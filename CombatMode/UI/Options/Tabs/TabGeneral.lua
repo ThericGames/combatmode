@@ -9,7 +9,7 @@
 --  Architecture / how it works:
 --    • DB: global.pulseCursor, hideTooltip, tooltipModifier, mouseLookSpeed, dynamicPitch,
 --      dynamicPitchStrength, vignetteConditions (CSV), vignetteMatch,
---      respectMotionSickness, shoulderFollowsMouseLook, sheathWeaponsWithMouselook,
+--      respectMotionSickness, shoulderFollowsMouseLook, sheathWeaponsWithMouselook, closeWindowsOnMouseLook,
 --      interactUnit; char.shoulderOffset.
 --    • Motion Sickness Protection disables ActionCam-owned Camera Features (pitch /
 --      shoulder / focus). Disable Offset With Mouselook stays editable under DynamicCam.
@@ -491,6 +491,17 @@ UI.Options.AddTab({
       end,
       set = function(value)
         CM.DB.global.sheathWeaponsWithMouselook = value
+      end,
+    })
+    ctx:Toggle({
+      label = L["Close Windows With Mouse Look"],
+      desc = L["Automatically close all open windows when toggling Mouse Look on."],
+      newFeatureFlag = true,
+      get = function()
+        return CM.DB.global.closeWindowsOnMouseLook
+      end,
+      set = function(value)
+        CM.DB.global.closeWindowsOnMouseLook = value
       end,
     })
     ctx:Dropdown({

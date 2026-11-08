@@ -153,6 +153,9 @@ L["Show Tooltips With"] = "툴팁 표시 키"
 L["Hold this key to show tooltips while Mouse Look is on."] =
   "마우스 룩이 켜져 있는 동안 이 키를 누르고 있으면 툴팁이 표시됩니다."
 L["Auto Sheath"] = "자동 무기 집어넣기"
+L["Close Windows With Mouse Look"] = "마우스 룩과 함께 창 닫기"
+L["Automatically close all open windows when toggling Mouse Look on."] =
+  "마우스 룩을 켤 때 열려 있는 모든 창을 자동으로 닫습니다"
 L["Sheath weapons automatically with Mouse Look."] =
   "마우스 룩과 함께 무기를 자동으로 집어넣습니다."
 L["Vignette Shows When"] = "비네트 표시 조건"
@@ -314,6 +317,7 @@ L["Shift"] = "Shift"
 L["Ctrl"] = "Ctrl"
 L["Alt"] = "Alt"
 L["Clear Target"] = "대상 해제"
+L["Target Crosshair"] = "조준점 대상 지정"
 L["Clear Focus"] = "주시 대상 해제"
 L["Start Attack"] = "공격 시작"
 L["Pet Attack"] = "소환수 공격"

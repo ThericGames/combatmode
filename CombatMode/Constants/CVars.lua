@@ -10,7 +10,9 @@
 --    • ReticleTargetingCVarValues — SoftTarget*, deselectOnClick, CursorStickyCentering, the
 --      outline CVars (Outline + selection / mouseover fades; ReticleOutlineCVarNames), etc.
 --    • InteractionHUDSoftTargetCVarValues — SoftTargetInteract subset when HUD is on
---      without full reticle targeting. SoftTargetIconInteract/GameObject are never written.
+--      without full reticle targeting, plus the Friend / Interact / GameObject icons off.
+--      InteractionHUDIconCVarNames lists those three: hidden only while the Interactable
+--      Indicator is on (CVarManager drops them from the effective preset otherwise).
 --      SoftTargetIconEnemy stays in the full reticle preset only.
 --    • MouseLookCameraLockedValues — MS off while locked. Shoulder unlock is tweened
 --      (SetShoulderOffset), not a snap table.
@@ -52,8 +54,13 @@ CM.Constants.ReticleTargetingCVarValues = {
   ["SoftTargetFriendRange"] = 60,
   -- SoftTarget Nameplate
   ["SoftTargetNameplateEnemy"] = 0, -- Always show nameplates  for soft target enemy.
-  -- SoftTarget Icon (enemy only — Interact/GameObject left to Accessibility / player).
+  -- SoftTarget Icon. Enemy is always hidden (the reticle replaces it). Friend / Interact / GameObject
+  -- are hidden only while the Interactable Indicator is on (the Interaction HUD already shows them);
+  -- otherwise GetEffectiveReticleTargetingCVarValues leaves them alone (InteractionHUDIconCVarNames).
   ["SoftTargetIconEnemy"] = 0,
+  ["SoftTargetIconFriend"] = 0,
+  ["SoftTargetIconInteract"] = 0,
+  ["SoftTargetIconGameObject"] = 0,
   -- Outline (the glow on quest objectives / mouseover / target). Switched by Target Outline
   -- (global.reticleOutline): off forces Outline 0 and Blizzard's fade defaults. A fade is how long
   -- the outline stays bright before settling dim. Both the target and the mouseover fade are long so
@@ -98,12 +105,23 @@ CM.Constants.ReticleTargetingCVarEditorExcluded = {
 
 -- Minimal SoftTarget CVars so the Interaction HUD (softinteract) works when Reticle Targeting
 -- is off; full stack remains CM.ConfigReticleTargeting("combatmode").
--- SoftTargetIconInteract/GameObject are never written by Combat Mode.
+-- Includes the Friend / Interact / GameObject icons off (the HUD replaces them).
 CM.Constants.InteractionHUDSoftTargetCVarValues = {
   ["interactKeyWarningTutorial"] = 1,
   ["SoftTargetInteract"] = 3,
   ["SoftTargetInteractArc"] = 1,
   ["SoftTargetInteractRange"] = 15,
+  ["SoftTargetIconFriend"] = 0,
+  ["SoftTargetIconInteract"] = 0,
+  ["SoftTargetIconGameObject"] = 0,
+}
+
+-- Blizzard soft-target icons the Interaction HUD replaces. Written (hidden) only while the
+-- Interactable Indicator is on, restored from the prior snapshot when it turns off.
+CM.Constants.InteractionHUDIconCVarNames = {
+  "SoftTargetIconFriend",
+  "SoftTargetIconInteract",
+  "SoftTargetIconGameObject",
 }
 
 -- CVARS FOR MOUSE LOOK CAMERA (shoulder, dynamic pitch pads, motion sickness)
@@ -150,6 +168,9 @@ CM.Constants.BlizzardReticleTargetingCVarValues = {
   ["SoftTargetInteractArc"] = 0,
   ["SoftTargetInteractRange"] = 10,
   ["SoftTargetIconEnemy"] = 0,
+  ["SoftTargetIconFriend"] = 0,
+  ["SoftTargetIconInteract"] = 0,
+  ["SoftTargetIconGameObject"] = 0,
   ["CursorStickyCentering"] = 0,
   ["Outline"] = 2,
   ["outlineMouseOverFadeDuration"] = 0.9,

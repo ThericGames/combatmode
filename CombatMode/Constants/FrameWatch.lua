@@ -129,6 +129,7 @@ CM.Constants.FramesToCheck = {
   "ScriptErrorsFrame",
   "SkillFrame",
   "SettingsPanel",
+  "SocialUIFrame",
   "SpellBookFrame",
   "SplashFrame",
   "StackSplitFrame",

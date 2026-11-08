@@ -93,6 +93,9 @@ local fallbackDescriptions = {
   SoftTargetFriendRange = "Max range to soft target friends (limited to tab targeting range).",
   SoftTargetNameplateEnemy = "Always show nameplates for soft enemy target.",
   SoftTargetIconEnemy = "Show icon for soft enemy target.",
+  SoftTargetIconFriend = "Show icon for soft friend target.",
+  SoftTargetIconInteract = "Show icon for soft interact target.",
+  SoftTargetIconGameObject = "Show icon for soft game object target.",
 }
 
 local function BuildDescriptionMap()

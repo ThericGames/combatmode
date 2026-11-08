@@ -67,13 +67,13 @@ local DefaultBindings = {
   altbutton1 = {
     enabled = true,
     key = "ALT-BUTTON1",
-    value = "TOGGLEPINGLISTENER",
+    value = "TARGETMOUSEOVER",
     macroName = "",
   },
   altbutton2 = {
     enabled = true,
     key = "ALT-BUTTON2",
-    value = "TOGGLEFOCUSANY",
+    value = "CLEARTARGET",
     macroName = "",
   },
   toggle = { key = "Combat Mode - Mouse Look", value = "BUTTON3" },
@@ -86,6 +86,7 @@ CM.Constants.DatabaseDefaults = {
     hideTooltip = true,
     tooltipModifier = "ALT", -- key that shows tooltips while Hide Tooltips is on: ALT | CTRL | SHIFT
     sheathWeaponsWithMouselook = false,
+    closeWindowsOnMouseLook = false, -- Mouse Look key closes open windows instead of waiting for you to
     interactUnit = "target",
     showTargetLockMarker = true,
     -- Sounds (Advanced tab): one switch per feature that plays cues.
@@ -209,7 +210,7 @@ return false
     excludeFromTargetingSpells = "",
     castAtCursorSpells = "",
     -- click casting
-    useGlobalBindings = false,
+    useGlobalBindings = true,
     bindings = DefaultBindings,
   },
 }

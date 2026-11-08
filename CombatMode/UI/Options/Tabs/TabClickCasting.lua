@@ -40,6 +40,7 @@ local C = UI.Colors
 local OVERRIDE_ORDER = {
   "CLEARFOCUS",
   "CLEARTARGET",
+  "TARGETMOUSEOVER",
   "STARTATTACK",
   "PETATTACK",
   "TOGGLEFOCUSANY",
@@ -66,6 +67,7 @@ local MODIFIER_GROUPS = {
 -- Colour-coded dropdown text for our own override actions (CM.Constants.OverrideActions keeps the English).
 local OVERRIDE_LABELS = {
   CLEARTARGET = "|cff69ccf0" .. L["Clear Target"] .. "|r",
+  TARGETMOUSEOVER = "|cff69ccf0" .. L["Target Crosshair"] .. "|r",
   CLEARFOCUS = "|cff69ccf0" .. L["Clear Focus"] .. "|r",
   STARTATTACK = "|cff69ccf0" .. L["Start Attack"] .. "|r",
   PETATTACK = "|cff69ccf0" .. L["Pet Attack"] .. "|r",

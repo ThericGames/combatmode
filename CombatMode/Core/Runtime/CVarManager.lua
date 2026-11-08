@@ -24,6 +24,10 @@
 --      circle and name; "hidden" = none. ApplyReticleSelectionCircleCVars writes just those on
 --      option changes and PLAYER_TARGET_CHANGED / PLAYER_FOCUS_CHANGED; turning the circle on waits
 --      until the soft target is on the hard target so it never slides over.
+--    • SoftTargetIconFriend/Interact/GameObject (InteractionHUDIconCVarNames) are in the effective
+--      preset only while the crosshair and the Interactable Indicator are on (an editor override
+--      still wins); SyncInteractionHUDIconCVars hides or restores them on toggles. A snapshot
+--      older than these CVars is backfilled before their first write (SetCVar).
 --    • ApplyMouseLookCamera / ClearMouseLookCamera — lock vs unlock (shoulder; MS via gate).
 --    • SetDynamicPitch — sticky with the option; strength is global.dynamicPitchStrength
 --      (ground pad). Flying pad is that value times Flying/Base so the air tilt stays
@@ -104,6 +108,11 @@ local restoringCVars = false
 local sessionSnapshotCaptured = false
 -- Camera speed dip state (see CM.BeginCameraSpeedDip): one shared table, never reallocated.
 local CAMERA_SPEED_DIP_NAMES = { "cameraYawMoveSpeed", "cameraPitchMoveSpeed" }
+-- Set of the HUD-replaced soft-target icon CVars (CM.Constants.InteractionHUDIconCVarNames).
+local ICON_CVAR_SET = {}
+for _, iconName in ipairs(CM.Constants.InteractionHUDIconCVarNames) do
+  ICON_CVAR_SET[iconName] = true
+end
 local cameraSpeedDipPending = false
 local cameraSpeedDipRestore = {} -- CVar name -> value to restore, valid while pending
 
@@ -268,6 +277,17 @@ function CM.GetEffectiveReticleTargetingCVarValues()
       resolved[cvar] = override
     else
       resolved[cvar] = value
+    end
+  end
+
+  -- Friend / Interact / GameObject soft-target icons: hidden only while the Interactable
+  -- Indicator is on (the Interaction HUD shows them). Otherwise leave the player's own values
+  -- alone, unless they set an explicit override in the CVar editor.
+  if not (CM.IsCrosshairEnabled() and CM.IsInteractionHUDEnabled()) then
+    for _, cvar in ipairs(CM.Constants.InteractionHUDIconCVarNames) do
+      if overrides[cvar] == nil then
+        resolved[cvar] = nil
+      end
     end
   end
 
@@ -454,8 +474,23 @@ function CM.EndCameraSpeedDip()
   end
 end
 
+--- Adds a managed CVar that an older snapshot predates (the HUD icon CVars came later) before
+--- its first write, so Uninstall / the indicator toggle can put the player's value back.
+local function BackfillSnapshot(name)
+  local snap = CM.DB and CM.DB.global and CM.DB.global.priorCVarSnapshot
+  if SnapshotIsPopulated(snap) and snap[name] == nil then
+    local current = GetCVar(name)
+    if current ~= nil then
+      snap[name] = current
+    end
+  end
+end
+
 function CM.SetCVar(name, value)
   CM.EnsurePriorCVarSnapshot()
+  if not restoringCVars and ICON_CVAR_SET[name] then
+    BackfillSnapshot(name)
+  end
   if cameraSpeedDipPending and IsCameraSpeedDipName(name) then
     cameraSpeedDipRestore[name] = value
     return
@@ -534,6 +569,39 @@ function CM.ConfigInteractionHUDSoftTarget()
   end
   CM.SetCVars(t)
   CM.DebugPrint("Interaction HUD SoftTarget CVars applied")
+end
+
+--- Hides Blizzard's Friend / Interact / GameObject soft-target icons while the Interactable
+--- Indicator is on, and gives them back (prior snapshot, else Blizzard's value) when it is off.
+--- Call after the indicator or crosshair toggles; the full presets handle it on Rematch.
+function CM.SyncInteractionHUDIconCVars()
+  local names = CM.Constants.InteractionHUDIconCVarNames
+  local hudOn = CM.IsCrosshairEnabled() and CM.IsInteractionHUDEnabled()
+  local reticleOn = CM.DB and CM.DB.char and CM.DB.char.reticleTargeting
+  local effective = reticleOn and CM.GetEffectiveReticleTargetingCVarValues() or nil
+  local snap = CM.DB and CM.DB.global and CM.DB.global.priorCVarSnapshot
+  local hudValues = CM.Constants.InteractionHUDSoftTargetCVarValues
+
+  CM.DebugPrint("Icon CVar sync: hudOn=" .. tostring(hudOn) .. " reticleOn=" .. tostring(reticleOn))
+  for _, name in ipairs(names) do
+    local target
+    if effective and effective[name] ~= nil then
+      target = effective[name]
+    elseif hudOn then
+      target = hudValues[name]
+    else
+      target = SnapshotIsPopulated(snap) and snap[name] or nil
+      if target == nil then
+        target = CM.Constants.BlizzardReticleTargetingCVarValues[name]
+      end
+    end
+    if target ~= nil then
+      CM.SetCVar(name, target)
+    end
+    CM.DebugPrint(
+      "  " .. name .. ": wanted " .. tostring(target) .. ", now " .. tostring(GetCVar(name))
+    )
+  end
 end
 
 --- One-shot migration from Action Camera situation profiles / legacy flat keys

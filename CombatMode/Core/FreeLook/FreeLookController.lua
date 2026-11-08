@@ -658,6 +658,20 @@ function _G.CombatMode_CursorModeKey(keystate)
       if unlockOnceActive then
         customUnlockOnceConsumed = true
       end
+      if
+        not unlockOnceActive
+        and CM.DbBool(CM.DB.global.closeWindowsOnMouseLook, false)
+        and CM.IsUnlockFrameVisible()
+        and CM.CloseUnlockWindows()
+      then
+        -- Close Windows: the windows were what kept the cursor free. Reconcile re-locks now
+        -- (and the next tick does if a frame lingers), still honouring force-unlock etc.
+        CancelPendingTapSheath()
+        FreeLookOverride = false
+        CursorModeShowTime = 0
+        CM.ReconcileFreeLook()
+        return
+      end
       if FreeLookOverride or unlockOnceActive then
         -- Re-lock. Unlock Once also covers a force-unlock that did not set FreeLookOverride,
         -- so the key can lock and stay locked while that snippet remains true.

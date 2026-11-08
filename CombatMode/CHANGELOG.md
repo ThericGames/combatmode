@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/2.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.4.6] - 2026-11-08
+
+### Added
+
+- **Auto Cursor Unlock** also watches the Social window on Forever.
+- **Close Windows With Mouse Look** option in the General tab (off by default). Automatically closes all open windows, such as bags, the character panel or menus, when you toggle Mouse Look on with the **Mouse Look Keybind**.
+
+### Changed
+
+- While the **Interactable Indicator** is on, Action Combat Mode now hides Blizzard's own friend, interact and game object icons (`SoftTargetIconFriend`, `SoftTargetIconInteract`, `SoftTargetIconGameObject`), since the indicator already shows them. Turn the indicator off and your own values come back. All three, and the enemy icon, are listed in the **Reticle CVar** editor.
+- **Account-Wide Binds** in Click Casting is now on by default for new characters, so they share one set of binds. Existing characters keep their current setting.
+- **Target Mouseover** in the Click Casting action list is now **Target Crosshair** and sits in the **Action Combat Mode** section. New characters (and new binding sets) default **Alt + Left Click** to Target Crosshair and **Alt + Right Click** to Clear Target; existing binds are unchanged.
+
 ## [5.4.5] - 2026-11-06
 
 ### Added
@@ -880,6 +893,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reloading could leave the cursor visible while still in the Mouse Look state after the loading screen.
 
 [Unreleased]: https://github.com/ThericGames/combatmode/compare/5.4.5...HEAD
+[5.4.6]: https://github.com/ThericGames/combatmode/compare/5.4.5...5.4.6
 [5.4.5]: https://github.com/ThericGames/combatmode/compare/5.4.4...5.4.5
 [5.4.4]: https://github.com/ThericGames/combatmode/compare/5.4.3...5.4.4
 [5.4.3]: https://github.com/ThericGames/combatmode/compare/5.4.2...5.4.3

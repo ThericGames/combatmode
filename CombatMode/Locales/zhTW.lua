@@ -149,6 +149,9 @@ L["Show Tooltips With"] = "顯示提示按鍵"
 L["Hold this key to show tooltips while Mouse Look is on."] =
   "滑鼠視角開啟時，按住此鍵可顯示提示。"
 L["Auto Sheath"] = "自動收起武器"
+L["Close Windows With Mouse Look"] = "隨滑鼠視角關閉視窗"
+L["Automatically close all open windows when toggling Mouse Look on."] =
+  "開啟滑鼠視角時自動關閉所有已開啟的視窗"
 L["Sheath weapons automatically with Mouse Look."] = "隨滑鼠視角自動收起武器。"
 L["Vignette Shows When"] = "暗角顯示條件"
 L["Darkens the edges of the screen while the checked situations are true."] =
@@ -302,6 +305,7 @@ L["Shift"] = "Shift"
 L["Ctrl"] = "Ctrl"
 L["Alt"] = "Alt"
 L["Clear Target"] = "清除目標"
+L["Target Crosshair"] = "以準星選取目標"
 L["Clear Focus"] = "清除專注目標"
 L["Start Attack"] = "開始攻擊"
 L["Pet Attack"] = "寵物攻擊"

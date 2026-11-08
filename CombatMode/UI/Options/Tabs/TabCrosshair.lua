@@ -71,6 +71,7 @@ UI.Options.AddTab({
         CM.DB.global.crosshair = value
         CM.DisplayCrosshair(value)
         CM.CreateCrosshair()
+        CM.SyncInteractionHUDIconCVars()
       end,
     })
     ctx:Toggle({
@@ -200,6 +201,7 @@ UI.Options.AddTab({
         if value and CM.IsCrosshairEnabled() and not CM.DB.char.reticleTargeting then
           CM.ConfigInteractionHUDSoftTarget()
         end
+        CM.SyncInteractionHUDIconCVars()
         RefreshAssist()
       end,
       disabled = CrosshairOff,

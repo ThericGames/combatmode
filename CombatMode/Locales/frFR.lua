@@ -152,6 +152,9 @@ L["Show Tooltips With"] = "Afficher les infobulles avec"
 L["Hold this key to show tooltips while Mouse Look is on."] =
   "Maintenez cette touche pour afficher les infobulles lorsque la vue à la souris est active."
 L["Auto Sheath"] = "Rengainer automatiquement"
+L["Close Windows With Mouse Look"] = "Fermer les fenêtres avec Mouse Look"
+L["Automatically close all open windows when toggling Mouse Look on."] =
+  "Ferme automatiquement toutes les fenêtres ouvertes à l'activation de Mouse Look"
 L["Sheath weapons automatically with Mouse Look."] =
   "Rengaine automatiquement les armes avec la vue à la souris."
 L["Vignette Shows When"] = "La vignette s'affiche quand"
@@ -312,6 +315,7 @@ L["Shift"] = "Maj"
 L["Ctrl"] = "Ctrl"
 L["Alt"] = "Alt"
 L["Clear Target"] = "Effacer la cible"
+L["Target Crosshair"] = "Cibler le réticule"
 L["Clear Focus"] = "Effacer le focus"
 L["Start Attack"] = "Lancer l'attaque"
 L["Pet Attack"] = "Attaque du familier"

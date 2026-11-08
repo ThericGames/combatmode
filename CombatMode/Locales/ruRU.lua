@@ -162,6 +162,9 @@ L["Show Tooltips With"] = "Показывать подсказки по"
 L["Hold this key to show tooltips while Mouse Look is on."] =
   "Удерживайте эту клавишу, чтобы показывать подсказки при включённом обзоре мышью."
 L["Auto Sheath"] = "Автоматически убирать оружие"
+L["Close Windows With Mouse Look"] = "Закрывать окна с Mouse Look"
+L["Automatically close all open windows when toggling Mouse Look on."] =
+  "Автоматически закрывать все открытые окна при включении Mouse Look"
 L["Sheath weapons automatically with Mouse Look."] =
   "Автоматически убирает оружие вместе с обзором мышью."
 L["Vignette Shows When"] = "Виньетка появляется, когда"
@@ -326,6 +329,7 @@ L["Shift"] = "Shift"
 L["Ctrl"] = "Ctrl"
 L["Alt"] = "Alt"
 L["Clear Target"] = "Сбросить цель"
+L["Target Crosshair"] = "Цель под прицелом"
 L["Clear Focus"] = "Сбросить фокус"
 L["Start Attack"] = "Начать атаку"
 L["Pet Attack"] = "Атака питомца"
