@@ -19,8 +19,9 @@
 --    • While focus exists and the marker option is on, center stays on the static Dot
 --      even if no nameplate is visible. Unlock / marker-off Clears and restores.
 --    • Marker tint uses CM.GetCrosshairReactionColor("focus") → effective hostile.
---    • Anchors centered on Blizzard/Platynator health bar (IsVisible + under-plate).
---      Platynator is preferred over UnitFrame.healthBar; widgets iterated with pairs
+--    • Anchors centered on Blizzard/Platynator/Plater health bar (IsVisible + under-plate).
+--      Platynator, then Plater (plate.unitFrame.healthBar), are preferred over
+--      UnitFrame.healthBar; widgets iterated with pairs
 --      (array or map). Secret bar sizes are treated as plausible, not rejected.
 --    • Plate GetWidth/GetAlpha/GetScale probes are secret-safe (issecretvalue) so instance
 --      taint cannot error while scanning StatusBars.
@@ -87,15 +88,7 @@ local driverFrame
 
 -- Public number for compares/arithmetic; secret measures (e.g. tainted StatusBar
 -- GetWidth/GetAlpha) fall back so we never branch on secret values under taint.
-local function PublicNumber(value, fallback)
-  if type(value) ~= "number" then
-    return fallback
-  end
-  if issecretvalue and issecretvalue(value) then
-    return fallback
-  end
-  return value
-end
+local PublicNumber = CM.Safe.PublicNumber
 
 local function Clamp01(value)
   return math.max(0, math.min(1, value))
@@ -208,7 +201,8 @@ local function IsPlausibleHealthBarSize(w, h, secretSize)
   if secretSize then
     return true
   end
-  return w >= 16 and h >= 2 and h <= 64
+  -- Thin bars are legitimate: Plater's at full health measured 69 x 1.9 after scale.
+  return w >= 16 and h >= 1 and h <= 64
 end
 
 -- Platynator hangs a display frame (with .widgets) under the nameplate. Widgets may be
@@ -267,11 +261,16 @@ local function FindBestVisibleStatusBar(frame, depth, best, bestArea)
   if okType and isStatusBar and IsUsableRegion(frame) then
     local w, h, secretSize = GetVisualSize(frame)
     if IsPlausibleHealthBarSize(w, h, secretSize) then
-      local area = w * h
+      -- Unreadable (secret) sizes are placeholders: they must never outrank a bar we can
+      -- measure. Plater's absorb/heal-prediction bars are secret and sized by HP, and a
+      -- 40x8 placeholder beat the real ~70x2 health bar, so the marker followed the fill.
+      local area = secretSize and 0.5 or w * h
       if area > bestArea then
         best = frame
         bestArea = area
       end
+      -- Bars nested in an accepted bar are overlays (absorb, heal prediction): skip them.
+      return best, bestArea
     end
   end
   local okKids, children = pcall(function()
@@ -300,6 +299,26 @@ local function GetIconAnchor(plate)
   local platWidget = FindPlatynatorHealthWidget(plate)
   if platWidget then
     return platWidget
+  end
+
+  -- Plater keeps its own bar at plate.unitFrame.healthBar (lowercase; plate.UnitFrame is
+  -- Blizzard's hidden one). The generic scan below picks Plater's HP-sized helper bars
+  -- (lost-health / absorb), whose centre moves with the enemy's health.
+  local platerFrame = plate.unitFrame
+  if
+    type(platerFrame) == "table" and not (platerFrame.IsForbidden and platerFrame:IsForbidden())
+  then
+    local platerBar = platerFrame.healthBar
+    if
+      type(platerBar) == "table"
+      and IsUsableRegion(platerBar)
+      and IsUnderPlate(platerBar, plate)
+    then
+      local w, h, secretSize = GetVisualSize(platerBar)
+      if IsPlausibleHealthBarSize(w, h, secretSize) then
+        return platerBar
+      end
+    end
   end
 
   local unitFrame = plate.UnitFrame

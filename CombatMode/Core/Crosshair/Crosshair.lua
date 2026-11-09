@@ -20,7 +20,7 @@
 --      crosshairSituationalCondition is true (then full reaction + situational appearance).
 --    • UpdateCrosshairReaction — hostile/friendly/dead/gameobject under mouse or soft
 --      target; drives texture + Animations reaction scale. Presence via UnitExists;
---      reaction/booleans are secret-safe (issecretvalue / PublicBool — no UnitGUID
+--      reaction/booleans are secret-safe (issecretvalue / PublicTruthy — no UnitGUID
 --      compares). While Target Lock shows a nameplate marker, center reticle is a
 --      static base-colored Dot (FocusNameplateMarker / SetFocusLockReticleSuppressed);
 --      Dot stays while focus exists (even with no nameplate); unlock restores.
@@ -62,15 +62,7 @@ local pcall = _G.pcall
 local type = _G.type
 
 -- Public boolean when not secret; nil when unknown/secret (cannot branch on it).
-local function PublicBool(value)
-  if value == nil then
-    return nil
-  end
-  if issecretvalue and issecretvalue(value) then
-    return nil
-  end
-  return value and true or false
-end
+local PublicTruthy = CM.Safe.PublicTruthy
 
 -- Soft UI ticks on Master: character panel open/close for lock/unlock; option click for cycle.
 local FOCUS_LOCK_SOUND = (SOUNDKIT and SOUNDKIT.IG_CHARACTER_INFO_OPEN) or 839
@@ -447,7 +439,7 @@ end)
 
 --- A dead unit with loot: the interact target, or (public GUID only) the game says it can be looted.
 local function IsLootableCorpse(unitID)
-  if UnitExists("softinteract") and PublicBool(UnitIsUnit(unitID, "softinteract")) then
+  if UnitExists("softinteract") and PublicTruthy(UnitIsUnit(unitID, "softinteract")) then
     return true
   end
   if not (CanLootUnit and UnitGUID) then
@@ -458,7 +450,7 @@ local function IsLootableCorpse(unitID)
     return false
   end
   local ok, hasLoot = pcall(CanLootUnit, guid)
-  return ok and PublicBool(hasLoot) == true
+  return ok and PublicTruthy(hasLoot) == true
 end
 
 local function GetUnitReactionType(unitID)
@@ -469,13 +461,13 @@ local function GetUnitReactionType(unitID)
   if not UnitExists(unitID) then
     return "base"
   end
-  local isTargetObject = PublicBool(UnitIsGameObject(unitID))
+  local isTargetObject = PublicTruthy(UnitIsGameObject(unitID))
   if isTargetObject then
     return "object"
   end
   -- A dead (or ghost) unit is not a target: base reticle, not the hostile / friendly tint, unless
   -- it can be looted (then it reads as an interactable, the yellow object state).
-  if PublicBool(UnitIsDeadOrGhost(unitID)) then
+  if PublicTruthy(UnitIsDeadOrGhost(unitID)) then
     return IsLootableCorpse(unitID) and "object" or "base"
   end
   local reaction = UnitReaction("player", unitID)
@@ -486,9 +478,9 @@ local function GetUnitReactionType(unitID)
   if not reaction then
     return "base"
   end
-  local isPlayer = PublicBool(UnitIsPlayer(unitID))
+  local isPlayer = PublicTruthy(UnitIsPlayer(unitID))
   if isPlayer then
-    local canAttack = PublicBool(UnitCanAttack("player", unitID))
+    local canAttack = PublicTruthy(UnitCanAttack("player", unitID))
     if canAttack == nil then
       return "base"
     end
@@ -514,7 +506,7 @@ local function IsEnemyOnlyReticleInCombat()
 end
 
 local function GetUnitUnderCursor()
-  local isTargetObject = PublicBool(UnitIsGameObject("softinteract"))
+  local isTargetObject = PublicTruthy(UnitIsGameObject("softinteract"))
   if isTargetObject then
     return "softinteract", "object"
   end

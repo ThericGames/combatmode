@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------------------------
 -- UI/Editors/ComposedMacroEditor.lua — EDITOR — Macro Composer (Reticle Targeting macros)
 ---------------------------------------------------------------------------------------
--- What does: Standalone editor (CM.OpenComposedMacroEditor) that writes a real WoW macro:
+-- What it does: Standalone editor (CM.OpenComposedMacroEditor) that writes a real WoW macro:
 -- the active targeting preline is shown greyed and locked above a multiline body the
 -- player types (Enter = new line), and Save Macro stores the joined macro so it keeps
 -- reticle targeting wherever it is used (action bar or a Run MACRO slot).

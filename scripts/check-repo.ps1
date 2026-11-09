@@ -153,6 +153,64 @@ else {
     Warn "Python not found; skipped the TGA compression check"
 }
 
+# --- Lua file contract -----------------------------------------------------------------
+# Every addon Lua file keeps the standard header, stays clear of Lua's limit of 200 locals per
+# function, and uses CM.Safe instead of its own copy of the secret-value readers.
+$HEADER_LIMIT = 40
+$LOCAL_LIMIT = 180
+$headerSections = @("What it does", "Architecture", "Does not", "Related")
+$dash = [char]0x2014
+
+function Get-MainChunkLocals([string[]]$codeLines) {
+    $count = 0
+    foreach ($line in $codeLines) {
+        if ($line -match '^local\s+function\s') { $count++; continue }
+        if ($line -match '^local\s+([A-Za-z_]\w*(?:\s*,\s*[A-Za-z_]\w*)*)') {
+            $count += @($Matches[1] -split ',').Count
+        }
+    }
+    return $count
+}
+
+$luaFailures = 0
+$luaFiles = @(Get-ChildItem -Path $addon -Recurse -File -Filter *.lua | Where-Object { $_.Name -ne "ChangelogData.lua" })
+foreach ($file in $luaFiles) {
+    $rel = [System.IO.Path]::GetRelativePath($addon, $file.FullName) -replace '\\', '/'
+    $text = Read-Text $file.FullName
+    $lines = $text -split "`n"
+
+    $header = @($lines | ForEach-Object -Begin { $open = $true } -Process {
+            if ($open -and $_ -match '^--') { $_ } else { $open = $false }
+        })
+    if ($header.Count -lt 2 -or $header[1] -notmatch ("^--\s+" + [regex]::Escape($rel) + " $dash [A-Z][A-Z /&-]* $dash \S")) {
+        Fail "$rel`: line 2 of the header must be '--  $rel $dash DOMAIN $dash title'"
+        $luaFailures++
+    }
+    if ($header.Count -gt $HEADER_LIMIT) {
+        Fail "$rel`: header is $($header.Count) lines (max $HEADER_LIMIT); gotchas belong in .claude/rules/domain-*.md"
+        $luaFailures++
+    }
+    $headerText = $header -join "`n"
+    foreach ($name in $headerSections) {
+        if (-not $headerText.Contains($name)) {
+            Fail "$rel`: header has no '$name' section"
+            $luaFailures++
+        }
+    }
+
+    $locals = Get-MainChunkLocals @($lines | Where-Object { $_ -notmatch '^\s*--' })
+    if ($locals -gt $LOCAL_LIMIT) {
+        Fail "$rel`: $locals top-level locals (max $LOCAL_LIMIT; Lua stops compiling at 200). Split the file or group them in a table."
+        $luaFailures++
+    }
+
+    if ($rel -ne "Core/Runtime/Safe.lua" -and $text -match '(?m)^\s*local function (IsSecret|PublicBool|PublicTruthy|PublicNumber)\b') {
+        Fail "$rel`: defines its own $($Matches[1]); alias it from CM.Safe instead"
+        $luaFailures++
+    }
+}
+if ($luaFailures -eq 0) { Pass "Lua files: $($luaFiles.Count) headers, local counts and CM.Safe use are fine" }
+
 # --- Release gate ----------------------------------------------------------------------
 if ($Release) {
     if (-not $section.Groups[2].Value) {

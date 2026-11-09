@@ -14,6 +14,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/2.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.4.7] - 2026-11-09
+
+### Changed
+
+- **Close Windows With Mouse Look** moved to the Mouse Look section of the General tab.
+
+### Fixed
+
+- The **Reticle CVar** editor now uses the game's help text for CVars without a written description.
+- The **Target Lock** marker now stays centered on the nameplate's health bar with Plater and similar nameplate addons, instead of drifting sideways as the enemy loses health.
+
 ## [5.4.6] - 2026-11-08
 
 ### Added
@@ -901,7 +912,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rapidly toggling OPie rings could leave the cursor stuck and visible while Mouse Look was active.
 - Reloading could leave the cursor visible while still in the Mouse Look state after the loading screen.
 
-[Unreleased]: https://github.com/ThericGames/combatmode/compare/5.4.5...HEAD
+[Unreleased]: https://github.com/ThericGames/combatmode/compare/5.4.7...HEAD
+[5.4.7]: https://github.com/ThericGames/combatmode/compare/5.4.6...5.4.7
 [5.4.6]: https://github.com/ThericGames/combatmode/compare/5.4.5...5.4.6
 [5.4.5]: https://github.com/ThericGames/combatmode/compare/5.4.4...5.4.5
 [5.4.4]: https://github.com/ThericGames/combatmode/compare/5.4.3...5.4.4

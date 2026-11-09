@@ -269,6 +269,17 @@ UI.Options.AddTab({
         end)
       end,
     })
+    ctx:Toggle({
+      label = L["Close Windows With Mouse Look"],
+      desc = L["Automatically close all open windows when toggling Mouse Look on."],
+      newFeatureFlag = true,
+      get = function()
+        return CM.DB.global.closeWindowsOnMouseLook
+      end,
+      set = function(value)
+        CM.DB.global.closeWindowsOnMouseLook = value
+      end,
+    })
     -- macOS only: on other clients the stuck-cursor freeze does not occur, so this
     -- recovery keybind is hidden to avoid clutter.
     if IsMacClient() then
@@ -491,17 +502,6 @@ UI.Options.AddTab({
       end,
       set = function(value)
         CM.DB.global.sheathWeaponsWithMouselook = value
-      end,
-    })
-    ctx:Toggle({
-      label = L["Close Windows With Mouse Look"],
-      desc = L["Automatically close all open windows when toggling Mouse Look on."],
-      newFeatureFlag = true,
-      get = function()
-        return CM.DB.global.closeWindowsOnMouseLook
-      end,
-      set = function(value)
-        CM.DB.global.closeWindowsOnMouseLook = value
       end,
     })
     ctx:Dropdown({

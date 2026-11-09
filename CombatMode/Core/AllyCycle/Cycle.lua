@@ -46,7 +46,6 @@ local UnitName = _G.UnitName
 
 -- Lua stdlib
 local ipairs = _G.ipairs
-local issecretvalue = _G.issecretvalue
 local select = _G.select
 local tostring = _G.tostring
 local wipe = _G.wipe
@@ -316,22 +315,8 @@ function CM.FlushPendingAllyCycleRoster()
   CM.RefreshAllyCycleRoster()
 end
 
-local function IsSecret(v)
-  return v ~= nil and issecretvalue and issecretvalue(v)
-end
-
-local function PublicBool(v)
-  if IsSecret(v) then
-    return nil
-  end
-  if v == true then
-    return true
-  end
-  if v == false then
-    return false
-  end
-  return nil
-end
+local IsSecret = CM.Safe.IsSecret
+local PublicBool = CM.Safe.PublicBool
 
 local rosterKids = {}
 

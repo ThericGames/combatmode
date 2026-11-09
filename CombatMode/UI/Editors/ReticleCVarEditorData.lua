@@ -4,7 +4,7 @@
 --  What it does: Data layer for the Reticle CVar editor: row lists from
 --  ReticleTargetingCVarValues minus exclusions, read/write of
 --  global.reticleTargetingCVarOverrides via CVarManager getters, combat-guarded writes,
---  and description caches from C_Console where available.
+--  and row descriptions (hand-written first, then ConsoleGetAllCommands help text).
 --  Architecture / how it works:
 --    • CM.ReticleCVarEditorData helpers; Panel owns the window + live attribution.
 --    • Effective values still computed in CVarManager.GetEffectiveReticleTargetingCVarValues.
@@ -18,7 +18,7 @@ local L = CM.L
 local _G = _G
 
 -- WoW API
-local C_Console = _G.C_Console
+local ConsoleGetAllCommands = _G.ConsoleGetAllCommands
 local GetCVar = _G.GetCVar
 local InCombatLockdown = _G.InCombatLockdown
 local pairs = _G.pairs
@@ -78,7 +78,8 @@ function Data.IsEditableCVar(cvarName)
   local excluded = cachedExcludedLower or {}
   return not excluded[strlower(canonical)]
 end
-local fallbackDescriptions = {
+-- Our own wording wins; the game's help text only fills CVars not listed here.
+local writtenDescriptions = {
   SoftTargetForce = "Auto-set target to match soft target. 1 = for enemies, 2 = for friends.",
   SoftTargetMatchLocked = "Match appropriate soft target to locked target. 1 = hard locked target only, 2 = for targets you attack ",
   SoftTargetWithLocked = "Allows soft target selection while player has a locked target. 2 = always do soft targeting.",
@@ -100,11 +101,11 @@ local fallbackDescriptions = {
 
 local function BuildDescriptionMap()
   cvarDescriptions = {}
-  if not C_Console or not C_Console.GetAllCommands then
+  if not ConsoleGetAllCommands then
     return
   end
 
-  local commands = C_Console.GetAllCommands()
+  local commands = ConsoleGetAllCommands()
   for _, info in pairs(commands or {}) do
     local cvar = info and info.command
     local canonical = cvar and Data.CanonicalCVar(cvar)
@@ -115,15 +116,15 @@ local function BuildDescriptionMap()
 end
 
 local function GetDescription(cvar)
+  local written = writtenDescriptions[cvar]
+  if written then
+    return written
+  end
   if not cvarDescriptions then
     BuildDescriptionMap()
   end
   local descriptions = cvarDescriptions or {}
-  local description = descriptions[cvar]
-  if description and description ~= "" then
-    return description
-  end
-  return fallbackDescriptions[cvar] or ""
+  return descriptions[cvar] or ""
 end
 
 function Data.GetOverrides()

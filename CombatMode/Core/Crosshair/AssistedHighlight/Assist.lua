@@ -443,12 +443,7 @@ function CM.InvalidateSuggestedSpellCache()
   suggestedSpellID = nil
 end
 
-local function PublicBool(v)
-  if issecretvalue and issecretvalue(v) then
-    return false
-  end
-  return v and true or false
-end
+local PublicTruthy = CM.Safe.PublicTruthy
 
 --- Crosshair visible, unmounted and mouselooking: shared by both HUD modes.
 local function PassesCrosshairGate()
@@ -467,8 +462,8 @@ local function GetHostileFocusUnit()
   for _, unit in ipairs(HOSTILE_FOCUS_UNITS) do
     if
       UnitExists(unit)
-      and PublicBool(UnitCanAttack("player", unit))
-      and not PublicBool(UnitIsDead(unit))
+      and PublicTruthy(UnitCanAttack("player", unit))
+      and not PublicTruthy(UnitIsDead(unit))
     then
       return unit
     end
@@ -697,9 +692,7 @@ local function HasText(text)
   return (issecretvalue and issecretvalue(text)) or text ~= ""
 end
 
-local function IsSecret(v)
-  return issecretvalue and issecretvalue(v)
-end
+local IsSecret = CM.Safe.IsSecret
 
 --- clickText: click-cast icons beside the icon. nameText: the interactable's name, same spot.
 --- cornerText: keyboard badge on the icon (spell key, or the interact key).

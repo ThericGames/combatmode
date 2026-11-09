@@ -26,18 +26,7 @@
 --      (here) and "party" (on CombatModeRadialWheel) let each key snippet skip while the other is open.
 --    • Harmful-only spells (C_Spell.IsSpellHarmful and not IsSpellHelpful) are never listed:
 --      CM.PartyWheelIsEligibleSpell filters the tab's picker and the stored set.
---    • Out of combat only: the allowlist (pw-<spellID>), the pages of unit tokens (pn<k>, pu<k>_<i>:
---      party1..4, or raidN minus the player, 8 per page, max LAYOUT.MAX_WHEELS pages), offline
---      flags (po<k>_<i>: the restricted environment has no UnitIsConnected; a release over an
---      offline slice just closes) and the slice directions. Roster / list / connection changes in
---      combat wait for CM.PartyWheelFlush (regen); the view desaturates offline members live meanwhile.
---    • Hold delay (insecure: the restricted environment has no clock): the secure wheel opens on
---      press, but CM.PartyWheelStartReveal only reports it open (CM.IsPartyWheelOpen, so the view
---      and Mouse Look react) after REVEAL_DELAY; a release before that just casts.
---    • Centre target: the dead zone is a protected motion-only frame (CombatModePartyWheelCentre)
---      whose OnEnter (the cursor coming back) sets pwleft; a centre release then casts
---      "/cast [@player]", else (tap, or never left) "/cast [@target,help,nodead][@player]"
---      through the centre slice.
+--    • Out-of-combat state, the hold delay and the centre target: see .claude/rules/domain-radial-menu.md (PartyWheel.lua notes).
 --    • Insecure readers for View.lua: CM.IsPartyWheelOpen, CM.PartyWheelLeftCentre,
 --      CM.PartyWheelGetFrame, CM.PartyWheelCurrent, CM.PartyWheelAimSlot.
 --  Does not: Draw (View.lua), bind keys itself (BindingOverrides.lua), or work on left / right

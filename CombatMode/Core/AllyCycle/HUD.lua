@@ -27,7 +27,6 @@ local _G = _G
 local CreateFrame = _G.CreateFrame
 
 -- Lua stdlib
-local issecretvalue = _G.issecretvalue
 local math = _G.math
 local tonumber = _G.tonumber
 local type = _G.type
@@ -110,9 +109,7 @@ local function Layout()
   return LAYOUT
 end
 
-local function IsSecret(v)
-  return v ~= nil and issecretvalue and issecretvalue(v)
-end
+local IsSecret = CM.Safe.IsSecret
 
 local function Config()
   local g = CM.DB and CM.DB.global and CM.DB.global.allyCycle

@@ -64,22 +64,8 @@ local COLOR_OUT_OF_RANGE = CreateColor and CreateColor(1, 1, 1, 0.3)
 
 Target.RAID_TARGET_TEXTURE = RAID_TARGET_TEXTURE
 
-local function IsSecret(v)
-  return v ~= nil and issecretvalue and issecretvalue(v)
-end
-
-local function PublicBool(v)
-  if IsSecret(v) then
-    return nil
-  end
-  if v == true then
-    return true
-  end
-  if v == false then
-    return false
-  end
-  return nil
-end
+local IsSecret = CM.Safe.IsSecret
+local PublicBool = CM.Safe.PublicBool
 
 -- SecureGroupHeader roster is party/raid (+ self). Interact NPCs can be assistable.
 local function IsAllyCycleRosterUnit(unit)

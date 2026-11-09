@@ -5,7 +5,7 @@ Pull requests are welcome. This page covers setup and the PR flow; the architect
 ## Setup
 
 1. Clone the repo and link (or copy) `CombatMode/` into your `World of Warcraft/_retail_/Interface/AddOns/` folder.
-2. Install [StyLua](https://github.com/JohnnyMorganz/StyLua), [Selene](https://github.com/Kampfkarren/selene), [PowerShell 7](https://github.com/PowerShell/PowerShell) (`pwsh`), Python 3 and [pre-commit](https://pre-commit.com) (`pip install pre-commit`).
+2. Install [StyLua](https://github.com/JohnnyMorganz/StyLua), [Selene](https://github.com/Kampfkarren/selene), [PowerShell 7](https://github.com/PowerShell/PowerShell) (`pwsh`), Python 3, [pre-commit](https://pre-commit.com) (`pip install pre-commit`) and, for the load test, [LuaJIT](https://luajit.org) (`winget install DEVCOM.LuaJIT`).
 3. `pre-commit install`, then `pwsh ./scripts/dev-check.ps1` (checks the tools and that StyLua / Selene match the versions CI pins).
 4. Optional: the Ketho [WoW API](https://marketplace.visualstudio.com/items?itemName=ketho.wow-api) VS Code extension. It gives Lua completion, and Claude Code's `wow-api` MCP server (`.mcp.json`) reads its annotations.
 
@@ -22,7 +22,7 @@ Pull requests are welcome. This page covers setup and the PR flow; the architect
 - **Title:** [Conventional Commits](https://www.conventionalcommits.org), as in the history: `feat: ...`, `fix(crosshair): ...`, `refactor: ...`.
 - **Body:** the template asks for a summary, the player impact and what you tested in game.
 - **Automatic checks:**
-  - `ci`: StyLua, Selene and `scripts/check-repo.ps1`, which covers changelog sync, TOC vs changelog version, `Embeds.xml` load order, LICENSE copies and TGA compression;
+  - `ci`: StyLua, Selene, `scripts/check-repo.ps1` (changelog sync, TOC vs changelog version, `Embeds.xml` load order, LICENSE copies, TGA compression, Lua file headers), `scripts/check-globals.ps1` (WoW API names) and `scripts/test.ps1` (every file loads against a stubbed client, plus unit specs);
   - `pr-title`: the title format;
   - domain labels.
 

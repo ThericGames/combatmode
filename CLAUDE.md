@@ -4,7 +4,7 @@ Action-combat controls for World of Warcraft: Mouse Look + a reticle replace tab
 
 ## What's where
 
-- `CombatMode/` is the addon. Everything else (docs, `scripts/`, `.github/`) is repo tooling and never ships.
+- `CombatMode/` is the addon. Everything else (docs, `scripts/`, `tests/`, `.github/`) is repo tooling and never ships.
 - Domains: **FreeLook** (Mouse Look, auto cursor unlock, flip camera) · **Crosshair** (reticle, Assist/Interact HUD, Target Lock marker) · **ClickCasting** (mouse/key override bindings, Reticle Targeting "prelines", composed macros) · **AllyCycle** (secure party/raid cycle + HUD) · **RadialMenu** (Radial Menu + Party Wheel) · **Options/Wizard UI** (standalone window, not Blizzard settings).
 - Load order: `CombatMode/Embeds.xml` + `STRUCTURE.md`. Events: `Constants/Gameplay.lua` (`BLIZZARD_EVENTS`) → `Core/Runtime/EventRouter.lua`. Settings: `Constants/DatabaseDefaults.lua` (+ `CM.DB.global` vs `CM.DB.char`) and `UI/Options/Tabs/Tab*.lua`.
 - Ownership/gotchas per module: the Lua file header first, then `.claude/rules/domain-*.md` (auto-loaded when you touch that folder).
@@ -15,19 +15,21 @@ Action-combat controls for World of Warcraft: Mouse Look + a reticle replace tab
 ## Three concepts behind most bugs
 
 1. **Combat lockdown / secure code:** secure frame attributes and bindings can't change in combat; queue and flush on `PLAYER_REGEN_ENABLED`. Secure snippets run in a restricted environment with very few APIs.
-2. **Secret values (Mainline):** never compare/branch on possibly secret units, GUIDs, health, names (`issecretvalue`, `PublicBool`, `PublicNumber`). Details: `.claude/rules/lua-safety.md`.
+2. **Secret values (Mainline):** never compare/branch on possibly secret units, GUIDs, health, names (read them through `CM.Safe`: `IsSecret`, `PublicBool`, `PublicTruthy`, `PublicNumber`). Details: `.claude/rules/lua-safety.md`.
 3. **Reticle Targeting injects a targeting preline into bound actions via `/click`;** macros can't click other macros, so raw macro actions skip it unless composed (`ComposedMacros`).
 
 ## Commands
 
-- `pwsh ./scripts/lint-changed.ps1` — StyLua + Selene + `check-repo` on changed Lua. **Run it twice** (the first run reformats). `scripts/dev-check.ps1` checks the toolchain against the versions CI pins.
-- `pwsh ./scripts/check-repo.ps1 [-Release]` — changelog sync, TOC vs changelog version, `Embeds.xml` load order, LICENSE copies, TGA compression (`-Release`: version newer than the last tag, dated section, compare link).
+- `pwsh ./scripts/lint-changed.ps1` — StyLua + Selene on changed Lua, and `check-repo`, `check-globals` and the load test whenever anything changed. **Run it twice** (the first run reformats). `scripts/dev-check.ps1` checks the toolchain against the versions CI pins.
+- `pwsh ./scripts/check-repo.ps1 [-Release]` — changelog sync, TOC vs changelog version, `Embeds.xml` load order, LICENSE copies, TGA compression, Lua headers (format, sections, 40-line cap), 180 top-level locals, no local copies of the `CM.Safe` readers (`-Release`: version newer than the last tag, dated section, compare link).
+- `pwsh ./scripts/test.ps1` — loads every addon file against a stubbed client, once per client in the TOC, then runs `tests/spec_*.lua`. Needs LuaJIT. A pass doesn't replace an in-game check.
+- `pwsh ./scripts/check-globals.ps1 [-Update]` — fails on a `_G.Name` or `C_X.Y` that Blizzard's source doesn't have. Fix a typo in the code. For a real name, run `-Update`, or add it to `scripts/data/wow-globals-manual.txt` with the reason. A name passes if any client has it, so client-specific calls still need their guards.
 - Edit/Write hook (`scripts/claude-post-edit-hook.ps1`): StyLua on edited addon Lua, and `CHANGELOG.md` edits regenerate `ChangelogData.lua`. Run `pwsh ./scripts/sync-changelog-to-lua.ps1` yourself only when you changed the changelog another way.
 
 ## Branches and CI
 
 - Solo workflow on `ThericGames/combatmode`: commit and push straight to `develop` (no feature branches or PRs; its ruleset only blocks deletion and force pushes). `master` is protected: it only takes the `develop → master` PR, which is a release (`release` skill, when the user says to release), and merging it tags, packages and announces automatically (`release.yml`). Never tag or create GitHub releases by hand.
-- Every PR runs `ci` (pre-commit: StyLua, Selene, `check-repo`; plus `check-repo -Release` into master), a Conventional Commits title check and path labels.
+- Every PR runs `ci` (pre-commit: StyLua, Selene, `check-repo`, `check-globals`, load test; plus `check-repo -Release` into master), a Conventional Commits title check and path labels.
 
 ## Working agreements
 
@@ -41,6 +43,6 @@ Action-combat controls for World of Warcraft: Mouse Look + a reticle replace tab
 
 ## Pitfalls
 
-- Source files are CRLF where they were created on Windows: use the Edit tool (or a script that preserves line endings). Shell heredocs/`sed` mangle backslashes in Lua path strings (`Interface\AddOns\...`).
+- Text files are LF (`.gitattributes`). Use the Edit tool for Lua: shell heredocs/`sed` mangle backslashes in path strings (`Interface\AddOns\...`).
 - Don't name addon-created macros with a `CM_` prefix (`RemoveLegacyMacros` deletes them).
 - Shipped art is TGA under `CombatMode/Assets/`; never `SetAtlas` a client atlas for addon art (use `CM.SetAtlas`). Run `python scripts/art/compress-tga.py` after adding or re-exporting a TGA (lossless RLE, idempotent, verifies pixels).

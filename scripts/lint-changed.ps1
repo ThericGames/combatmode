@@ -1,4 +1,5 @@
-# Runs the pre-commit gate (StyLua, Selene, check-repo) on changed + new addon Lua files.
+# Runs the pre-commit gate (StyLua, Selene, check-repo, check-globals, load test) on changed + new
+# Lua files, or just the last three when something else changed.
 # Run it twice after edits: the first pass reformats.
 param()
 
@@ -27,12 +28,19 @@ if (-not $changed -or $changed.Count -eq 0) {
 }
 
 $luaTargets = $changed | Where-Object {
-    $_ -match '^CombatMode/.+\.lua$'
+    $_ -match '^(CombatMode|tests)/.+\.lua$'
 }
 
 if (-not $luaTargets -or $luaTargets.Count -eq 0) {
-    Write-Host "[PASS] No changed addon Lua files to lint."
-    exit 0
+    # The changelog, TOC, Embeds.xml, LICENSE and the name lists matter without any Lua change too.
+    Write-Host "[INFO] No changed Lua files; running check-repo, check-globals and the load test."
+    pwsh -NoProfile -File (Join-Path $PSScriptRoot "check-repo.ps1")
+    $exitCode = $LASTEXITCODE
+    pwsh -NoProfile -File (Join-Path $PSScriptRoot "check-globals.ps1")
+    if ($LASTEXITCODE -ne 0) { $exitCode = $LASTEXITCODE }
+    pwsh -NoProfile -File (Join-Path $PSScriptRoot "test.ps1") -SkipIfMissing
+    if ($LASTEXITCODE -ne 0) { $exitCode = $LASTEXITCODE }
+    exit $exitCode
 }
 
 Write-Host "[INFO] Running pre-commit on changed Lua files:"

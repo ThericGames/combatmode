@@ -58,29 +58,8 @@ local function HB()
   return HEALTH_BAR
 end
 
-local function IsSecret(v)
-  return v ~= nil and issecretvalue and issecretvalue(v)
-end
-
-local function PublicBool(v)
-  if IsSecret(v) then
-    return nil
-  end
-  if v == true then
-    return true
-  end
-  if v == false then
-    return false
-  end
-  return nil
-end
-
-local function PublicNumber(v, fallback)
-  if v == nil or IsSecret(v) or type(v) ~= "number" then
-    return fallback
-  end
-  return v
-end
+local PublicBool = CM.Safe.PublicBool
+local PublicNumber = CM.Safe.PublicNumber
 
 local function ExtractColorRGBA(color)
   if not color then

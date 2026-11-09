@@ -5,11 +5,11 @@ Folder map and per-domain notes: [`.claude/rules/`](.claude/rules/) (`architectu
 Load order is defined in [`CombatMode/Embeds.xml`](CombatMode/Embeds.xml) (included
 from [`CombatMode/CombatMode.toc`](CombatMode/CombatMode.toc)).
 
-When you move or rename modules, update this file, `Embeds.xml`, the matching `.claude/rules/domain-*.md` note, and touched Lua headers in the same change (see `CLAUDE.md`, "Working agreements").
+When you move or rename modules, update this file, `Embeds.xml`, the matching `.claude/rules/domain-*.md` note, and touched Lua headers in the same change (see `CLAUDE.md`, "Working agreements"). `tests/run.lua` reads `Embeds.xml`, so a new file is in the load test as soon as it's listed there.
 
 ## Load order (scripts)
 
-1. **CombatMode/Core/Runtime/Runtime.lua** — receives the AddOn namespace (`local addonName, CM = ...`), optional `_G.CM` alias, registers `ADDON_LOADED` / `PLAYER_LOGIN` lifecycle, native `CombatModeDB` merge, and slash commands (`/acm`, `/actioncombatmode`).
+1. **CombatMode/Core/Runtime/Runtime.lua** — receives the AddOn namespace (`local addonName, CM = ...`), optional `_G.CM` alias, registers `ADDON_LOADED` / `PLAYER_LOGIN` lifecycle, native `CombatModeDB` merge, and slash commands (`/acm`, `/actioncombatmode`). **Safe.lua** follows at once (`CM.Safe`, the secret-value readers every module aliases).
 2. **CombatMode/Constants/** — constants/data modules initialize `CM.Constants` and must load before feature consumers (`Namespace.lua` first).
    - **CombatMode/Locales/** loads right after `Constants/Namespace.lua`: **Locale.lua** (`CM.L`, English text is the key, missing entries fall back to it), **enUS.lua** (canonical key list), then one file per other client locale (deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW; each returns early unless `GetLocale()` matches). See `.claude/rules/localization.md`.
 3. **CombatMode/Core/Dev/** — developer tools with no production impact when idle:

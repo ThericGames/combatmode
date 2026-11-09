@@ -16,7 +16,7 @@
 --    • UpdatePlayerMenu runs from the throttled CombatMode_OnUpdate tick (out of combat only):
 --      the crosshair candidate is `mouseover` first, then `softinteract`; the first one that
 --      exists decides (an NPC under the crosshair keeps the key on Interact). It must be another
---      player (PublicBool(UnitIsPlayer), not UnitIsUnit "player"); anything secret or unknown
+--      player (PublicTruthy(UnitIsPlayer), not UnitIsUnit "player"); anything secret or unknown
 --      fails closed. The button's `unit` must be a stable token (party/raid, nameplate or
 --      "target"): the menu keeps the id and the crosshair leaves the player once the cursor is
 --      free, so `mouseover` / `softinteract` would break Inspect / Trade. A player with no stable
@@ -57,7 +57,6 @@ local UnregisterStateDriver = _G.UnregisterStateDriver
 
 -- Lua stdlib
 local ipairs = _G.ipairs
-local issecretvalue = _G.issecretvalue
 local math = _G.math
 local pcall = _G.pcall
 local string = _G.string
@@ -79,22 +78,14 @@ local COND_OFF = "off"
 local CANDIDATES = { "mouseover", "softinteract" }
 
 -- Public boolean when not secret; nil when unknown/secret (cannot branch on it).
-local function PublicBool(value)
-  if value == nil then
-    return nil
-  end
-  if issecretvalue and issecretvalue(value) then
-    return nil
-  end
-  return value and true or false
-end
+local PublicTruthy = CM.Safe.PublicTruthy
 
 local function Exists(unit)
-  return PublicBool(UnitExists(unit)) == true
+  return PublicTruthy(UnitExists(unit)) == true
 end
 
 local function SameUnit(a, b)
-  return Exists(a) and Exists(b) and PublicBool(UnitIsUnit(a, b)) == true
+  return Exists(a) and Exists(b) and PublicTruthy(UnitIsUnit(a, b)) == true
 end
 
 -- The button must stay shown (a hidden button makes the click do nothing) and off the mouse so it
@@ -178,7 +169,8 @@ local function GetPlayerUnderCrosshair()
   for _, unit in ipairs(CANDIDATES) do
     if Exists(unit) then
       if
-        PublicBool(UnitIsPlayer(unit)) == true and PublicBool(UnitIsUnit(unit, "player")) == false
+        PublicTruthy(UnitIsPlayer(unit)) == true
+        and PublicTruthy(UnitIsUnit(unit, "player")) == false
       then
         return unit
       end

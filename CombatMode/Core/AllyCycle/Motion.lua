@@ -19,7 +19,6 @@ local _G = _G
 -- WoW API
 
 -- Lua stdlib
-local issecretvalue = _G.issecretvalue
 local math = _G.math
 local type = _G.type
 
@@ -53,16 +52,8 @@ local cycleArrowTravelSign = 0
 local ARROW_UP = "housing-floor-arrow-up-default"
 local ARROW_DOWN = "housing-floor-arrow-down-default"
 
-local function IsSecret(v)
-  return v ~= nil and issecretvalue and issecretvalue(v)
-end
-
-local function PublicNumber(v, fallback)
-  if v == nil or IsSecret(v) or type(v) ~= "number" then
-    return fallback
-  end
-  return v
-end
+local IsSecret = CM.Safe.IsSecret
+local PublicNumber = CM.Safe.PublicNumber
 
 local function HostCluster()
   return getCluster and getCluster() or nil

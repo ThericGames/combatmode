@@ -43,6 +43,8 @@ $allToolsOk = $true
 $allToolsOk = (Test-Tool -CommandName "stylua") -and $allToolsOk
 $allToolsOk = (Test-Tool -CommandName "selene") -and $allToolsOk
 $allToolsOk = (Test-Tool -CommandName "pre-commit") -and $allToolsOk
+if (Get-Command luajit -ErrorAction SilentlyContinue) { Write-Host "[PASS] luajit found (load test)" }
+else { Write-Host "[WARN] luajit not found; the load test is skipped (winget install DEVCOM.LuaJIT)" }
 
 Write-Host ""
 Write-Host "== Versions pinned in CI (.github/workflows/ci.yml) =="

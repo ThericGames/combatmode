@@ -27,13 +27,7 @@
 --      Mouse Look keybind is ignored while force lock is true; a stale FreeLookOverride
 --      is dropped when force lock wins, and the tap poll never clears chrome or sheathes
 --      while Mouse Look is actually on.
---    • SheathWeaponsWithMouselook: unsheath on intentional Mouse Look; sheath on
---      tap unlock (poll detects binding release) and Auto Cursor Unlock. Hold
---      never sheaths. Ground targeting and OPie keep weapons drawn.
---      Sheath requests are debounced (~1.5s) so rapid Mouse Look toggle does not
---      flash sheath/unsheath; unsheath and re-lock cancel any pending sheath.
---    • OPie: when a ring is visible, unlock path may free centering; Rematch after
---      the ring closes re-bounces freelook if still desired.
+--    • Sheathing with Mouse Look and the OPie rematch: see .claude/rules/domain-freelook-camera.md (FreeLookController.lua notes).
 --    • Mouse Look camera chrome (shoulder + vignette): active while locked and through
 --      temp unlock; cleared only on permanent unlock via IsMouseLookCameraChromeActive.
 --      Shoulder tweens with Vignette over MouseLookCameraFadeDuration. Dynamic Pitch is

@@ -1,0 +1,42 @@
+# Names check-globals.ps1 accepts that Blizzard's UI source can't confirm. Say why for each group.
+
+# This addon's own globals: namespace alias, SavedVariables, keybind functions, named frames, slash command.
+CM
+CombatModeDB
+CombatMode_AllyCycleDown
+CombatMode_AllyCycleUp
+CombatMode_CursorModeKey
+CombatMode_CycleFocusNext
+CombatMode_CycleFocusPrevious
+CombatMode_FlipCameraKey
+CombatMode_OnEvent
+CombatMode_OnUpdate
+CombatMode_ResetMouseLook
+CombatMode_SwapShoulder
+CombatMode_ToggleFocusTarget
+CombatModeAllyCycleHUD
+CombatModeCrosshairFrame
+CombatModeFrame
+CombatModePartyWheelCentre
+CombatModeRadialWheel
+CombatModeTargetingMacroPrelinesEditor
+SLASH_COMBATMODE1
+SLASH_COMBATMODE2
+
+# Another addon's API, read only when that addon is loaded.
+SteadyCamAPI
+
+# Engine functions no Blizzard Lua happens to call; confirmed with the wow-api MCP.
+GetCameraZoom
+GetMacroBody
+GetMacroIndexByName
+IsMouselooking
+issecurevariable
+MouselookStart
+MouselookStop
+SetMouselookOverrideBinding
+
+# Optional lookups behind a nil or type guard, with a fallback. No current client defines them.
+C_SpecializationInfo.GetSpecializationRole
+DEFAULT_ACTION_BUTTON_NAMES
+NUM_MOUSE_BUTTONS

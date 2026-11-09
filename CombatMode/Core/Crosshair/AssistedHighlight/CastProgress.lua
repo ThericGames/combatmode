@@ -13,6 +13,7 @@
 --    • CastGuidsCompatible skips == when either GUID is secret; pending cancel uses a
 --      public token (not GUID ~=) so deferred STOP cannot taint-error.
 --    • Cast-break hostile flash reads CM.GetCrosshairReactionColor at flash time.
+--  Does not: Choose the suggested spell or own the press and pulse feedback (Feedback.lua).
 --  Related: Core/Crosshair/AssistedHighlight/Feedback.lua,
 --  Core/Runtime/EventRouter.lua, Constants/Assets.lua, Constants/Gameplay.lua
 ---------------------------------------------------------------------------------------

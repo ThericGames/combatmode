@@ -30,7 +30,7 @@ Returned tables can be secret too (e.g. aura data): `canaccesstable(t)` before i
 
 Instead:
 - `issecretvalue(v)` before any branch/compare; treat secret as unknown and fail soft (base tint, skip filter, placeholder `"…"`).
-- Booleans: `PublicBool` pattern (secret → `nil`; branch only on public `true`/`false`). Numbers: `PublicNumber(v, fallback)` before compare/arithmetic.
+- Booleans: `PublicBool` (secret → `nil`; branch only on public `true`/`false`), or `PublicTruthy` for APIs that answer `1`/`nil` on older clients. Numbers: `PublicNumber(v, fallback)` before compare/arithmetic. These and `IsSecret` live in `Core/Runtime/Safe.lua`: alias them (`local PublicBool = CM.Safe.PublicBool`), never redefine them (`check-repo` fails on a local copy).
 - Identity: `UnitExists`, `UnitIsUnit`, plate/frame identity — not GUID equality.
 - Cast GUID match: if either side is secret treat as compatible for the single in-flight cast; deferred cancel uses a public generation token.
 - Health/dead styling: `UnitHealthPercent` + color curves / `C_CurveUtil.EvaluateColorFromBoolean`; never compare raw secret health fractions.

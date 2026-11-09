@@ -23,7 +23,6 @@
 --      click adds it, right click / Esc cancels. Same approach as WeakAuras' frame chooser: it
 --      watches the mouse buttons rather than covering the screen, so the clicked frame also
 --      receives the click.
-
 --  Does not: Evaluate visibility for the unlock itself (Core/FreeLook/AutoCursorUnlock.lua).
 --  Related: UI/Options/Widgets.lua (UI.MakePillMultiSelect), UI/Options/MountMultiSelect.lua,
 --  Constants/FrameWatch.lua, UI/Options/Tabs/TabAutoCursorUnlock.lua

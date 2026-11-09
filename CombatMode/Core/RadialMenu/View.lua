@@ -28,12 +28,7 @@
 --      not) and steps; public health is plain math and eases toward each reading. Repainted on
 --      that unit's UNIT_HEALTH / UNIT_MAXHEALTH (view-local events while the wheel is open) and
 --      every HEALTH_INTERVAL (range, dead, offline).
---    • Ally HUD parity: out-of-range members dimmed (AllyCycleTarget.GetRangeAlpha), the low-HP
---      pulsing glow (AllyCycleHealthBar.GetGlowColor / GlowPulseAlpha; alpha may be secret),
---      offline members desaturated and unselectable. The aimed wedge takes the member's class colour.
---    • The Party Wheel centre is a circle slot with the spell's icon + cooldown and the Assist
---      HUD's breathing glow and proc FlipBook (AssistedHighlightMotion), swapped (SetCenterAim) for
---      your own unit plate while the cursor rests there (it casts, so no cancel X).
+--    • Ally HUD parity and the Party Wheel centre: see .claude/rules/domain-radial-menu.md (View.lua notes).
 --  Does not: Decide what a slice does, store wheels, or bind keys (Secure.lua / Data.lua).
 --  Related: Core/RadialMenu/{Data,Secure,PartyWheel,RadialMenu}.lua,
 --  Core/AllyCycle/{HealthBar,Target}.lua,
