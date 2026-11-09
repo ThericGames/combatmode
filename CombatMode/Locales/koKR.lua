@@ -433,6 +433,37 @@ L["Scales the size of the Ally HUD."] = "아군 HUD의 크기를 조절합니다
 L["Distance between the Ally HUD and the crosshair."] =
   "아군 HUD와 조준점 사이의 거리입니다."
 
+-- Healing Mode: keybind label, notices and options tab (HealingMode.lua, TabHealingMode.lua)
+L["Healing Mode"] = "치유 모드"
+L["healing mode keybinding"] = "치유 모드 단축키"
+L["Healing Mode on"] = "치유 모드 켜짐"
+L["Healing Mode off"] = "치유 모드 꺼짐"
+L["Healing Mode on. Nameplates switch after combat."] = "치유 모드 켜짐. 이름표는 전투가 끝난 뒤 전환됩니다."
+L["Healing Mode off. Nameplates switch after combat."] = "치유 모드 꺼짐. 이름표는 전투가 끝난 뒤 전환됩니다."
+L["HEALING MODE"] = "치유 모드"
+L["A second set of click casts for supporting your group. While Healing Mode is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair (never to yourself by accident), your main action bar shows a healing page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
+  "파티를 지원하기 위한 두 번째 클릭 시전 세트입니다. 치유 모드가 켜져 있는 동안 클릭 시전 버튼의 이로운 주문은 조준점 아래의 우호적 대상에게만 시전되고(실수로 자신에게 시전되지 않음), 주 행동 단축바는 치유 페이지를 표시하며, 적 이름표 대신 우호적 이름표가 표시됩니다. 해로운 주문은 계속 적을 대상으로 합니다."
+L["Healing Mode Keybind"] = "치유 모드 단축키"
+L["Turns Healing Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
+  "치유 모드를 켜고 끕니다. 전투 중에도 작동합니다. 단축키를 지정하지 않으면 기능이 비활성화됩니다."
+L["Key Behavior"] = "키 동작 방식"
+L["Toggle: press to turn Healing Mode on, press again to turn it off. Hold: Healing Mode stays on only while the key is held."] =
+  "전환: 누르면 치유 모드가 켜지고 다시 누르면 꺼집니다. 누르고 있기: 키를 누르고 있는 동안에만 치유 모드가 유지됩니다."
+L["Hold"] = "누르고 있기"
+L["Healing Bar Page"] = "치유 단축바 페이지"
+L["The main action bar page shown while Healing Mode is on. Put your healing and support abilities there. Leaving Healing Mode returns to page 1."] =
+  "치유 모드가 켜져 있는 동안 표시되는 주 행동 단축바 페이지입니다. 치유 및 지원 능력을 그곳에 배치하세요. 치유 모드를 끄면 1페이지로 돌아갑니다."
+L["Don't swap"] = "전환 안 함"
+L["Page %d"] = "%d페이지"
+L["Self-Cast Modifier"] = "자신에게 시전 보조키"
+L["Hold this key while clicking to cast the helpful spell on yourself instead. While Healing Mode is on, this replaces the click-cast actions you set for that modifier."] =
+  "클릭할 때 이 키를 누르고 있으면 이로운 주문을 자신에게 시전합니다. 치유 모드가 켜져 있는 동안에는 해당 보조키에 설정한 클릭 시전 동작을 대체합니다."
+L["None"] = "없음"
+L["Swap Nameplates"] = "이름표 전환"
+L["Hide enemy nameplates and show friendly player nameplates while Healing Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
+  "치유 모드가 켜져 있는 동안 적 이름표를 숨기고 우호적 플레이어 이름표를 표시한 다음, 원래 설정으로 되돌립니다. 게임에서는 전투 중이 아닐 때만 이름표를 바꿀 수 있으므로 전투 중에 전환하면 전투가 끝날 때 적용됩니다."
+L["Requires Reticle Targeting"] = "조준선 대상 지정 필요"
+
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = "자동 해제"
 L["AUTO UNLOCK"] = "자동 해제"

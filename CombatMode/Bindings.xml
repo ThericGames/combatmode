@@ -21,6 +21,9 @@
 	<Binding name="Combat Mode - Ally Cycle Previous" description="Cycle to the previous group member" category="|A:::|a|TInterface\Addons\CombatMode\Assets\branding\cmtitle:26:55|t">
 		CombatMode_AllyCycleDown()
 	</Binding>
+	<Binding name="Combat Mode - Healing Mode" description="Switch your click casts to healing the ally under the crosshair (tap or hold, set in the Healing Mode options)" header="Healing Mode" category="|A:::|a|TInterface\Addons\CombatMode\Assets\branding\cmtitle:26:55|t" runOnUp="true">
+		-- Handled by a secure override click (Core/ClickCasting/HealingMode.lua), which wins over this body.
+	</Binding>
 	<Binding name="Combat Mode - Radial Menu" description="Hold to open your radial menu, flick toward a slice and release to use it" header="Radial Menu" category="|A:::|a|TInterface\Addons\CombatMode\Assets\branding\cmtitle:26:55|t" runOnUp="true">
 		-- Handled by a secure override click (Core/RadialMenu/Secure.lua), which wins over this body.
 	</Binding>

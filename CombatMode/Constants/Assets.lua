@@ -57,6 +57,7 @@ local BINDING_DISPLAY_NAMES = {
   { id = "Cycle Focus Next", text = L["Cycle Focus Next"] },
   { id = "Cycle Focus Previous", text = L["Cycle Focus Previous"] },
   { id = "Radial Menu", text = L["Radial Menu"] },
+  { id = "Healing Mode", text = L["Healing Mode"] },
 }
 for _, entry in ipairs(BINDING_DISPLAY_NAMES) do
   _G["BINDING_NAME_Combat Mode - " .. entry.id] = "Action Combat Mode - " .. entry.text
@@ -66,6 +67,7 @@ end
 _G["BINDING_HEADER_Action Combat Mode - Mouse Look"] = "Action Combat Mode - " .. L["Mouse Look"]
 _G["BINDING_HEADER_Ally Cycle"] = L["Ally Cycle"]
 _G["BINDING_HEADER_Radial Menu"] = L["Radial Menu"]
+_G["BINDING_HEADER_Healing Mode"] = L["Healing Mode"]
 _G["BINDING_HEADER_Reticle Targeting"] = L["Reticle Targeting"]
 
 CM.Constants.BasePrintMsg = CM.METADATA["TITLE"]

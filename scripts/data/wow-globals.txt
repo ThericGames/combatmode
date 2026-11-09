@@ -14,6 +14,7 @@ C_ActionBar.HasOverrideActionBar
 C_ActionBar.HasTempShapeshiftActionBar
 C_ActionBar.HasVehicleActionBar
 C_ActionBar.IsAssistedCombatAction
+C_ActionBar.SetActionBarPage
 C_AddOnProfiler
 C_AddOnProfiler.AddMeasuredCallEvent
 C_AddOnProfiler.GetAddOnMetric
@@ -37,6 +38,7 @@ C_CurveUtil.EvaluateColorFromBoolean
 C_CVar
 C_CVar.GetCVar
 C_CVar.GetCVarDefault
+C_CVar.GetCVarInfo
 C_CVar.SetCVar
 C_HouseEditor
 C_HouseEditor.IsHouseEditorActive
@@ -96,6 +98,7 @@ CameraZoomIn
 CameraZoomOut
 CANCEL
 CanLootUnit
+ChangeActionBarPage
 CLASS_ICON_TCOORDS
 ClearCursor
 ClearOverrideBindings
@@ -210,6 +213,7 @@ RegisterStateDriver
 ReloadUI
 ResetCursor
 SaveBindings
+SecureHandlerExecute
 SecureHandlerSetFrameRef
 SecureHandlerWrapScript
 select
@@ -237,6 +241,7 @@ ToggleSheath
 tonumber
 tostring
 type
+UIErrorsFrame
 UIParent
 UISpecialFrames
 UnitAffectingCombat

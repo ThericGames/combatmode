@@ -105,6 +105,10 @@ local function RunClickCastBindingRefresh()
     -- Binding/attribute writes can echo UPDATE_BINDINGS and ACTIONBAR_SLOT_CHANGED.
     SuppressSelfBindingEvents(0.5)
     DebugPrintClickCastRefreshReason()
+    -- Before the macros: they are built in two versions only while the Healing Mode key is bound.
+    if CM.ApplyHealingModeBinding and clickCastRefreshReason == "UPDATE_BINDINGS" then
+      CM.ApplyHealingModeBinding()
+    end
     CM.RefreshClickCastMacros()
     if
       CM.ApplyToggleFocusTargetBinding
@@ -192,6 +196,10 @@ local function HandleEventByCategory(category, event, ...)
           CM.OnAllyCycleCombatEnd()
         end
         CM.FlushDeferredBindingChanges()
+        -- Healing Mode first: a key rebound in combat changes which macros the refresh builds.
+        if CM.FlushHealingMode then
+          CM.FlushHealingMode()
+        end
         if CM.FlushPendingClickCastRefresh then
           CM.FlushPendingClickCastRefresh()
         end

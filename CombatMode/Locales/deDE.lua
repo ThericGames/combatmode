@@ -432,6 +432,39 @@ L["Scales the size of the Ally HUD."] = "Skaliert die Größe des Verbündeten-H
 L["Distance between the Ally HUD and the crosshair."] =
   "Abstand zwischen Verbündeten-HUD und Fadenkreuz."
 
+-- Healing Mode: keybind label, notices and options tab (HealingMode.lua, TabHealingMode.lua)
+L["Healing Mode"] = "Heilmodus"
+L["healing mode keybinding"] = "Belegung für Heilmodus"
+L["Healing Mode on"] = "Heilmodus an"
+L["Healing Mode off"] = "Heilmodus aus"
+L["Healing Mode on. Nameplates switch after combat."] =
+  "Heilmodus an. Namensplaketten wechseln nach dem Kampf."
+L["Healing Mode off. Nameplates switch after combat."] =
+  "Heilmodus aus. Namensplaketten wechseln nach dem Kampf."
+L["HEALING MODE"] = "HEILMODUS"
+L["A second set of click casts for supporting your group. While Healing Mode is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair (never to yourself by accident), your main action bar shows a healing page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
+  "Ein zweiter Satz Klick-Zauber zur Unterstützung deiner Gruppe. Solange der Heilmodus an ist, gehen hilfreiche Zauber auf deinen Klick-Zauber-Tasten nur auf die freundliche Einheit unter dem Fadenkreuz (nie versehentlich auf dich selbst), deine Hauptaktionsleiste zeigt eine Heilseite und freundliche Namensplaketten ersetzen die feindlichen. Schädliche Zauber zielen weiterhin auf Gegner."
+L["Healing Mode Keybind"] = "Tastenbelegung für Heilmodus"
+L["Turns Healing Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
+  "Schaltet den Heilmodus an und aus. Funktioniert im Kampf. Ohne Belegung ist die Funktion deaktiviert."
+L["Key Behavior"] = "Tastenverhalten"
+L["Toggle: press to turn Healing Mode on, press again to turn it off. Hold: Healing Mode stays on only while the key is held."] =
+  "Umschalten: einmal drücken schaltet den Heilmodus an, erneut drücken schaltet ihn aus. Halten: Der Heilmodus bleibt nur an, solange die Taste gehalten wird."
+L["Hold"] = "Halten"
+L["Healing Bar Page"] = "Heilleistenseite"
+L["The main action bar page shown while Healing Mode is on. Put your healing and support abilities there. Leaving Healing Mode returns to page 1."] =
+  "Die Seite der Hauptaktionsleiste, die im Heilmodus angezeigt wird. Lege dort deine Heil- und Unterstützungsfähigkeiten ab. Beim Verlassen des Heilmodus geht es zurück zu Seite 1."
+L["Don't swap"] = "Nicht wechseln"
+L["Page %d"] = "Seite %d"
+L["Self-Cast Modifier"] = "Selbstzauber-Modifikator"
+L["Hold this key while clicking to cast the helpful spell on yourself instead. While Healing Mode is on, this replaces the click-cast actions you set for that modifier."] =
+  "Halte diese Taste beim Klicken, um den hilfreichen Zauber stattdessen auf dich selbst zu wirken. Solange der Heilmodus an ist, ersetzt das die Klick-Zauber-Aktionen, die du für diesen Modifikator festgelegt hast."
+L["None"] = "Keiner"
+L["Swap Nameplates"] = "Namensplaketten tauschen"
+L["Hide enemy nameplates and show friendly player nameplates while Healing Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
+  "Blendet feindliche Namensplaketten aus und zeigt die freundlicher Spieler, solange der Heilmodus an ist, und stellt danach deine eigenen Einstellungen wieder her. Das Spiel erlaubt Änderungen an Namensplaketten nur außerhalb des Kampfes, daher wird ein Wechsel im Kampf erst nach Kampfende angewendet."
+L["Requires Reticle Targeting"] = "Erfordert Fadenkreuz-Zielerfassung"
+
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = "Auto-Entsperren"
 L["AUTO UNLOCK"] = "AUTO-ENTSPERREN"

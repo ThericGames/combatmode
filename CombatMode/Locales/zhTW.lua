@@ -416,6 +416,37 @@ L["Where the Ally HUD sits relative to the crosshair."] = "友方 HUD 相對於�
 L["Scales the size of the Ally HUD."] = "縮放友方 HUD 的大小。"
 L["Distance between the Ally HUD and the crosshair."] = "友方 HUD 與準星之間的距離。"
 
+-- Healing Mode: keybind label, notices and options tab (HealingMode.lua, TabHealingMode.lua)
+L["Healing Mode"] = "治療模式"
+L["healing mode keybinding"] = "治療模式按鍵綁定"
+L["Healing Mode on"] = "治療模式已開啟"
+L["Healing Mode off"] = "治療模式已關閉"
+L["Healing Mode on. Nameplates switch after combat."] = "治療模式已開啟。名條將在戰鬥結束後切換。"
+L["Healing Mode off. Nameplates switch after combat."] = "治療模式已關閉。名條將在戰鬥結束後切換。"
+L["HEALING MODE"] = "治療模式"
+L["A second set of click casts for supporting your group. While Healing Mode is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair (never to yourself by accident), your main action bar shows a healing page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
+  "用於支援隊伍的第二組點擊施法。治療模式開啟時，點擊施法按鍵上的有益法術只會施放給準星下的友方單位（絕不會誤放給自己），主快捷列顯示治療頁，友方名條取代敵方名條。有害法術仍然以敵人為目標。"
+L["Healing Mode Keybind"] = "治療模式按鍵"
+L["Turns Healing Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
+  "開啟或關閉治療模式。戰鬥中可用。不綁定按鍵即可停用此功能。"
+L["Key Behavior"] = "按鍵行為"
+L["Toggle: press to turn Healing Mode on, press again to turn it off. Hold: Healing Mode stays on only while the key is held."] =
+  "切換：按一下開啟治療模式，再按一下關閉。按住：僅在按住按鍵時維持治療模式。"
+L["Hold"] = "按住"
+L["Healing Bar Page"] = "治療快捷列頁"
+L["The main action bar page shown while Healing Mode is on. Put your healing and support abilities there. Leaving Healing Mode returns to page 1."] =
+  "治療模式開啟時顯示的主快捷列頁。把你的治療和輔助技能放在那裡。離開治療模式會回到第 1 頁。"
+L["Don't swap"] = "不切換"
+L["Page %d"] = "第 %d 頁"
+L["Self-Cast Modifier"] = "自我施法輔助鍵"
+L["Hold this key while clicking to cast the helpful spell on yourself instead. While Healing Mode is on, this replaces the click-cast actions you set for that modifier."] =
+  "點擊時按住此鍵可將有益法術施放給自己。治療模式開啟時，它會取代你為該輔助鍵設定的點擊施法動作。"
+L["None"] = "無"
+L["Swap Nameplates"] = "切換名條"
+L["Hide enemy nameplates and show friendly player nameplates while Healing Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
+  "治療模式開啟時隱藏敵方名條並顯示友方玩家名條，之後恢復你自己的設定。遊戲只允許在非戰鬥狀態下變更名條，因此在戰鬥中切換會在戰鬥結束後生效。"
+L["Requires Reticle Targeting"] = "需要準星瞄準"
+
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = "自動解鎖"
 L["AUTO UNLOCK"] = "自動解鎖"

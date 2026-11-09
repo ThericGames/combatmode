@@ -21,6 +21,8 @@
 --      forces MS off while focus+option active unless Motion Sickness Protection).
 --    • ConfigStickyCrosshair: Blizzard-reset helper for Uninstall only.
 --    • SetCursorFreelookCenteringCVar + SetCursorCenteredYPos — FreeLook bounce + Y sync.
+--    • SyncHealingModeNameplates — Healing Mode's enemy → friendly nameplate swap; the player's
+--      values wait in global.healingModeSavedNameplates until the mode ends (or Uninstall).
 --  Does not: Own SoftTarget UI widgets or freelook state machine.
 --  Related: Constants/CVars.lua, Constants/DatabaseDefaults.lua,
 --  Core/FreeLook/FreeLookController.lua, Core/Crosshair/Crosshair.lua,
@@ -158,6 +160,8 @@ function CM.RestorePriorCVars()
   restoringCVars = true
   -- A pending speed dip must not put its saved speeds back over the restored snapshot.
   cameraSpeedDipPending = false
+  -- Nameplates Healing Mode swapped are not in the snapshot; put the player's own back.
+  CM.SyncHealingModeNameplates(true)
 
   if SnapshotIsPopulated(snap) then
     for name, value in pairs(snap) do
@@ -1192,6 +1196,78 @@ function CM.ApplyMinCameraZoom()
   end
   minZoomFrame:SetShown(active)
   EnforceMinCameraZoom()
+end
+
+---------------------------------------------------------------------------------------
+-- Healing Mode nameplates
+---------------------------------------------------------------------------------------
+local HEALING_ENEMY_PLATES = "nameplateShowEnemies"
+-- nameplateShowFriendlyPlayers on Mainline and Forever, nameplateShowFriends on older Classic.
+local HEALING_FRIENDLY_PLATES = { "nameplateShowFriendlyPlayers", "nameplateShowFriends" }
+
+local function FriendlyNameplateCVar()
+  for _, name in ipairs(HEALING_FRIENDLY_PLATES) do
+    if GetCVar(name) ~= nil then
+      return name
+    end
+  end
+  return nil
+end
+
+-- A combat-protected CVar (isSecure, 6th return of GetCVarInfo) raises ADDON_ACTION_BLOCKED when
+-- an addon writes it in combat. Unknown counts as protected.
+local function IsCVarLockedNow(name)
+  if not InCombatLockdown() then
+    return false
+  end
+  local GetCVarInfo = _G.C_CVar.GetCVarInfo
+  if not GetCVarInfo then
+    return true
+  end
+  local ok, _, _, _, _, _, isSecure = pcall(GetCVarInfo, name)
+  return not ok or isSecure ~= false
+end
+
+--- Brings the nameplate CVars in line with Healing Mode (Core/ClickCasting/HealingMode.lua).
+--- Mode on (and char.healingModeNameplates): remember the player's values, hide enemy nameplates,
+--- show friendly player ones. Mode off, or `forceRestore` (Uninstall): put the remembered values
+--- back. Returns false when the CVars are protected right now (combat); call again after combat.
+function CM.SyncHealingModeNameplates(forceRestore)
+  local globalDB = CM.DB and CM.DB.global
+  local char = CM.DB and CM.DB.char
+  if not globalDB or not char then
+    return true
+  end
+  local want = not forceRestore
+    and CM.DbBool(char.healingModeNameplates, true)
+    and CM.IsHealingModeActive ~= nil
+    and CM.IsHealingModeActive()
+  local saved = globalDB.healingModeSavedNameplates
+  if type(saved) ~= "table" then
+    saved = nil
+  end
+  if (want and saved) or (not want and not saved) then
+    return true
+  end
+  local friendly = FriendlyNameplateCVar()
+  if IsCVarLockedNow(HEALING_ENEMY_PLATES) or (friendly and IsCVarLockedNow(friendly)) then
+    return false
+  end
+  if want then
+    saved = { [HEALING_ENEMY_PLATES] = GetCVar(HEALING_ENEMY_PLATES) }
+    SetCVar(HEALING_ENEMY_PLATES, "0")
+    if friendly then
+      saved[friendly] = GetCVar(friendly)
+      SetCVar(friendly, "1")
+    end
+    globalDB.healingModeSavedNameplates = saved
+  elseif saved then
+    for name, value in pairs(saved) do
+      SetCVar(name, value)
+    end
+    globalDB.healingModeSavedNameplates = nil
+  end
+  return true
 end
 
 --- Restore the player's pre-Combat Mode CVars (snapshot preferred; Blizzard tables fallback).

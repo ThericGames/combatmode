@@ -6,7 +6,8 @@
 --  Ally Cycle restore post-line, /click bar button or /cast [@cursor] for ground spells,
 --  and membership tests for cast-at-cursor / exclude lists (spell IDs).
 --  Architecture / how it works:
---    • BuildClickCastMacroText(bindingValue) — no-op text when reticleTargeting off.
+--    • BuildClickCastMacroText(bindingValue, opts) — nil when reticleTargeting is off; opts =
+--      Healing Mode bar page + friendly-only preline for helpful spells (HealingMode.lua).
 --    • Default prelines clear dead focus + dead hostile hard target (friendly corpses
 --      kept for res), then /tar (any/enemy + autoLockAny/autoLockEnemy). Overrides from
 --      global.targetingMacroPreline*Override keys.
@@ -35,7 +36,7 @@
 --  Core/ClickCasting/ComposedMacros.lua, UI/Editors/TargetingMacroPrelinesEditor.lua,
 --  UI/Options/Tabs/TabReticleTargeting.lua, UI/Options/SpellMultiSelect.lua,
 --  Constants/DatabaseDefaults.lua, Constants/Gameplay.lua,
---  Core/ClickCasting/AddonActionBarResolver.lua
+--  Core/ClickCasting/{AddonActionBarResolver,HealingMode}.lua
 ---------------------------------------------------------------------------------------
 local _, CM = ...
 local _G = _G
@@ -407,6 +408,25 @@ local function ComputeActionButtonSlot(buttonNum)
   return id + ((page - 1) * buttons)
 end
 
+-- ACTIONBUTTON index → action slot on a given bar page, whichever page is showing now (Healing
+-- Mode builds macros for the page it will swap to). Blizzard only shows the bonus bar (forms,
+-- stealth) on page 1 (ActionBarController_UpdateAll).
+local function ComputeActionButtonSlotOnPage(buttonNum, page)
+  local id = tonumber(buttonNum)
+  local buttons = tonumber(_G.NUM_ACTIONBAR_BUTTONS) or 12
+  if not id or id < 1 or id > buttons then
+    return nil
+  end
+  if page == 1 then
+    local bonusOffset = GetBonusBarOffsetSafe()
+    if HasBonusActionBarSafe() and bonusOffset ~= 0 then
+      local pages = tonumber(_G.NUM_ACTIONBAR_PAGES) or 6
+      return id + ((pages + bonusOffset - 1) * buttons)
+    end
+  end
+  return id + ((page - 1) * buttons)
+end
+
 local function ReadFrameActionId(frameName)
   if not frameName then
     return nil
@@ -432,16 +452,21 @@ end
 --- Currently displayed action for ACTIONBUTTON / MULTIACTIONBAR* bindings.
 --- Prefers the live button action attribute; rejects stale override slots (121–132)
 --- after dismount; falls back to page/bonus math or ResolveClickCastBindingToActionSlot.
-function CM.GetDisplayedActionSlotInfo(bindingValue)
+--- `page` (optional, ACTIONBUTTON only): the action on that bar page instead of the shown one.
+function CM.GetDisplayedActionSlotInfo(bindingValue, page)
   if not bindingValue or bindingValue == "" then
     return nil
   end
 
-  local frameName = CM.GetEffectiveBarButtonFrameName(bindingValue)
-  local action = ReadFrameActionId(frameName)
+  local buttonNum = bindingValue:match("^ACTIONBUTTON(%d+)$")
+  local action
+  if page and buttonNum then
+    action = ComputeActionButtonSlotOnPage(buttonNum, page)
+  else
+    action = ReadFrameActionId(CM.GetEffectiveBarButtonFrameName(bindingValue))
+  end
 
   if not action then
-    local buttonNum = bindingValue:match("^ACTIONBUTTON(%d+)$")
     if buttonNum then
       action = ComputeActionButtonSlot(buttonNum)
     elseif CM.ResolveClickCastBindingToActionSlot then
@@ -807,12 +832,37 @@ function CM.GetActiveTargetingPreline()
   return GetOverride("targetingMacroPrelineAnyOverride") or CLICKCAST_PRE_LINE_ANY
 end
 
-local function GetClickCastPreLine(spellId, routeOverride)
+-- Healing Mode (Core/ClickCasting/HealingMode.lua): a helpful spell on a click-cast button only
+-- goes to the friendly unit under the crosshair. Nothing friendly there = /stopmacro, so it never falls
+-- back to the hard target or to yourself (auto self-cast). `help` is true for a dead ally, so a
+-- resurrection still works. The optional modifier targets you instead; "self" is that same cast
+-- for the modifier's own click-cast button (SHIFT-BUTTON1 is a different key from BUTTON1).
+local function HealingModePreLine(opts)
+  if opts.healing == "self" then
+    return "/tar player"
+  end
+  local mod = opts.selfModifier
+  if mod then
+    return "/stopmacro [nomod:"
+      .. mod
+      .. ",@mouseover,nohelp]\n/tar [mod:"
+      .. mod
+      .. ",@player][@mouseover]"
+  end
+  return "/stopmacro [@mouseover,nohelp]\n/tar [@mouseover]"
+end
+
+-- Second return: true when the Healing Mode preline was used.
+local function GetClickCastPreLine(spellId, routeOverride, opts)
   if not CM.DB.char.reticleTargeting then
     return nil
   end
 
   local route = routeOverride or GetAllyCycleSpellRoute(spellId)
+
+  if route == "help" and opts and opts.healing then
+    return HealingModePreLine(opts), true
+  end
 
   -- Helpful: Reticle Targeting friendly-preserving path (not Ally Cycle–gated).
   if route == "help" then
@@ -845,7 +895,11 @@ local function GetClickCastPostLine(spellId, routeOverride)
   return GetAllyCycleHarmPostLine()
 end
 
-function CM.BuildClickCastMacroText(bindingValue)
+--- `opts` (optional, Healing Mode): `page` classifies an ACTIONBUTTON by that bar page instead of
+--- the shown one; `healing` ("mouseover" | "self") gives helpful spells the Healing Mode preline,
+--- with `selfModifier` ("shift" | "ctrl" | "alt") as its self-cast key. Second return: true when
+--- that preline was used.
+function CM.BuildClickCastMacroText(bindingValue, opts)
   -- When reticle targeting is off, no macro wrapping (no pre-line, no castAtCursor, no excludeFromTargeting).
   if not CM.DB.char.reticleTargeting then
     return nil
@@ -889,7 +943,7 @@ function CM.BuildClickCastMacroText(bindingValue)
 
   -- Classify from the currently displayed slot (paged / bonus / override-aware).
   -- Macros: no pre-line so the macro runs as written (e.g. [mod:shift], [@cursor]).
-  local atype, id, slot = CM.GetDisplayedActionSlotInfo(bindingValue)
+  local atype, id, slot = CM.GetDisplayedActionSlotInfo(bindingValue, opts and opts.page)
   local spellIdForPreline
   -- Single-Button Assistant: its slot spell is whatever is suggested right now, so it is never
   -- classified by spell. It gets the harmful targeting route and skips the spell-based exclude /
@@ -952,7 +1006,7 @@ function CM.BuildClickCastMacroText(bindingValue)
   end
 
   local routeOverride = isAssistedButton and "harm" or nil
-  local pre = GetClickCastPreLine(spellIdForPreline, routeOverride)
+  local pre, healingPreline = GetClickCastPreLine(spellIdForPreline, routeOverride, opts)
   local post = GetClickCastPostLine(spellIdForPreline, routeOverride)
   -- Do not prefix pre-line with [nooverridebar]; that can be misinterpreted in combat and echo to chat.
   local function Assemble(preLine)
@@ -971,5 +1025,5 @@ function CM.BuildClickCastMacroText(bindingValue)
   if slimmer and #text > SECURE_MACROTEXT_MAX then
     text = Assemble(slimmer)
   end
-  return text
+  return text, healingPreline or false
 end

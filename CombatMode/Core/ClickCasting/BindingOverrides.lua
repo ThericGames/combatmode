@@ -28,10 +28,12 @@
 --    • Combat-safe via BindingQueue when options change mid-combat.
 --    • RefreshClickCastMacros also runs CM.RebuildComposedMacros so composer-built
 --      macros follow the active preline (lockdown refreshes are queued, flushed on regen).
+--    • Healing Mode: click-cast and main-bar proxies store a second macro text
+--      (BuildModeMacroTexts → CM.SetModeMacroText) that HealingMode.lua's secure key swaps in.
 --  Does not: Resolve ElvUI/BT4 frame names (AddonActionBarResolver) or build preline text
 --  (TargetingMacroBuilder).
 --  Related: Core/ClickCasting/TargetingMacroBuilder.lua, Core/ClickCasting/ComposedMacros.lua,
---  Core/ClickCasting/AddonActionBarResolver.lua, Core/Runtime/BindingQueue.lua,
+--  Core/ClickCasting/{AddonActionBarResolver,HealingMode}.lua, Core/Runtime/BindingQueue.lua,
 --  Core/Runtime/EventRouter.lua, Core/Runtime/Bootstrap.lua,
 --  UI/Options/Tabs/TabClickCasting.lua, UI/Options/Tabs/TabGeneral.lua, Constants/Gameplay.lua
 ---------------------------------------------------------------------------------------
@@ -100,6 +102,10 @@ for idx, bindingName in ipairs(OrderedBindingNames) do
   f:SetAttribute("type", "macro")
   f:RegisterForClicks("AnyUp", "AnyDown")
   SlotFramesByBindingName[bindingName] = f
+  -- Only the main bar is paged, so only its keys have a second (Healing Mode) macro text.
+  if bindingName:match("^ACTIONBUTTON%d+$") then
+    CM.HealingModeRegisterProxy(f)
+  end
 end
 
 -- Click pre-line moved to TargetingMacroBuilder.lua
@@ -121,6 +127,7 @@ for i, key in ipairs(CLICKCAST_KEYS) do
   f:SetAttribute("type", "macro")
   f:RegisterForClicks("AnyUp", "AnyDown")
   ClickCastFramesByKey[key] = f
+  CM.HealingModeRegisterProxy(f)
 end
 
 -- Secure action button for toggle focus target
@@ -263,10 +270,56 @@ end
 
 -- BuildClickCastMacroText moved to TargetingMacroBuilder.lua
 
-local function SetClickCastFrameMacro(frame, macroText)
-  if frame and macroText and not InCombatLockdown() then
-    frame:SetAttribute("macrotext", macroText)
+-- `healText` (optional) is what the proxy runs while Healing Mode is on; the mode's secure key
+-- swaps the two in combat (CM.SetModeMacroText, HealingMode.lua).
+local function SetClickCastFrameMacro(frame, macroText, healText)
+  CM.SetModeMacroText(frame, macroText, healText)
+end
+
+-- Normal and Healing Mode macro texts for a bar binding (healText nil = no second text).
+--  • `strict` (click-cast mouse buttons): helpful spells get the friendly-under-the-crosshair
+--    preline. Keyboard keys keep the normal routing, classified for the healing page.
+--  • `selfText`: the self-cast macro when this key is the self-cast chord of a helpful spell.
+--  • While the mode is on the healing page is the one showing, so the normal text is classified
+--    from the page the mode returns to (page 1) instead of the displayed slot.
+local function BuildModeMacroTexts(bindingValue, strict, selfText)
+  local ctx = CM.GetHealingModeBuildContext()
+  if not ctx then
+    return (CM.BuildClickCastMacroText(bindingValue)), nil
   end
+  local page, selfModifier, active = ctx.page, ctx.selfModifier, ctx.active
+  local isMainBar = bindingValue:match("^ACTIONBUTTON%d+$") ~= nil
+  if not strict and not (page and isMainBar) then
+    return (CM.BuildClickCastMacroText(bindingValue)), nil
+  end
+  local normalText =
+    CM.BuildClickCastMacroText(bindingValue, active and page and { page = 1 } or nil)
+  local healText = selfText
+    or CM.BuildClickCastMacroText(bindingValue, {
+      page = page,
+      healing = strict and "mouseover" or nil,
+      selfModifier = strict and selfModifier or nil,
+    })
+  return normalText, healText
+end
+
+-- Healing Mode self-cast: with e.g. Shift chosen, SHIFT-BUTTON1 casts BUTTON1's helpful spell on
+-- you while the mode is on (the chord's own action is back when the mode is off). Returns that
+-- macro text, or nil when `key` is not the chord of a helpful spell on a bar button.
+local function HealingSelfCastText(key)
+  local ctx = CM.GetHealingModeBuildContext()
+  local selfModifier = ctx and ctx.selfModifier
+  local modifier, buttonNum = key:match("^(%u+)%-BUTTON(%d)$")
+  if not selfModifier or not modifier or modifier:lower() ~= selfModifier then
+    return nil
+  end
+  local base = CM.DB[CM.GetBindingsLocation()].bindings["button" .. buttonNum]
+  if not base or not base.enabled or not SlotFramesByBindingName[base.value] then
+    return nil
+  end
+  local text, isHealing =
+    CM.BuildClickCastMacroText(base.value, { page = ctx.page, healing = "self" })
+  return isHealing and text or nil
 end
 
 -- Returns true if the given action bar binding currently has a macro in the
@@ -402,14 +455,14 @@ function CM.ApplyGroundCastKeyOverrides()
             )
           else
             local frame = SlotFramesByBindingName[bindingName]
-            local macroText = CM.BuildClickCastMacroText(bindingName)
+            local macroText, healText = BuildModeMacroTexts(bindingName, false)
             if frame and macroText then
-              SetClickCastFrameMacro(frame, macroText)
+              SetClickCastFrameMacro(frame, macroText, healText)
               -- Party Wheel spell on this key: the wheel's key button runs the same macro on a tap.
               local wheelButton, wheelArg
               if CM.PartyWheelPrepareKey then
                 wheelButton, wheelArg =
-                  CM.PartyWheelPrepareKey(bindingIndex, bindingName, macroText)
+                  CM.PartyWheelPrepareKey(bindingIndex, bindingName, macroText, healText)
               end
               if wheelButton then
                 SetOverrideBindingClick(
@@ -511,7 +564,7 @@ function CM.SetNewBinding(buttonSettings)
     local frame = ClickCastFramesByKey[key]
     local macroText = ActionMacroText(value)
     if frame and macroText then
-      SetClickCastFrameMacro(frame, macroText)
+      SetClickCastFrameMacro(frame, macroText, HealingSelfCastText(key))
       valueToUse = "CLICK " .. frame:GetName() .. ":" .. ClickCastMouseButton(key)
     end
   else
@@ -525,9 +578,9 @@ function CM.SetNewBinding(buttonSettings)
         valueToUse = "CLICK " .. realFrame .. ":" .. ClickCastMouseButton(key)
       else
         local frame = ClickCastFramesByKey[key]
-        local macroText = CM.BuildClickCastMacroText(value)
+        local macroText, healText = BuildModeMacroTexts(value, true, HealingSelfCastText(key))
         if frame and macroText then
-          SetClickCastFrameMacro(frame, macroText)
+          SetClickCastFrameMacro(frame, macroText, healText)
           valueToUse = "CLICK " .. frame:GetName() .. ":" .. ClickCastMouseButton(key)
         else
           valueToUse = value

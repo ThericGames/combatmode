@@ -11,7 +11,8 @@
 --      minCameraZoom, dynamicPitch, dynamicPitchStrength, vignette, shoulderFollowsMouseLook, respectMotionSickness,
 --      autofocusLockedTarget) / allyCycle / debug.
 --      Crosshair also stores crosshairSituationalCondition + crosshairSituationalAppearance.
---    • char: reticle targeting, click-cast bindings, useGlobalBindings, shoulderOffset.
+--    • char: reticle targeting, click-cast bindings, useGlobalBindings, shoulderOffset,
+--      healingMode* (Healing Mode page / key behavior / self-cast modifier / nameplates).
 --    • InitDatabase merges missing keys, then coerces Forever-style 1/0 flags to real
 --      booleans wherever these defaults declare a boolean (CM.DbBool / NormalizeBools).
 --    • MigrateMouseLookCameraDB (CVarManager) seeds shoulder/dynamicPitch from legacy
@@ -212,5 +213,11 @@ return false
     -- click casting
     useGlobalBindings = true,
     bindings = DefaultBindings,
+    -- Healing Mode (enable = keybind bound; Core/ClickCasting/HealingMode.lua)
+    healingModePage = 2, -- bar page shown while the mode is on (2-6); 0 = no page swap
+    healingModeKeyBehavior = "toggle", -- "toggle" | "hold"
+    healingModeSelfCastModifier = "NONE", -- "NONE" | "SHIFT" | "CTRL" | "ALT"
+    healingModeNameplates = true, -- hide enemy / show friendly nameplates while the mode is on
+    healingModeActive = false, -- session flag: a reload while on returns to page 1
   },
 }
