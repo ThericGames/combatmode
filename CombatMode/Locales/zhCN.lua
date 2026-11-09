@@ -421,8 +421,10 @@ L["Healing Mode"] = "治疗模式"
 L["healing mode keybinding"] = "治疗模式按键绑定"
 L["Healing Mode on"] = "治疗模式已开启"
 L["Healing Mode off"] = "治疗模式已关闭"
-L["Healing Mode on. Nameplates switch after combat."] = "治疗模式已开启。姓名板将在战斗结束后切换。"
-L["Healing Mode off. Nameplates switch after combat."] = "治疗模式已关闭。姓名板将在战斗结束后切换。"
+L["Healing Mode on. Nameplates switch after combat."] =
+  "治疗模式已开启。姓名板将在战斗结束后切换。"
+L["Healing Mode off. Nameplates switch after combat."] =
+  "治疗模式已关闭。姓名板将在战斗结束后切换。"
 L["HEALING MODE"] = "治疗模式"
 L["A second set of click casts for supporting your group. While Healing Mode is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair (never to yourself by accident), your main action bar shows a healing page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
   "用于支援队伍的第二套点击施法。治疗模式开启时，点击施法按键上的有益法术只会施放给准星下的友方单位（绝不会误放给自己），主动作条显示治疗页，友方姓名板取代敌方姓名板。有害法术仍然以敌人为目标。"

@@ -438,8 +438,10 @@ L["Healing Mode"] = "치유 모드"
 L["healing mode keybinding"] = "치유 모드 단축키"
 L["Healing Mode on"] = "치유 모드 켜짐"
 L["Healing Mode off"] = "치유 모드 꺼짐"
-L["Healing Mode on. Nameplates switch after combat."] = "치유 모드 켜짐. 이름표는 전투가 끝난 뒤 전환됩니다."
-L["Healing Mode off. Nameplates switch after combat."] = "치유 모드 꺼짐. 이름표는 전투가 끝난 뒤 전환됩니다."
+L["Healing Mode on. Nameplates switch after combat."] =
+  "치유 모드 켜짐. 이름표는 전투가 끝난 뒤 전환됩니다."
+L["Healing Mode off. Nameplates switch after combat."] =
+  "치유 모드 꺼짐. 이름표는 전투가 끝난 뒤 전환됩니다."
 L["HEALING MODE"] = "치유 모드"
 L["A second set of click casts for supporting your group. While Healing Mode is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair (never to yourself by accident), your main action bar shows a healing page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
   "파티를 지원하기 위한 두 번째 클릭 시전 세트입니다. 치유 모드가 켜져 있는 동안 클릭 시전 버튼의 이로운 주문은 조준점 아래의 우호적 대상에게만 시전되고(실수로 자신에게 시전되지 않음), 주 행동 단축바는 치유 페이지를 표시하며, 적 이름표 대신 우호적 이름표가 표시됩니다. 해로운 주문은 계속 적을 대상으로 합니다."
