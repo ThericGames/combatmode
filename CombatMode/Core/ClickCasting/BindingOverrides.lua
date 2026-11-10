@@ -279,9 +279,9 @@ end
 -- Normal, Support Mode and Support Mode self-cast macro texts for a bar binding (nil = no extra
 -- text).
 --  • `strict` (click-cast mouse buttons): helpful spells become a mouseover cast on the ally
---    under the crosshair, and a cast on yourself in the self-cast text (neither changes your
---    target). Keyboard keys keep the normal routing, classified for the support page, and have
---    no self-cast text.
+--    under the crosshair, else a cast on your friendly hard target (an Ally Cycle pick), and a
+--    cast on yourself in the self-cast text (none changes your target). Keyboard keys keep the
+--    normal routing, classified for the support page, and have no self-cast text.
 --  • While the mode is on the support page is the one showing, so the normal text is classified
 --    from the page the mode returns to (page 1) instead of the displayed slot.
 local function BuildModeMacroTexts(bindingValue, strict)

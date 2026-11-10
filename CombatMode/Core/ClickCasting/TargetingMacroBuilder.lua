@@ -833,25 +833,27 @@ function CM.GetActiveTargetingPreline()
 end
 
 -- Support Mode (Core/ClickCasting/SupportMode.lua): a helpful spell on a click-cast button only
--- goes to the friendly unit under the crosshair ("mouseover"), or to you while the Self-Cast key
--- is held ("self"). SupportCastLine below does that without touching your target; this
--- target-then-click preline is only its fallback. Nothing friendly under the crosshair =
--- /stopmacro, so it never falls back to the hard target or to yourself (auto self-cast). `help`
--- is true for a dead ally, so a resurrection still works. (A macro can't test the Self-Cast key
--- itself: [mod] only knows Shift / Ctrl / Alt, and those chords are click-cast buttons of
--- their own.)
+-- goes to the friendly unit under the crosshair, else to your friendly hard target (an Ally
+-- Cycle pick) ("mouseover"), or to you while the Self-Cast key is held ("self").
+-- SupportCastLine below does that without touching your target; this target-then-click preline
+-- is only its fallback. Neither unit friendly = /stopmacro, so it never lands on yourself (auto
+-- self-cast). `help` is true for a dead ally, so a resurrection still works. (A macro can't
+-- test the Self-Cast key itself: [mod] only knows Shift / Ctrl / Alt, and those chords are
+-- click-cast buttons of their own.)
 local function SupportModePreLine(opts)
   if opts.support == "self" then
     return "/tar player"
   end
-  return "/stopmacro [@mouseover,nohelp]\n/tar [@mouseover]"
+  return "/tar [@mouseover,help]\n/stopmacro [nohelp]"
 end
 
 -- Support Mode cast as one line that never changes your hard target: a mouseover cast on the
--- ally under the crosshair (no friendly unit there = the condition fails and nothing is cast),
--- or a cast on yourself (reported in game: becoming your own target pulls the shoulder-offset
--- camera back to the centre). /click can't name a unit, so this is a named /cast of the spell
--- on the slot when the macro is built; a Classic rank rides along as "Name(Rank N)".
+-- ally under the crosshair, else a cast on your friendly hard target (so an Ally Cycle pick is
+-- healed when you aim at nobody; the crosshair wins when both exist). Neither one friendly =
+-- every condition fails and nothing is cast. Self = a cast on yourself (reported in game:
+-- becoming your own target pulls the shoulder-offset camera back to the centre). /click can't
+-- name a unit, so this is a named /cast of the spell on the slot when the macro is built; a
+-- Classic rank rides along as "Name(Rank N)".
 -- nil = no name yet: the caller keeps SupportModePreLine + /click.
 local function SupportCastLine(spellId, onSelf)
   if not spellId or not (C_Spell and C_Spell.GetSpellInfo) then
@@ -869,7 +871,7 @@ local function SupportCastLine(spellId, onSelf)
       name = name .. "(" .. subtext .. ")"
     end
   end
-  return (onSelf and "/cast [@player] " or "/cast [@mouseover,help] ") .. name
+  return (onSelf and "/cast [@player] " or "/cast [@mouseover,help][@target,help] ") .. name
 end
 
 -- Second return: true when the Support Mode preline was used.
@@ -917,7 +919,8 @@ end
 
 --- `opts` (optional, Support Mode): `page` classifies an ACTIONBUTTON by that bar page instead of
 --- the shown one; `support` ("mouseover" | "self") gives helpful spells the Support Mode preline
---- (the ally under the crosshair, or yourself). Second return: true when that preline was used.
+--- (the ally under the crosshair, else your friendly hard target; or yourself). Second return:
+--- true when that preline was used.
 function CM.BuildClickCastMacroText(bindingValue, opts)
   -- When reticle targeting is off, no macro wrapping (no pre-line, no castAtCursor, no excludeFromTargeting).
   if not CM.DB.char.reticleTargeting then
