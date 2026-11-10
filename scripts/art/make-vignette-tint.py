@@ -1,7 +1,8 @@
 """Build the tintable copy of the vignette art.
 
 Usage: python scripts/art/make-vignette-tint.py
-       python scripts/art/compress-tga.py CombatMode/Assets/ui/vignette-tint.tga
+       python scripts/art/compress-tga.py CombatMode/Assets/ui
+       (compress-tga.py takes folders; it skips a path that is a single file)
 
 The vignette (CombatMode/Assets/atlas/Artifacts-BG-Shadow.tga, Blizzard's
 Artifacts-BG-Shadow atlas) is black with the shape in its alpha channel. A
