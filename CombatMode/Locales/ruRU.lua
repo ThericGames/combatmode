@@ -455,37 +455,39 @@ L["Scales the size of the Ally HUD."] =
 L["Distance between the Ally HUD and the crosshair."] =
   "Расстояние между HUD союзника и прицелом."
 
--- Healing Mode: keybind label, notices and options tab (HealingMode.lua, TabHealingMode.lua)
-L["Healing Mode"] = "Режим исцеления"
-L["healing mode keybinding"] = "привязка режима исцеления"
-L["Healing Mode on"] = "Режим исцеления включен"
-L["Healing Mode off"] = "Режим исцеления выключен"
-L["Healing Mode on. Nameplates switch after combat."] =
-  "Режим исцеления включен. Индикаторы здоровья переключатся после боя."
-L["Healing Mode off. Nameplates switch after combat."] =
-  "Режим исцеления выключен. Индикаторы здоровья переключатся после боя."
-L["HEALING MODE"] = "РЕЖИМ ИСЦЕЛЕНИЯ"
-L["A second set of click casts for supporting your group. While Healing Mode is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair (never to yourself by accident), your main action bar shows a healing page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
-  "Второй набор применений по щелчку для поддержки группы. Пока режим исцеления включен, полезные заклинания на кнопках применения по щелчку применяются только к дружественной цели под прицелом (и никогда случайно к вам), основная панель команд показывает страницу исцеления, а дружественные индикаторы здоровья заменяют вражеские. Вредоносные заклинания по-прежнему применяются к противникам."
-L["Healing Mode Keybind"] = "Клавиша режима исцеления"
-L["Turns Healing Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
-  "Включает и выключает режим исцеления. Работает в бою. Оставьте без клавиши, чтобы отключить функцию."
+-- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
+L["Support Mode"] = "Режим поддержки"
+L["Support Mode Self-Cast"] = "Режим поддержки: применение к себе"
+L["support mode keybinding"] = "привязка режима поддержки"
+L["support mode self-cast keybinding"] =
+  "привязка применения к себе в режиме поддержки"
+L["Support Mode on"] = "Режим поддержки включен"
+L["Support Mode off"] = "Режим поддержки выключен"
+L["Support Mode on. Nameplates switch after combat."] =
+  "Режим поддержки включен. Индикаторы здоровья переключатся после боя."
+L["Support Mode off. Nameplates switch after combat."] =
+  "Режим поддержки выключен. Индикаторы здоровья переключатся после боя."
+L["SUPPORT MODE"] = "РЕЖИМ ПОДДЕРЖКИ"
+L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair (never to yourself by accident), your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
+  "Второй набор применений по щелчку для поддержки группы. Пока режим поддержки включен, полезные заклинания на кнопках применения по щелчку применяются только к дружественной цели под прицелом (и никогда случайно к вам), основная панель команд показывает страницу поддержки, а дружественные индикаторы здоровья заменяют вражеские. Вредоносные заклинания по-прежнему применяются к противникам."
+L["Support Mode Keybind"] = "Клавиша режима поддержки"
+L["Turns Support Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
+  "Включает и выключает режим поддержки. Работает в бою. Оставьте без клавиши, чтобы отключить функцию."
 L["Key Behavior"] = "Поведение клавиши"
-L["Toggle: press to turn Healing Mode on, press again to turn it off. Hold: Healing Mode stays on only while the key is held."] =
-  "Переключить: нажмите, чтобы включить режим исцеления, нажмите еще раз, чтобы выключить. Удерживать: режим исцеления включен, только пока клавиша удерживается."
+L["Toggle: press to turn Support Mode on, press again to turn it off. Hold: Support Mode stays on only while the key is held."] =
+  "Переключить: нажмите, чтобы включить режим поддержки, нажмите еще раз, чтобы выключить. Удерживать: режим поддержки включен, только пока клавиша удерживается."
 L["Hold"] = "Удерживать"
-L["Healing Bar Page"] = "Страница панели исцеления"
-L["The main action bar page shown while Healing Mode is on. Put your healing and support abilities there. Leaving Healing Mode returns to page 1."] =
-  "Страница основной панели команд, которая показывается, пока включен режим исцеления. Разместите на ней способности исцеления и поддержки. При выходе из режима исцеления возвращается страница 1."
+L["Support Bar Page"] = "Страница панели поддержки"
+L["The main action bar page shown while Support Mode is on. Put your healing and support abilities there. Leaving Support Mode returns to page 1."] =
+  "Страница основной панели команд, которая показывается, пока включен режим поддержки. Разместите на ней способности исцеления и поддержки. При выходе из режима поддержки возвращается страница 1."
 L["Don't swap"] = "Не менять"
 L["Page %d"] = "Страница %d"
-L["Self-Cast Modifier"] = "Модификатор применения к себе"
-L["Hold this key while clicking to cast the helpful spell on yourself instead. While Healing Mode is on, this replaces the click-cast actions you set for that modifier."] =
-  "Удерживайте эту клавишу при щелчке, чтобы применить полезное заклинание к себе. Пока режим исцеления включен, это заменяет действия применения по щелчку, назначенные на этот модификатор."
-L["None"] = "Нет"
+L["Self-Cast Keybind"] = "Клавиша применения к себе"
+L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
+  "Удерживайте эту клавишу при щелчке в режиме поддержки, чтобы применить полезное заклинание этой привязки щелчка к себе, а не к цели под прицелом. Все ваши привязки щелчков сохраняют свои заклинания. Оставьте без клавиши, если она не нужна."
 L["Swap Nameplates"] = "Менять индикаторы здоровья"
-L["Hide enemy nameplates and show friendly player nameplates while Healing Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
-  "Скрывает вражеские индикаторы здоровья и показывает индикаторы дружественных игроков, пока включен режим исцеления, а затем возвращает ваши настройки. Игра позволяет менять индикаторы здоровья только вне боя, поэтому переключение в бою применяется после его окончания."
+L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
+  "Скрывает вражеские индикаторы здоровья и показывает индикаторы дружественных игроков, пока включен режим поддержки, а затем возвращает ваши настройки. Игра позволяет менять индикаторы здоровья только вне боя, поэтому переключение в бою применяется после его окончания."
 L["Requires Reticle Targeting"] = "Требуется наведение по прицелу"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab

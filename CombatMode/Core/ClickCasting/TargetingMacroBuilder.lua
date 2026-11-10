@@ -7,7 +7,7 @@
 --  and membership tests for cast-at-cursor / exclude lists (spell IDs).
 --  Architecture / how it works:
 --    • BuildClickCastMacroText(bindingValue, opts) — nil when reticleTargeting is off; opts =
---      Healing Mode bar page + friendly-only preline for helpful spells (HealingMode.lua).
+--      Support Mode bar page + friendly-only preline for helpful spells (SupportMode.lua).
 --    • Default prelines clear dead focus + dead hostile hard target (friendly corpses
 --      kept for res), then /tar (any/enemy + autoLockAny/autoLockEnemy). Overrides from
 --      global.targetingMacroPreline*Override keys.
@@ -36,7 +36,7 @@
 --  Core/ClickCasting/ComposedMacros.lua, UI/Editors/TargetingMacroPrelinesEditor.lua,
 --  UI/Options/Tabs/TabReticleTargeting.lua, UI/Options/SpellMultiSelect.lua,
 --  Constants/DatabaseDefaults.lua, Constants/Gameplay.lua,
---  Core/ClickCasting/{AddonActionBarResolver,HealingMode}.lua
+--  Core/ClickCasting/{AddonActionBarResolver,SupportMode}.lua
 ---------------------------------------------------------------------------------------
 local _, CM = ...
 local _G = _G
@@ -408,7 +408,7 @@ local function ComputeActionButtonSlot(buttonNum)
   return id + ((page - 1) * buttons)
 end
 
--- ACTIONBUTTON index → action slot on a given bar page, whichever page is showing now (Healing
+-- ACTIONBUTTON index → action slot on a given bar page, whichever page is showing now (Support
 -- Mode builds macros for the page it will swap to). Blizzard only shows the bonus bar (forms,
 -- stealth) on page 1 (ActionBarController_UpdateAll).
 local function ComputeActionButtonSlotOnPage(buttonNum, page)
@@ -832,27 +832,44 @@ function CM.GetActiveTargetingPreline()
   return GetOverride("targetingMacroPrelineAnyOverride") or CLICKCAST_PRE_LINE_ANY
 end
 
--- Healing Mode (Core/ClickCasting/HealingMode.lua): a helpful spell on a click-cast button only
+-- Support Mode (Core/ClickCasting/SupportMode.lua): a helpful spell on a click-cast button only
 -- goes to the friendly unit under the crosshair. Nothing friendly there = /stopmacro, so it never falls
 -- back to the hard target or to yourself (auto self-cast). `help` is true for a dead ally, so a
--- resurrection still works. The optional modifier targets you instead; "self" is that same cast
--- for the modifier's own click-cast button (SHIFT-BUTTON1 is a different key from BUTTON1).
-local function HealingModePreLine(opts)
-  if opts.healing == "self" then
+-- resurrection still works. "self" is the text used while the Self-Cast key is held; it is only
+-- the fallback for SupportSelfCastLine below. (A macro can't test that key itself: [mod] only
+-- knows Shift / Ctrl / Alt, and those chords are click-cast buttons of their own.)
+local function SupportModePreLine(opts)
+  if opts.support == "self" then
     return "/tar player"
-  end
-  local mod = opts.selfModifier
-  if mod then
-    return "/stopmacro [nomod:"
-      .. mod
-      .. ",@mouseover,nohelp]\n/tar [mod:"
-      .. mod
-      .. ",@player][@mouseover]"
   end
   return "/stopmacro [@mouseover,nohelp]\n/tar [@mouseover]"
 end
 
--- Second return: true when the Healing Mode preline was used.
+-- Support Mode self-cast as one line that never makes you your own hard target (reported in
+-- game: targeting yourself pulls the shoulder-offset camera back to the centre). /click can't
+-- name a unit, so this is a named /cast of the spell on the slot when the macro is built; a
+-- Classic rank rides along as "Name(Rank N)". nil = no name yet: the caller keeps the
+-- "/tar player" preline + /click.
+local function SupportSelfCastLine(spellId)
+  if not spellId or not (C_Spell and C_Spell.GetSpellInfo) then
+    return nil
+  end
+  local info = C_Spell.GetSpellInfo(spellId)
+  local name = info and info.name
+  if type(name) ~= "string" or name == "" then
+    return nil
+  end
+  local getSubtext = C_Spell.GetSpellSubtext or _G.GetSpellSubtext
+  if getSubtext then
+    local ok, subtext = pcall(getSubtext, spellId)
+    if ok and type(subtext) == "string" and subtext:find("%d") then
+      name = name .. "(" .. subtext .. ")"
+    end
+  end
+  return "/cast [@player] " .. name
+end
+
+-- Second return: true when the Support Mode preline was used.
 local function GetClickCastPreLine(spellId, routeOverride, opts)
   if not CM.DB.char.reticleTargeting then
     return nil
@@ -860,8 +877,8 @@ local function GetClickCastPreLine(spellId, routeOverride, opts)
 
   local route = routeOverride or GetAllyCycleSpellRoute(spellId)
 
-  if route == "help" and opts and opts.healing then
-    return HealingModePreLine(opts), true
+  if route == "help" and opts and opts.support then
+    return SupportModePreLine(opts), true
   end
 
   -- Helpful: Reticle Targeting friendly-preserving path (not Ally Cycle–gated).
@@ -895,10 +912,9 @@ local function GetClickCastPostLine(spellId, routeOverride)
   return GetAllyCycleHarmPostLine()
 end
 
---- `opts` (optional, Healing Mode): `page` classifies an ACTIONBUTTON by that bar page instead of
---- the shown one; `healing` ("mouseover" | "self") gives helpful spells the Healing Mode preline,
---- with `selfModifier` ("shift" | "ctrl" | "alt") as its self-cast key. Second return: true when
---- that preline was used.
+--- `opts` (optional, Support Mode): `page` classifies an ACTIONBUTTON by that bar page instead of
+--- the shown one; `support` ("mouseover" | "self") gives helpful spells the Support Mode preline
+--- (the ally under the crosshair, or yourself). Second return: true when that preline was used.
 function CM.BuildClickCastMacroText(bindingValue, opts)
   -- When reticle targeting is off, no macro wrapping (no pre-line, no castAtCursor, no excludeFromTargeting).
   if not CM.DB.char.reticleTargeting then
@@ -1006,7 +1022,13 @@ function CM.BuildClickCastMacroText(bindingValue, opts)
   end
 
   local routeOverride = isAssistedButton and "harm" or nil
-  local pre, healingPreline = GetClickCastPreLine(spellIdForPreline, routeOverride, opts)
+  local pre, supportPreline = GetClickCastPreLine(spellIdForPreline, routeOverride, opts)
+  if supportPreline and opts.support == "self" then
+    local selfLine = SupportSelfCastLine(spellIdForPreline)
+    if selfLine then
+      return selfLine, true
+    end
+  end
   local post = GetClickCastPostLine(spellIdForPreline, routeOverride)
   -- Do not prefix pre-line with [nooverridebar]; that can be misinterpreted in combat and echo to chat.
   local function Assemble(preLine)
@@ -1025,5 +1047,5 @@ function CM.BuildClickCastMacroText(bindingValue, opts)
   if slimmer and #text > SECURE_MACROTEXT_MAX then
     text = Assemble(slimmer)
   end
-  return text, healingPreline or false
+  return text, supportPreline or false
 end

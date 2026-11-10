@@ -416,37 +416,38 @@ L["Where the Ally HUD sits relative to the crosshair."] = "友方 HUD 相对于�
 L["Scales the size of the Ally HUD."] = "缩放友方 HUD 的大小。"
 L["Distance between the Ally HUD and the crosshair."] = "友方 HUD 与准星之间的距离。"
 
--- Healing Mode: keybind label, notices and options tab (HealingMode.lua, TabHealingMode.lua)
-L["Healing Mode"] = "治疗模式"
-L["healing mode keybinding"] = "治疗模式按键绑定"
-L["Healing Mode on"] = "治疗模式已开启"
-L["Healing Mode off"] = "治疗模式已关闭"
-L["Healing Mode on. Nameplates switch after combat."] =
-  "治疗模式已开启。姓名板将在战斗结束后切换。"
-L["Healing Mode off. Nameplates switch after combat."] =
-  "治疗模式已关闭。姓名板将在战斗结束后切换。"
-L["HEALING MODE"] = "治疗模式"
-L["A second set of click casts for supporting your group. While Healing Mode is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair (never to yourself by accident), your main action bar shows a healing page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
-  "用于支援队伍的第二套点击施法。治疗模式开启时，点击施法按键上的有益法术只会施放给准星下的友方单位（绝不会误放给自己），主动作条显示治疗页，友方姓名板取代敌方姓名板。有害法术仍然以敌人为目标。"
-L["Healing Mode Keybind"] = "治疗模式按键"
-L["Turns Healing Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
-  "开启或关闭治疗模式。战斗中可用。不绑定按键即可停用此功能。"
+-- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
+L["Support Mode"] = "辅助模式"
+L["Support Mode Self-Cast"] = "辅助模式自我施法"
+L["support mode keybinding"] = "辅助模式按键绑定"
+L["support mode self-cast keybinding"] = "辅助模式自我施法按键绑定"
+L["Support Mode on"] = "辅助模式已开启"
+L["Support Mode off"] = "辅助模式已关闭"
+L["Support Mode on. Nameplates switch after combat."] =
+  "辅助模式已开启。姓名板将在战斗结束后切换。"
+L["Support Mode off. Nameplates switch after combat."] =
+  "辅助模式已关闭。姓名板将在战斗结束后切换。"
+L["SUPPORT MODE"] = "辅助模式"
+L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair (never to yourself by accident), your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
+  "用于支援队伍的第二套点击施法。辅助模式开启时，点击施法按键上的有益法术只会施放给准星下的友方单位（绝不会误放给自己），主动作条显示辅助页，友方姓名板取代敌方姓名板。有害法术仍然以敌人为目标。"
+L["Support Mode Keybind"] = "辅助模式按键"
+L["Turns Support Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
+  "开启或关闭辅助模式。战斗中可用。不绑定按键即可停用此功能。"
 L["Key Behavior"] = "按键行为"
-L["Toggle: press to turn Healing Mode on, press again to turn it off. Hold: Healing Mode stays on only while the key is held."] =
-  "切换：按一下开启治疗模式，再按一下关闭。按住：仅在按住按键时保持治疗模式。"
+L["Toggle: press to turn Support Mode on, press again to turn it off. Hold: Support Mode stays on only while the key is held."] =
+  "切换：按一下开启辅助模式，再按一下关闭。按住：仅在按住按键时保持辅助模式。"
 L["Hold"] = "按住"
-L["Healing Bar Page"] = "治疗动作条页"
-L["The main action bar page shown while Healing Mode is on. Put your healing and support abilities there. Leaving Healing Mode returns to page 1."] =
-  "治疗模式开启时显示的主动作条页。把你的治疗和辅助技能放在那里。离开治疗模式会回到第 1 页。"
+L["Support Bar Page"] = "辅助动作条页"
+L["The main action bar page shown while Support Mode is on. Put your healing and support abilities there. Leaving Support Mode returns to page 1."] =
+  "辅助模式开启时显示的主动作条页。把你的治疗和辅助技能放在那里。离开辅助模式会回到第 1 页。"
 L["Don't swap"] = "不切换"
 L["Page %d"] = "第 %d 页"
-L["Self-Cast Modifier"] = "自我施法修饰键"
-L["Hold this key while clicking to cast the helpful spell on yourself instead. While Healing Mode is on, this replaces the click-cast actions you set for that modifier."] =
-  "点击时按住此键可将有益法术施放给自己。治疗模式开启时，它会取代你为该修饰键设置的点击施法动作。"
-L["None"] = "无"
+L["Self-Cast Keybind"] = "自我施法按键"
+L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
+  "在辅助模式中点击时按住此键，可将该点击绑定的有益法术施放给自己，而不是准星下的单位。你的所有点击绑定都保留各自的法术。不需要时可以不绑定。"
 L["Swap Nameplates"] = "切换姓名板"
-L["Hide enemy nameplates and show friendly player nameplates while Healing Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
-  "治疗模式开启时隐藏敌方姓名板并显示友方玩家姓名板，之后恢复你自己的设置。游戏只允许在非战斗状态下更改姓名板，因此在战斗中切换会在战斗结束后生效。"
+L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
+  "辅助模式开启时隐藏敌方姓名板并显示友方玩家姓名板，之后恢复你自己的设置。游戏只允许在非战斗状态下更改姓名板，因此在战斗中切换会在战斗结束后生效。"
 L["Requires Reticle Targeting"] = "需要准星瞄准"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab

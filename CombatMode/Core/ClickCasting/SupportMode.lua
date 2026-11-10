@@ -1,30 +1,31 @@
 ---------------------------------------------------------------------------------------
---  Core/ClickCasting/HealingMode.lua — CLICKCAST — Healing Mode key + secure mode swap
+--  Core/ClickCasting/SupportMode.lua — CLICKCAST — Support Mode key + secure mode swap
 ---------------------------------------------------------------------------------------
---  What it does: The Healing Mode keybind. While the mode is on, helpful spells on the
---  click-cast mouse buttons only go to the friendly unit under the crosshair (an optional
---  modifier casts on yourself), the main action bar shows the healing page, and enemy
+--  What it does: The Support Mode keybind. While the mode is on, helpful spells on the
+--  click-cast mouse buttons only go to the friendly unit under the crosshair (or to you while
+--  the Self-Cast key is held), the main action bar shows the support page, and enemy
 --  nameplates give way to friendly ones. Leaving it puts page 1 and the nameplates back.
 --  Architecture / how it works:
 --    • Enabled = Reticle Targeting on and the key bound (no master toggle).
---    • CombatModeHealingMode (SecureHandlerBaseTemplate) holds the state (attribute hm = 1 / 0)
---      and a frame ref to every click-cast proxy that has two macro texts. BindingOverrides and
---      the Party Wheel route buttons store both out of combat (CM.SetModeMacroText: hm-off /
---      hm-on attributes); the key's wrapped OnClick copies the right one into macrotext, so the
---      swap works in combat.
---    • CombatModeHealingModeKey (SecureActionButtonTemplate, type macro) runs
+--    • CombatModeSupportMode (SecureHandlerBaseTemplate) holds the state (attributes sm and
+--      smself = 1 / 0) and a frame ref to every click-cast proxy with more than one macro text.
+--      BindingOverrides and the Party Wheel route buttons store them out of combat
+--      (CM.SetModeMacroText: sm-off / sm-on / sm-self attributes); the keys' wrapped OnClick
+--      copies the right one into macrotext, so the swap works in combat.
+--    • CombatModeSupportModeKey (SecureActionButtonTemplate, type macro) runs
 --      /changeactionbar <page> for the page swap, the only secure way to page in combat.
 --      Key Behavior: toggle (press) or hold (press = on, release = off).
---    • Insecure side: Handler.HealingModeChanged (CallMethod) → nameplates
---      (CM.SyncHealingModeNameplates in CVarManager; protected in combat, so they wait for
---      PLAYER_REGEN_ENABLED) and the on / off notice. CM.IsHealingModeActive reads the attribute.
---    • The mode never survives a reload: CM.InitializeHealingMode turns a leftover healing
+--    • CombatModeSupportModeSelfKey: held = smself 1 (click casts use sm-self, "/tar player").
+--    • Insecure side: Handler.SupportModeChanged (CallMethod) → nameplates
+--      (CM.SyncSupportModeNameplates in CVarManager; protected in combat, so they wait for
+--      PLAYER_REGEN_ENABLED) and the on / off notice. CM.IsSupportModeActive reads the attribute.
+--    • The mode never survives a reload: CM.InitializeSupportMode turns a leftover support
 --      page back to page 1 and CVarManager restores leftover nameplate CVars.
 --  Does not: Build macro text (TargetingMacroBuilder), own the proxy buttons or their
 --  bindings (BindingOverrides), or write CVars (CVarManager).
 --  Related: Core/ClickCasting/{TargetingMacroBuilder,BindingOverrides}.lua,
 --  Core/RadialMenu/PartyWheel.lua, Core/Runtime/{CVarManager,EventRouter,Bootstrap}.lua,
---  UI/Options/Tabs/TabHealingMode.lua, Constants/DatabaseDefaults.lua, Bindings.xml
+--  UI/Options/Tabs/TabSupportMode.lua, Constants/DatabaseDefaults.lua, Bindings.xml
 ---------------------------------------------------------------------------------------
 local _, CM = ...
 local L = CM.L
@@ -47,31 +48,33 @@ local ipairs = _G.ipairs
 local pcall = _G.pcall
 local tonumber = _G.tonumber
 
-local BIND_NAME = "Combat Mode - Healing Mode"
--- Leaving Healing Mode always returns to the first bar page.
+local BIND_NAME = "Combat Mode - Support Mode"
+local SELF_BIND_NAME = "Combat Mode - Support Mode Self Cast"
+-- Leaving Support Mode always returns to the first bar page.
 local EXIT_PAGE = 1
--- Saved option value -> macro conditional modifier.
-local SELF_CAST_MODIFIERS = { SHIFT = "shift", CTRL = "ctrl", ALT = "alt" }
 
 local Handler
 local KeyButton
+local SelfKeyButton
 local OverrideOwner = CreateFrame("Frame", nil, UIParent)
 local proxyCount = 0
 local pendingApply = false
 local pendingNameplates = false
 local pendingProxies = {} -- proxies created during lockdown, registered after combat
--- Reused by CM.GetHealingModeBuildContext (one refresh asks for it once per binding).
+-- Reused by CM.GetSupportModeBuildContext (one refresh asks for it once per binding).
 local buildContext = {}
 
 ---------------------------------------------------------------------------------------
 -- Snippets (restricted environment)
 ---------------------------------------------------------------------------------------
--- Needs `owner` (the handler) and `want` (boolean): stores the state and gives every registered
--- proxy the macro text of that state.
-local SWAP = [[
-  owner:SetAttribute("hm", want and 1 or 0)
-  local attr = want and "hm-on" or "hm-off"
-  local count = owner:GetAttribute("hmcount") or 0
+-- Needs `owner` (the handler): gives every registered proxy the macro text of the stored state
+-- (sm-off; in Support Mode sm-on, or sm-self while the Self-Cast key is held).
+local APPLY = [[
+  local attr = "sm-off"
+  if owner:GetAttribute("sm") == 1 then
+    attr = owner:GetAttribute("smself") == 1 and "sm-self" or "sm-on"
+  end
+  local count = owner:GetAttribute("smcount") or 0
   for i = 1, count do
     local proxy = owner:GetFrameRef("p" .. i)
     local text = proxy and proxy:GetAttribute(attr)
@@ -79,15 +82,25 @@ local SWAP = [[
       proxy:SetAttribute("macrotext", text)
     end
   end
-  owner:CallMethod("HealingModeChanged")
+]]
+
+-- Needs `owner` and `want` (boolean): enters / leaves the mode. Leaving also drops a held
+-- Self-Cast state, so a key release the client swallowed can't outlive the mode.
+local SWAP = [[
+  owner:SetAttribute("sm", want and 1 or 0)
+  if not want then
+    owner:SetAttribute("smself", 0)
+  end
+  ]] .. APPLY .. [[
+  owner:CallMethod("SupportModeChanged")
 ]]
 
 -- The key, both edges. useOnKeyDown is set per edge so the button's own macro (the page swap) runs
 -- on the edge that changed the mode, whatever ActionButtonUseKeyDown says.
 local KEY_PRE = [[
   local owner = owner or self
-  local hold = owner:GetAttribute("hmhold")
-  local on = owner:GetAttribute("hm") == 1
+  local hold = owner:GetAttribute("smhold")
+  local on = owner:GetAttribute("sm") == 1
   local want
   if down then
     self:SetAttribute("useOnKeyDown", true)
@@ -102,7 +115,18 @@ local KEY_PRE = [[
     return false
   end
   ]] .. SWAP .. [[
-  self:SetAttribute("macrotext", owner:GetAttribute(want and "hmenter" or "hmexit"))
+  self:SetAttribute("macrotext", owner:GetAttribute(want and "smenter" or "smexit"))
+]]
+
+-- The Self-Cast key, both edges: held = click casts go to you. It runs no action of its own.
+local SELF_KEY_PRE = [[
+  local owner = owner or self
+  local want = down and 1 or 0
+  if owner:GetAttribute("smself") ~= want then
+    owner:SetAttribute("smself", want)
+    ]] .. APPLY .. [[
+  end
+  return false
 ]]
 
 local FORCE_OFF = "local owner = self\nlocal want = false\n" .. SWAP
@@ -110,9 +134,9 @@ local FORCE_OFF = "local owner = self\nlocal want = false\n" .. SWAP
 ---------------------------------------------------------------------------------------
 -- Settings
 ---------------------------------------------------------------------------------------
---- Bar page shown while Healing Mode is on, or nil when the page swap is off.
-function CM.GetHealingModePage()
-  local page = tonumber(CM.DB and CM.DB.char and CM.DB.char.healingModePage)
+--- Bar page shown while Support Mode is on, or nil when the page swap is off.
+function CM.GetSupportModePage()
+  local page = tonumber(CM.DB and CM.DB.char and CM.DB.char.supportModePage)
   local pages = tonumber(_G.NUM_ACTIONBAR_PAGES) or 6
   if page and page > EXIT_PAGE and page <= pages then
     return page
@@ -120,8 +144,8 @@ function CM.GetHealingModePage()
   return nil
 end
 
---- Reticle Targeting on and the Healing Mode key bound.
-function CM.IsHealingModeEnabled()
+--- Reticle Targeting on and the Support Mode key bound.
+function CM.IsSupportModeEnabled()
   local char = CM.DB and CM.DB.char
   if not Handler or not char or not char.reticleTargeting then
     return false
@@ -129,52 +153,58 @@ function CM.IsHealingModeEnabled()
   return GetBindingKey(BIND_NAME) ~= nil
 end
 
-function CM.IsHealingModeActive()
-  return Handler ~= nil and Handler:GetAttribute("hm") == 1
+function CM.IsSupportModeActive()
+  return Handler ~= nil and Handler:GetAttribute("sm") == 1
 end
 
---- What BindingOverrides needs to build both macro texts of a key, or nil when the feature is
---- off: `page` (healing bar page or nil), `selfModifier` ("shift" | "ctrl" | "alt" | nil),
---- `active` (the healing page is the one showing right now). The table is reused: read it at once.
-function CM.GetHealingModeBuildContext()
-  if not CM.IsHealingModeEnabled() then
+--- What BindingOverrides needs to build the macro texts of a key, or nil when the feature is
+--- off: `page` (support bar page or nil) and `active` (the support page is the one showing
+--- right now). The table is reused: read it at once.
+function CM.GetSupportModeBuildContext()
+  if not CM.IsSupportModeEnabled() then
     return nil
   end
-  buildContext.page = CM.GetHealingModePage()
-  buildContext.selfModifier = SELF_CAST_MODIFIERS[CM.DB.char.healingModeSelfCastModifier]
-  buildContext.active = CM.IsHealingModeActive()
+  buildContext.page = CM.GetSupportModePage()
+  buildContext.active = CM.IsSupportModeActive()
   return buildContext
 end
 
 ---------------------------------------------------------------------------------------
 -- Proxy registration (called by the modules that own the proxy buttons)
 ---------------------------------------------------------------------------------------
---- Lets the Healing Mode key swap this secure button's macro text. A call in combat is kept for
---- PLAYER_REGEN_ENABLED (CM.FlushHealingMode).
-function CM.HealingModeRegisterProxy(frame)
-  if not Handler or not frame or frame.cmHealingModeProxy then
+--- Lets the Support Mode key swap this secure button's macro text. A call in combat is kept for
+--- PLAYER_REGEN_ENABLED (CM.FlushSupportMode).
+function CM.SupportModeRegisterProxy(frame)
+  if not Handler or not frame or frame.cmSupportModeProxy then
     return
   end
   if InCombatLockdown() then
     pendingProxies[#pendingProxies + 1] = frame
     return
   end
-  frame.cmHealingModeProxy = true
+  frame.cmSupportModeProxy = true
   proxyCount = proxyCount + 1
   SecureHandlerSetFrameRef(Handler, "p" .. proxyCount, frame)
-  Handler:SetAttribute("hmcount", proxyCount)
+  Handler:SetAttribute("smcount", proxyCount)
 end
 
---- Stores a proxy's normal and Healing Mode macro texts (same text when `healText` is nil) and
---- shows the one for the current mode. Out of combat only.
-function CM.SetModeMacroText(frame, normalText, healText)
+--- Stores a proxy's macro texts: normal, Support Mode (`supportText`, nil = same as normal) and
+--- Support Mode with the Self-Cast key held (`selfText`, nil = same as supportText), and shows the
+--- one for the current state. Out of combat only.
+function CM.SetModeMacroText(frame, normalText, supportText, selfText)
   if not frame or not normalText or InCombatLockdown() then
     return
   end
-  healText = healText or normalText
-  frame:SetAttribute("hm-off", normalText)
-  frame:SetAttribute("hm-on", healText)
-  frame:SetAttribute("macrotext", CM.IsHealingModeActive() and healText or normalText)
+  supportText = supportText or normalText
+  selfText = selfText or supportText
+  frame:SetAttribute("sm-off", normalText)
+  frame:SetAttribute("sm-on", supportText)
+  frame:SetAttribute("sm-self", selfText)
+  local current = normalText
+  if CM.IsSupportModeActive() then
+    current = Handler:GetAttribute("smself") == 1 and selfText or supportText
+  end
+  frame:SetAttribute("macrotext", current)
 end
 
 ---------------------------------------------------------------------------------------
@@ -182,7 +212,7 @@ end
 ---------------------------------------------------------------------------------------
 local function SyncNameplates()
   -- False = the nameplate CVars are protected right now (combat): retry on PLAYER_REGEN_ENABLED.
-  local applied = not CM.SyncHealingModeNameplates or CM.SyncHealingModeNameplates()
+  local applied = not CM.SyncSupportModeNameplates or CM.SyncSupportModeNameplates()
   pendingNameplates = applied == false
   return applied
 end
@@ -194,19 +224,19 @@ local function Notify(active, nameplatesApplied)
   end
   local text
   if nameplatesApplied == false then
-    text = active and L["Healing Mode on. Nameplates switch after combat."]
-      or L["Healing Mode off. Nameplates switch after combat."]
+    text = active and L["Support Mode on. Nameplates switch after combat."]
+      or L["Support Mode off. Nameplates switch after combat."]
   else
-    text = active and L["Healing Mode on"] or L["Healing Mode off"]
+    text = active and L["Support Mode on"] or L["Support Mode off"]
   end
   frame:AddMessage(text, 1, 0.82, 0)
 end
 
 -- Runs from the secure snippet (CallMethod), in or out of combat: nothing protected in here.
 local function OnModeChanged()
-  local active = CM.IsHealingModeActive()
+  local active = CM.IsSupportModeActive()
   if CM.DB and CM.DB.char then
-    CM.DB.char.healingModeActive = active
+    CM.DB.char.supportModeActive = active
   end
   Notify(active, SyncNameplates())
 end
@@ -226,10 +256,10 @@ end
 
 -- Leaves the mode from addon code (feature turned off while it was on). Out of combat only.
 local function ForceOff()
-  if not CM.IsHealingModeActive() or InCombatLockdown() then
+  if not CM.IsSupportModeActive() or InCombatLockdown() then
     return
   end
-  local page = CM.GetHealingModePage()
+  local page = CM.GetSupportModePage()
   SecureHandlerExecute(Handler, FORCE_OFF)
   if page and GetBarPage() == page then
     SetBarPage(EXIT_PAGE)
@@ -240,17 +270,23 @@ end
 -- Frames
 ---------------------------------------------------------------------------------------
 if SecureHandlerWrapScript then
-  Handler = CreateFrame("Frame", "CombatModeHealingMode", UIParent, "SecureHandlerBaseTemplate")
-  Handler:SetAttribute("hm", 0)
-  Handler:SetAttribute("hmcount", 0)
-  Handler.HealingModeChanged = OnModeChanged
+  Handler = CreateFrame("Frame", "CombatModeSupportMode", UIParent, "SecureHandlerBaseTemplate")
+  Handler:SetAttribute("sm", 0)
+  Handler:SetAttribute("smself", 0)
+  Handler:SetAttribute("smcount", 0)
+  Handler.SupportModeChanged = OnModeChanged
 
   KeyButton =
-    CreateFrame("Button", "CombatModeHealingModeKey", UIParent, "SecureActionButtonTemplate")
+    CreateFrame("Button", "CombatModeSupportModeKey", UIParent, "SecureActionButtonTemplate")
   KeyButton:RegisterForClicks("AnyDown", "AnyUp")
   KeyButton:SetAttribute("type", "macro")
   KeyButton:SetAttribute("useOnKeyDown", true)
   SecureHandlerWrapScript(KeyButton, "OnClick", Handler, KEY_PRE)
+
+  SelfKeyButton =
+    CreateFrame("Button", "CombatModeSupportModeSelfKey", UIParent, "SecureActionButtonTemplate")
+  SelfKeyButton:RegisterForClicks("AnyDown", "AnyUp")
+  SecureHandlerWrapScript(SelfKeyButton, "OnClick", Handler, SELF_KEY_PRE)
 end
 
 ---------------------------------------------------------------------------------------
@@ -261,23 +297,26 @@ local function ApplyImpl()
   if not Handler then
     return
   end
-  local page = CM.GetHealingModePage()
-  Handler:SetAttribute("hmhold", CM.DB.char.healingModeKeyBehavior == "hold" or nil)
-  Handler:SetAttribute("hmenter", page and ("/changeactionbar " .. page) or nil)
-  Handler:SetAttribute("hmexit", page and ("/changeactionbar " .. EXIT_PAGE) or nil)
-  if not CM.IsHealingModeEnabled() then
+  local page = CM.GetSupportModePage()
+  Handler:SetAttribute("smhold", CM.DB.char.supportModeKeyBehavior == "hold" or nil)
+  Handler:SetAttribute("smenter", page and ("/changeactionbar " .. page) or nil)
+  Handler:SetAttribute("smexit", page and ("/changeactionbar " .. EXIT_PAGE) or nil)
+  if not CM.IsSupportModeEnabled() then
     ForceOff()
     return
   end
   for _, key in ipairs({ GetBindingKey(BIND_NAME) }) do
     SetOverrideBindingClick(OverrideOwner, false, key, KeyButton:GetName(), "LeftButton")
   end
+  for _, key in ipairs({ GetBindingKey(SELF_BIND_NAME) }) do
+    SetOverrideBindingClick(OverrideOwner, false, key, SelfKeyButton:GetName(), "LeftButton")
+  end
 end
 
---- Stores the key's settings and (re)binds it; a call in combat waits for PLAYER_REGEN_ENABLED.
---- Callers that change what the macros say (key, page, modifier) also run
---- CM.RefreshClickCastMacros.
-function CM.ApplyHealingModeBinding()
+--- Stores the keys' settings and (re)binds them; a call in combat waits for
+--- PLAYER_REGEN_ENABLED. Callers that change what the macros say (Support Mode key, page) also
+--- run CM.RefreshClickCastMacros.
+function CM.ApplySupportModeBinding()
   if InCombatLockdown() then
     pendingApply = true
     return
@@ -286,29 +325,29 @@ function CM.ApplyHealingModeBinding()
   ApplyImpl()
 end
 
--- A reload while the mode was on leaves the healing page showing with the secure state back to
+-- A reload while the mode was on leaves the support page showing with the secure state back to
 -- off: return to page 1 (out of combat; PLAYER_REGEN_ENABLED retries).
 local function ClearLeftoverSession()
   local char = CM.DB and CM.DB.char
-  if not char or not char.healingModeActive or CM.IsHealingModeActive() or InCombatLockdown() then
+  if not char or not char.supportModeActive or CM.IsSupportModeActive() or InCombatLockdown() then
     return
   end
-  char.healingModeActive = false
-  local page = CM.GetHealingModePage()
+  char.supportModeActive = false
+  local page = CM.GetSupportModePage()
   if page and GetBarPage() == page then
     SetBarPage(EXIT_PAGE)
   end
 end
 
 --- PLAYER_REGEN_ENABLED: whatever combat held back.
-function CM.FlushHealingMode()
+function CM.FlushSupportMode()
   if InCombatLockdown() then
     return
   end
   ClearLeftoverSession()
   if #pendingProxies > 0 then
     for i = 1, #pendingProxies do
-      CM.HealingModeRegisterProxy(pendingProxies[i])
+      CM.SupportModeRegisterProxy(pendingProxies[i])
       pendingProxies[i] = nil
     end
     -- Their macro texts were not stored either.
@@ -317,7 +356,7 @@ function CM.FlushHealingMode()
     end
   end
   if pendingApply then
-    CM.ApplyHealingModeBinding()
+    CM.ApplySupportModeBinding()
   end
   if pendingNameplates then
     SyncNameplates()
@@ -325,8 +364,8 @@ function CM.FlushHealingMode()
 end
 
 --- Login / reload: the secure state starts off, so undo what an earlier session left behind.
-function CM.InitializeHealingMode()
+function CM.InitializeSupportMode()
   ClearLeftoverSession()
   SyncNameplates()
-  CM.ApplyHealingModeBinding()
+  CM.ApplySupportModeBinding()
 end

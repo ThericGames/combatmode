@@ -430,37 +430,39 @@ L["Where the Ally HUD sits relative to the crosshair."] =
 L["Scales the size of the Ally HUD."] = "Scala le dimensioni dell'HUD alleato."
 L["Distance between the Ally HUD and the crosshair."] = "Distanza tra l'HUD alleato e il mirino."
 
--- Healing Mode: keybind label, notices and options tab (HealingMode.lua, TabHealingMode.lua)
-L["Healing Mode"] = "Modalità cura"
-L["healing mode keybinding"] = "assegnazione della modalità cura"
-L["Healing Mode on"] = "Modalità cura attiva"
-L["Healing Mode off"] = "Modalità cura disattivata"
-L["Healing Mode on. Nameplates switch after combat."] =
-  "Modalità cura attiva. Le barre dei nomi cambiano dopo il combattimento."
-L["Healing Mode off. Nameplates switch after combat."] =
-  "Modalità cura disattivata. Le barre dei nomi cambiano dopo il combattimento."
-L["HEALING MODE"] = "MODALITÀ CURA"
-L["A second set of click casts for supporting your group. While Healing Mode is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair (never to yourself by accident), your main action bar shows a healing page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
-  "Un secondo set di lanci con clic per supportare il tuo gruppo. Finché la Modalità cura è attiva, gli incantesimi benefici sui tuoi pulsanti di lancio con clic vanno solo all'unità amica sotto il mirino (mai a te per sbaglio), la barra delle azioni principale mostra una pagina di cura e le barre dei nomi amiche sostituiscono quelle nemiche. Gli incantesimi dannosi continuano a mirare ai nemici."
-L["Healing Mode Keybind"] = "Tasto della modalità cura"
-L["Turns Healing Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
-  "Attiva e disattiva la Modalità cura. Funziona in combattimento. Lascialo senza assegnazione per disattivare la funzione."
+-- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
+L["Support Mode"] = "Modalità supporto"
+L["Support Mode Self-Cast"] = "Modalità supporto: lancio su di sé"
+L["support mode keybinding"] = "assegnazione della modalità supporto"
+L["support mode self-cast keybinding"] =
+  "assegnazione del lancio su di sé della modalità supporto"
+L["Support Mode on"] = "Modalità supporto attiva"
+L["Support Mode off"] = "Modalità supporto disattivata"
+L["Support Mode on. Nameplates switch after combat."] =
+  "Modalità supporto attiva. Le barre dei nomi cambiano dopo il combattimento."
+L["Support Mode off. Nameplates switch after combat."] =
+  "Modalità supporto disattivata. Le barre dei nomi cambiano dopo il combattimento."
+L["SUPPORT MODE"] = "MODALITÀ SUPPORTO"
+L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair (never to yourself by accident), your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
+  "Un secondo set di lanci con clic per supportare il tuo gruppo. Finché la Modalità supporto è attiva, gli incantesimi benefici sui tuoi pulsanti di lancio con clic vanno solo all'unità amica sotto il mirino (mai a te per sbaglio), la barra delle azioni principale mostra una pagina di supporto e le barre dei nomi amiche sostituiscono quelle nemiche. Gli incantesimi dannosi continuano a mirare ai nemici."
+L["Support Mode Keybind"] = "Tasto della modalità supporto"
+L["Turns Support Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
+  "Attiva e disattiva la Modalità supporto. Funziona in combattimento. Lascialo senza assegnazione per disattivare la funzione."
 L["Key Behavior"] = "Comportamento del tasto"
-L["Toggle: press to turn Healing Mode on, press again to turn it off. Hold: Healing Mode stays on only while the key is held."] =
-  "Attiva/disattiva: premi per attivare la Modalità cura, premi di nuovo per disattivarla. Tieni premuto: la Modalità cura resta attiva solo finché il tasto è premuto."
+L["Toggle: press to turn Support Mode on, press again to turn it off. Hold: Support Mode stays on only while the key is held."] =
+  "Attiva/disattiva: premi per attivare la Modalità supporto, premi di nuovo per disattivarla. Tieni premuto: la Modalità supporto resta attiva solo finché il tasto è premuto."
 L["Hold"] = "Tieni premuto"
-L["Healing Bar Page"] = "Pagina della barra di cura"
-L["The main action bar page shown while Healing Mode is on. Put your healing and support abilities there. Leaving Healing Mode returns to page 1."] =
-  "La pagina della barra delle azioni principale mostrata finché la Modalità cura è attiva. Metti lì le tue abilità di cura e supporto. Uscendo dalla Modalità cura si torna alla pagina 1."
+L["Support Bar Page"] = "Pagina della barra di supporto"
+L["The main action bar page shown while Support Mode is on. Put your healing and support abilities there. Leaving Support Mode returns to page 1."] =
+  "La pagina della barra delle azioni principale mostrata finché la Modalità supporto è attiva. Metti lì le tue abilità di cura e supporto. Uscendo dalla Modalità supporto si torna alla pagina 1."
 L["Don't swap"] = "Non cambiare"
 L["Page %d"] = "Pagina %d"
-L["Self-Cast Modifier"] = "Modificatore di lancio su di sé"
-L["Hold this key while clicking to cast the helpful spell on yourself instead. While Healing Mode is on, this replaces the click-cast actions you set for that modifier."] =
-  "Tieni premuto questo tasto mentre fai clic per lanciare l'incantesimo benefico su di te. Finché la Modalità cura è attiva, questo sostituisce le azioni di lancio con clic impostate per quel modificatore."
-L["None"] = "Nessuno"
+L["Self-Cast Keybind"] = "Tasto di lancio su di sé"
+L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
+  "Tieni premuto questo tasto mentre fai clic in Modalità supporto per lanciare su di te l'incantesimo benefico di quell'assegnazione di clic, invece che sull'unità sotto il mirino. Tutte le tue assegnazioni di clic mantengono i propri incantesimi. Lascialo senza assegnazione se non ti serve."
 L["Swap Nameplates"] = "Scambia barre dei nomi"
-L["Hide enemy nameplates and show friendly player nameplates while Healing Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
-  "Nasconde le barre dei nomi nemiche e mostra quelle dei giocatori amici finché la Modalità cura è attiva, poi ripristina le tue impostazioni. Il gioco permette di cambiare le barre dei nomi solo fuori dal combattimento, quindi un cambio fatto in combattimento viene applicato quando il combattimento termina."
+L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
+  "Nasconde le barre dei nomi nemiche e mostra quelle dei giocatori amici finché la Modalità supporto è attiva, poi ripristina le tue impostazioni. Il gioco permette di cambiare le barre dei nomi solo fuori dal combattimento, quindi un cambio fatto in combattimento viene applicato quando il combattimento termina."
 L["Requires Reticle Targeting"] = "Richiede Puntamento a mirino"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab

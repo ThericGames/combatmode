@@ -9,9 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Healing Mode**, with its own options tab and keybind (needs Reticle Targeting). While it is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair, never to yourself by accident, and harmful spells keep targeting enemies. It works in combat.
-  - **Healing Bar Page** swaps your main action bar to a page for your healing and support abilities (page 2 by default), and back to page 1 when you leave.
-  - **Self-Cast Modifier** (off by default) casts the spell on yourself while you hold Shift, Ctrl or Alt.
+- **Support Mode**, with its own options tab and keybind (needs Reticle Targeting). While it is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair, never to yourself by accident, and harmful spells keep targeting enemies. It works in combat.
+  - **Support Bar Page** swaps your main action bar to a page for your healing and support abilities (page 2 by default), and back to page 1 when you leave.
+  - **Self-Cast Keybind** (optional): hold it while clicking to cast that click bind's helpful spell on yourself instead. All your click binds keep their own spells.
   - **Swap Nameplates** hides enemy nameplates and shows friendly player ones, then restores your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends.
   - **Key Behavior** picks between a toggle and holding the key.
 

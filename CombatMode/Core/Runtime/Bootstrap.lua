@@ -127,9 +127,9 @@ function CM.BootstrapFeatureModules()
     CM.CapturePriorCVarSnapshot()
   end
   RenameBindableActions()
-  -- Before the click-cast macros: built in two versions while the Healing Mode key is bound.
-  if CM.InitializeHealingMode then
-    CM.InitializeHealingMode()
+  -- Before the click-cast macros: built in two versions while the Support Mode key is bound.
+  if CM.InitializeSupportMode then
+    CM.InitializeSupportMode()
   end
   CM.OverrideDefaultButtons()
   CM.ApplyGroundCastKeyOverrides()

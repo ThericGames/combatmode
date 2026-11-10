@@ -21,8 +21,8 @@
 --      forces MS off while focus+option active unless Motion Sickness Protection).
 --    • ConfigStickyCrosshair: Blizzard-reset helper for Uninstall only.
 --    • SetCursorFreelookCenteringCVar + SetCursorCenteredYPos — FreeLook bounce + Y sync.
---    • SyncHealingModeNameplates — Healing Mode's enemy → friendly nameplate swap; the player's
---      values wait in global.healingModeSavedNameplates until the mode ends (or Uninstall).
+--    • SyncSupportModeNameplates — Support Mode's enemy → friendly nameplate swap; the player's
+--      values wait in global.supportModeSavedNameplates until the mode ends (or Uninstall).
 --  Does not: Own SoftTarget UI widgets or freelook state machine.
 --  Related: Constants/CVars.lua, Constants/DatabaseDefaults.lua,
 --  Core/FreeLook/FreeLookController.lua, Core/Crosshair/Crosshair.lua,
@@ -160,8 +160,8 @@ function CM.RestorePriorCVars()
   restoringCVars = true
   -- A pending speed dip must not put its saved speeds back over the restored snapshot.
   cameraSpeedDipPending = false
-  -- Nameplates Healing Mode swapped are not in the snapshot; put the player's own back.
-  CM.SyncHealingModeNameplates(true)
+  -- Nameplates Support Mode swapped are not in the snapshot; put the player's own back.
+  CM.SyncSupportModeNameplates(true)
 
   if SnapshotIsPopulated(snap) then
     for name, value in pairs(snap) do
@@ -1199,14 +1199,14 @@ function CM.ApplyMinCameraZoom()
 end
 
 ---------------------------------------------------------------------------------------
--- Healing Mode nameplates
+-- Support Mode nameplates
 ---------------------------------------------------------------------------------------
-local HEALING_ENEMY_PLATES = "nameplateShowEnemies"
+local SUPPORT_ENEMY_PLATES = "nameplateShowEnemies"
 -- nameplateShowFriendlyPlayers on Mainline and Forever, nameplateShowFriends on older Classic.
-local HEALING_FRIENDLY_PLATES = { "nameplateShowFriendlyPlayers", "nameplateShowFriends" }
+local SUPPORT_FRIENDLY_PLATES = { "nameplateShowFriendlyPlayers", "nameplateShowFriends" }
 
 local function FriendlyNameplateCVar()
-  for _, name in ipairs(HEALING_FRIENDLY_PLATES) do
+  for _, name in ipairs(SUPPORT_FRIENDLY_PLATES) do
     if GetCVar(name) ~= nil then
       return name
     end
@@ -1228,21 +1228,21 @@ local function IsCVarLockedNow(name)
   return not ok or isSecure ~= false
 end
 
---- Brings the nameplate CVars in line with Healing Mode (Core/ClickCasting/HealingMode.lua).
---- Mode on (and char.healingModeNameplates): remember the player's values, hide enemy nameplates,
+--- Brings the nameplate CVars in line with Support Mode (Core/ClickCasting/SupportMode.lua).
+--- Mode on (and char.supportModeNameplates): remember the player's values, hide enemy nameplates,
 --- show friendly player ones. Mode off, or `forceRestore` (Uninstall): put the remembered values
 --- back. Returns false when the CVars are protected right now (combat); call again after combat.
-function CM.SyncHealingModeNameplates(forceRestore)
+function CM.SyncSupportModeNameplates(forceRestore)
   local globalDB = CM.DB and CM.DB.global
   local char = CM.DB and CM.DB.char
   if not globalDB or not char then
     return true
   end
   local want = not forceRestore
-    and CM.DbBool(char.healingModeNameplates, true)
-    and CM.IsHealingModeActive ~= nil
-    and CM.IsHealingModeActive()
-  local saved = globalDB.healingModeSavedNameplates
+    and CM.DbBool(char.supportModeNameplates, true)
+    and CM.IsSupportModeActive ~= nil
+    and CM.IsSupportModeActive()
+  local saved = globalDB.supportModeSavedNameplates
   if type(saved) ~= "table" then
     saved = nil
   end
@@ -1250,22 +1250,22 @@ function CM.SyncHealingModeNameplates(forceRestore)
     return true
   end
   local friendly = FriendlyNameplateCVar()
-  if IsCVarLockedNow(HEALING_ENEMY_PLATES) or (friendly and IsCVarLockedNow(friendly)) then
+  if IsCVarLockedNow(SUPPORT_ENEMY_PLATES) or (friendly and IsCVarLockedNow(friendly)) then
     return false
   end
   if want then
-    saved = { [HEALING_ENEMY_PLATES] = GetCVar(HEALING_ENEMY_PLATES) }
-    SetCVar(HEALING_ENEMY_PLATES, "0")
+    saved = { [SUPPORT_ENEMY_PLATES] = GetCVar(SUPPORT_ENEMY_PLATES) }
+    SetCVar(SUPPORT_ENEMY_PLATES, "0")
     if friendly then
       saved[friendly] = GetCVar(friendly)
       SetCVar(friendly, "1")
     end
-    globalDB.healingModeSavedNameplates = saved
+    globalDB.supportModeSavedNameplates = saved
   elseif saved then
     for name, value in pairs(saved) do
       SetCVar(name, value)
     end
-    globalDB.healingModeSavedNameplates = nil
+    globalDB.supportModeSavedNameplates = nil
   end
   return true
 end

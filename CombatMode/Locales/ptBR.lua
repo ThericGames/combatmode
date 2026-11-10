@@ -431,37 +431,38 @@ L["Scales the size of the Ally HUD."] = "Ajusta o tamanho do HUD de aliados."
 L["Distance between the Ally HUD and the crosshair."] =
   "Distância entre o HUD de aliados e a mira."
 
--- Healing Mode: keybind label, notices and options tab (HealingMode.lua, TabHealingMode.lua)
-L["Healing Mode"] = "Modo de Cura"
-L["healing mode keybinding"] = "atalho do modo de cura"
-L["Healing Mode on"] = "Modo de Cura ativado"
-L["Healing Mode off"] = "Modo de Cura desativado"
-L["Healing Mode on. Nameplates switch after combat."] =
-  "Modo de Cura ativado. As placas de identificação mudam após o combate."
-L["Healing Mode off. Nameplates switch after combat."] =
-  "Modo de Cura desativado. As placas de identificação mudam após o combate."
-L["HEALING MODE"] = "MODO DE CURA"
-L["A second set of click casts for supporting your group. While Healing Mode is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair (never to yourself by accident), your main action bar shows a healing page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
-  "Um segundo conjunto de lançamentos por clique para apoiar seu grupo. Enquanto o Modo de Cura está ativado, os feitiços benéficos dos seus botões de lançamento por clique só vão para a unidade amigável sob a mira (nunca para você por acidente), sua barra de ação principal mostra uma página de cura e as placas de identificação amigáveis substituem as inimigas. Feitiços nocivos continuam mirando inimigos."
-L["Healing Mode Keybind"] = "Atalho do Modo de Cura"
-L["Turns Healing Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
-  "Ativa e desativa o Modo de Cura. Funciona em combate. Deixe sem atalho para desativar o recurso."
+-- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
+L["Support Mode"] = "Modo de Suporte"
+L["Support Mode Self-Cast"] = "Modo de Suporte: autolançamento"
+L["support mode keybinding"] = "atalho do modo de suporte"
+L["support mode self-cast keybinding"] = "atalho de autolançamento do modo de suporte"
+L["Support Mode on"] = "Modo de Suporte ativado"
+L["Support Mode off"] = "Modo de Suporte desativado"
+L["Support Mode on. Nameplates switch after combat."] =
+  "Modo de Suporte ativado. As placas de identificação mudam após o combate."
+L["Support Mode off. Nameplates switch after combat."] =
+  "Modo de Suporte desativado. As placas de identificação mudam após o combate."
+L["SUPPORT MODE"] = "MODO DE SUPORTE"
+L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair (never to yourself by accident), your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
+  "Um segundo conjunto de lançamentos por clique para apoiar seu grupo. Enquanto o Modo de Suporte está ativado, os feitiços benéficos dos seus botões de lançamento por clique só vão para a unidade amigável sob a mira (nunca para você por acidente), sua barra de ação principal mostra uma página de suporte e as placas de identificação amigáveis substituem as inimigas. Feitiços nocivos continuam mirando inimigos."
+L["Support Mode Keybind"] = "Atalho do Modo de Suporte"
+L["Turns Support Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
+  "Ativa e desativa o Modo de Suporte. Funciona em combate. Deixe sem atalho para desativar o recurso."
 L["Key Behavior"] = "Comportamento da tecla"
-L["Toggle: press to turn Healing Mode on, press again to turn it off. Hold: Healing Mode stays on only while the key is held."] =
-  "Alternar: pressione para ativar o Modo de Cura e pressione de novo para desativar. Segurar: o Modo de Cura só fica ativado enquanto a tecla está pressionada."
+L["Toggle: press to turn Support Mode on, press again to turn it off. Hold: Support Mode stays on only while the key is held."] =
+  "Alternar: pressione para ativar o Modo de Suporte e pressione de novo para desativar. Segurar: o Modo de Suporte só fica ativado enquanto a tecla está pressionada."
 L["Hold"] = "Segurar"
-L["Healing Bar Page"] = "Página da barra de cura"
-L["The main action bar page shown while Healing Mode is on. Put your healing and support abilities there. Leaving Healing Mode returns to page 1."] =
-  "A página da barra de ação principal exibida enquanto o Modo de Cura está ativado. Coloque nela suas habilidades de cura e suporte. Sair do Modo de Cura volta para a página 1."
+L["Support Bar Page"] = "Página da barra de suporte"
+L["The main action bar page shown while Support Mode is on. Put your healing and support abilities there. Leaving Support Mode returns to page 1."] =
+  "A página da barra de ação principal exibida enquanto o Modo de Suporte está ativado. Coloque nela suas habilidades de cura e suporte. Sair do Modo de Suporte volta para a página 1."
 L["Don't swap"] = "Não trocar"
 L["Page %d"] = "Página %d"
-L["Self-Cast Modifier"] = "Modificador de autolançamento"
-L["Hold this key while clicking to cast the helpful spell on yourself instead. While Healing Mode is on, this replaces the click-cast actions you set for that modifier."] =
-  "Segure esta tecla ao clicar para lançar o feitiço benéfico em você. Enquanto o Modo de Cura está ativado, isso substitui as ações de lançamento por clique definidas para esse modificador."
-L["None"] = "Nenhum"
+L["Self-Cast Keybind"] = "Atalho de autolançamento"
+L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
+  "Segure esta tecla ao clicar no Modo de Suporte para lançar em você o feitiço benéfico daquele atalho de clique, em vez de na unidade sob a mira. Todos os seus atalhos de clique mantêm seus próprios feitiços. Deixe sem atalho se não precisar."
 L["Swap Nameplates"] = "Trocar placas de identificação"
-L["Hide enemy nameplates and show friendly player nameplates while Healing Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
-  "Oculta as placas de identificação inimigas e mostra as de jogadores amigáveis enquanto o Modo de Cura está ativado, depois restaura suas configurações. O jogo só permite mudar as placas de identificação fora de combate, então uma troca feita em combate é aplicada quando o combate termina."
+L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
+  "Oculta as placas de identificação inimigas e mostra as de jogadores amigáveis enquanto o Modo de Suporte está ativado, depois restaura suas configurações. O jogo só permite mudar as placas de identificação fora de combate, então uma troca feita em combate é aplicada quando o combate termina."
 L["Requires Reticle Targeting"] = "Requer Mira de Alvo"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab

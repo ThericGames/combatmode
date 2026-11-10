@@ -357,33 +357,34 @@ L["Where the Ally HUD sits relative to the crosshair."] = true
 L["Scales the size of the Ally HUD."] = true
 L["Distance between the Ally HUD and the crosshair."] = true
 
--- Healing Mode: keybind label, notices and options tab (HealingMode.lua, TabHealingMode.lua)
-L["Healing Mode"] = true
-L["healing mode keybinding"] = true
-L["Healing Mode on"] = true
-L["Healing Mode off"] = true
-L["Healing Mode on. Nameplates switch after combat."] = true
-L["Healing Mode off. Nameplates switch after combat."] = true
-L["HEALING MODE"] = true
-L["A second set of click casts for supporting your group. While Healing Mode is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair (never to yourself by accident), your main action bar shows a healing page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
+-- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
+L["Support Mode"] = true
+L["Support Mode Self-Cast"] = true
+L["support mode keybinding"] = true
+L["support mode self-cast keybinding"] = true
+L["Support Mode on"] = true
+L["Support Mode off"] = true
+L["Support Mode on. Nameplates switch after combat."] = true
+L["Support Mode off. Nameplates switch after combat."] = true
+L["SUPPORT MODE"] = true
+L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair (never to yourself by accident), your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
   true
-L["Healing Mode Keybind"] = true
-L["Turns Healing Mode on and off. Works in combat. Leave it unbound to disable the feature."] = true
+L["Support Mode Keybind"] = true
+L["Turns Support Mode on and off. Works in combat. Leave it unbound to disable the feature."] = true
 L["Key Behavior"] = true
-L["Toggle: press to turn Healing Mode on, press again to turn it off. Hold: Healing Mode stays on only while the key is held."] =
+L["Toggle: press to turn Support Mode on, press again to turn it off. Hold: Support Mode stays on only while the key is held."] =
   true
 L["Hold"] = true
-L["Healing Bar Page"] = true
-L["The main action bar page shown while Healing Mode is on. Put your healing and support abilities there. Leaving Healing Mode returns to page 1."] =
+L["Support Bar Page"] = true
+L["The main action bar page shown while Support Mode is on. Put your healing and support abilities there. Leaving Support Mode returns to page 1."] =
   true
 L["Don't swap"] = true
 L["Page %d"] = true
-L["Self-Cast Modifier"] = true
-L["Hold this key while clicking to cast the helpful spell on yourself instead. While Healing Mode is on, this replaces the click-cast actions you set for that modifier."] =
+L["Self-Cast Keybind"] = true
+L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
   true
-L["None"] = true
 L["Swap Nameplates"] = true
-L["Hide enemy nameplates and show friendly player nameplates while Healing Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
+L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
   true
 L["Requires Reticle Targeting"] = true
 
