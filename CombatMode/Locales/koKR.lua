@@ -435,9 +435,7 @@ L["Distance between the Ally HUD and the crosshair."] =
 
 -- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
 L["Support Mode"] = "지원 모드"
-L["Support Mode Self-Cast"] = "지원 모드 자신에게 시전"
 L["support mode keybinding"] = "지원 모드 단축키"
-L["support mode self-cast keybinding"] = "지원 모드 자신에게 시전 단축키"
 L["Support Mode on"] = "지원 모드 켜짐"
 L["Support Mode off"] = "지원 모드 꺼짐"
 L["Support Mode on. Nameplates switch after combat."] =
@@ -445,8 +443,8 @@ L["Support Mode on. Nameplates switch after combat."] =
 L["Support Mode off. Nameplates switch after combat."] =
   "지원 모드 꺼짐. 이름표는 전투가 끝난 뒤 전환됩니다."
 L["SUPPORT MODE"] = "지원 모드"
-L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons go to your friendly target first (such as an Ally Cycle pick), else to the friendly unit under the crosshair, else to the ally the game soft-targets in front of you, and never to yourself by accident. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
-  "파티를 지원하기 위한 두 번째 클릭 시전 세트입니다. 지원 모드가 켜져 있는 동안 클릭 시전 버튼의 이로운 주문은 먼저 우호적인 현재 대상(예: 아군 순환으로 선택한 대상)에게 시전되고, 없으면 조준점 아래의 우호적 대상에게, 그것도 없으면 게임이 앞쪽에서 부드러운 대상으로 잡은 아군에게 시전되며, 실수로 자신에게 시전되지 않습니다. 주 행동 단축바는 지원 페이지를 표시하고, 적 이름표 대신 우호적 이름표가 표시됩니다. 해로운 주문은 계속 적을 대상으로 합니다."
+L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons go to your friendly target first (such as an Ally Cycle pick), else to the friendly unit under the crosshair, else to the ally the game soft-targets in front of you. With no ally to take the spell, the game's Self Cast setting decides whether it lands on you. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
+  "파티를 지원하기 위한 두 번째 클릭 시전 세트입니다. 지원 모드가 켜져 있는 동안 클릭 시전 버튼의 이로운 주문은 먼저 우호적인 현재 대상(예: 아군 순환으로 선택한 대상)에게 시전되고, 없으면 조준점 아래의 우호적 대상에게, 그것도 없으면 게임이 앞쪽에서 부드러운 대상으로 잡은 아군에게 시전됩니다. 주문을 받을 아군이 없으면 게임의 자신에게 시전 설정에 따라 자신에게 시전될지가 정해집니다. 주 행동 단축바는 지원 페이지를 표시하고, 적 이름표 대신 우호적 이름표가 표시됩니다. 해로운 주문은 계속 적을 대상으로 합니다."
 L["Support Mode Keybind"] = "지원 모드 단축키"
 L["Turns Support Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
   "지원 모드를 켜고 끕니다. 전투 중에도 작동합니다. 단축키를 지정하지 않으면 기능이 비활성화됩니다."
@@ -455,17 +453,6 @@ L["The main action bar page shown while Support Mode is on. Put your healing and
   "지원 모드가 켜져 있는 동안 표시되는 주 행동 단축바 페이지입니다. 치유 및 지원 능력을 그곳에 배치하세요. 지원 모드를 끄면 1페이지로 돌아갑니다."
 L["Don't swap"] = "전환 안 함"
 L["Page %d"] = "%d페이지"
-L["Self-Cast Keybind"] = "자신에게 시전 단축키"
-L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
-  "지원 모드에서 클릭할 때 이 키를 누르고 있으면 해당 클릭 단축키의 이로운 주문을 조준점 아래의 대상 대신 자신에게 시전합니다. 모든 클릭 단축키는 원래 주문을 그대로 유지합니다. 필요하지 않으면 지정하지 않아도 됩니다."
-L["Self-Cast Modifier"] = "자신에게 시전 보조키"
-L["Hold this modifier while clicking in Support Mode to cast the click's helpful spell on yourself. Warning: this replaces the modifier's own click binds while Support Mode is on."] =
-  "지원 모드에서 이 보조키를 누른 채 클릭하면 해당 클릭의 이로운 주문을 자신에게 시전합니다. 경고: 지원 모드가 켜져 있는 동안 이 보조키의 클릭 단축키를 대신합니다."
-L["Example: Shift"] = "예: Shift"
-L["Shift + Left Click casts the Left Click's helpful spell on yourself, and Shift + Right Click the Right Click's."] =
-  "Shift + 왼쪽 클릭은 왼쪽 클릭의 이로운 주문을, Shift + 오른쪽 클릭은 오른쪽 클릭의 이로운 주문을 자신에게 시전합니다."
-L["While Support Mode is on, Shift + Left Click and Shift + Right Click cast on yourself instead of their own click binds (action bar slots 3 and 4 by default) whenever the plain click holds a helpful spell. Outside Support Mode they work as usual."] =
-  "지원 모드가 켜져 있는 동안 일반 클릭에 이로운 주문이 있으면, Shift + 왼쪽 클릭과 Shift + 오른쪽 클릭은 자체 클릭 단축키(기본값: 행동 단축바 3번과 4번 칸) 대신 자신에게 시전합니다. 지원 모드 밖에서는 평소대로 작동합니다."
 L["Requires Reticle Targeting"] = "조준선 대상 지정 필요"
 L["Support"] = "지원"
 L["Tint Vignette"] = "비네트 색 입히기"

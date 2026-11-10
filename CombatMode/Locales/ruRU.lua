@@ -457,10 +457,7 @@ L["Distance between the Ally HUD and the crosshair."] =
 
 -- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
 L["Support Mode"] = "Режим поддержки"
-L["Support Mode Self-Cast"] = "Режим поддержки: применение к себе"
 L["support mode keybinding"] = "привязка режима поддержки"
-L["support mode self-cast keybinding"] =
-  "привязка применения к себе в режиме поддержки"
 L["Support Mode on"] = "Режим поддержки включен"
 L["Support Mode off"] = "Режим поддержки выключен"
 L["Support Mode on. Nameplates switch after combat."] =
@@ -468,8 +465,8 @@ L["Support Mode on. Nameplates switch after combat."] =
 L["Support Mode off. Nameplates switch after combat."] =
   "Режим поддержки выключен. Индикаторы здоровья переключатся после боя."
 L["SUPPORT MODE"] = "РЕЖИМ ПОДДЕРЖКИ"
-L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons go to your friendly target first (such as an Ally Cycle pick), else to the friendly unit under the crosshair, else to the ally the game soft-targets in front of you, and never to yourself by accident. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
-  "Второй набор применений по щелчку для поддержки группы. Пока режим поддержки включен, полезные заклинания на кнопках применения по щелчку применяются сначала к вашей дружественной цели (например, выбранной через «Смена союзника»), иначе к дружественной цели под прицелом, иначе к союзнику, которого игра выбирает мягкой целью перед вами, и никогда случайно к вам. Основная панель команд показывает страницу поддержки, а дружественные индикаторы здоровья заменяют вражеские. Вредоносные заклинания по-прежнему применяются к противникам."
+L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons go to your friendly target first (such as an Ally Cycle pick), else to the friendly unit under the crosshair, else to the ally the game soft-targets in front of you. With no ally to take the spell, the game's Self Cast setting decides whether it lands on you. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
+  "Второй набор применений по щелчку для поддержки группы. Пока режим поддержки включен, полезные заклинания на кнопках применения по щелчку применяются сначала к вашей дружественной цели (например, выбранной через «Смена союзника»), иначе к дружественной цели под прицелом, иначе к союзнику, которого игра выбирает мягкой целью перед вами. Если союзника для заклинания нет, настройка игры «Применение на себя» решает, попадет ли оно на вас. Основная панель команд показывает страницу поддержки, а дружественные индикаторы здоровья заменяют вражеские. Вредоносные заклинания по-прежнему применяются к противникам."
 L["Support Mode Keybind"] = "Клавиша режима поддержки"
 L["Turns Support Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
   "Включает и выключает режим поддержки. Работает в бою. Оставьте без клавиши, чтобы отключить функцию."
@@ -478,17 +475,6 @@ L["The main action bar page shown while Support Mode is on. Put your healing and
   "Страница основной панели команд, которая показывается, пока включен режим поддержки. Разместите на ней способности исцеления и поддержки. При выходе из режима поддержки возвращается страница 1."
 L["Don't swap"] = "Не менять"
 L["Page %d"] = "Страница %d"
-L["Self-Cast Keybind"] = "Клавиша применения к себе"
-L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
-  "Удерживайте эту клавишу при щелчке в режиме поддержки, чтобы применить полезное заклинание этой привязки щелчка к себе, а не к цели под прицелом. Все ваши привязки щелчков сохраняют свои заклинания. Оставьте без клавиши, если она не нужна."
-L["Self-Cast Modifier"] = "Модификатор применения на себя"
-L["Hold this modifier while clicking in Support Mode to cast the click's helpful spell on yourself. Warning: this replaces the modifier's own click binds while Support Mode is on."] =
-  "Удерживайте этот модификатор при щелчке в режиме поддержки, чтобы применить полезное заклинание щелчка на себя. Внимание: пока режим поддержки включен, это заменяет собственные назначения щелчков с этим модификатором."
-L["Example: Shift"] = "Пример: Shift"
-L["Shift + Left Click casts the Left Click's helpful spell on yourself, and Shift + Right Click the Right Click's."] =
-  "Shift + левый щелчок применяет на вас полезное заклинание левого щелчка, а Shift + правый щелчок применяет заклинание правого."
-L["While Support Mode is on, Shift + Left Click and Shift + Right Click cast on yourself instead of their own click binds (action bar slots 3 and 4 by default) whenever the plain click holds a helpful spell. Outside Support Mode they work as usual."] =
-  "Пока режим поддержки включен, Shift + левый щелчок и Shift + правый щелчок применяют заклинание на вас вместо собственных назначений (по умолчанию ячейки 3 и 4 панели команд), если на обычном щелчке полезное заклинание. Вне режима поддержки они работают как обычно."
 L["Requires Reticle Targeting"] = "Требуется наведение по прицелу"
 L["Support"] = "Поддержка"
 L["Tint Vignette"] = "Окрашивать виньетку"

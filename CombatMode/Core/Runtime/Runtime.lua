@@ -403,8 +403,10 @@ function CM.InitDatabase()
         end
         charDb.supportModeNameplates = nil
       end
-      -- Its Key Behavior (toggle / hold) option was removed before release: the key toggles.
+      -- Its Key Behavior (toggle / hold) and Self-Cast Modifier options were removed before
+      -- release: the key toggles, and self-casting is left to a player macro.
       charDb.supportModeKeyBehavior = nil
+      charDb.supportModeSelfCastModifier = nil
     end
   end
   -- Party Radial removed in 4.7.0; drop leftover settings so they do not linger in SV.

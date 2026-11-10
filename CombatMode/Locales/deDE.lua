@@ -434,9 +434,7 @@ L["Distance between the Ally HUD and the crosshair."] =
 
 -- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
 L["Support Mode"] = "Unterstützungsmodus"
-L["Support Mode Self-Cast"] = "Unterstützungsmodus: Selbstzauber"
 L["support mode keybinding"] = "Belegung für Unterstützungsmodus"
-L["support mode self-cast keybinding"] = "Belegung für Unterstützungsmodus-Selbstzauber"
 L["Support Mode on"] = "Unterstützungsmodus an"
 L["Support Mode off"] = "Unterstützungsmodus aus"
 L["Support Mode on. Nameplates switch after combat."] =
@@ -444,8 +442,8 @@ L["Support Mode on. Nameplates switch after combat."] =
 L["Support Mode off. Nameplates switch after combat."] =
   "Unterstützungsmodus aus. Namensplaketten wechseln nach dem Kampf."
 L["SUPPORT MODE"] = "UNTERSTÜTZUNGSMODUS"
-L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons go to your friendly target first (such as an Ally Cycle pick), else to the friendly unit under the crosshair, else to the ally the game soft-targets in front of you, and never to yourself by accident. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
-  "Ein zweiter Satz Klick-Zauber zur Unterstützung deiner Gruppe. Solange der Unterstützungsmodus an ist, gehen hilfreiche Zauber auf deinen Klick-Zauber-Tasten zuerst auf dein freundliches Ziel (etwa eine Auswahl des Verbündetenwechsels), sonst auf die freundliche Einheit unter dem Fadenkreuz, sonst auf den Verbündeten, den das Spiel vor dir als weiches Ziel wählt, und nie versehentlich auf dich selbst. Deine Hauptaktionsleiste zeigt eine Unterstützungsseite und freundliche Namensplaketten ersetzen die feindlichen. Schädliche Zauber zielen weiterhin auf Gegner."
+L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons go to your friendly target first (such as an Ally Cycle pick), else to the friendly unit under the crosshair, else to the ally the game soft-targets in front of you. With no ally to take the spell, the game's Self Cast setting decides whether it lands on you. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
+  "Ein zweiter Satz Klick-Zauber zur Unterstützung deiner Gruppe. Solange der Unterstützungsmodus an ist, gehen hilfreiche Zauber auf deinen Klick-Zauber-Tasten zuerst auf dein freundliches Ziel (etwa eine Auswahl des Verbündetenwechsels), sonst auf die freundliche Einheit unter dem Fadenkreuz, sonst auf den Verbündeten, den das Spiel vor dir als weiches Ziel wählt. Gibt es keinen Verbündeten für den Zauber, entscheidet die Selbstzauber-Einstellung des Spiels, ob er auf dich geht. Deine Hauptaktionsleiste zeigt eine Unterstützungsseite und freundliche Namensplaketten ersetzen die feindlichen. Schädliche Zauber zielen weiterhin auf Gegner."
 L["Support Mode Keybind"] = "Tastenbelegung für Unterstützungsmodus"
 L["Turns Support Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
   "Schaltet den Unterstützungsmodus an und aus. Funktioniert im Kampf. Ohne Belegung ist die Funktion deaktiviert."
@@ -454,17 +452,6 @@ L["The main action bar page shown while Support Mode is on. Put your healing and
   "Die Seite der Hauptaktionsleiste, die im Unterstützungsmodus angezeigt wird. Lege dort deine Heil- und Unterstützungsfähigkeiten ab. Beim Verlassen des Unterstützungsmodus geht es zurück zu Seite 1."
 L["Don't swap"] = "Nicht wechseln"
 L["Page %d"] = "Seite %d"
-L["Self-Cast Keybind"] = "Tastenbelegung für Selbstzauber"
-L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
-  "Halte diese Taste beim Klicken im Unterstützungsmodus, um den hilfreichen Zauber dieser Klick-Belegung auf dich selbst statt auf die Einheit unter dem Fadenkreuz zu wirken. Alle deine Klick-Belegungen behalten ihre eigenen Zauber. Lass sie unbelegt, wenn du sie nicht brauchst."
-L["Self-Cast Modifier"] = "Selbstzauber-Modifikator"
-L["Hold this modifier while clicking in Support Mode to cast the click's helpful spell on yourself. Warning: this replaces the modifier's own click binds while Support Mode is on."] =
-  "Halte diesen Modifikator beim Klicken im Unterstützungsmodus, um den hilfreichen Zauber des Klicks auf dich selbst zu wirken. Warnung: Das ersetzt die eigenen Klick-Belegungen des Modifikators, solange der Unterstützungsmodus an ist."
-L["Example: Shift"] = "Beispiel: Umschalt"
-L["Shift + Left Click casts the Left Click's helpful spell on yourself, and Shift + Right Click the Right Click's."] =
-  "Umschalt + Linksklick wirkt den hilfreichen Zauber des Linksklicks auf dich selbst, Umschalt + Rechtsklick den des Rechtsklicks."
-L["While Support Mode is on, Shift + Left Click and Shift + Right Click cast on yourself instead of their own click binds (action bar slots 3 and 4 by default) whenever the plain click holds a helpful spell. Outside Support Mode they work as usual."] =
-  "Solange der Unterstützungsmodus an ist, wirken Umschalt + Linksklick und Umschalt + Rechtsklick auf dich selbst statt ihre eigenen Klick-Belegungen (standardmäßig Aktionsleistenplätze 3 und 4), sobald der einfache Klick einen hilfreichen Zauber hat. Außerhalb des Unterstützungsmodus funktionieren sie wie gewohnt."
 L["Requires Reticle Targeting"] = "Erfordert Fadenkreuz-Zielerfassung"
 L["Support"] = "Support"
 L["Tint Vignette"] = "Vignette einfärben"

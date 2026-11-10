@@ -1,10 +1,9 @@
 ---------------------------------------------------------------------------------------
 --  UI/Options/Tabs/TabSupportMode.lua — OPTIONS TAB — Support Mode
 ---------------------------------------------------------------------------------------
---  What it does: Support Mode keybind (a toggle), support bar page, Self-Cast keybind and
---  modifier, Vignette tint toggle and the nameplates dropdown. An unbound
---  Support Mode key disables it. (The Support crosshair color and texture are on the Crosshair
---  tab: Reaction Colors and Appearance.)
+--  What it does: Support Mode keybind (a toggle), support bar page, Vignette tint toggle and
+--  the nameplates dropdown. An unbound Support Mode key disables it. (The Support crosshair
+--  color and texture are on the Crosshair tab: Reaction Colors and Appearance.)
 --  Architecture / how it works:
 --    • DB.char.supportMode* (per character). Every setter re-stores the secure key
 --      (CM.ApplySupportModeBinding) and rebuilds the click-cast macros
@@ -29,16 +28,6 @@ local tonumber = _G.tonumber
 local UI = CM.UI
 
 local BIND_NAME = "Combat Mode - Support Mode"
-local SELF_BIND_NAME = "Combat Mode - Support Mode Self Cast"
-
--- Stored ids are the macro modifier names ("shift" in [mod:shift]); "none" = off.
-local SELF_MODIFIER_VALUES = {
-  none = L["Off"],
-  shift = _G.SHIFT_KEY or L["Shift"],
-  ctrl = _G.CTRL_KEY or L["Ctrl"],
-  alt = _G.ALT_KEY or L["Alt"],
-}
-local SELF_MODIFIER_ORDER = { "none", "shift", "ctrl", "alt" }
 
 -- char.supportModeNameplateMode (applied by CM.SyncSupportModeNameplates in CVarManager).
 local NAMEPLATE_VALUES = {
@@ -86,7 +75,7 @@ UI.Options.AddTab({
   build = function(ctx)
     ctx:Header({ text = L["SUPPORT MODE"], newFeatureFlag = true })
     ctx:Description({
-      text = L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons go to your friendly target first (such as an Ally Cycle pick), else to the friendly unit under the crosshair, else to the ally the game soft-targets in front of you, and never to yourself by accident. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."],
+      text = L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons go to your friendly target first (such as an Ally Cycle pick), else to the friendly unit under the crosshair, else to the ally the game soft-targets in front of you. With no ally to take the spell, the game's Self Cast setting decides whether it lands on you. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."],
     })
 
     ctx:Keybind({
@@ -118,51 +107,6 @@ UI.Options.AddTab({
       end,
       set = function(value)
         CM.DB.char.supportModePage = tonumber(string.sub(value, 2)) or 0
-        Apply()
-      end,
-      disabled = ReticleTargetingOff,
-      watermarkWhenDisabled = ReticleTargetingNotice,
-    })
-    ctx:Keybind({
-      label = L["Self-Cast Keybind"],
-      desc = L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."],
-      newFeatureFlag = true,
-      get = function()
-        return (GetBindingKey(SELF_BIND_NAME))
-      end,
-      set = function(key)
-        CM.TryApplyBindingChange(L["support mode self-cast keybinding"], function()
-          CM.AssignNamedKeybind(SELF_BIND_NAME, key)
-          Apply()
-        end)
-      end,
-      disabled = ReticleTargetingOff,
-      watermarkWhenDisabled = ReticleTargetingNotice,
-    })
-    ctx:Dropdown({
-      label = L["Self-Cast Modifier"],
-      desc = L["Hold this modifier while clicking in Support Mode to cast the click's helpful spell on yourself. Warning: this replaces the modifier's own click binds while Support Mode is on."],
-      helpTooltip = {
-        title = L["Self-Cast Modifier"],
-        stacked = true,
-        lines = {
-          {
-            label = L["Example: Shift"],
-            value = L["Shift + Left Click casts the Left Click's helpful spell on yourself, and Shift + Right Click the Right Click's."],
-            warning = L["While Support Mode is on, Shift + Left Click and Shift + Right Click cast on yourself instead of their own click binds (action bar slots 3 and 4 by default) whenever the plain click holds a helpful spell. Outside Support Mode they work as usual."],
-          },
-        },
-      },
-      charSpecific = true,
-      newFeatureFlag = true,
-      values = SELF_MODIFIER_VALUES,
-      order = SELF_MODIFIER_ORDER,
-      get = function()
-        local modifier = CM.DB.char.supportModeSelfCastModifier
-        return SELF_MODIFIER_VALUES[modifier] and modifier or "none"
-      end,
-      set = function(value)
-        CM.DB.char.supportModeSelfCastModifier = value
         Apply()
       end,
       disabled = ReticleTargetingOff,

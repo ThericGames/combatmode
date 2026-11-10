@@ -86,9 +86,13 @@ local function RememberActionBarFingerprint()
   end
 end
 
+-- CVAR_UPDATE names that rebuild the click-cast macros: the /click phase and, in Support Mode,
+-- the game's Auto Self Cast (TargetingMacroBuilder reads both when it builds a text).
+local CLICKCAST_MACRO_CVARS = { ActionButtonUseKeyDown = true, autoSelfCast = true }
+
 local function DebugPrintClickCastRefreshReason()
   if clickCastRefreshReason == "cvar" then
-    CM.DebugPrint("ActionButtonUseKeyDown changed, refreshing binding macros")
+    CM.DebugPrint("ActionButtonUseKeyDown or autoSelfCast changed, refreshing binding macros")
   elseif clickCastRefreshReason == "ACTIONBAR_SLOT_CHANGED" and clickCastRefreshSlot ~= nil then
     CM.DebugPrint(
       "Refreshing binding macros (ACTIONBAR_SLOT_CHANGED slot="
@@ -217,7 +221,8 @@ local function HandleEventByCategory(category, event, ...)
       end
     end,
     REFRESH_BINDINGS_EVENTS = function()
-      if event == "CVAR_UPDATE" and cvarName ~= "ActionButtonUseKeyDown" then
+      -- Only the CVars the click-cast macro texts are built from (autoSelfCast: Support Mode).
+      if event == "CVAR_UPDATE" and not CLICKCAST_MACRO_CVARS[cvarName] then
         return
       end
       -- Payload is unitTarget; only the player's spec changes restore-after-harm defaults.

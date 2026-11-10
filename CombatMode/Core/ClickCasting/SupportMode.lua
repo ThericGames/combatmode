@@ -3,22 +3,21 @@
 ---------------------------------------------------------------------------------------
 --  What it does: The Support Mode keybind. While the mode is on, helpful spells on the
 --  click-cast mouse buttons only go to your friendly hard target (an Ally Cycle pick), else to
---  the ally under the crosshair or soft-targeted, or to you while the Self-Cast key is held; the
---  main action bar shows the support page, and enemy nameplates give way to friendly ones.
---  Leaving it puts page 1 and the nameplates back.
+--  the ally under the crosshair or soft-targeted, else to you if the game's Self Cast setting
+--  says so; the main action bar shows the support page, and enemy nameplates give way to
+--  friendly ones. Leaving it puts page 1 and the nameplates back.
 --  Architecture / how it works:
 --    • Enabled = Reticle Targeting on and the key bound (no master toggle).
---    • CombatModeSupportMode (SecureHandlerBaseTemplate) holds the state (attributes sm and
---      smself = 1 / 0) and a frame ref to every click-cast proxy with more than one macro text.
+--    • CombatModeSupportMode (SecureHandlerBaseTemplate) holds the state (attribute sm = 1 / 0)
+--      and a frame ref to every click-cast proxy with more than one macro text.
 --      BindingOverrides and the Party Wheel route buttons store them out of combat
---      (CM.SetModeMacroText: sm-off / sm-on / sm-self attributes); the keys' wrapped OnClick
---      copies the right one into macrotext, so the swap works in combat.
+--      (CM.SetModeMacroText: sm-off / sm-on attributes); the key's wrapped OnClick copies the
+--      right one into macrotext, so the swap works in combat.
 --    • CombatModeSupportModeKey (SecureActionButtonTemplate, type macro) runs
 --      /changeactionbar <page> for the page swap, the only secure way to page in combat.
 --      The key is a toggle: each press flips the mode, the release does nothing.
---    • CombatModeSupportModeSelfKey: held = smself 1 (click casts use sm-self, "/cast [@player]").
---      char.supportModeSelfCastModifier (Shift / Ctrl / Alt) does the same from the macro texts
---      alone, with no secure state (ModifierSelfCastText in BindingOverrides).
+--    • No self-cast option of its own (a hold key and a modifier existed before release and
+--      were removed); the macro texts follow the game's Self Cast setting instead.
 --    • Insecure side: Handler.SupportModeChanged (CallMethod) → nameplates
 --      (CM.SyncSupportModeNameplates in CVarManager; only if a client protects those CVars in
 --      combat do they wait for PLAYER_REGEN_ENABLED), the on / off notice, the crosshair
@@ -54,13 +53,11 @@ local pcall = _G.pcall
 local tonumber = _G.tonumber
 
 local BIND_NAME = "Combat Mode - Support Mode"
-local SELF_BIND_NAME = "Combat Mode - Support Mode Self Cast"
 -- Leaving Support Mode always returns to the first bar page.
 local EXIT_PAGE = 1
 
 local Handler
 local KeyButton
-local SelfKeyButton
 local OverrideOwner = CreateFrame("Frame", nil, UIParent)
 local proxyCount = 0
 local pendingApply = false
@@ -73,12 +70,9 @@ local buildContext = {}
 -- Snippets (restricted environment)
 ---------------------------------------------------------------------------------------
 -- Needs `owner` (the handler): gives every registered proxy the macro text of the stored state
--- (sm-off; in Support Mode sm-on, or sm-self while the Self-Cast key is held).
+-- (sm-off, or sm-on in Support Mode).
 local APPLY = [[
-  local attr = "sm-off"
-  if owner:GetAttribute("sm") == 1 then
-    attr = owner:GetAttribute("smself") == 1 and "sm-self" or "sm-on"
-  end
+  local attr = owner:GetAttribute("sm") == 1 and "sm-on" or "sm-off"
   local count = owner:GetAttribute("smcount") or 0
   for i = 1, count do
     local proxy = owner:GetFrameRef("p" .. i)
@@ -89,13 +83,9 @@ local APPLY = [[
   end
 ]]
 
--- Needs `owner` and `want` (boolean): enters / leaves the mode. Leaving also drops a held
--- Self-Cast state, so a key release the client swallowed can't outlive the mode.
+-- Needs `owner` and `want` (boolean): enters / leaves the mode.
 local SWAP = [[
   owner:SetAttribute("sm", want and 1 or 0)
-  if not want then
-    owner:SetAttribute("smself", 0)
-  end
   ]] .. APPLY .. [[
   owner:CallMethod("SupportModeChanged")
 ]]
@@ -113,17 +103,6 @@ local KEY_PRE = [[
   self:SetAttribute("macrotext", owner:GetAttribute(want and "smenter" or "smexit"))
 ]]
 
--- The Self-Cast key, both edges: held = click casts go to you. It runs no action of its own.
-local SELF_KEY_PRE = [[
-  local owner = owner or self
-  local want = down and 1 or 0
-  if owner:GetAttribute("smself") ~= want then
-    owner:SetAttribute("smself", want)
-    ]] .. APPLY .. [[
-  end
-  return false
-]]
-
 local FORCE_OFF = "local owner = self\nlocal want = false\n" .. SWAP
 
 ---------------------------------------------------------------------------------------
@@ -137,14 +116,6 @@ function CM.GetSupportModePage()
     return page
   end
   return nil
-end
-
-local SELF_CAST_MODIFIERS = { shift = true, ctrl = true, alt = true }
-
---- Self-Cast Modifier as a macro modifier name ("shift" | "ctrl" | "alt"), or nil when off.
-function CM.GetSupportModeSelfCastModifier()
-  local modifier = CM.DB and CM.DB.char and CM.DB.char.supportModeSelfCastModifier
-  return SELF_CAST_MODIFIERS[modifier] and modifier or nil
 end
 
 --- Reticle Targeting on and the Support Mode key bound.
@@ -161,15 +132,14 @@ function CM.IsSupportModeActive()
 end
 
 --- What BindingOverrides needs to build the macro texts of a key, or nil when the feature is
---- off: `page` (support bar page or nil), `active` (the support page is the one showing right
---- now) and `selfMod` (Self-Cast Modifier or nil). The table is reused: read it at once.
+--- off: `page` (support bar page or nil) and `active` (the support page is the one showing
+--- right now). The table is reused: read it at once.
 function CM.GetSupportModeBuildContext()
   if not CM.IsSupportModeEnabled() then
     return nil
   end
   buildContext.page = CM.GetSupportModePage()
   buildContext.active = CM.IsSupportModeActive()
-  buildContext.selfMod = CM.GetSupportModeSelfCastModifier()
   return buildContext
 end
 
@@ -192,23 +162,16 @@ function CM.SupportModeRegisterProxy(frame)
   Handler:SetAttribute("smcount", proxyCount)
 end
 
---- Stores a proxy's macro texts: normal, Support Mode (`supportText`, nil = same as normal) and
---- Support Mode with the Self-Cast key held (`selfText`, nil = same as supportText), and shows the
---- one for the current state. Out of combat only.
-function CM.SetModeMacroText(frame, normalText, supportText, selfText)
+--- Stores a proxy's macro texts: normal and Support Mode (`supportText`, nil = same as normal),
+--- and shows the one for the current state. Out of combat only.
+function CM.SetModeMacroText(frame, normalText, supportText)
   if not frame or not normalText or InCombatLockdown() then
     return
   end
   supportText = supportText or normalText
-  selfText = selfText or supportText
   frame:SetAttribute("sm-off", normalText)
   frame:SetAttribute("sm-on", supportText)
-  frame:SetAttribute("sm-self", selfText)
-  local current = normalText
-  if CM.IsSupportModeActive() then
-    current = Handler:GetAttribute("smself") == 1 and selfText or supportText
-  end
-  frame:SetAttribute("macrotext", current)
+  frame:SetAttribute("macrotext", CM.IsSupportModeActive() and supportText or normalText)
 end
 
 ---------------------------------------------------------------------------------------
@@ -284,7 +247,6 @@ end
 if SecureHandlerWrapScript then
   Handler = CreateFrame("Frame", "CombatModeSupportMode", UIParent, "SecureHandlerBaseTemplate")
   Handler:SetAttribute("sm", 0)
-  Handler:SetAttribute("smself", 0)
   Handler:SetAttribute("smcount", 0)
   Handler.SupportModeChanged = OnModeChanged
 
@@ -294,11 +256,6 @@ if SecureHandlerWrapScript then
   KeyButton:SetAttribute("type", "macro")
   KeyButton:SetAttribute("useOnKeyDown", true)
   SecureHandlerWrapScript(KeyButton, "OnClick", Handler, KEY_PRE)
-
-  SelfKeyButton =
-    CreateFrame("Button", "CombatModeSupportModeSelfKey", UIParent, "SecureActionButtonTemplate")
-  SelfKeyButton:RegisterForClicks("AnyDown", "AnyUp")
-  SecureHandlerWrapScript(SelfKeyButton, "OnClick", Handler, SELF_KEY_PRE)
 end
 
 ---------------------------------------------------------------------------------------
@@ -320,12 +277,9 @@ local function ApplyImpl()
   for _, key in ipairs({ GetBindingKey(BIND_NAME) }) do
     SetOverrideBindingClick(OverrideOwner, false, key, KeyButton:GetName(), "LeftButton")
   end
-  for _, key in ipairs({ GetBindingKey(SELF_BIND_NAME) }) do
-    SetOverrideBindingClick(OverrideOwner, false, key, SelfKeyButton:GetName(), "LeftButton")
-  end
 end
 
---- Stores the keys' settings and (re)binds them; a call in combat waits for
+--- Stores the key's settings and (re)binds it; a call in combat waits for
 --- PLAYER_REGEN_ENABLED. Callers that change what the macros say (Support Mode key, page) also
 --- run CM.RefreshClickCastMacros.
 function CM.ApplySupportModeBinding()

@@ -433,9 +433,7 @@ L["Distance between the Ally HUD and the crosshair."] =
 
 -- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
 L["Support Mode"] = "Modo de Suporte"
-L["Support Mode Self-Cast"] = "Modo de Suporte: autolançamento"
 L["support mode keybinding"] = "atalho do modo de suporte"
-L["support mode self-cast keybinding"] = "atalho de autolançamento do modo de suporte"
 L["Support Mode on"] = "Modo de Suporte ativado"
 L["Support Mode off"] = "Modo de Suporte desativado"
 L["Support Mode on. Nameplates switch after combat."] =
@@ -443,8 +441,8 @@ L["Support Mode on. Nameplates switch after combat."] =
 L["Support Mode off. Nameplates switch after combat."] =
   "Modo de Suporte desativado. As placas de identificação mudam após o combate."
 L["SUPPORT MODE"] = "MODO DE SUPORTE"
-L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons go to your friendly target first (such as an Ally Cycle pick), else to the friendly unit under the crosshair, else to the ally the game soft-targets in front of you, and never to yourself by accident. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
-  "Um segundo conjunto de lançamentos por clique para apoiar seu grupo. Enquanto o Modo de Suporte está ativado, os feitiços benéficos dos seus botões de lançamento por clique vão primeiro para o seu alvo amigável (por exemplo, o escolhido com o Ciclo de aliados); se não houver, para a unidade amigável sob a mira; e, se também não houver, para o aliado que o jogo seleciona como alvo suave à sua frente, e nunca para você por acidente. Sua barra de ação principal mostra uma página de suporte e as placas de identificação amigáveis substituem as inimigas. Feitiços nocivos continuam mirando inimigos."
+L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons go to your friendly target first (such as an Ally Cycle pick), else to the friendly unit under the crosshair, else to the ally the game soft-targets in front of you. With no ally to take the spell, the game's Self Cast setting decides whether it lands on you. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
+  "Um segundo conjunto de lançamentos por clique para apoiar seu grupo. Enquanto o Modo de Suporte está ativado, os feitiços benéficos dos seus botões de lançamento por clique vão primeiro para o seu alvo amigável (por exemplo, o escolhido com o Ciclo de aliados); se não houver, para a unidade amigável sob a mira; e, se também não houver, para o aliado que o jogo seleciona como alvo suave à sua frente. Sem nenhum aliado para receber o feitiço, a configuração de autolançamento do jogo decide se ele cai em você. Sua barra de ação principal mostra uma página de suporte e as placas de identificação amigáveis substituem as inimigas. Feitiços nocivos continuam mirando inimigos."
 L["Support Mode Keybind"] = "Atalho do Modo de Suporte"
 L["Turns Support Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
   "Ativa e desativa o Modo de Suporte. Funciona em combate. Deixe sem atalho para desativar o recurso."
@@ -453,17 +451,6 @@ L["The main action bar page shown while Support Mode is on. Put your healing and
   "A página da barra de ação principal exibida enquanto o Modo de Suporte está ativado. Coloque nela suas habilidades de cura e suporte. Sair do Modo de Suporte volta para a página 1."
 L["Don't swap"] = "Não trocar"
 L["Page %d"] = "Página %d"
-L["Self-Cast Keybind"] = "Atalho de autolançamento"
-L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
-  "Segure esta tecla ao clicar no Modo de Suporte para lançar em você o feitiço benéfico daquele atalho de clique, em vez de na unidade sob a mira. Todos os seus atalhos de clique mantêm seus próprios feitiços. Deixe sem atalho se não precisar."
-L["Self-Cast Modifier"] = "Modificador de autolançamento"
-L["Hold this modifier while clicking in Support Mode to cast the click's helpful spell on yourself. Warning: this replaces the modifier's own click binds while Support Mode is on."] =
-  "Segure este modificador ao clicar no Modo de Suporte para lançar em você o feitiço benéfico do clique. Aviso: isso substitui as atribuições de clique do próprio modificador enquanto o Modo de Suporte está ativado."
-L["Example: Shift"] = "Exemplo: Shift"
-L["Shift + Left Click casts the Left Click's helpful spell on yourself, and Shift + Right Click the Right Click's."] =
-  "Shift + clique esquerdo lança em você o feitiço benéfico do clique esquerdo, e Shift + clique direito o do clique direito."
-L["While Support Mode is on, Shift + Left Click and Shift + Right Click cast on yourself instead of their own click binds (action bar slots 3 and 4 by default) whenever the plain click holds a helpful spell. Outside Support Mode they work as usual."] =
-  "Enquanto o Modo de Suporte está ativado, Shift + clique esquerdo e Shift + clique direito lançam em você em vez de suas próprias atribuições de clique (espaços 3 e 4 da barra de ação por padrão) sempre que o clique simples tiver um feitiço benéfico. Fora do Modo de Suporte, funcionam normalmente."
 L["Requires Reticle Targeting"] = "Requer Mira de Alvo"
 L["Support"] = "Suporte"
 L["Tint Vignette"] = "Tingir a vinheta"

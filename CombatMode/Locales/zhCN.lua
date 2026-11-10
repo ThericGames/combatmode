@@ -418,9 +418,7 @@ L["Distance between the Ally HUD and the crosshair."] = "友方 HUD 与准星之
 
 -- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
 L["Support Mode"] = "辅助模式"
-L["Support Mode Self-Cast"] = "辅助模式自我施法"
 L["support mode keybinding"] = "辅助模式按键绑定"
-L["support mode self-cast keybinding"] = "辅助模式自我施法按键绑定"
 L["Support Mode on"] = "辅助模式已开启"
 L["Support Mode off"] = "辅助模式已关闭"
 L["Support Mode on. Nameplates switch after combat."] =
@@ -428,8 +426,8 @@ L["Support Mode on. Nameplates switch after combat."] =
 L["Support Mode off. Nameplates switch after combat."] =
   "辅助模式已关闭。姓名板将在战斗结束后切换。"
 L["SUPPORT MODE"] = "辅助模式"
-L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons go to your friendly target first (such as an Ally Cycle pick), else to the friendly unit under the crosshair, else to the ally the game soft-targets in front of you, and never to yourself by accident. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
-  "用于支援队伍的第二套点击施法。辅助模式开启时，点击施法按键上的有益法术会优先施放给你的友方目标（例如用友方循环选中的目标）；没有时施放给准星下的友方单位；再没有时施放给游戏在你前方软选中的友方，绝不会误放给自己。主动作条显示辅助页，友方姓名板取代敌方姓名板。有害法术仍然以敌人为目标。"
+L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons go to your friendly target first (such as an Ally Cycle pick), else to the friendly unit under the crosshair, else to the ally the game soft-targets in front of you. With no ally to take the spell, the game's Self Cast setting decides whether it lands on you. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
+  "用于支援队伍的第二套点击施法。辅助模式开启时，点击施法按键上的有益法术会优先施放给你的友方目标（例如用友方循环选中的目标）；没有时施放给准星下的友方单位；再没有时施放给游戏在你前方软选中的友方。没有可施放的友方时，由游戏的自我施法设置决定是否施放给自己。主动作条显示辅助页，友方姓名板取代敌方姓名板。有害法术仍然以敌人为目标。"
 L["Support Mode Keybind"] = "辅助模式按键"
 L["Turns Support Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
   "开启或关闭辅助模式。战斗中可用。不绑定按键即可停用此功能。"
@@ -438,17 +436,6 @@ L["The main action bar page shown while Support Mode is on. Put your healing and
   "辅助模式开启时显示的主动作条页。把你的治疗和辅助技能放在那里。离开辅助模式会回到第 1 页。"
 L["Don't swap"] = "不切换"
 L["Page %d"] = "第 %d 页"
-L["Self-Cast Keybind"] = "自我施法按键"
-L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
-  "在辅助模式中点击时按住此键，可将该点击绑定的有益法术施放给自己，而不是准星下的单位。你的所有点击绑定都保留各自的法术。不需要时可以不绑定。"
-L["Self-Cast Modifier"] = "自我施法修饰键"
-L["Hold this modifier while clicking in Support Mode to cast the click's helpful spell on yourself. Warning: this replaces the modifier's own click binds while Support Mode is on."] =
-  "在辅助模式下按住此修饰键点击，会将该点击的有益法术施放给自己。警告：辅助模式开启时，这会取代该修饰键自己的点击绑定。"
-L["Example: Shift"] = "示例：Shift"
-L["Shift + Left Click casts the Left Click's helpful spell on yourself, and Shift + Right Click the Right Click's."] =
-  "Shift + 左键点击会将左键点击的有益法术施放给自己，Shift + 右键点击则施放右键点击的有益法术。"
-L["While Support Mode is on, Shift + Left Click and Shift + Right Click cast on yourself instead of their own click binds (action bar slots 3 and 4 by default) whenever the plain click holds a helpful spell. Outside Support Mode they work as usual."] =
-  "辅助模式开启时，只要普通点击上是有益法术，Shift + 左键点击和 Shift + 右键点击就会对自己施法，而不再使用它们自己的点击绑定（默认为动作条第 3 和第 4 格）。辅助模式之外照常使用。"
 L["Requires Reticle Targeting"] = "需要准星瞄准"
 L["Support"] = "辅助"
 L["Tint Vignette"] = "暗角着色"
