@@ -428,8 +428,8 @@ L["Support Mode on. Nameplates switch after combat."] =
 L["Support Mode off. Nameplates switch after combat."] =
   "辅助模式已关闭。姓名板将在战斗结束后切换。"
 L["SUPPORT MODE"] = "辅助模式"
-L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair, or to your friendly target (such as an Ally Cycle pick) when you aim at nobody, and never to yourself by accident. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
-  "用于支援队伍的第二套点击施法。辅助模式开启时，点击施法按键上的有益法术只会施放给准星下的友方单位；准星下没有友方单位时，则施放给你的友方目标（例如用友方循环选中的目标），绝不会误放给自己。主动作条显示辅助页，友方姓名板取代敌方姓名板。有害法术仍然以敌人为目标。"
+L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons go to the friendly unit under the crosshair, else to the ally the game soft-targets in front of you, else to your friendly target (such as an Ally Cycle pick), and never to yourself by accident. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
+  "用于支援队伍的第二套点击施法。辅助模式开启时，点击施法按键上的有益法术会施放给准星下的友方单位；没有时施放给游戏在你前方软选中的友方；再没有时施放给你的友方目标（例如用友方循环选中的目标），绝不会误放给自己。主动作条显示辅助页，友方姓名板取代敌方姓名板。有害法术仍然以敌人为目标。"
 L["Support Mode Keybind"] = "辅助模式按键"
 L["Turns Support Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
   "开启或关闭辅助模式。战斗中可用。不绑定按键即可停用此功能。"

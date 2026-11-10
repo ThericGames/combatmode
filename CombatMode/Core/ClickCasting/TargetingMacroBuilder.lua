@@ -833,16 +833,23 @@ function CM.GetActiveTargetingPreline()
 end
 
 -- Support Mode (Core/ClickCasting/SupportMode.lua): a helpful spell on a click-cast button only
--- goes to the friendly unit under the crosshair, else to your friendly hard target (an Ally
--- Cycle pick) ("mouseover"), or to you while the Self-Cast key is held ("self").
+-- goes to the aimed-at ally (SUPPORT_ALLY_UNITS below), else to your friendly hard target (an
+-- Ally Cycle pick) ("mouseover"), or to you while the Self-Cast key is held ("self").
 -- SupportCastLine below does that without touching your target; this target-then-click preline
--- is only its fallback. Neither unit friendly = /stopmacro, so it never lands on yourself (auto
--- self-cast). `help` is true for a dead ally, so a resurrection still works. (A macro can't
--- test the Self-Cast key itself: [mod] only knows Shift / Ctrl / Alt, and those chords are
--- click-cast buttons of their own.)
+-- is only its fallback. No friendly unit in any of them = /stopmacro, so it never lands on
+-- yourself (auto self-cast). `help` is true for a dead ally, so a resurrection still works. (A
+-- macro can't test the Self-Cast key itself: [mod] only knows Shift / Ctrl / Alt, and those
+-- chords are click-cast buttons of their own.)
 -- opts.selfMod (Self-Cast Modifier: "shift" | "ctrl" | "alt") puts a [mod:<it>,@player] branch
 -- first, for a click the modifier reaches without a chord bind of its own; a chord with its own
 -- click-cast bind never runs this text (BindingOverrides gives that chord the self text).
+-- The aimed-at ally: the unit whose model is under the crosshair, else the friendly soft target.
+-- A nameplate is not a mouseover unit in Mouse Look (reported in game: aiming at a friendly
+-- nameplate cast nothing), so Support Mode turns friendly soft targeting on (SoftTargetFriend,
+-- CVarManager) and @softfriend picks the ally in front of you. Blizzard picks it from an arc in
+-- front of the character, not from the crosshair, so it is looser than a mouseover.
+local SUPPORT_ALLY_UNITS = "[@mouseover,help][@softfriend,help]"
+
 local function SupportSelfModCondition(selfMod)
   return selfMod and ("[mod:" .. selfMod .. ",@player]") or ""
 end
@@ -852,16 +859,18 @@ local function SupportModePreLine(opts)
     return "/tar player"
   end
   local selfBranch = SupportSelfModCondition(opts.selfMod)
-  return "/tar " .. selfBranch .. "[@mouseover,help]\n/stopmacro [nohelp]"
+  return "/tar " .. selfBranch .. SUPPORT_ALLY_UNITS .. "\n/stopmacro [nohelp]"
 end
 
--- Support Mode cast as one line that never changes your hard target: a mouseover cast on the
--- ally under the crosshair, else a cast on your friendly hard target (so an Ally Cycle pick is
--- healed when you aim at nobody; the crosshair wins when both exist). Neither one friendly =
--- every condition fails and nothing is cast. Self = a cast on yourself (reported in game:
--- becoming your own target pulls the shoulder-offset camera back to the centre). /click can't
--- name a unit, so this is a named /cast of the spell on the slot when the macro is built; a
--- Classic rank rides along as "Name(Rank N)".
+-- Support Mode cast as one line that never changes your hard target: a cast on the aimed-at
+-- ally (under the crosshair, else the friendly soft target), else on your friendly hard target
+-- (so an Ally Cycle pick is healed when nobody is aimed at; the aimed-at ally wins when both
+-- exist). None of them friendly = every condition fails and nothing is cast. With soft targeting
+-- on, "nobody aimed at" means no ally in the arc in front of you, not just an empty crosshair.
+-- Self = a cast on yourself (reported in game: becoming your own target pulls the
+-- shoulder-offset camera back to the centre). /click can't name a unit, so this is a named
+-- /cast of the spell on the slot when the macro is built; a Classic rank rides along as
+-- "Name(Rank N)".
 -- nil = no name yet: the caller keeps SupportModePreLine + /click.
 local function SupportCastLine(spellId, onSelf, selfMod)
   if not spellId or not (C_Spell and C_Spell.GetSpellInfo) then
@@ -883,7 +892,7 @@ local function SupportCastLine(spellId, onSelf, selfMod)
     return "/cast [@player] " .. name
   end
   local selfBranch = SupportSelfModCondition(selfMod)
-  return "/cast " .. selfBranch .. "[@mouseover,help][@target,help] " .. name
+  return "/cast " .. selfBranch .. SUPPORT_ALLY_UNITS .. "[@target,help] " .. name
 end
 
 -- Second return: true when the Support Mode preline was used.

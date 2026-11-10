@@ -367,7 +367,7 @@ L["Support Mode off"] = true
 L["Support Mode on. Nameplates switch after combat."] = true
 L["Support Mode off. Nameplates switch after combat."] = true
 L["SUPPORT MODE"] = true
-L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair, or to your friendly target (such as an Ally Cycle pick) when you aim at nobody, and never to yourself by accident. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
+L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons go to the friendly unit under the crosshair, else to the ally the game soft-targets in front of you, else to your friendly target (such as an Ally Cycle pick), and never to yourself by accident. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."] =
   true
 L["Support Mode Keybind"] = true
 L["Turns Support Mode on and off. Works in combat. Leave it unbound to disable the feature."] = true

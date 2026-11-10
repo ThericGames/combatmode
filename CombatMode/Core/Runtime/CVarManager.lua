@@ -230,6 +230,9 @@ local function UnitsMatch(unitA, unitB)
   return ok and same == true
 end
 
+local SUPPORT_SOFT_FRIEND = "SoftTargetFriend"
+local SUPPORT_SOFT_FRIEND_ON = 3 -- always (0 = off in the reticle preset)
+
 function CM.GetEffectiveReticleTargetingCVarValues()
   local resolved = {}
   local defaults = CM.Constants.ReticleTargetingCVarValues
@@ -242,6 +245,13 @@ function CM.GetEffectiveReticleTargetingCVarValues()
     else
       resolved[cvar] = value
     end
+  end
+
+  -- Support Mode casts on @softfriend when no ally's model is under the crosshair (a nameplate
+  -- is not a mouseover unit in Mouse Look), so friendly soft targeting is on for as long as the
+  -- mode is (CM.SyncSupportModeNameplates writes it when the mode flips).
+  if CM.IsSupportModeActive and CM.IsSupportModeActive() then
+    resolved[SUPPORT_SOFT_FRIEND] = SUPPORT_SOFT_FRIEND_ON
   end
 
   -- Friend / Interact / GameObject soft-target icons: hidden only while the Interactable
@@ -1247,6 +1257,17 @@ function CM.SyncSupportModeNameplates(forceRestore)
   local char = CM.DB and CM.DB.char
   if not globalDB or not char then
     return true
+  end
+  -- Friendly soft targeting follows the mode too (3 while on, else the reticle preset's value;
+  -- see CM.GetEffectiveReticleTargetingCVarValues). Uninstall restores it from the snapshot.
+  if not forceRestore and char.reticleTargeting then
+    local wanted = CM.GetEffectiveReticleTargetingCVarValues()[SUPPORT_SOFT_FRIEND]
+    if wanted ~= nil and GetCVar(SUPPORT_SOFT_FRIEND) ~= tostring(wanted) then
+      if IsCVarLockedNow(SUPPORT_SOFT_FRIEND) then
+        return false
+      end
+      CM.SetCVar(SUPPORT_SOFT_FRIEND, wanted)
+    end
   end
   local plates = not forceRestore
     and CM.IsSupportModeActive ~= nil

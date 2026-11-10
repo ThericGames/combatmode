@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Support Mode**, with its own options tab and keybind (needs Reticle Targeting). While it is on, helpful spells on your click-cast buttons only go to the friendly unit under the crosshair, or to your friendly target (such as an **Ally Cycle** pick) when you aim at nobody, never to yourself by accident. Harmful spells keep targeting enemies. It works in combat.
+- **Support Mode**, with its own options tab and keybind (needs Reticle Targeting). While it is on, helpful spells on your click-cast buttons go to the friendly unit under the crosshair, else to the ally the game soft-targets in front of you, else to your friendly target (such as an **Ally Cycle** pick), never to yourself by accident. Friendly soft targeting is switched on while the mode is on. Harmful spells keep targeting enemies. It works in combat.
   - **Support Bar Page** swaps your main action bar to a page for your healing and support abilities (page 2 by default), and back to page 1 when you leave.
   - **Self-Cast Keybind** (optional): hold it while clicking to cast that click bind's helpful spell on yourself instead. All your click binds keep their own spells.
   - **Self-Cast Modifier** (optional): pick Shift, Ctrl or Alt and hold it while clicking to cast on yourself. It replaces that modifier's own click binds while Support Mode is on (with Shift, Shift + Left Click and Shift + Right Click no longer cast action bar slots 3 and 4).
