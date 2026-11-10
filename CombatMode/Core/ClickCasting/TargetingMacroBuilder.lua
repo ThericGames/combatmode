@@ -833,11 +833,13 @@ function CM.GetActiveTargetingPreline()
 end
 
 -- Support Mode (Core/ClickCasting/SupportMode.lua): a helpful spell on a click-cast button only
--- goes to the friendly unit under the crosshair. Nothing friendly there = /stopmacro, so it never falls
--- back to the hard target or to yourself (auto self-cast). `help` is true for a dead ally, so a
--- resurrection still works. "self" is the text used while the Self-Cast key is held; it is only
--- the fallback for SupportSelfCastLine below. (A macro can't test that key itself: [mod] only
--- knows Shift / Ctrl / Alt, and those chords are click-cast buttons of their own.)
+-- goes to the friendly unit under the crosshair ("mouseover"), or to you while the Self-Cast key
+-- is held ("self"). SupportCastLine below does that without touching your target; this
+-- target-then-click preline is only its fallback. Nothing friendly under the crosshair =
+-- /stopmacro, so it never falls back to the hard target or to yourself (auto self-cast). `help`
+-- is true for a dead ally, so a resurrection still works. (A macro can't test the Self-Cast key
+-- itself: [mod] only knows Shift / Ctrl / Alt, and those chords are click-cast buttons of
+-- their own.)
 local function SupportModePreLine(opts)
   if opts.support == "self" then
     return "/tar player"
@@ -845,12 +847,13 @@ local function SupportModePreLine(opts)
   return "/stopmacro [@mouseover,nohelp]\n/tar [@mouseover]"
 end
 
--- Support Mode self-cast as one line that never makes you your own hard target (reported in
--- game: targeting yourself pulls the shoulder-offset camera back to the centre). /click can't
--- name a unit, so this is a named /cast of the spell on the slot when the macro is built; a
--- Classic rank rides along as "Name(Rank N)". nil = no name yet: the caller keeps the
--- "/tar player" preline + /click.
-local function SupportSelfCastLine(spellId)
+-- Support Mode cast as one line that never changes your hard target: a mouseover cast on the
+-- ally under the crosshair (no friendly unit there = the condition fails and nothing is cast),
+-- or a cast on yourself (reported in game: becoming your own target pulls the shoulder-offset
+-- camera back to the centre). /click can't name a unit, so this is a named /cast of the spell
+-- on the slot when the macro is built; a Classic rank rides along as "Name(Rank N)".
+-- nil = no name yet: the caller keeps SupportModePreLine + /click.
+local function SupportCastLine(spellId, onSelf)
   if not spellId or not (C_Spell and C_Spell.GetSpellInfo) then
     return nil
   end
@@ -866,7 +869,7 @@ local function SupportSelfCastLine(spellId)
       name = name .. "(" .. subtext .. ")"
     end
   end
-  return "/cast [@player] " .. name
+  return (onSelf and "/cast [@player] " or "/cast [@mouseover,help] ") .. name
 end
 
 -- Second return: true when the Support Mode preline was used.
@@ -1023,10 +1026,10 @@ function CM.BuildClickCastMacroText(bindingValue, opts)
 
   local routeOverride = isAssistedButton and "harm" or nil
   local pre, supportPreline = GetClickCastPreLine(spellIdForPreline, routeOverride, opts)
-  if supportPreline and opts.support == "self" then
-    local selfLine = SupportSelfCastLine(spellIdForPreline)
-    if selfLine then
-      return selfLine, true
+  if supportPreline then
+    local supportLine = SupportCastLine(spellIdForPreline, opts.support == "self")
+    if supportLine then
+      return supportLine, true
     end
   end
   local post = GetClickCastPostLine(spellIdForPreline, routeOverride)
