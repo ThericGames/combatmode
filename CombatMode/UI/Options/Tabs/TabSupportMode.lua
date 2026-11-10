@@ -86,7 +86,7 @@ UI.Options.AddTab({
   build = function(ctx)
     ctx:Header({ text = L["SUPPORT MODE"], newFeatureFlag = true })
     ctx:Description({
-      text = L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons go to the friendly unit under the crosshair, else to the ally the game soft-targets in front of you, else to your friendly target (such as an Ally Cycle pick), and never to yourself by accident. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."],
+      text = L["A second set of click casts for supporting your group. While Support Mode is on, helpful spells on your click-cast buttons go to your friendly target first (such as an Ally Cycle pick), else to the friendly unit under the crosshair, else to the ally the game soft-targets in front of you, and never to yourself by accident. Your main action bar shows a support page, and friendly nameplates replace enemy ones. Harmful spells keep targeting enemies."],
     })
 
     ctx:Keybind({
