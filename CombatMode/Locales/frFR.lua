@@ -464,6 +464,10 @@ L["Swap Nameplates"] = "Échanger les barres de nom"
 L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."] =
   "Masque les barres de nom ennemies et affiche celles des joueurs amicaux tant que le Mode soutien est activé, puis rétablit vos propres réglages."
 L["Requires Reticle Targeting"] = "Nécessite le Ciblage par réticule"
+L["Support"] = "Soutien"
+L["Crosshair Color"] = "Couleur du réticule"
+L["While Support Mode is on, the idle crosshair takes this color so you can tell the mode at a glance. Opens Reaction Colors on the Support tab."] =
+  "Tant que le Mode soutien est activé, le réticule au repos prend cette couleur pour reconnaître le mode d'un coup d'œil. Ouvre Couleurs de réaction sur l'onglet Soutien."
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = "Déverrouillage auto"

@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Self-Cast Keybind** (optional): hold it while clicking to cast that click bind's helpful spell on yourself instead. All your click binds keep their own spells.
   - **Swap Nameplates** hides enemy nameplates and shows friendly player ones, then restores your own settings.
   - **Key Behavior** picks between a toggle and holding the key.
+  - The idle crosshair turns cyan while Support Mode is on. Change the color with **Crosshair Color**, or on the new **Support** tab of **Reaction Colors**.
 
 ### Changed
 

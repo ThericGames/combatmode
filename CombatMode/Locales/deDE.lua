@@ -465,6 +465,10 @@ L["Swap Nameplates"] = "Namensplaketten tauschen"
 L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."] =
   "Blendet feindliche Namensplaketten aus und zeigt die freundlicher Spieler, solange der Unterstützungsmodus an ist, und stellt danach deine eigenen Einstellungen wieder her."
 L["Requires Reticle Targeting"] = "Erfordert Fadenkreuz-Zielerfassung"
+L["Support"] = "Support"
+L["Crosshair Color"] = "Fadenkreuzfarbe"
+L["While Support Mode is on, the idle crosshair takes this color so you can tell the mode at a glance. Opens Reaction Colors on the Support tab."] =
+  "Solange der Unterstützungsmodus an ist, nimmt das Fadenkreuz im Ruhezustand diese Farbe an, damit du den Modus auf einen Blick erkennst. Öffnet die Reaktionsfarben auf dem Reiter Support."
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = "Auto-Entsperren"

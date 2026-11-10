@@ -387,6 +387,10 @@ L["Swap Nameplates"] = true
 L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."] =
   true
 L["Requires Reticle Targeting"] = true
+L["Support"] = true
+L["Crosshair Color"] = true
+L["While Support Mode is on, the idle crosshair takes this color so you can tell the mode at a glance. Opens Reaction Colors on the Support tab."] =
+  true
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = true

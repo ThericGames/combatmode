@@ -4,7 +4,8 @@
 --  What it does: Standalone editor (CM.OpenCrosshairColorsEditor) with reaction
 --  tabs and an embedded color picker (no modal-on-modal). Live-updates crosshair tints.
 --  Architecture / how it works:
---    • Tabs: hostile, friendly_npc, friendly_player, object, base.
+--    • Tabs: hostile, friendly_npc, friendly_player, object, base, support (idle reticle in
+--      Support Mode). CM.OpenCrosshairColorsEditor(key) opens on that tab.
 --    • DB.global.crosshairReactionColors[state] = { r, g, b, a }; Reset Color clears one override.
 --    • Opens beside CombatModeOptionsFrame when visible; combat-guarded.
 --  Does not: Edit mounted/focus colors (mounted fixed; focus → hostile at runtime).
@@ -32,9 +33,11 @@ local REACTION_STATES = {
   { key = "friendly_player", tab = L["Player"] },
   { key = "object", tab = L["Object"] },
   { key = "base", tab = L["Base"] },
+  -- The idle reticle while Support Mode is on (CM.GetCrosshairIdleColorState).
+  { key = "support", tab = L["Support"] },
 }
 
-local TAB_BAR_W = 330
+local TAB_BAR_W = 396 -- one 66 px step per reaction tab
 local EDITOR_W = TAB_BAR_W + 32
 local EDITOR_H = 398
 local PICKER_CARD_PAD = 10
@@ -205,7 +208,8 @@ local function Build()
   end)
 end
 
-function CM.OpenCrosshairColorsEditor()
+--- `key` (optional): the reaction tab to open on, e.g. "support".
+function CM.OpenCrosshairColorsEditor(key)
   if InCombatLockdown and InCombatLockdown() then
     print(
       CM.Constants.BasePrintMsg
@@ -218,6 +222,13 @@ function CM.OpenCrosshairColorsEditor()
 
   if not window then
     Build()
+  end
+  if key and tabButtons[key] then
+    -- OnShow selects activeKey; an already open window needs the switch now.
+    activeKey = key
+    if window:IsShown() then
+      SelectReactionTab(key)
+    end
   end
 
   local anchor = CM.GetOptionsFrame and CM.GetOptionsFrame()

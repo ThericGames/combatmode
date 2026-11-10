@@ -240,6 +240,10 @@ local function OnModeChanged()
     CM.DB.char.supportModeActive = active
   end
   Notify(active, SyncNameplates())
+  -- The idle reticle is tinted while the mode is on (CM.GetCrosshairIdleColorState).
+  if CM.RefreshCrosshairAppearance then
+    CM.RefreshCrosshairAppearance()
+  end
 end
 
 local function SetBarPage(page)

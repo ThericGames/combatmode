@@ -489,6 +489,10 @@ L["Swap Nameplates"] = "Менять индикаторы здоровья"
 L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."] =
   "Скрывает вражеские индикаторы здоровья и показывает индикаторы дружественных игроков, пока включен режим поддержки, а затем возвращает ваши настройки."
 L["Requires Reticle Targeting"] = "Требуется наведение по прицелу"
+L["Support"] = "Поддержка"
+L["Crosshair Color"] = "Цвет прицела"
+L["While Support Mode is on, the idle crosshair takes this color so you can tell the mode at a glance. Opens Reaction Colors on the Support tab."] =
+  "Пока включен режим поддержки, прицел в состоянии покоя принимает этот цвет, чтобы режим было видно с первого взгляда. Открывает «Цвета реакции» на вкладке «Поддержка»."
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = "Авторазблокировка"

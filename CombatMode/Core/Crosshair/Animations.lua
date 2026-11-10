@@ -275,7 +275,9 @@ local function ApplyCrosshairAppearanceToWidget(
     return
   end
 
-  local color = CM.GetCrosshairReactionColor(state)
+  -- The idle reticle takes the Support Mode color while that mode is on (texture / scale unchanged).
+  local color =
+    CM.GetCrosshairReactionColor(state == "base" and CM.GetCrosshairIdleColorState() or state)
   local targetR, targetG, targetB, targetA = color[1], color[2], color[3], color[4]
   local textureToUse = state == "base" and appearance.Base or appearance.Active
   local reverseAnimation = state == "base" and true or false

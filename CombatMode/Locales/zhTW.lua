@@ -449,6 +449,10 @@ L["Swap Nameplates"] = "切換名條"
 L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."] =
   "輔助模式開啟時隱藏敵方名條並顯示友方玩家名條，之後恢復你自己的設定。"
 L["Requires Reticle Targeting"] = "需要準星瞄準"
+L["Support"] = "輔助"
+L["Crosshair Color"] = "準星顏色"
+L["While Support Mode is on, the idle crosshair takes this color so you can tell the mode at a glance. Opens Reaction Colors on the Support tab."] =
+  "輔助模式開啟時，閒置狀態的準星會變為此顏色，讓你一眼就能看出目前模式。會開啟反應顏色的輔助分頁。"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = "自動解鎖"

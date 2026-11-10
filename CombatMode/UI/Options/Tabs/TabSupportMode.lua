@@ -143,6 +143,20 @@ UI.Options.AddTab({
       disabled = ReticleTargetingOff,
       watermarkWhenDisabled = ReticleTargetingNotice,
     })
+    ctx:Button({
+      layout = "row",
+      label = L["Crosshair Color"],
+      buttonLabel = L["Edit"],
+      desc = L["While Support Mode is on, the idle crosshair takes this color so you can tell the mode at a glance. Opens Reaction Colors on the Support tab."],
+      newFeatureFlag = true,
+      func = function()
+        if CM.OpenCrosshairColorsEditor then
+          CM.OpenCrosshairColorsEditor("support")
+        end
+      end,
+      disabled = ReticleTargetingOff,
+      watermarkWhenDisabled = ReticleTargetingNotice,
+    })
     ctx:Toggle({
       label = L["Swap Nameplates"],
       desc = L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."],

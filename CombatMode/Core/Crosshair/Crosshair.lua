@@ -9,7 +9,7 @@
 --  Architecture / how it works:
 --    • DB.global.crosshair / appearance / crosshairScale / Y;
 --      crosshairReactionColors optional overrides; CM.GetCrosshairReactionColor resolves
---      tints (mounted = defaults; focus → hostile).
+--      tints (mounted = defaults; focus → hostile; idle = "support" while Support Mode is on).
 --    • crosshairSituationalCondition — user Lua; when true, Animations uses
 --      crosshairSituationalAppearance (default Invisible) while reaction tint/scale stay normal.
 --      Appearance Hidden (both situational slots hidden) hides the reticle texture only. A slot
@@ -130,6 +130,15 @@ function CM.GetCrosshairReactionColor(state)
   return CopyColorArray(constants and constants[effectiveState]) or { 1, 1, 1, 1 }
 end
 
+--- Reaction-color state of the idle reticle (nothing under the crosshair, Target Lock idle Dot,
+--- mounted): "support" while Support Mode is on, so the mode shows at a glance, else "base".
+function CM.GetCrosshairIdleColorState()
+  if CM.IsSupportModeActive and CM.IsSupportModeActive() then
+    return "support"
+  end
+  return "base"
+end
+
 local CROSSHAIR_BASE_SIZE = 64
 
 local function ClampUserScale(scale)
@@ -227,7 +236,7 @@ local function GetFocusLockIdleTexturePath()
 end
 
 local function GetFocusLockIdleColor()
-  local c = CM.GetCrosshairReactionColor("base")
+  local c = CM.GetCrosshairReactionColor(CM.GetCrosshairIdleColorState())
   if type(c) == "table" then
     return c[1] or 1, c[2] or 1, c[3] or 1, c[4] or 0.5
   end

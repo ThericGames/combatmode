@@ -268,6 +268,7 @@ CM.Constants.CrosshairReactionColors = {
   friendly_player = { 0.3, 0.6, 1, 0.8 }, -- blue (friendly players)
   object = { 1, 0.8, 0.2, 0.8 }, -- yellow
   base = { 1, 1, 1, 0.5 }, -- white
+  support = { 0.2, 1, 0.9, 0.7 }, -- cyan: the idle (base) reticle while Support Mode is on
   mounted = { 1, 1, 1, 0 }, -- transparent
   --  focus = { 1, 0.2, 0.3, 1 }, -- defaults only; runtime focus tint uses hostile via getter
 }

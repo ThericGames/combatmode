@@ -466,6 +466,10 @@ L["Swap Nameplates"] = "이름표 전환"
 L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."] =
   "지원 모드가 켜져 있는 동안 적 이름표를 숨기고 우호적 플레이어 이름표를 표시한 다음, 원래 설정으로 되돌립니다."
 L["Requires Reticle Targeting"] = "조준선 대상 지정 필요"
+L["Support"] = "지원"
+L["Crosshair Color"] = "조준점 색상"
+L["While Support Mode is on, the idle crosshair takes this color so you can tell the mode at a glance. Opens Reaction Colors on the Support tab."] =
+  "지원 모드가 켜져 있는 동안 대기 상태의 조준점이 이 색상으로 바뀌어 모드를 한눈에 알 수 있습니다. 반응 색상의 지원 탭을 엽니다."
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = "자동 해제"
