@@ -486,8 +486,8 @@ L["Self-Cast Keybind"] = "Клавиша применения к себе"
 L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
   "Удерживайте эту клавишу при щелчке в режиме поддержки, чтобы применить полезное заклинание этой привязки щелчка к себе, а не к цели под прицелом. Все ваши привязки щелчков сохраняют свои заклинания. Оставьте без клавиши, если она не нужна."
 L["Swap Nameplates"] = "Менять индикаторы здоровья"
-L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
-  "Скрывает вражеские индикаторы здоровья и показывает индикаторы дружественных игроков, пока включен режим поддержки, а затем возвращает ваши настройки. Игра позволяет менять индикаторы здоровья только вне боя, поэтому переключение в бою применяется после его окончания."
+L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."] =
+  "Скрывает вражеские индикаторы здоровья и показывает индикаторы дружественных игроков, пока включен режим поддержки, а затем возвращает ваши настройки."
 L["Requires Reticle Targeting"] = "Требуется наведение по прицелу"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab

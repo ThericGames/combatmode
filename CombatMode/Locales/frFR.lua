@@ -461,8 +461,8 @@ L["Self-Cast Keybind"] = "Raccourci de lancer sur soi"
 L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
   "Maintenez cette touche en cliquant en Mode soutien pour lancer sur vous-même le sort bénéfique de ce raccourci de clic, au lieu de l'unité sous le réticule. Tous vos raccourcis de clic gardent leurs propres sorts. Laissez-le sans touche si vous n'en avez pas besoin."
 L["Swap Nameplates"] = "Échanger les barres de nom"
-L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
-  "Masque les barres de nom ennemies et affiche celles des joueurs amicaux tant que le Mode soutien est activé, puis rétablit vos propres réglages. Le jeu n'autorise le changement des barres de nom que hors combat : un changement fait en combat s'applique à la fin du combat."
+L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."] =
+  "Masque les barres de nom ennemies et affiche celles des joueurs amicaux tant que le Mode soutien est activé, puis rétablit vos propres réglages."
 L["Requires Reticle Targeting"] = "Nécessite le Ciblage par réticule"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab

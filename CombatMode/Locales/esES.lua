@@ -461,8 +461,8 @@ L["Self-Cast Keybind"] = "Tecla de autolanzamiento"
 L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
   "Mantén esta tecla al hacer clic en el Modo de apoyo para lanzarte a ti el hechizo beneficioso de esa asignación de clic, en lugar de a la unidad bajo la mira. Todas tus asignaciones de clic conservan sus propios hechizos. Déjala sin asignar si no la necesitas."
 L["Swap Nameplates"] = "Intercambiar placas de nombre"
-L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
-  "Oculta las placas de nombre enemigas y muestra las de jugadores amistosos mientras el Modo de apoyo está activado, y después restaura tu configuración. El juego solo permite cambiar las placas de nombre fuera de combate, así que un cambio hecho en combate se aplica cuando este termina."
+L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."] =
+  "Oculta las placas de nombre enemigas y muestra las de jugadores amistosos mientras el Modo de apoyo está activado, y después restaura tu configuración."
 L["Requires Reticle Targeting"] = "Requiere Selección por retícula"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab

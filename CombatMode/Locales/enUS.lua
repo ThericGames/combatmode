@@ -384,7 +384,7 @@ L["Self-Cast Keybind"] = true
 L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
   true
 L["Swap Nameplates"] = true
-L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
+L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."] =
   true
 L["Requires Reticle Targeting"] = true
 

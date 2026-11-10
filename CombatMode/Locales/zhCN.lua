@@ -446,8 +446,8 @@ L["Self-Cast Keybind"] = "自我施法按键"
 L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
   "在辅助模式中点击时按住此键，可将该点击绑定的有益法术施放给自己，而不是准星下的单位。你的所有点击绑定都保留各自的法术。不需要时可以不绑定。"
 L["Swap Nameplates"] = "切换姓名板"
-L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
-  "辅助模式开启时隐藏敌方姓名板并显示友方玩家姓名板，之后恢复你自己的设置。游戏只允许在非战斗状态下更改姓名板，因此在战斗中切换会在战斗结束后生效。"
+L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."] =
+  "辅助模式开启时隐藏敌方姓名板并显示友方玩家姓名板，之后恢复你自己的设置。"
 L["Requires Reticle Targeting"] = "需要准星瞄准"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab

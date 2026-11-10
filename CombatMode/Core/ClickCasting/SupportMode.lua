@@ -15,10 +15,11 @@
 --    • CombatModeSupportModeKey (SecureActionButtonTemplate, type macro) runs
 --      /changeactionbar <page> for the page swap, the only secure way to page in combat.
 --      Key Behavior: toggle (press) or hold (press = on, release = off).
---    • CombatModeSupportModeSelfKey: held = smself 1 (click casts use sm-self, "/tar player").
+--    • CombatModeSupportModeSelfKey: held = smself 1 (click casts use sm-self, "/cast [@player]").
 --    • Insecure side: Handler.SupportModeChanged (CallMethod) → nameplates
---      (CM.SyncSupportModeNameplates in CVarManager; protected in combat, so they wait for
---      PLAYER_REGEN_ENABLED) and the on / off notice. CM.IsSupportModeActive reads the attribute.
+--      (CM.SyncSupportModeNameplates in CVarManager; only if a client protects those CVars in
+--      combat do they wait for PLAYER_REGEN_ENABLED) and the on / off notice.
+--      CM.IsSupportModeActive reads the attribute.
 --    • The mode never survives a reload: CM.InitializeSupportMode turns a leftover support
 --      page back to page 1 and CVarManager restores leftover nameplate CVars.
 --  Does not: Build macro text (TargetingMacroBuilder), own the proxy buttons or their

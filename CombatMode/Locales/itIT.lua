@@ -461,8 +461,8 @@ L["Self-Cast Keybind"] = "Tasto di lancio su di sé"
 L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
   "Tieni premuto questo tasto mentre fai clic in Modalità supporto per lanciare su di te l'incantesimo benefico di quell'assegnazione di clic, invece che sull'unità sotto il mirino. Tutte le tue assegnazioni di clic mantengono i propri incantesimi. Lascialo senza assegnazione se non ti serve."
 L["Swap Nameplates"] = "Scambia barre dei nomi"
-L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
-  "Nasconde le barre dei nomi nemiche e mostra quelle dei giocatori amici finché la Modalità supporto è attiva, poi ripristina le tue impostazioni. Il gioco permette di cambiare le barre dei nomi solo fuori dal combattimento, quindi un cambio fatto in combattimento viene applicato quando il combattimento termina."
+L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."] =
+  "Nasconde le barre dei nomi nemiche e mostra quelle dei giocatori amici finché la Modalità supporto è attiva, poi ripristina le tue impostazioni."
 L["Requires Reticle Targeting"] = "Richiede Puntamento a mirino"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab

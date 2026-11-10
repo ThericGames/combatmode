@@ -462,8 +462,8 @@ L["Self-Cast Keybind"] = "Tastenbelegung für Selbstzauber"
 L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
   "Halte diese Taste beim Klicken im Unterstützungsmodus, um den hilfreichen Zauber dieser Klick-Belegung auf dich selbst statt auf die Einheit unter dem Fadenkreuz zu wirken. Alle deine Klick-Belegungen behalten ihre eigenen Zauber. Lass sie unbelegt, wenn du sie nicht brauchst."
 L["Swap Nameplates"] = "Namensplaketten tauschen"
-L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
-  "Blendet feindliche Namensplaketten aus und zeigt die freundlicher Spieler, solange der Unterstützungsmodus an ist, und stellt danach deine eigenen Einstellungen wieder her. Das Spiel erlaubt Änderungen an Namensplaketten nur außerhalb des Kampfes, daher wird ein Wechsel im Kampf erst nach Kampfende angewendet."
+L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."] =
+  "Blendet feindliche Namensplaketten aus und zeigt die freundlicher Spieler, solange der Unterstützungsmodus an ist, und stellt danach deine eigenen Einstellungen wieder her."
 L["Requires Reticle Targeting"] = "Erfordert Fadenkreuz-Zielerfassung"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab

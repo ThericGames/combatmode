@@ -1215,7 +1215,8 @@ local function FriendlyNameplateCVar()
 end
 
 -- A combat-protected CVar (isSecure, 6th return of GetCVarInfo) raises ADDON_ACTION_BLOCKED when
--- an addon writes it in combat. Unknown counts as protected.
+-- an addon writes it in combat. Unknown counts as protected. The nameplate CVars reported false
+-- (not protected) when checked in game, so the wait is a safety net for clients that differ.
 local function IsCVarLockedNow(name)
   if not InCombatLockdown() then
     return false

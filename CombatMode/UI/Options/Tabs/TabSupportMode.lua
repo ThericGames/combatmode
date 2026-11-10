@@ -145,7 +145,7 @@ UI.Options.AddTab({
     })
     ctx:Toggle({
       label = L["Swap Nameplates"],
-      desc = L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."],
+      desc = L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."],
       charSpecific = true,
       newFeatureFlag = true,
       get = function()

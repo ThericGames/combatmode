@@ -463,8 +463,8 @@ L["Self-Cast Keybind"] = "자신에게 시전 단축키"
 L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
   "지원 모드에서 클릭할 때 이 키를 누르고 있으면 해당 클릭 단축키의 이로운 주문을 조준점 아래의 대상 대신 자신에게 시전합니다. 모든 클릭 단축키는 원래 주문을 그대로 유지합니다. 필요하지 않으면 지정하지 않아도 됩니다."
 L["Swap Nameplates"] = "이름표 전환"
-L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings. The game only lets nameplates change out of combat, so a switch made in combat applies when combat ends."] =
-  "지원 모드가 켜져 있는 동안 적 이름표를 숨기고 우호적 플레이어 이름표를 표시한 다음, 원래 설정으로 되돌립니다. 게임에서는 전투 중이 아닐 때만 이름표를 바꿀 수 있으므로 전투 중에 전환하면 전투가 끝날 때 적용됩니다."
+L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."] =
+  "지원 모드가 켜져 있는 동안 적 이름표를 숨기고 우호적 플레이어 이름표를 표시한 다음, 원래 설정으로 되돌립니다."
 L["Requires Reticle Targeting"] = "조준선 대상 지정 필요"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
