@@ -867,7 +867,8 @@ end
 --- `opts.charSpecific` places a blue © to the right of the title (bool or function).
 --- `opts.newFeatureFlag` places the Alliance "NEW" badge to the right of the title.
 --- `control.widgetH` / `control.widgetFill` / `control.textFrac` behave as elsewhere
---- (multiline inputs use textFrac 0.40 so the box gets ~60%).
+--- (multiline inputs use textFrac 0.40 so the box gets ~60%). `control.widgetMinW` keeps the
+--- widget column at least that wide, narrowing the text column when needed.
 local function AttachOptionText(control, row, opts, widgetH)
   -- Horizontal row padding; the narrow sidebar footer passes a smaller `padX`.
   local padX = opts.padX or ROW_PAD_X
@@ -1068,6 +1069,11 @@ local function AttachOptionText(control, row, opts, widgetH)
 
       local function MeasureText(lead)
         local textW = max(floor(width * textFrac) - padX - lead, 40)
+        -- A widget that can't get narrower (the crosshair tile row) takes its room from the text.
+        if control.widgetMinW then
+          local room = width - (2 * padX) - lead - CONTROL_GAP - leftInset - control.widgetMinW
+          textW = max(min(textW, room), 40)
+        end
         row.label:SetWidth(textW)
         local labelH = row.label:GetStringHeight()
         local textH = labelH
@@ -3163,6 +3169,8 @@ local function MakeTexturePairRow(parent, opts)
     widget = holder,
     widgetH = holderH,
     widgetW = holderW,
+    -- Tiles don't shrink below TILE: with many of them the row gives the text column less.
+    widgetMinW = holderW,
     widgetFill = true,
   }
 

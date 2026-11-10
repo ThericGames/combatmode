@@ -448,10 +448,6 @@ L["A second set of click casts for supporting your group. While Support Mode is 
 L["Support Mode Keybind"] = "Raccourci du mode soutien"
 L["Turns Support Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
   "Active et désactive le Mode soutien. Fonctionne en combat. Laissez-le sans touche pour désactiver la fonction."
-L["Key Behavior"] = "Comportement de la touche"
-L["Toggle: press to turn Support Mode on, press again to turn it off. Hold: Support Mode stays on only while the key is held."] =
-  "Basculer : appuyez pour activer le Mode soutien, appuyez de nouveau pour le désactiver. Maintenir : le Mode soutien ne reste activé que tant que la touche est maintenue."
-L["Hold"] = "Maintenir"
 L["Support Bar Page"] = "Page de la barre de soutien"
 L["The main action bar page shown while Support Mode is on. Put your healing and support abilities there. Leaving Support Mode returns to page 1."] =
   "La page de la barre d'action principale affichée tant que le Mode soutien est activé. Placez-y vos techniques de soin et de soutien. Quitter le Mode soutien ramène à la page 1."
@@ -460,14 +456,26 @@ L["Page %d"] = "Page %d"
 L["Self-Cast Keybind"] = "Raccourci de lancer sur soi"
 L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
   "Maintenez cette touche en cliquant en Mode soutien pour lancer sur vous-même le sort bénéfique de ce raccourci de clic, au lieu de l'unité sous le réticule. Tous vos raccourcis de clic gardent leurs propres sorts. Laissez-le sans touche si vous n'en avez pas besoin."
-L["Swap Nameplates"] = "Échanger les barres de nom"
-L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."] =
-  "Masque les barres de nom ennemies et affiche celles des joueurs amicaux tant que le Mode soutien est activé, puis rétablit vos propres réglages."
+L["Self-Cast Modifier"] = "Modificateur d'auto-lancer"
+L["Hold this modifier while clicking in Support Mode to cast the click's helpful spell on yourself. Warning: this replaces the modifier's own click binds while Support Mode is on."] =
+  "Maintenez ce modificateur en cliquant en Mode soutien pour lancer sur vous le sort bénéfique du clic. Attention : cela remplace les raccourcis de clic propres au modificateur tant que le Mode soutien est activé."
+L["Example: Shift"] = "Exemple : Maj"
+L["Shift + Left Click casts the Left Click's helpful spell on yourself, and Shift + Right Click the Right Click's."] =
+  "Maj + clic gauche lance sur vous le sort bénéfique du clic gauche, et Maj + clic droit celui du clic droit."
+L["While Support Mode is on, Shift + Left Click and Shift + Right Click cast on yourself instead of their own click binds (action bar slots 3 and 4 by default) whenever the plain click holds a helpful spell. Outside Support Mode they work as usual."] =
+  "Tant que le Mode soutien est activé, Maj + clic gauche et Maj + clic droit lancent sur vous au lieu de leurs propres raccourcis de clic (emplacements 3 et 4 de la barre d'action par défaut) dès que le clic simple porte un sort bénéfique. En dehors du Mode soutien, ils fonctionnent comme d'habitude."
 L["Requires Reticle Targeting"] = "Nécessite le Ciblage par réticule"
 L["Support"] = "Soutien"
-L["Crosshair Color"] = "Couleur du réticule"
-L["While Support Mode is on, the idle crosshair takes this color so you can tell the mode at a glance. Opens Reaction Colors on the Support tab."] =
-  "Tant que le Mode soutien est activé, le réticule au repos prend cette couleur pour reconnaître le mode d'un coup d'œil. Ouvre Couleurs de réaction sur l'onglet Soutien."
+L["Tint Vignette"] = "Teinter la vignette"
+L["While Support Mode is on, the Vignette takes the Support crosshair color, so you can tell the mode at a glance. It shows only when your Vignette does; with the Vignette off, nothing is tinted."] =
+  "Tant que le Mode soutien est activé, la vignette prend la couleur du réticule de Soutien pour reconnaître le mode d'un coup d'œil. Elle ne s'affiche que lorsque votre vignette s'affiche ; si la vignette est désactivée, rien n'est teinté."
+L["Nameplates"] = "Barres de nom"
+L["Which nameplates show while Support Mode is on. Your own nameplate settings come back when you leave it."] =
+  "Les barres de nom affichées tant que le Mode soutien est activé. Vos propres réglages de barres de nom reviennent quand vous le quittez."
+L["Don't change"] = "Ne pas modifier"
+L["Friendly only"] = "Amicales uniquement"
+L["Friendly and enemy"] = "Amicales et ennemies"
+L["Hide all"] = "Tout masquer"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = "Déverrouillage auto"
@@ -692,6 +700,13 @@ L["Not aiming at anything"] = "Ne vise rien"
 L["Aiming at a unit or object"] = "Vise une unité ou un objet"
 L["While you are mounted"] = "Lorsque vous êtes en monture"
 L["While Target Lock holds"] = "Tant que le verrouillage de cible est actif"
+L["SUPPORT"] = "SOUTIEN"
+L["Use a Support Mode crosshair"] = "Utiliser un réticule pour le Mode soutien"
+L["Use the normal crosshair in Support Mode"] = "Utiliser le réticule normal en Mode soutien"
+L["Support Mode keeps your Inactive and Active textures."] =
+  "Le Mode soutien conserve vos textures Inactif et Actif."
+L["While Support Mode is on, in place of Inactive and Active"] =
+  "Tant que le Mode soutien est activé, à la place d'Inactif et Actif"
 L["Brings back the texture you had before hiding it."] =
   "Rétablit la texture que vous aviez avant de la masquer."
 L["Crosshair Textures"] = "Textures du réticule"

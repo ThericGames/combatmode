@@ -21,7 +21,7 @@
 	<Binding name="Combat Mode - Ally Cycle Previous" description="Cycle to the previous group member" category="|A:::|a|TInterface\Addons\CombatMode\Assets\branding\cmtitle:26:55|t">
 		CombatMode_AllyCycleDown()
 	</Binding>
-	<Binding name="Combat Mode - Support Mode" description="Switch your click casts to supporting the ally under the crosshair (tap or hold, set in the Support Mode options)" header="Support Mode" category="|A:::|a|TInterface\Addons\CombatMode\Assets\branding\cmtitle:26:55|t" runOnUp="true">
+	<Binding name="Combat Mode - Support Mode" description="Switch your click casts to supporting the ally under the crosshair (press to turn on, press again to turn off)" header="Support Mode" category="|A:::|a|TInterface\Addons\CombatMode\Assets\branding\cmtitle:26:55|t" runOnUp="true">
 		-- Handled by a secure override click (Core/ClickCasting/SupportMode.lua), which wins over this body.
 	</Binding>
 	<Binding name="Combat Mode - Support Mode Self Cast" description="Hold while clicking in Support Mode to cast that click bind's helpful spell on yourself" category="|A:::|a|TInterface\Addons\CombatMode\Assets\branding\cmtitle:26:55|t" runOnUp="true">

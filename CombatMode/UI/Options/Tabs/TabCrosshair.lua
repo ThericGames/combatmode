@@ -97,6 +97,7 @@ UI.Options.AddTab({
         { slot = "active", caption = L["Active"], tint = "hostile" },
         { slot = "mounted", caption = L["Mounted"], tint = "base" },
         { slot = "lock", caption = L["Disabled"], tint = "base" },
+        { slot = "support", caption = L["Support"], tint = "support" },
       },
       previews = function()
         local appearance = CM.Constants.NormalizeCrosshairAppearance(
@@ -104,11 +105,13 @@ UI.Options.AddTab({
         ) or CM.Constants.CrosshairTextureObj.Default
         local byId = CM.Constants.CrosshairTextureById
         local default = byId[CM.Constants.CrosshairIdleDefaultId]
+        local supportDefault = byId[CM.Constants.CrosshairSupportDefaultId]
         return {
           base = appearance.Base,
           active = appearance.Active,
           mounted = (byId[CM.DB.global.crosshairMountedId] or default).path,
           lock = (byId[CM.DB.global.crosshairTargetLockId] or default).path,
+          support = (byId[CM.DB.global.crosshairSupportId] or supportDefault).path,
         }
       end,
       func = function(slot)

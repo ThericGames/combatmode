@@ -450,10 +450,6 @@ L["A second set of click casts for supporting your group. While Support Mode is 
 L["Support Mode Keybind"] = "지원 모드 단축키"
 L["Turns Support Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
   "지원 모드를 켜고 끕니다. 전투 중에도 작동합니다. 단축키를 지정하지 않으면 기능이 비활성화됩니다."
-L["Key Behavior"] = "키 동작 방식"
-L["Toggle: press to turn Support Mode on, press again to turn it off. Hold: Support Mode stays on only while the key is held."] =
-  "전환: 누르면 지원 모드가 켜지고 다시 누르면 꺼집니다. 누르고 있기: 키를 누르고 있는 동안에만 지원 모드가 유지됩니다."
-L["Hold"] = "누르고 있기"
 L["Support Bar Page"] = "지원 단축바 페이지"
 L["The main action bar page shown while Support Mode is on. Put your healing and support abilities there. Leaving Support Mode returns to page 1."] =
   "지원 모드가 켜져 있는 동안 표시되는 주 행동 단축바 페이지입니다. 치유 및 지원 능력을 그곳에 배치하세요. 지원 모드를 끄면 1페이지로 돌아갑니다."
@@ -462,14 +458,26 @@ L["Page %d"] = "%d페이지"
 L["Self-Cast Keybind"] = "자신에게 시전 단축키"
 L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
   "지원 모드에서 클릭할 때 이 키를 누르고 있으면 해당 클릭 단축키의 이로운 주문을 조준점 아래의 대상 대신 자신에게 시전합니다. 모든 클릭 단축키는 원래 주문을 그대로 유지합니다. 필요하지 않으면 지정하지 않아도 됩니다."
-L["Swap Nameplates"] = "이름표 전환"
-L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."] =
-  "지원 모드가 켜져 있는 동안 적 이름표를 숨기고 우호적 플레이어 이름표를 표시한 다음, 원래 설정으로 되돌립니다."
+L["Self-Cast Modifier"] = "자신에게 시전 보조키"
+L["Hold this modifier while clicking in Support Mode to cast the click's helpful spell on yourself. Warning: this replaces the modifier's own click binds while Support Mode is on."] =
+  "지원 모드에서 이 보조키를 누른 채 클릭하면 해당 클릭의 이로운 주문을 자신에게 시전합니다. 경고: 지원 모드가 켜져 있는 동안 이 보조키의 클릭 단축키를 대신합니다."
+L["Example: Shift"] = "예: Shift"
+L["Shift + Left Click casts the Left Click's helpful spell on yourself, and Shift + Right Click the Right Click's."] =
+  "Shift + 왼쪽 클릭은 왼쪽 클릭의 이로운 주문을, Shift + 오른쪽 클릭은 오른쪽 클릭의 이로운 주문을 자신에게 시전합니다."
+L["While Support Mode is on, Shift + Left Click and Shift + Right Click cast on yourself instead of their own click binds (action bar slots 3 and 4 by default) whenever the plain click holds a helpful spell. Outside Support Mode they work as usual."] =
+  "지원 모드가 켜져 있는 동안 일반 클릭에 이로운 주문이 있으면, Shift + 왼쪽 클릭과 Shift + 오른쪽 클릭은 자체 클릭 단축키(기본값: 행동 단축바 3번과 4번 칸) 대신 자신에게 시전합니다. 지원 모드 밖에서는 평소대로 작동합니다."
 L["Requires Reticle Targeting"] = "조준선 대상 지정 필요"
 L["Support"] = "지원"
-L["Crosshair Color"] = "조준점 색상"
-L["While Support Mode is on, the idle crosshair takes this color so you can tell the mode at a glance. Opens Reaction Colors on the Support tab."] =
-  "지원 모드가 켜져 있는 동안 대기 상태의 조준점이 이 색상으로 바뀌어 모드를 한눈에 알 수 있습니다. 반응 색상의 지원 탭을 엽니다."
+L["Tint Vignette"] = "비네트 색 입히기"
+L["While Support Mode is on, the Vignette takes the Support crosshair color, so you can tell the mode at a glance. It shows only when your Vignette does; with the Vignette off, nothing is tinted."] =
+  "지원 모드가 켜져 있는 동안 비네트가 지원 조준점 색상으로 바뀌어 모드를 한눈에 알 수 있습니다. 비네트가 표시될 때만 나타나며, 비네트가 꺼져 있으면 아무것도 물들지 않습니다."
+L["Nameplates"] = "이름표"
+L["Which nameplates show while Support Mode is on. Your own nameplate settings come back when you leave it."] =
+  "지원 모드가 켜져 있는 동안 표시할 이름표입니다. 모드를 끄면 원래 이름표 설정으로 돌아갑니다."
+L["Don't change"] = "변경 안 함"
+L["Friendly only"] = "우호적 대상만"
+L["Friendly and enemy"] = "우호적 대상과 적"
+L["Hide all"] = "모두 숨기기"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = "자동 해제"
@@ -689,6 +697,13 @@ L["Not aiming at anything"] = "아무것도 조준하지 않음"
 L["Aiming at a unit or object"] = "유닛이나 오브젝트를 조준 중"
 L["While you are mounted"] = "탈것에 탑승한 동안"
 L["While Target Lock holds"] = "대상 고정이 유지되는 동안"
+L["SUPPORT"] = "지원"
+L["Use a Support Mode crosshair"] = "지원 모드 조준점 사용"
+L["Use the normal crosshair in Support Mode"] = "지원 모드에서 일반 조준점 사용"
+L["Support Mode keeps your Inactive and Active textures."] =
+  "지원 모드에서도 비활성 및 활성 텍스처를 그대로 사용합니다."
+L["While Support Mode is on, in place of Inactive and Active"] =
+  "지원 모드가 켜져 있는 동안 비활성 및 활성 대신 사용"
 L["Brings back the texture you had before hiding it."] =
   "숨기기 전에 사용하던 텍스처를 되돌립니다."
 L["Crosshair Textures"] = "조준점 텍스처"

@@ -284,12 +284,16 @@ end
 --    normal routing, classified for the support page, and have no self-cast text.
 --  • While the mode is on the support page is the one showing, so the normal text is classified
 --    from the page the mode returns to (page 1) instead of the displayed slot.
-local function BuildModeMacroTexts(bindingValue, strict)
+--  • `withSelfMod` (the plain BUTTON1 / BUTTON2 clicks): the support text also casts on yourself
+--    while the Self-Cast Modifier is held, for a modifier + click with no click-cast bind of its
+--    own (the game then runs the plain click's bind). A bound chord is ModifierSelfCastText's job.
+local function BuildModeMacroTexts(bindingValue, strict, withSelfMod)
   local ctx = CM.GetSupportModeBuildContext()
   if not ctx then
     return (CM.BuildClickCastMacroText(bindingValue)), nil, nil
   end
   local page, active = ctx.page, ctx.active
+  local selfMod = withSelfMod and ctx.selfMod or nil
   local isMainBar = bindingValue:match("^ACTIONBUTTON%d+$") ~= nil
   if not strict and not (page and isMainBar) then
     return (CM.BuildClickCastMacroText(bindingValue)), nil, nil
@@ -299,8 +303,8 @@ local function BuildModeMacroTexts(bindingValue, strict)
   if not strict then
     return normalText, (CM.BuildClickCastMacroText(bindingValue, { page = page })), nil
   end
-  local supportText =
-    CM.BuildClickCastMacroText(bindingValue, { page = page, support = "mouseover" })
+  local supportOpts = { page = page, support = "mouseover", selfMod = selfMod }
+  local supportText = CM.BuildClickCastMacroText(bindingValue, supportOpts)
   local selfText = CM.BuildClickCastMacroText(bindingValue, { page = page, support = "self" })
   return normalText, supportText, selfText
 end
@@ -532,6 +536,32 @@ for value, text in pairs(CM.Constants.BlizzardActionMacros) do
   ACTION_MACRO_TEXTS[value] = text
 end
 
+-- Support Mode Self-Cast Modifier, for the modifier's own chords (SHIFT-BUTTON1 / SHIFT-BUTTON2
+-- for Shift). A chord is a click-cast key of its own, so a [mod:shift] test in the plain click's
+-- macro never sees it; instead, while the mode is on, the chord's proxy runs the plain click's
+-- self-cast line in place of its own ability. Returns that line, or nil when `key` is not such
+-- a chord or the plain click holds no helpful spell (the chord then keeps its own bind).
+-- Chords that don't run through a proxy (Run MACRO, a macro on the bar slot) can't be swapped.
+local function ModifierSelfCastText(key)
+  local ctx = CM.GetSupportModeBuildContext()
+  local selfMod = ctx and ctx.selfMod
+  if not selfMod then
+    return nil
+  end
+  local page = ctx.page
+  local modifier, baseKey = key:match("^(%u+)%-(BUTTON%d)$")
+  if not modifier or modifier:lower() ~= selfMod then
+    return nil
+  end
+  local base = CM.DB[CM.GetBindingsLocation()].bindings[baseKey:lower()]
+  if not base or not base.enabled or base.value == "MACRO" or ActionMacroText(base.value) then
+    return nil
+  end
+  local selfOpts = { page = page, support = "self" }
+  local text, isSupport = CM.BuildClickCastMacroText(base.value, selfOpts)
+  return isSupport and text or nil
+end
+
 function CM.SetNewBinding(buttonSettings)
   if not buttonSettings.enabled then
     return
@@ -547,7 +577,8 @@ function CM.SetNewBinding(buttonSettings)
     local frame = ClickCastFramesByKey[key]
     local macroText = ActionMacroText(value)
     if frame and macroText then
-      SetClickCastFrameMacro(frame, macroText)
+      local modSelfText = ModifierSelfCastText(key)
+      SetClickCastFrameMacro(frame, macroText, modSelfText, modSelfText)
       valueToUse = "CLICK " .. frame:GetName() .. ":" .. ClickCastMouseButton(key)
     end
   else
@@ -561,7 +592,12 @@ function CM.SetNewBinding(buttonSettings)
         valueToUse = "CLICK " .. realFrame .. ":" .. ClickCastMouseButton(key)
       else
         local frame = ClickCastFramesByKey[key]
-        local macroText, supportText, selfText = BuildModeMacroTexts(value, true)
+        local isPlainClick = not key:find("-", 1, true)
+        local macroText, supportText, selfText = BuildModeMacroTexts(value, true, isPlainClick)
+        local modSelfText = ModifierSelfCastText(key)
+        if modSelfText then
+          supportText, selfText = modSelfText, modSelfText
+        end
         if frame and macroText then
           SetClickCastFrameMacro(frame, macroText, supportText, selfText)
           valueToUse = "CLICK " .. frame:GetName() .. ":" .. ClickCastMouseButton(key)

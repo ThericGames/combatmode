@@ -242,12 +242,14 @@ local function ApplyCrosshairAppearanceToWidget(
   end
 
   local appearance = CrosshairAppearance
+  local situationalApplied = false
   if CM.IsCrosshairSituationalActive and CM.IsCrosshairSituationalActive() then
     -- InitDatabase and the editor already store normalized tables (or the Hidden constant).
     local situational =
       CM.Constants.NormalizeCrosshairAppearance(CM.DB.global.crosshairSituationalAppearance)
     if situational then
       appearance = situational
+      situationalApplied = true
     end
   end
 
@@ -275,11 +277,18 @@ local function ApplyCrosshairAppearanceToWidget(
     return
   end
 
-  -- The idle reticle takes the Support Mode color while that mode is on (texture / scale unchanged).
+  -- The idle reticle takes the Support Mode color while that mode is on (scale unchanged).
   local color =
     CM.GetCrosshairReactionColor(state == "base" and CM.GetCrosshairIdleColorState() or state)
   local targetR, targetG, targetB, targetA = color[1], color[2], color[3], color[4]
   local textureToUse = state == "base" and appearance.Base or appearance.Active
+  -- Support Mode: its own texture for both states (the situational appearance still wins).
+  local supportTexture = not situationalApplied
+    and CM.GetCrosshairSupportTexturePath
+    and CM.GetCrosshairSupportTexturePath()
+  if supportTexture then
+    textureToUse = supportTexture
+  end
   local reverseAnimation = state == "base" and true or false
 
   -- An empty path is a slot the player chose to hide: draw nothing for that state.

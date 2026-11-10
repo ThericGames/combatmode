@@ -94,6 +94,9 @@ end
 -- Soft window drop shadow: 128x128 TGA, a blurred rounded box (box 48..80, radius 10) sliced as
 -- 9 pieces by UI.AddWindowShadow.
 CM.Constants.Shadow = uiPath .. "shadow.tga"
+-- The vignette art (Assets/atlas/Artifacts-BG-Shadow.tga, black) with white RGB and the same
+-- alpha, so Core/Vignette.lua can tint it (scripts/art/make-vignette-tint.py builds it).
+CM.Constants.VignetteTint = uiPath .. "vignette-tint.tga"
 -- Blizzard textures shipped as TGAs (so they do not depend on the client): color picker thumbs
 -- (64x16 sheet), the wizard check mark and the frame picker's fallback addon icon.
 CM.Constants.ColorPickerThumbs = uiPath .. "colorpicker-buttons.tga"
@@ -147,6 +150,11 @@ local crosshairAssetNames = {
 -- can pick any catalog texture for it (global.crosshairMountedId / crosshairTargetLockId); the Dot is a plain catalog entry.
 CM.Constants.CrosshairDotTexture = crosshairPath .. "crosshairDot.blp"
 CM.Constants.CrosshairIdleDefaultId = "Dot"
+-- Support Mode reticle (global.crosshairSupportId): one texture in place of Inactive and Active
+-- while that mode is on, so the shape tells the mode and the color still tells the target.
+-- Default: the Triangle preset's inactive texture (three chevrons). "none" = no Support texture
+-- (the normal ones stay).
+CM.Constants.CrosshairSupportDefaultId = "Triangle"
 
 local PACK_COUNT = 202
 

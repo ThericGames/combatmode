@@ -15,11 +15,14 @@
 --      copies the right one into macrotext, so the swap works in combat.
 --    • CombatModeSupportModeKey (SecureActionButtonTemplate, type macro) runs
 --      /changeactionbar <page> for the page swap, the only secure way to page in combat.
---      Key Behavior: toggle (press) or hold (press = on, release = off).
+--      The key is a toggle: each press flips the mode, the release does nothing.
 --    • CombatModeSupportModeSelfKey: held = smself 1 (click casts use sm-self, "/cast [@player]").
+--      char.supportModeSelfCastModifier (Shift / Ctrl / Alt) does the same from the macro texts
+--      alone, with no secure state (ModifierSelfCastText in BindingOverrides).
 --    • Insecure side: Handler.SupportModeChanged (CallMethod) → nameplates
 --      (CM.SyncSupportModeNameplates in CVarManager; only if a client protects those CVars in
---      combat do they wait for PLAYER_REGEN_ENABLED) and the on / off notice.
+--      combat do they wait for PLAYER_REGEN_ENABLED), the on / off notice, the crosshair
+--      (Support texture + idle tint) and the Vignette tint (CM.RefreshVignetteTint).
 --      CM.IsSupportModeActive reads the attribute.
 --    • The mode never survives a reload: CM.InitializeSupportMode turns a leftover support
 --      page back to page 1 and CVarManager restores leftover nameplate CVars.
@@ -97,25 +100,15 @@ local SWAP = [[
   owner:CallMethod("SupportModeChanged")
 ]]
 
--- The key, both edges. useOnKeyDown is set per edge so the button's own macro (the page swap) runs
--- on the edge that changed the mode, whatever ActionButtonUseKeyDown says.
+-- The key toggles the mode on its press; the release is dropped. The button keeps useOnKeyDown
+-- set, so its own macro (the page swap) runs on that press whatever ActionButtonUseKeyDown says.
+-- (A hold-to-stay-on behavior existed before release and was removed as not useful.)
 local KEY_PRE = [[
+  if not down then
+    return false
+  end
   local owner = owner or self
-  local hold = owner:GetAttribute("smhold")
-  local on = owner:GetAttribute("sm") == 1
-  local want
-  if down then
-    self:SetAttribute("useOnKeyDown", true)
-    want = hold or not on
-  elseif hold then
-    self:SetAttribute("useOnKeyDown", false)
-    want = false
-  else
-    return false
-  end
-  if want == on then
-    return false
-  end
+  local want = owner:GetAttribute("sm") ~= 1
   ]] .. SWAP .. [[
   self:SetAttribute("macrotext", owner:GetAttribute(want and "smenter" or "smexit"))
 ]]
@@ -146,6 +139,14 @@ function CM.GetSupportModePage()
   return nil
 end
 
+local SELF_CAST_MODIFIERS = { shift = true, ctrl = true, alt = true }
+
+--- Self-Cast Modifier as a macro modifier name ("shift" | "ctrl" | "alt"), or nil when off.
+function CM.GetSupportModeSelfCastModifier()
+  local modifier = CM.DB and CM.DB.char and CM.DB.char.supportModeSelfCastModifier
+  return SELF_CAST_MODIFIERS[modifier] and modifier or nil
+end
+
 --- Reticle Targeting on and the Support Mode key bound.
 function CM.IsSupportModeEnabled()
   local char = CM.DB and CM.DB.char
@@ -160,14 +161,15 @@ function CM.IsSupportModeActive()
 end
 
 --- What BindingOverrides needs to build the macro texts of a key, or nil when the feature is
---- off: `page` (support bar page or nil) and `active` (the support page is the one showing
---- right now). The table is reused: read it at once.
+--- off: `page` (support bar page or nil), `active` (the support page is the one showing right
+--- now) and `selfMod` (Self-Cast Modifier or nil). The table is reused: read it at once.
 function CM.GetSupportModeBuildContext()
   if not CM.IsSupportModeEnabled() then
     return nil
   end
   buildContext.page = CM.GetSupportModePage()
   buildContext.active = CM.IsSupportModeActive()
+  buildContext.selfMod = CM.GetSupportModeSelfCastModifier()
   return buildContext
 end
 
@@ -245,6 +247,10 @@ local function OnModeChanged()
   if CM.RefreshCrosshairAppearance then
     CM.RefreshCrosshairAppearance()
   end
+  -- The Vignette takes the same color (Core/Vignette.lua).
+  if CM.RefreshVignetteTint then
+    CM.RefreshVignetteTint()
+  end
 end
 
 local function SetBarPage(page)
@@ -304,7 +310,7 @@ local function ApplyImpl()
     return
   end
   local page = CM.GetSupportModePage()
-  Handler:SetAttribute("smhold", CM.DB.char.supportModeKeyBehavior == "hold" or nil)
+  KeyButton:SetAttribute("useOnKeyDown", true)
   Handler:SetAttribute("smenter", page and ("/changeactionbar " .. page) or nil)
   Handler:SetAttribute("smexit", page and ("/changeactionbar " .. EXIT_PAGE) or nil)
   if not CM.IsSupportModeEnabled() then

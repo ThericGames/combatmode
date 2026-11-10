@@ -10,6 +10,8 @@
 --    • DB.global.crosshair / appearance / crosshairScale / Y;
 --      crosshairReactionColors optional overrides; CM.GetCrosshairReactionColor resolves
 --      tints (mounted = defaults; focus → hostile; idle = "support" while Support Mode is on).
+--    • CM.GetCrosshairSupportTexturePath — crosshairSupportId, drawn by Animations in place of
+--      the Inactive / Active textures while Support Mode is on ("none" = keep those).
 --    • crosshairSituationalCondition — user Lua; when true, Animations uses
 --      crosshairSituationalAppearance (default Invisible) while reaction tint/scale stay normal.
 --      Appearance Hidden (both situational slots hidden) hides the reticle texture only. A slot
@@ -137,6 +139,21 @@ function CM.GetCrosshairIdleColorState()
     return "support"
   end
   return "base"
+end
+
+--- Texture path of the Support Mode reticle (global.crosshairSupportId), or nil when that mode is
+--- off or the player turned the Support texture off ("none"): Inactive / Active then apply as
+--- usual. Animations uses it for both states, so the shape tells the mode and the reaction color
+--- still tells the target. Mounted, Target Lock and the situational appearance keep their own.
+function CM.GetCrosshairSupportTexturePath()
+  if not (CM.IsSupportModeActive and CM.IsSupportModeActive()) then
+    return nil
+  end
+  local entry = CM.Constants.CrosshairTextureById[CM.DB.global.crosshairSupportId]
+  if not entry or entry.path == "" then
+    return nil
+  end
+  return entry.path
 end
 
 local CROSSHAIR_BASE_SIZE = 64

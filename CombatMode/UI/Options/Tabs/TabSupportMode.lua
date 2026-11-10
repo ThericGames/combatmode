@@ -1,8 +1,10 @@
 ---------------------------------------------------------------------------------------
 --  UI/Options/Tabs/TabSupportMode.lua — OPTIONS TAB — Support Mode
 ---------------------------------------------------------------------------------------
---  What it does: Support Mode keybind, key behavior (toggle / hold), support bar page,
---  Self-Cast keybind and the nameplate swap toggle. An unbound Support Mode key disables it.
+--  What it does: Support Mode keybind (a toggle), support bar page, Self-Cast keybind and
+--  modifier, Vignette tint toggle and the nameplates dropdown. An unbound
+--  Support Mode key disables it. (The Support crosshair color and texture are on the Crosshair
+--  tab: Reaction Colors and Appearance.)
 --  Architecture / how it works:
 --    • DB.char.supportMode* (per character). Every setter re-stores the secure key
 --      (CM.ApplySupportModeBinding) and rebuilds the click-cast macros
@@ -29,11 +31,23 @@ local UI = CM.UI
 local BIND_NAME = "Combat Mode - Support Mode"
 local SELF_BIND_NAME = "Combat Mode - Support Mode Self Cast"
 
-local KEY_BEHAVIOR_VALUES = {
-  toggle = L["Toggle"],
-  hold = L["Hold"],
+-- Stored ids are the macro modifier names ("shift" in [mod:shift]); "none" = off.
+local SELF_MODIFIER_VALUES = {
+  none = L["Off"],
+  shift = _G.SHIFT_KEY or L["Shift"],
+  ctrl = _G.CTRL_KEY or L["Ctrl"],
+  alt = _G.ALT_KEY or L["Alt"],
 }
-local KEY_BEHAVIOR_ORDER = { "toggle", "hold" }
+local SELF_MODIFIER_ORDER = { "none", "shift", "ctrl", "alt" }
+
+-- char.supportModeNameplateMode (applied by CM.SyncSupportModeNameplates in CVarManager).
+local NAMEPLATE_VALUES = {
+  keep = L["Don't change"],
+  friendly = L["Friendly only"],
+  all = L["Friendly and enemy"],
+  none = L["Hide all"],
+}
+local NAMEPLATE_ORDER = { "keep", "friendly", "all", "none" }
 
 -- Stored as "p<page>" in the dropdown; the DB keeps the number (0 = no page swap).
 local PAGE_VALUES = { p0 = L["Don't swap"] }
@@ -92,24 +106,6 @@ UI.Options.AddTab({
       watermarkWhenDisabled = ReticleTargetingNotice,
     })
     ctx:Dropdown({
-      label = L["Key Behavior"],
-      desc = L["Toggle: press to turn Support Mode on, press again to turn it off. Hold: Support Mode stays on only while the key is held."],
-      charSpecific = true,
-      newFeatureFlag = true,
-      values = KEY_BEHAVIOR_VALUES,
-      order = KEY_BEHAVIOR_ORDER,
-      get = function()
-        local behavior = CM.DB.char.supportModeKeyBehavior
-        return KEY_BEHAVIOR_VALUES[behavior] and behavior or "toggle"
-      end,
-      set = function(value)
-        CM.DB.char.supportModeKeyBehavior = value
-        Apply()
-      end,
-      disabled = ReticleTargetingOff,
-      watermarkWhenDisabled = ReticleTargetingNotice,
-    })
-    ctx:Dropdown({
       label = L["Support Bar Page"],
       desc = L["The main action bar page shown while Support Mode is on. Put your healing and support abilities there. Leaving Support Mode returns to page 1."],
       charSpecific = true,
@@ -143,30 +139,65 @@ UI.Options.AddTab({
       disabled = ReticleTargetingOff,
       watermarkWhenDisabled = ReticleTargetingNotice,
     })
-    ctx:Button({
-      layout = "row",
-      label = L["Crosshair Color"],
-      buttonLabel = L["Edit"],
-      desc = L["While Support Mode is on, the idle crosshair takes this color so you can tell the mode at a glance. Opens Reaction Colors on the Support tab."],
+    ctx:Dropdown({
+      label = L["Self-Cast Modifier"],
+      desc = L["Hold this modifier while clicking in Support Mode to cast the click's helpful spell on yourself. Warning: this replaces the modifier's own click binds while Support Mode is on."],
+      helpTooltip = {
+        title = L["Self-Cast Modifier"],
+        stacked = true,
+        lines = {
+          {
+            label = L["Example: Shift"],
+            value = L["Shift + Left Click casts the Left Click's helpful spell on yourself, and Shift + Right Click the Right Click's."],
+            warning = L["While Support Mode is on, Shift + Left Click and Shift + Right Click cast on yourself instead of their own click binds (action bar slots 3 and 4 by default) whenever the plain click holds a helpful spell. Outside Support Mode they work as usual."],
+          },
+        },
+      },
+      charSpecific = true,
       newFeatureFlag = true,
-      func = function()
-        if CM.OpenCrosshairColorsEditor then
-          CM.OpenCrosshairColorsEditor("support")
-        end
+      values = SELF_MODIFIER_VALUES,
+      order = SELF_MODIFIER_ORDER,
+      get = function()
+        local modifier = CM.DB.char.supportModeSelfCastModifier
+        return SELF_MODIFIER_VALUES[modifier] and modifier or "none"
+      end,
+      set = function(value)
+        CM.DB.char.supportModeSelfCastModifier = value
+        Apply()
       end,
       disabled = ReticleTargetingOff,
       watermarkWhenDisabled = ReticleTargetingNotice,
     })
     ctx:Toggle({
-      label = L["Swap Nameplates"],
-      desc = L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."],
+      label = L["Tint Vignette"],
+      desc = L["While Support Mode is on, the Vignette takes the Support crosshair color, so you can tell the mode at a glance. It shows only when your Vignette does; with the Vignette off, nothing is tinted."],
       charSpecific = true,
       newFeatureFlag = true,
       get = function()
-        return CM.DbBool(CM.DB.char.supportModeNameplates, true)
+        return CM.DbBool(CM.DB.char.supportModeTintVignette, true)
       end,
       set = function(value)
-        CM.DB.char.supportModeNameplates = value and true or false
+        CM.DB.char.supportModeTintVignette = value and true or false
+        if CM.RefreshVignetteTint then
+          CM.RefreshVignetteTint()
+        end
+      end,
+      disabled = ReticleTargetingOff,
+      watermarkWhenDisabled = ReticleTargetingNotice,
+    })
+    ctx:Dropdown({
+      label = L["Nameplates"],
+      desc = L["Which nameplates show while Support Mode is on. Your own nameplate settings come back when you leave it."],
+      charSpecific = true,
+      newFeatureFlag = true,
+      values = NAMEPLATE_VALUES,
+      order = NAMEPLATE_ORDER,
+      get = function()
+        local mode = CM.DB.char.supportModeNameplateMode
+        return NAMEPLATE_VALUES[mode] and mode or "friendly"
+      end,
+      set = function(value)
+        CM.DB.char.supportModeNameplateMode = value
         if CM.SyncSupportModeNameplates then
           CM.SyncSupportModeNameplates()
         end

@@ -433,10 +433,6 @@ L["A second set of click casts for supporting your group. While Support Mode is 
 L["Support Mode Keybind"] = "辅助模式按键"
 L["Turns Support Mode on and off. Works in combat. Leave it unbound to disable the feature."] =
   "开启或关闭辅助模式。战斗中可用。不绑定按键即可停用此功能。"
-L["Key Behavior"] = "按键行为"
-L["Toggle: press to turn Support Mode on, press again to turn it off. Hold: Support Mode stays on only while the key is held."] =
-  "切换：按一下开启辅助模式，再按一下关闭。按住：仅在按住按键时保持辅助模式。"
-L["Hold"] = "按住"
 L["Support Bar Page"] = "辅助动作条页"
 L["The main action bar page shown while Support Mode is on. Put your healing and support abilities there. Leaving Support Mode returns to page 1."] =
   "辅助模式开启时显示的主动作条页。把你的治疗和辅助技能放在那里。离开辅助模式会回到第 1 页。"
@@ -445,14 +441,26 @@ L["Page %d"] = "第 %d 页"
 L["Self-Cast Keybind"] = "自我施法按键"
 L["Hold this key while clicking in Support Mode to cast that click bind's helpful spell on yourself instead of the unit under the crosshair. All your click binds keep their own spells. Leave it unbound if you don't need it."] =
   "在辅助模式中点击时按住此键，可将该点击绑定的有益法术施放给自己，而不是准星下的单位。你的所有点击绑定都保留各自的法术。不需要时可以不绑定。"
-L["Swap Nameplates"] = "切换姓名板"
-L["Hide enemy nameplates and show friendly player nameplates while Support Mode is on, then restore your own settings."] =
-  "辅助模式开启时隐藏敌方姓名板并显示友方玩家姓名板，之后恢复你自己的设置。"
+L["Self-Cast Modifier"] = "自我施法修饰键"
+L["Hold this modifier while clicking in Support Mode to cast the click's helpful spell on yourself. Warning: this replaces the modifier's own click binds while Support Mode is on."] =
+  "在辅助模式下按住此修饰键点击，会将该点击的有益法术施放给自己。警告：辅助模式开启时，这会取代该修饰键自己的点击绑定。"
+L["Example: Shift"] = "示例：Shift"
+L["Shift + Left Click casts the Left Click's helpful spell on yourself, and Shift + Right Click the Right Click's."] =
+  "Shift + 左键点击会将左键点击的有益法术施放给自己，Shift + 右键点击则施放右键点击的有益法术。"
+L["While Support Mode is on, Shift + Left Click and Shift + Right Click cast on yourself instead of their own click binds (action bar slots 3 and 4 by default) whenever the plain click holds a helpful spell. Outside Support Mode they work as usual."] =
+  "辅助模式开启时，只要普通点击上是有益法术，Shift + 左键点击和 Shift + 右键点击就会对自己施法，而不再使用它们自己的点击绑定（默认为动作条第 3 和第 4 格）。辅助模式之外照常使用。"
 L["Requires Reticle Targeting"] = "需要准星瞄准"
 L["Support"] = "辅助"
-L["Crosshair Color"] = "准星颜色"
-L["While Support Mode is on, the idle crosshair takes this color so you can tell the mode at a glance. Opens Reaction Colors on the Support tab."] =
-  "辅助模式开启时，空闲状态的准星会变为此颜色，让你一眼就能看出当前模式。会打开反应颜色的辅助标签页。"
+L["Tint Vignette"] = "暗角着色"
+L["While Support Mode is on, the Vignette takes the Support crosshair color, so you can tell the mode at a glance. It shows only when your Vignette does; with the Vignette off, nothing is tinted."] =
+  "辅助模式开启时，暗角会变为辅助准星颜色，让你一眼就能看出当前模式。它只在暗角显示时出现；暗角关闭时不会着色。"
+L["Nameplates"] = "姓名板"
+L["Which nameplates show while Support Mode is on. Your own nameplate settings come back when you leave it."] =
+  "辅助模式开启时显示哪些姓名板。退出后会恢复你自己的姓名板设置。"
+L["Don't change"] = "不更改"
+L["Friendly only"] = "仅友方"
+L["Friendly and enemy"] = "友方和敌方"
+L["Hide all"] = "全部隐藏"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = "自动解锁"
@@ -669,6 +677,13 @@ L["Not aiming at anything"] = "未瞄准任何目标"
 L["Aiming at a unit or object"] = "正在瞄准单位或物体"
 L["While you are mounted"] = "骑乘时"
 L["While Target Lock holds"] = "目标锁定期间"
+L["SUPPORT"] = "辅助"
+L["Use a Support Mode crosshair"] = "使用辅助模式准星"
+L["Use the normal crosshair in Support Mode"] = "在辅助模式中使用普通准星"
+L["Support Mode keeps your Inactive and Active textures."] =
+  "辅助模式沿用你的未激活和已激活纹理。"
+L["While Support Mode is on, in place of Inactive and Active"] =
+  "辅助模式开启时，取代未激活和已激活"
 L["Brings back the texture you had before hiding it."] = "恢复隐藏之前使用的纹理。"
 L["Crosshair Textures"] = "准星纹理"
 L["Select a state, then pick a texture below, or apply a preset for a curated appearance."] =

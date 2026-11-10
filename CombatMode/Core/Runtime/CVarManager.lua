@@ -1229,39 +1229,55 @@ local function IsCVarLockedNow(name)
   return not ok or isSecure ~= false
 end
 
+-- char.supportModeNameplateMode -> the two CVar values while the mode is on. "keep" (or anything
+-- unknown) has no entry: the player's nameplates are left alone.
+local SUPPORT_NAMEPLATE_MODES = {
+  friendly = { enemy = "0", friendly = "1" },
+  all = { enemy = "1", friendly = "1" },
+  none = { enemy = "0", friendly = "0" },
+}
+
 --- Brings the nameplate CVars in line with Support Mode (Core/ClickCasting/SupportMode.lua).
---- Mode on (and char.supportModeNameplates): remember the player's values, hide enemy nameplates,
---- show friendly player ones. Mode off, or `forceRestore` (Uninstall): put the remembered values
---- back. Returns false when the CVars are protected right now (combat); call again after combat.
+--- Mode on and char.supportModeNameplateMode is "friendly" / "all" / "none": remember the
+--- player's values (once), then show that set of nameplates. Mode off, "keep", or
+--- `forceRestore` (Uninstall): put the remembered values back. Returns false when the CVars are
+--- protected right now (combat); call again after combat.
 function CM.SyncSupportModeNameplates(forceRestore)
   local globalDB = CM.DB and CM.DB.global
   local char = CM.DB and CM.DB.char
   if not globalDB or not char then
     return true
   end
-  local want = not forceRestore
-    and CM.DbBool(char.supportModeNameplates, true)
+  local plates = not forceRestore
     and CM.IsSupportModeActive ~= nil
     and CM.IsSupportModeActive()
+    and SUPPORT_NAMEPLATE_MODES[char.supportModeNameplateMode]
   local saved = globalDB.supportModeSavedNameplates
   if type(saved) ~= "table" then
     saved = nil
   end
-  if (want and saved) or (not want and not saved) then
+  if not plates and not saved then
     return true
   end
   local friendly = FriendlyNameplateCVar()
   if IsCVarLockedNow(SUPPORT_ENEMY_PLATES) or (friendly and IsCVarLockedNow(friendly)) then
     return false
   end
-  if want then
-    saved = { [SUPPORT_ENEMY_PLATES] = GetCVar(SUPPORT_ENEMY_PLATES) }
-    SetCVar(SUPPORT_ENEMY_PLATES, "0")
-    if friendly then
-      saved[friendly] = GetCVar(friendly)
-      SetCVar(friendly, "1")
+  if plates then
+    -- Already saved = the mode is on and only the dropdown changed: keep the first snapshot.
+    if not saved then
+      saved = { [SUPPORT_ENEMY_PLATES] = GetCVar(SUPPORT_ENEMY_PLATES) }
+      if friendly then
+        saved[friendly] = GetCVar(friendly)
+      end
+      globalDB.supportModeSavedNameplates = saved
     end
-    globalDB.supportModeSavedNameplates = saved
+    if GetCVar(SUPPORT_ENEMY_PLATES) ~= plates.enemy then
+      SetCVar(SUPPORT_ENEMY_PLATES, plates.enemy)
+    end
+    if friendly and GetCVar(friendly) ~= plates.friendly then
+      SetCVar(friendly, plates.friendly)
+    end
   elseif saved then
     for name, value in pairs(saved) do
       SetCVar(name, value)

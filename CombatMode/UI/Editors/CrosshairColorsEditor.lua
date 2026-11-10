@@ -50,9 +50,12 @@ local tabButtons = {}
 local activeKey = "hostile"
 local switchingTab
 
---- Re-tints everything that previews the reaction colors: the Appearance rows' tiles and the
---- Crosshair Textures editor (cards + presets).
+--- Re-tints everything that previews the reaction colors: the Appearance rows' tiles, the
+--- Crosshair Textures editor (cards + presets) and the Support Mode Vignette tint.
 local function RefreshColorPreviews()
+  if CM.RefreshVignetteTint then
+    CM.RefreshVignetteTint()
+  end
   if UI.Options and UI.Options.Sync then
     UI.Options.Sync()
   end
