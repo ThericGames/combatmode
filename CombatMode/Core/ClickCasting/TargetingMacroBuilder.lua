@@ -2,16 +2,17 @@
 --  Core/ClickCasting/TargetingMacroBuilder.lua — CLICKCAST — reticle macro text
 ---------------------------------------------------------------------------------------
 --  What it does: Builds the macrotext injected into click-cast proxies: targeting prelines
---  (any vs enemy-only, optional Auto Target Lock variants, with DB overrides), optional
+--  (enemy-only, optional Auto Target Lock variant, with DB overrides), optional
 --  Ally Cycle restore post-line, /click bar button or /cast [@cursor] for ground spells,
 --  and membership tests for cast-at-cursor / exclude lists (spell IDs).
 --  Architecture / how it works:
---    • BuildClickCastMacroText(bindingValue) — no-op text when reticleTargeting off.
+--    • BuildClickCastMacroText(bindingValue, opts) — nil when reticleTargeting is off; opts =
+--      Support Mode bar page + friendly-only preline for helpful spells (SupportMode.lua).
 --    • Default prelines clear dead focus + dead hostile hard target (friendly corpses
---      kept for res), then /tar (any/enemy + autoLockAny/autoLockEnemy). Overrides from
+--      kept for res), then /tar (enemy / autoLockEnemy). Overrides from
 --      global.targetingMacroPreline*Override keys.
---      char.autoTargetLockOnAttack selects the auto-lock pair. Enemy-only gates the
---      focus branch on harm so a friendly Target Lock does not hijack hostile casts.
+--      char.autoTargetLockOnAttack selects the auto-lock variant (not in Support Mode). Focus is gated
+--      on harm so a friendly Target Lock does not hijack hostile casts.
 --    • Auto-lock prelines and helpful-spell routing: see .claude/rules/domain-click-casting.md (TargetingMacroBuilder.lua notes).
 --    • The /click line omits /click's default args (LeftButton, key-up) and only adds
 --      "LeftButton 1" for addon bars with key-down on. CM.TargetingMacroPrelineMaxLen =
@@ -35,7 +36,7 @@
 --  Core/ClickCasting/ComposedMacros.lua, UI/Editors/TargetingMacroPrelinesEditor.lua,
 --  UI/Options/Tabs/TabReticleTargeting.lua, UI/Options/SpellMultiSelect.lua,
 --  Constants/DatabaseDefaults.lua, Constants/Gameplay.lua,
---  Core/ClickCasting/AddonActionBarResolver.lua
+--  Core/ClickCasting/{AddonActionBarResolver,SupportMode}.lua
 ---------------------------------------------------------------------------------------
 local _, CM = ...
 local _G = _G
@@ -407,6 +408,25 @@ local function ComputeActionButtonSlot(buttonNum)
   return id + ((page - 1) * buttons)
 end
 
+-- ACTIONBUTTON index → action slot on a given bar page, whichever page is showing now (Support
+-- Mode builds macros for the page it will swap to). Blizzard only shows the bonus bar (forms,
+-- stealth) on page 1 (ActionBarController_UpdateAll).
+local function ComputeActionButtonSlotOnPage(buttonNum, page)
+  local id = tonumber(buttonNum)
+  local buttons = tonumber(_G.NUM_ACTIONBAR_BUTTONS) or 12
+  if not id or id < 1 or id > buttons then
+    return nil
+  end
+  if page == 1 then
+    local bonusOffset = GetBonusBarOffsetSafe()
+    if HasBonusActionBarSafe() and bonusOffset ~= 0 then
+      local pages = tonumber(_G.NUM_ACTIONBAR_PAGES) or 6
+      return id + ((pages + bonusOffset - 1) * buttons)
+    end
+  end
+  return id + ((page - 1) * buttons)
+end
+
 local function ReadFrameActionId(frameName)
   if not frameName then
     return nil
@@ -432,16 +452,21 @@ end
 --- Currently displayed action for ACTIONBUTTON / MULTIACTIONBAR* bindings.
 --- Prefers the live button action attribute; rejects stale override slots (121–132)
 --- after dismount; falls back to page/bonus math or ResolveClickCastBindingToActionSlot.
-function CM.GetDisplayedActionSlotInfo(bindingValue)
+--- `page` (optional, ACTIONBUTTON only): the action on that bar page instead of the shown one.
+function CM.GetDisplayedActionSlotInfo(bindingValue, page)
   if not bindingValue or bindingValue == "" then
     return nil
   end
 
-  local frameName = CM.GetEffectiveBarButtonFrameName(bindingValue)
-  local action = ReadFrameActionId(frameName)
+  local buttonNum = bindingValue:match("^ACTIONBUTTON(%d+)$")
+  local action
+  if page and buttonNum then
+    action = ComputeActionButtonSlotOnPage(buttonNum, page)
+  else
+    action = ReadFrameActionId(CM.GetEffectiveBarButtonFrameName(bindingValue))
+  end
 
   if not action then
-    local buttonNum = bindingValue:match("^ACTIONBUTTON(%d+)$")
     if buttonNum then
       action = ComputeActionButtonSlot(buttonNum)
     elseif CM.ResolveClickCastBindingToActionSlot then
@@ -525,13 +550,7 @@ local CLICKCAST_WORST_CAST_LINE_LEN = #(
 -- Max editable preline so pre + newline + worst cast stays within SECURE_MACROTEXT_MAX.
 CM.TargetingMacroPrelineMaxLen = SECURE_MACROTEXT_MAX - CLICKCAST_WORST_CAST_LINE_LEN - 1
 
--- Regular (Auto Target Lock OFF), Ignore Friendlies OFF:
--- Clear dead focus + dead *hostile* hard target (keep friendly corpses for res).
-local CLICKCAST_PRE_LINE_ANY = "/clearfocus [@focus,dead]\n"
-  .. "/cleartarget [dead,harm]\n"
-  .. "/tar [@focus,exists];[nomounted,@mouseover]"
-
--- Regular (Auto Target Lock OFF), Ignore Friendlies ON:
+-- Regular (Auto Target Lock OFF):
 -- Clear dead focus + dead hostile hard target. Focus branch gated on harm so a friendly
 -- Target Lock (e.g. a party member) is ignored for hostile casts. Otherwise: mouseover
 -- hostile+alive under the crosshair; else anyenemy (hard target, then softenemy /
@@ -550,14 +569,7 @@ local CLICKCAST_PRE_LINE_ENEMY = "/clearfocus [@focus,dead]\n"
 -- defaults to @target. Focus branches must include ,nodead — ,harm / ,exists alone
 -- still match corpses.
 
--- Auto Target Lock ON, Ignore Friendlies OFF:
--- Attack-driven: soft-target harm+alive. [@focus,nodead] skips a dead lock for /tar.
-local CLICKCAST_PRE_LINE_AUTO_LOCK_ANY = "/clearfocus [@focus,dead]\n"
-  .. "/cleartarget [dead,harm]\n"
-  .. "/tar [@focus,nodead];[@mouseover,harm,nodead]\n"
-  .. "/focus [nodead]"
-
--- Auto Target Lock ON, Ignore Friendlies ON:
+-- Auto Target Lock ON:
 -- ,nodead on the focus and mouseover branches (a dead hostile under the reticle is not picked up);
 -- resync /focus [nodead,harm] (replaces sticky noexists). Mounted (skyriding) abilities are
 -- excluded from targeting by the builtin exclude list, so there is no [nomounted] here.
@@ -568,9 +580,7 @@ local CLICKCAST_PRE_LINE_AUTO_LOCK_ENEMY = "/clearfocus [@focus,dead]\n"
 
 -- Export defaults so the prelines editor can show a starting point even when no override exists.
 CM.TargetingMacroPrelinesDefaults = {
-  any = CLICKCAST_PRE_LINE_ANY,
   enemy = CLICKCAST_PRE_LINE_ENEMY,
-  autoLockAny = CLICKCAST_PRE_LINE_AUTO_LOCK_ANY,
   autoLockEnemy = CLICKCAST_PRE_LINE_AUTO_LOCK_ENEMY,
 }
 
@@ -664,11 +674,8 @@ function CM.IsExcludedFromTargetingSpell(spellId)
     or SpellListContains(CM.DB.char.excludeFromTargetingSpells, spellId)
 end
 
--- Helpful: Ignore Friendlies = do not /tar. Any = reticle /tar helpable mouseover, NPCs, players
--- (not unfiltered mouseover — that would /tar a hostile and drop a cycled ally).
+-- Helpful: no /tar (a friendly hard target, such as an Ally Cycle pick, is kept).
 local CLICKCAST_PRE_LINE_ALLY_HELP = "/clearfocus [@focus,dead]"
-local CLICKCAST_PRE_LINE_ALLY_HELP_ANY = "/clearfocus [@focus,dead]\n"
-  .. "/tar [nomounted,@mouseover,help,nodead][nomounted,@softinteract,exists][nomounted,@anyfriend,exists]"
 
 -- Same as ENEMY (clears a dead focus too). Keeps [@focus,harm] so hostile Target Lock still wins
 -- /tar. With the /targetlasttarget post-line this can overflow the 255-char cap on setups with a
@@ -689,8 +696,15 @@ local function AllyCycleRestoreAfterHarm()
   return CM.IsAllyCycleRestoreAfterHarm and CM.IsAllyCycleRestoreAfterHarm()
 end
 
-local function GetAllyCycleHarmPreLine()
-  if CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false) then
+-- Auto Target Lock applies to enemies outside Support Mode only: in Support Mode it locks the
+-- ally who took a heal (SupportAutoLockText), so harmful spells get the non-locking variants
+-- (`support` = the Support Mode text is being built).
+local function AutoLockEnemies(support)
+  return not support and CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false)
+end
+
+local function GetAllyCycleHarmPreLine(support)
+  if AutoLockEnemies(support) then
     return CLICKCAST_PRE_LINE_AUTO_LOCK_ENEMY
   end
   if AllyCycleRestoreAfterHarm() then
@@ -699,8 +713,8 @@ local function GetAllyCycleHarmPreLine()
   return CLICKCAST_PRE_LINE_ENEMY
 end
 
-local function GetAllyCycleHarmPostLine()
-  if CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false) then
+local function GetAllyCycleHarmPostLine(support)
+  if AutoLockEnemies(support) then
     return nil
   end
   if not AllyCycleRestoreAfterHarm() then
@@ -765,16 +779,9 @@ local function AllyCycleInGroup()
   return IsInGroup and IsInGroup()
 end
 
-local function FriendlyPreservingHelpPreLine()
-  if CM.DbBool(CM.DB.char.reticleTargetingEnemyOnly, true) then
-    return CLICKCAST_PRE_LINE_ALLY_HELP
-  end
-  return CLICKCAST_PRE_LINE_ALLY_HELP_ANY
-end
-
--- Settings-only preline (Ignore Friendlies x Auto Target Lock, honoring editor overrides).
+-- Settings-only preline (Auto Target Lock, honoring editor overrides).
 -- No per-spell ally-cycle routing; shared with the macro composer.
-function CM.GetActiveTargetingPreline()
+function CM.GetActiveTargetingPreline(support)
   local function GetOverride(key)
     local v = CM.DB and CM.DB.global and CM.DB.global[key]
     if type(v) ~= "string" then
@@ -792,47 +799,251 @@ function CM.GetActiveTargetingPreline()
     return v
   end
 
-  local autoLock = CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false)
-  if CM.DbBool(CM.DB.char.reticleTargetingEnemyOnly, true) then
-    if autoLock then
-      return GetOverride("targetingMacroPrelineAutoLockEnemyOverride")
-        or CLICKCAST_PRE_LINE_AUTO_LOCK_ENEMY
-    end
-    return GetOverride("targetingMacroPrelineEnemyOverride") or CLICKCAST_PRE_LINE_ENEMY
+  if AutoLockEnemies(support) then
+    return GetOverride("targetingMacroPrelineAutoLockEnemyOverride")
+      or CLICKCAST_PRE_LINE_AUTO_LOCK_ENEMY
   end
-  if autoLock then
-    return GetOverride("targetingMacroPrelineAutoLockAnyOverride")
-      or CLICKCAST_PRE_LINE_AUTO_LOCK_ANY
-  end
-  return GetOverride("targetingMacroPrelineAnyOverride") or CLICKCAST_PRE_LINE_ANY
+  return GetOverride("targetingMacroPrelineEnemyOverride") or CLICKCAST_PRE_LINE_ENEMY
 end
 
-local function GetClickCastPreLine(spellId, routeOverride)
+-- Support Mode (Core/ClickCasting/SupportMode.lua): a helpful spell on a click-cast button only
+-- goes to your living friendly hard target (an Ally Cycle pick: top priority, the user's call),
+-- else to the aimed-at ally (SUPPORT_ALLY_UNITS below). SupportCastLine below does that without
+-- touching your target; the target-then-click preline is only its fallback. `help` is true for a
+-- dead ally, so a resurrection still works.
+-- Casting on yourself follows the game's own Self Cast setting, as a normal action button does
+-- (asked for after testing: Support Mode cast nothing with no ally to take the spell):
+--  • Auto Self Cast (CVar autoSelfCast) on: with no friendly unit in any of them the spell lands
+--    on you ([@player] last). Off: nothing is cast.
+--  • Self Cast key: [mod:SELFCAST,@player] first, evaluated live (never true when the key is
+--    "None"). Like the game, it also fires on a click bind that includes that key.
+-- The addon has no self-cast option of its own: a hold key and a Shift / Ctrl / Alt modifier
+-- were built and removed before release.
+-- The aimed-at ally: the unit whose model is under the crosshair, else the friendly soft target.
+-- A nameplate is not a mouseover unit in Mouse Look (reported in game: aiming at a friendly
+-- nameplate cast nothing), so Support Mode turns friendly soft targeting on (SoftTargetFriend,
+-- CVarManager) and @softfriend picks the ally in front of you. Blizzard picks it from an arc in
+-- front of the character, not from the crosshair, so it is looser than a mouseover.
+local SUPPORT_ALLY_UNITS = "[@mouseover,help][@softfriend,help]"
+-- The friendly hard target comes first, but only while alive: a dead pick must not block heals
+-- on the aimed-at ally. Dead, it is the last resort (SupportCastLine), so a resurrection on a
+-- cycled ally still works when nobody else is aimed at.
+local SUPPORT_LIVING_TARGET = "[@target,help,nodead]"
+-- Target Lock on an ally (a living friendly focus; the Target Lock and cycle keys pick friendly
+-- units in Support Mode) beats everything else in both orders, as a lock does for enemies. The
+-- lock key also hard-targets it, so this only matters once the target moved on (a harmful cast,
+-- an Ally Cycle press). Dead, it steps aside like a dead hard target and is a last resort.
+local SUPPORT_LOCKED_ALLY = "[@focus,help,nodead]"
+-- The allies after the lock (SupportCastUnits = the lock + these): the hard target before the
+-- crosshair.
+local SUPPORT_ALLY_ORDER = SUPPORT_LIVING_TARGET .. SUPPORT_ALLY_UNITS
+-- Crosshair First (char.supportModeCrosshairFirst, default off): the unit under the crosshair
+-- beats a hard target or an Ally Cycle pick, but not Target Lock; then the living hard target,
+-- then the soft friend. Off: the order above.
+local SUPPORT_ALLY_ORDER_CROSSHAIR_FIRST = "[@mouseover,help]"
+  .. SUPPORT_LIVING_TARGET
+  .. "[@softfriend,help]"
+-- Last resorts, for resurrections: the hard target, then the lock, when it is a dead ally.
+local SUPPORT_DEAD_TARGET = "[@target,help]"
+local SUPPORT_DEAD_LOCK = "[@focus,help]"
+
+local function SupportAllyOrder()
+  local char = CM.DB and CM.DB.char
+  if char and CM.DbBool(char.supportModeCrosshairFirst, false) then
+    return SUPPORT_ALLY_ORDER_CROSSHAIR_FIRST
+  end
+  return SUPPORT_ALLY_ORDER
+end
+
+local function SupportCastUnits()
+  return SUPPORT_LOCKED_ALLY .. SupportAllyOrder()
+end
+
+local SUPPORT_SELF_KEY = "[mod:SELFCAST,@player]"
+
+-- Read when the macro is built; EventRouter rebuilds the macros on this CVar's CVAR_UPDATE.
+local function AutoSelfCastOn()
+  return C_CVar and C_CVar.GetCVar and C_CVar.GetCVar("autoSelfCast") == "1"
+end
+
+-- Fallback preline (target, then /click). A living friendly target "retargets" itself (no
+-- change); a dead one stays when nothing is aimed at. The /click applies the game's Self Cast
+-- setting by itself, so with Auto Self Cast on nothing may stop the macro; with it off, a
+-- helpful /click without a friendly target would raise the targeting cursor, so the macro stops
+-- there unless the Self Cast key is held.
+local function SupportPreLine()
+  local line = "/tar " .. SupportCastUnits()
+  if AutoSelfCastOn() then
+    return line
+  end
+  return line .. "\n/stopmacro [nomod:SELFCAST,nohelp]"
+end
+
+-- Auto Target Lock (char.autoTargetLockOnAttack) for allies, the user's call: the option locks
+-- what you attack, so in Support Mode it also locks who you heal. The cast line is followed by
+--   /stopmacro [mod:SELFCAST][@focus,help,nodead]
+--   /focus <the allies in cast order, without the lock>
+-- A living locked ally already took the heal, so the macro stops and the lock stays. Otherwise
+-- the /focus line walks the same units the cast just walked and locks the one that took it; a
+-- heal that went to you, or to a dead hard target, matches nothing and locks nobody. A dead or
+-- hostile lock gives way to the next ally healed. Your hard target is never changed.
+-- The /focus line must not name @focus: Blizzard's /focus swaps a "focus" target for the (empty)
+-- action and calls FocusUnit("") (read in SlashCommands.lua, live and forever branches). That
+-- is what a bare [] does too, and in game a bare [] locked the soft interact target, so it
+-- would move the lock; hence /stopmacro for the "lock alive" case.
+-- 255 characters is tight with the spell named in the cast, so extras go one by one until it
+-- fits: the Self Cast key guard on /stopmacro (a self-cast with that key then also locks the
+-- aimed-at ally), the dead-lock last resort, the dead-target last resort. nil = even that is too
+-- long: the caller uses the plain cast line (no auto-lock for that spell).
+local function SupportAutoLockText(units, selfCast, name)
+  local lockLine = "\n/focus " .. SupportAllyOrder()
+  local stop = "\n/stopmacro [mod:SELFCAST]" .. SUPPORT_LOCKED_ALLY
+  local deadTarget, deadLock = SUPPORT_DEAD_TARGET, SUPPORT_DEAD_LOCK
+  for step = 1, 4 do
+    if step == 2 then
+      stop = "\n/stopmacro " .. SUPPORT_LOCKED_ALLY
+    elseif step == 3 then
+      deadLock = ""
+    elseif step == 4 then
+      deadTarget = ""
+    end
+    local cast = "/cast " .. units .. deadTarget .. deadLock .. selfCast .. " " .. name
+    local text = cast .. stop .. lockLine
+    if #text <= SECURE_MACROTEXT_MAX then
+      return text
+    end
+  end
+  return nil
+end
+
+-- Prioritize Crosshair Target on (the user's call after testing: with it on, the ally you aim
+-- at should also become your target, as an enemy does with Reticle Targeting; with it off the
+-- heal must leave the target alone so an Ally Cycle pick stays selected): a /tar line ahead of
+-- the cast hard-targets the ally the cast is about to pick. The cast below it is unchanged and
+-- still resolves to that ally. Falls back to lock + crosshair only, then to no line, when the
+-- macro would pass 255 characters. A self-cast with the Self Cast key still moves the target.
+local function SupportCrosshairTargetLine(text)
+  local char = CM.DB and CM.DB.char
+  if not (char and CM.DbBool(char.supportModeCrosshairFirst, false)) then
+    return ""
+  end
+  local full = "/tar " .. SupportCastUnits() .. "\n"
+  if #full + #text <= SECURE_MACROTEXT_MAX then
+    return full
+  end
+  local short = "/tar " .. SUPPORT_LOCKED_ALLY .. "[@mouseover,help]\n"
+  if #short + #text <= SECURE_MACROTEXT_MAX then
+    return short
+  end
+  return ""
+end
+
+-- Auto Target Lock and Prioritize Crosshair Target both on. SupportAutoLockText fills the 255
+-- characters by itself, which would leave no room for the /tar line above, so this is one text
+-- of its own. The /tar line puts the ally on your target first, so the cast only needs the
+-- target (and the dead-lock last resort), and the lock is the enemy auto-lock's own line:
+-- "/focus [help,nodead]" has no unit, so it focuses your target. The /stopmacro before it keeps
+-- a living lock (already targeted by the /tar line) from being focused again on every heal, and
+-- stops a self-cast with the Self Cast key from locking. nil = Prioritize Crosshair Target is
+-- off, or the text is too long (the caller then builds the separate forms).
+local function SupportAutoLockTargetText(selfCast, name)
+  local char = CM.DB and CM.DB.char
+  if not (char and CM.DbBool(char.supportModeCrosshairFirst, false)) then
+    return nil
+  end
+  local cast = "/cast " .. SUPPORT_SELF_KEY .. SUPPORT_DEAD_TARGET .. SUPPORT_DEAD_LOCK .. selfCast
+  local text = "/tar "
+    .. SupportCastUnits()
+    .. "\n"
+    .. cast
+    .. " "
+    .. name
+    .. "\n/stopmacro [mod:SELFCAST]"
+    .. SUPPORT_LOCKED_ALLY
+    .. "\n/focus [help,nodead]"
+  if #text <= SECURE_MACROTEXT_MAX then
+    return text
+  end
+  return nil
+end
+
+-- Support Mode cast: one line that never changes your hard target, unless Prioritize Crosshair
+-- Target is on (SupportCrosshairTargetLine above). Order (SupportCastUnits):
+-- you while the game's Self Cast key is held, then your living locked ally (Target Lock), then
+-- either your living friendly hard target first (the default: an Ally Cycle pick wins over
+-- whatever you aim at; clear the target to heal by aim again) or the aimed-at ally first
+-- (Prioritize Crosshair Target), then the other, the soft friend, the hard target or the lock
+-- when it is a dead ally (SUPPORT_DEAD_TARGET / SUPPORT_DEAD_LOCK), and last
+-- you when the game's Auto Self Cast is on (off: every condition fails and nothing is cast).
+-- Any friendly hard target counts: a macro can't tell who picked it.
+-- /click can't name a unit, so this is a named /cast of the spell on the slot when the macro is
+-- built; a Classic rank rides along as "Name(Rank N)".
+-- With Auto Target Lock on, two more lines lock the ally who took the heal (SupportAutoLockText,
+-- or SupportAutoLockTargetText when Prioritize Crosshair Target is on as well).
+-- nil = no name yet: the caller keeps SupportPreLine + /click (which never auto-locks).
+local function SupportCastLine(spellId)
+  if not spellId or not (C_Spell and C_Spell.GetSpellInfo) then
+    return nil
+  end
+  local info = C_Spell.GetSpellInfo(spellId)
+  local name = info and info.name
+  if type(name) ~= "string" or name == "" then
+    return nil
+  end
+  local getSubtext = C_Spell.GetSpellSubtext or _G.GetSpellSubtext
+  if getSubtext then
+    local ok, subtext = pcall(getSubtext, spellId)
+    if ok and type(subtext) == "string" and subtext:find("%d") then
+      name = name .. "(" .. subtext .. ")"
+    end
+  end
+  local units = SUPPORT_SELF_KEY .. SupportCastUnits()
+  local selfCast = AutoSelfCastOn() and "[@player]" or ""
+  local text
+  if CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false) then
+    local combined = SupportAutoLockTargetText(selfCast, name)
+    if combined then
+      return combined
+    end
+    text = SupportAutoLockText(units, selfCast, name)
+  end
+  text = text
+    or ("/cast " .. units .. SUPPORT_DEAD_TARGET .. SUPPORT_DEAD_LOCK .. selfCast .. " " .. name)
+  return SupportCrosshairTargetLine(text) .. text
+end
+
+-- Second return: true when the Support Mode preline was used.
+local function GetClickCastPreLine(spellId, routeOverride, opts)
   if not CM.DB.char.reticleTargeting then
     return nil
   end
 
   local route = routeOverride or GetAllyCycleSpellRoute(spellId)
 
+  if route == "help" and opts and opts.support then
+    return SupportPreLine(), true
+  end
+
   -- Helpful: Reticle Targeting friendly-preserving path (not Ally Cycle–gated).
   if route == "help" then
-    return FriendlyPreservingHelpPreLine()
+    return CLICKCAST_PRE_LINE_ALLY_HELP
   end
 
   -- Harmful + cycle keys: enemy / restore-aware preline (including solo).
+  local support = opts and opts.support
   if AllyCycleKeysBound() and route == "harm" then
-    return GetAllyCycleHarmPreLine()
+    return GetAllyCycleHarmPreLine(support)
   end
 
   -- Unclassified + cycle keys: treat as help (same as when cycling is on).
   if AllyCycleKeysBound() then
-    return FriendlyPreservingHelpPreLine()
+    return CLICKCAST_PRE_LINE_ALLY_HELP
   end
 
-  return CM.GetActiveTargetingPreline()
+  return CM.GetActiveTargetingPreline(support)
 end
 
-local function GetClickCastPostLine(spellId, routeOverride)
+local function GetClickCastPostLine(spellId, routeOverride, opts)
   if not CM.DB.char.reticleTargeting then
     return nil
   end
@@ -842,10 +1053,14 @@ local function GetClickCastPostLine(spellId, routeOverride)
   if (routeOverride or GetAllyCycleSpellRoute(spellId)) ~= "harm" then
     return nil
   end
-  return GetAllyCycleHarmPostLine()
+  return GetAllyCycleHarmPostLine(opts and opts.support)
 end
 
-function CM.BuildClickCastMacroText(bindingValue)
+--- `opts` (optional, Support Mode): `page` classifies an ACTIONBUTTON by that bar page instead of
+--- the shown one; `support = true` gives helpful spells the Support Mode cast (your living
+--- friendly hard target, else the ally under the crosshair or soft-targeted, else you if the
+--- game's Self Cast setting says so). Second return: true when that cast was used.
+function CM.BuildClickCastMacroText(bindingValue, opts)
   -- When reticle targeting is off, no macro wrapping (no pre-line, no castAtCursor, no excludeFromTargeting).
   if not CM.DB.char.reticleTargeting then
     return nil
@@ -889,7 +1104,7 @@ function CM.BuildClickCastMacroText(bindingValue)
 
   -- Classify from the currently displayed slot (paged / bonus / override-aware).
   -- Macros: no pre-line so the macro runs as written (e.g. [mod:shift], [@cursor]).
-  local atype, id, slot = CM.GetDisplayedActionSlotInfo(bindingValue)
+  local atype, id, slot = CM.GetDisplayedActionSlotInfo(bindingValue, opts and opts.page)
   local spellIdForPreline
   -- Single-Button Assistant: its slot spell is whatever is suggested right now, so it is never
   -- classified by spell. It gets the harmful targeting route and skips the spell-based exclude /
@@ -946,14 +1161,20 @@ function CM.BuildClickCastMacroText(bindingValue)
   -- turns the ability off. /startattack and /cast ! only start (or keep) the swing.
   if IsAutoSwingSpell(spellIdForPreline) then
     local kind = AutoSwingKind(spellIdForPreline) or "attack"
-    local pre = GetClickCastPreLine(spellIdForPreline)
+    local pre = GetClickCastPreLine(spellIdForPreline, nil, opts)
     local swapCmd = AutoSwingSwapCommand(kind, spellIdForPreline)
     return pre and (pre .. "\n" .. swapCmd) or swapCmd
   end
 
   local routeOverride = isAssistedButton and "harm" or nil
-  local pre = GetClickCastPreLine(spellIdForPreline, routeOverride)
-  local post = GetClickCastPostLine(spellIdForPreline, routeOverride)
+  local pre, supportPreline = GetClickCastPreLine(spellIdForPreline, routeOverride, opts)
+  if supportPreline then
+    local supportLine = SupportCastLine(spellIdForPreline)
+    if supportLine then
+      return supportLine, true
+    end
+  end
+  local post = GetClickCastPostLine(spellIdForPreline, routeOverride, opts)
   -- Do not prefix pre-line with [nooverridebar]; that can be misinterpreted in combat and echo to chat.
   local function Assemble(preLine)
     local text = castLine
@@ -971,5 +1192,5 @@ function CM.BuildClickCastMacroText(bindingValue)
   if slimmer and #text > SECURE_MACROTEXT_MAX then
     text = Assemble(slimmer)
   end
-  return text
+  return text, supportPreline or false
 end

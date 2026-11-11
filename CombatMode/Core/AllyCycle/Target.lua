@@ -84,6 +84,11 @@ local function IsAllyCycleRosterUnit(unit)
   return false
 end
 
+--- A pet Ally Cycle can land on (Also Cycle Through: Your Pet / Party Pets); false when both are off.
+function Target.IsExtraUnit(unit)
+  return CM.IsAllyCycleExtraUnit ~= nil and CM.IsAllyCycleExtraUnit(unit) == true
+end
+
 function Target.IsFriendlyHardTarget()
   if not UnitExists("target") then
     return false
@@ -94,7 +99,7 @@ function Target.IsFriendlyHardTarget()
     end
     return true
   end
-  if not IsAllyCycleRosterUnit("target") then
+  if not IsAllyCycleRosterUnit("target") and not Target.IsExtraUnit("target") then
     return false
   end
   local attack = UnitCanAttack and UnitCanAttack("player", "target")
@@ -170,6 +175,10 @@ function Target.GetClassFileRGB(classFile)
 end
 
 function Target.GetClassRGB(unit)
+  -- A pet's class token is its family/template, not a class colour: plain white name.
+  if unit == "target" and Target.IsExtraUnit(unit) then
+    return 1, 1, 1
+  end
   local _, classFile = UnitClass(unit)
   return Target.GetClassFileRGB(classFile)
 end
@@ -180,6 +189,10 @@ function Target.GetRoleAtlasFor(role)
 end
 
 function Target.GetRoleAtlas(unit)
+  -- Pets have no group role: no atlas (the HUD draws its pet crest instead).
+  if unit == "target" and Target.IsExtraUnit(unit) then
+    return nil
+  end
   local role
   if UnitGroupRolesAssigned then
     local ok, result = pcall(UnitGroupRolesAssigned, unit)
@@ -250,7 +263,15 @@ function Target.GetRangeAlpha(unit, preview, outA)
   if not UnitInRange then
     return 1
   end
-  local inRange = UnitInRange(unit)
+  -- Your own pet is never "out of range" (UnitInRange reports false for it outside a group).
+  if UnitIsUnit and PublicBool(UnitIsUnit(unit, "pet")) == true then
+    return 1
+  end
+  local inRange, checkedRange = UnitInRange(unit)
+  -- Not a checkable unit (e.g. a pet while solo): never dim it.
+  if PublicBool(checkedRange) == false then
+    return 1
+  end
   if IsSecret(inRange) then
     if EvaluateColorFromBoolean and COLOR_IN_RANGE and COLOR_OUT_OF_RANGE then
       local rangeColor = EvaluateColorFromBoolean(inRange, COLOR_IN_RANGE, COLOR_OUT_OF_RANGE)

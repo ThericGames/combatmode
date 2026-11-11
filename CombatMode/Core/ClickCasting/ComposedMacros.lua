@@ -12,7 +12,7 @@
 --    • CM.SaveComposedMacro — create/edit the macro (character macro unless Account-Wide
 --      Binds) and remember its body in CM.DB.global.composedMacros[name].
 --    • CM.RebuildComposedMacros — re-edits registered macros whose text no longer matches the
---      active preline (Auto Target Lock / Ignore Friendlies / preline override changes).
+--      active preline (Auto Target Lock / preline override changes).
 --      Runs from RefreshClickCastMacros and at login; skipped in combat.
 --      Macros not saved by the composer but opening with an older ACM preline get just that
 --      first part swapped (CM.RebuildUnregisteredMacros).
@@ -274,9 +274,7 @@ local function MatchingPreline(body)
   local global = CM.DB and CM.DB.global
   if global then
     for _, key in pairs({
-      "targetingMacroPrelineAnyOverride",
       "targetingMacroPrelineEnemyOverride",
-      "targetingMacroPrelineAutoLockAnyOverride",
       "targetingMacroPrelineAutoLockEnemyOverride",
     }) do
       if type(global[key]) == "string" then

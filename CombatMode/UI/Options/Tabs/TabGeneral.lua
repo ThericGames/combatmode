@@ -180,7 +180,6 @@ end
 UI.Options.AddTab({
   id = "general",
   label = L["Mouse Look"],
-  newFeatureFlag = true,
   build = function(ctx)
     ctx:Header(L["MOUSE LOOK"])
     ctx:Description(
@@ -201,7 +200,6 @@ UI.Options.AddTab({
     })
     ctx:Keybind({
       label = L["Interact Keybind"],
-      newFeatureFlag = true,
       desc = L["Tap to interact with the unit chosen below. Hold on a player to open their context menu."],
       helpTooltip = {
         title = L["Interact Keybind"],
@@ -242,7 +240,6 @@ UI.Options.AddTab({
     })
     ctx:Toggle({
       label = L["Disable Player Interaction"],
-      newFeatureFlag = true,
       desc = L["Disables interaction with players from the Interact Key."],
       get = function()
         return not CM.IsPlayerMenuEnabled()
@@ -272,7 +269,6 @@ UI.Options.AddTab({
     ctx:Toggle({
       label = L["Close Windows With Mouse Look"],
       desc = L["Automatically close all open windows when toggling Mouse Look on."],
-      newFeatureFlag = true,
       get = function()
         return CM.DB.global.closeWindowsOnMouseLook
       end,
@@ -345,7 +341,6 @@ UI.Options.AddTab({
       max = 10,
       step = 0.5,
       default = 3,
-      newFeatureFlag = true,
       get = function()
         return CM.DB.global.minCameraZoom or 3
       end,
@@ -480,7 +475,6 @@ UI.Options.AddTab({
     })
     ctx:Dropdown({
       label = L["Show Tooltips With"],
-      newFeatureFlag = true,
       desc = L["Hold this key to show tooltips while Mouse Look is on."],
       values = TOOLTIP_MODIFIER_VALUES,
       order = TOOLTIP_MODIFIER_ORDER,
@@ -508,7 +502,6 @@ UI.Options.AddTab({
       label = L["Vignette Shows When"],
       desc = L["Darkens the edges of the screen while the checked situations are true."],
       multi = true,
-      newFeatureFlag = true,
       values = VIGNETTE_CONDITION_VALUES,
       order = VIGNETTE_CONDITION_ORDER,
       isOn = VignetteConditionOn,
@@ -519,7 +512,6 @@ UI.Options.AddTab({
     ctx:Dropdown({
       label = L["Vignette Match"],
       desc = L["Any: one checked situation is enough. All: every checked situation must be true at once."],
-      newFeatureFlag = true,
       values = VIGNETTE_MATCH_VALUES,
       order = VIGNETTE_MATCH_ORDER,
       get = function()

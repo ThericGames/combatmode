@@ -25,6 +25,8 @@
 --    • Between steps the whole spotlight fades out (UI.FadeOutSpotlight) while the options tab scrolls
 --      to the next target, and fades back in with it (UI.ShowSpotlight), so it never visibly chases a
 --      moving widget.
+--    • `info = true` shows the same balloon alone (no dim, step count, Back / Next / Skip) at the
+--      right of the options window with a header close X: the "i" button popup on options (Wizard.ShowInfo).
 --    • ESC skips the tour (keyboard is captured only while the spotlight is shown; every other
 --      key still propagates so the game stays responsive).
 --  Does not: Decide what to highlight or what the steps say (SetupWizard.lua).
@@ -433,7 +435,14 @@ local function Build()
     skipText:SetTextColor(C.textDim[1], C.textDim[2], C.textDim[3])
   end)
 
+  -- Info popup (no tour): the usual close X in the header takes the place of Back / Next / Skip.
+  local closeButton = UI.CreateCloseButton(balloon)
+  closeButton:SetPoint("TOPRIGHT", balloon, "TOPRIGHT", -8, -8)
+  closeButton:Hide()
+
   local self = {
+    hole = hole,
+    close = closeButton,
     root = root,
     balloon = balloon,
     title = title,
@@ -473,6 +482,11 @@ local function Build()
     end
   end)
   skip:SetScript("OnClick", function()
+    if self.onSkip then
+      self.onSkip()
+    end
+  end)
+  closeButton:SetScript("OnClick", function()
     if self.onSkip then
       self.onSkip()
     end
@@ -713,12 +727,21 @@ function UI.ShowSpotlight(target, opts)
   end
   local slidesH = #slides > 0 and (SLIDE_TOP + SLIDE_H + SLIDE_BOTTOM - BODY_GAP) or 0
 
+  local info = opts.info and true or false
   s.step:SetText(opts.step or "")
   s.next.text:SetText(opts.nextLabel or L["Next"])
-  s.next:SetShown(not opts.isLast)
+  s.next:SetShown(not info and not opts.isLast)
   s.finish.text:SetText(opts.nextLabel or L["Finish"])
-  s.finish:SetShown(opts.isLast and true or false)
-  s.back:SetShown(opts.canGoBack and true or false)
+  s.finish:SetShown(not info and opts.isLast and true or false)
+  s.back:SetShown(not info and opts.canGoBack and true or false)
+  s.skip:SetShown(not info)
+  s.close:SetShown(info)
+  if info then
+    -- Explanation only: nothing highlighted or dimmed, the balloon sits at the screen centre.
+    s.targets = nil
+    s.clip = nil
+    s.hole.SetShown(false)
+  end
 
   -- Task check list under the text.
   s.tasks = opts.tasks or {}
@@ -746,10 +769,20 @@ function UI.ShowSpotlight(target, opts)
       + slidesH
       + bodyH
       + tasksH
-      + 14
-      + UI.Sizes.control
+      + (info and 0 or (14 + UI.Sizes.control))
       + BALLOON_PAD
   )
+
+  if info then
+    -- Like the editors: to the right of the options window, else the screen centre.
+    local anchor = CM.GetOptionsFrame and CM.GetOptionsFrame()
+    s.balloon:ClearAllPoints()
+    if anchor and anchor:IsShown() then
+      s.balloon:SetPoint("TOPLEFT", anchor, "TOPRIGHT", 12, 0)
+    else
+      s.balloon:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    end
+  end
 
   s.root.cmResetLayout()
   -- Always fade in from invisible, so the move to the new target is never seen.

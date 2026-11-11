@@ -201,9 +201,6 @@ L["Enables aim-based unit targeting and precise placement of ground-targeted spe
 L["Enable Reticle Targeting"] = "Включить наведение по прицелу"
 L["Aim the crosshair at units to pick targets instead of tab-targeting."] =
   "Наводите прицел на цели, чтобы выбирать их вместо перебора клавишей Tab."
-L["Ignore Friendlies"] = "Игнорировать союзников"
-L["Ignore friendly NPCs and Players, and only target hostile units."] =
-  "Игнорирует дружественных NPC и игроков и выбирает только враждебные цели."
 L["Click Casting Only"] = "Только Click Casting"
 L["Apply reticle targeting logic only to Click Casting binds."] =
   "Применять логику наведения по прицелу только к привязкам Click Casting."
@@ -214,8 +211,8 @@ L["Cast at Crosshair"] = "Применять в прицел"
 L["Ground spells to cast at the crosshair location."] =
   "Заклинания по земле, применяемые в точку прицела."
 L["TARGET LOCK"] = "ЗАХВАТ ЦЕЛИ"
-L["Lock onto a target to prevent accidental switching, and cycle between units to prioritize specific enemies."] =
-  "Захватывайте цель, чтобы случайно не сменить её, и переключайтесь между целями, чтобы выделять нужных врагов."
+L["Lock onto a target to prevent accidental switching, and cycle between units to prioritize specific ones."] =
+  "Захватывайте цель, чтобы случайно не сменить её, и переключайтесь между целями, чтобы выделять нужные."
 L["Warning: Target Lock uses your Focus Target. Anything else that sets your focus will interfere with it."] =
   "Внимание: захват цели использует вашу цель фокуса. Всё, что меняет фокус, будет ему мешать."
 L["Target Lock Keybind"] = "Клавиша захвата цели"
@@ -234,17 +231,15 @@ L["Locks your target, or the unit under the crosshair. Tap again to unlock."] =
   "Захватывает вашу цель или цель под прицелом. Повторное нажатие снимает захват."
 L["Locks the unit under the crosshair, replacing any current lock. Tap with nothing under the crosshair to unlock. Aiming at the unit you already locked keeps the lock."] =
   "Захватывает цель под прицелом, заменяя текущий захват. Нажатие, когда под прицелом ничего нет, снимает захват. Если навести прицел на уже захваченную цель, захват сохраняется."
-L["With Ignore Friendlies on, a friendly or dead unit under the crosshair is ignored: the lock stays where it is."] =
-  "Если включено «Игнорировать союзников», дружественная или мёртвая цель под прицелом игнорируется: захват остаётся на месте."
 L["Auto Target Lock"] = "Автозахват цели"
-L["Target Lock engages automatically when attacking units."] =
-  "Захват цели включается автоматически при атаке юнитов."
+L["Target Lock engages automatically when attacking units. In Support Mode it only locks the ally you heal."] =
+  "Захват цели включается автоматически при атаке юнитов. В режиме поддержки захватывается только союзник, которого вы исцеляете."
 L["Target Lock Marker"] = "Метка захвата цели"
 L["Show a crosshair marker on the nameplate of the locked target."] =
   "Показывает метку прицела на индикаторе имени захваченной цели."
 L["Focus Locked Target"] = "Фокус на захваченной цели"
-L["Pulls the camera toward your locked target, keeping it in focus."] =
-  "Притягивает камеру к захваченной цели, удерживая её в фокусе."
+L["Pulls the camera toward your locked target, keeping it in focus. Works on hostile targets only."] =
+  "Притягивает камеру к захваченной цели, удерживая её в фокусе. Работает только с враждебными целями."
 L["TARGETING INDICATORS"] = "ИНДИКАТОРЫ ЦЕЛИ"
 L["Visual indicators that highlight targets in the world for easier identification."] =
   "Визуальные индикаторы, выделяющие цели в мире для лучшего распознавания."
@@ -333,7 +328,6 @@ L["Target Crosshair"] = "Цель под прицелом"
 L["Clear Focus"] = "Сбросить фокус"
 L["Start Attack"] = "Начать атаку"
 L["Pet Attack"] = "Атака питомца"
-L["Toggle Focus Any"] = "Переключить фокус (любая цель)"
 L["Toggle Focus Enemy"] = "Переключить фокус (враг)"
 L["Run MACRO"] = "Запустить MACRO"
 L["— none —"] = "— нет —"
@@ -435,6 +429,11 @@ L["Ally Cycle - Previous"] = "Смена союзника – Предыдущи
 L["Target the previous group member."] =
   "Выбирает предыдущего участника группы."
 L["Skip Self"] = "Пропускать себя"
+L["Also Cycle Through"] = "Также переключаться между"
+L["Adds pets after the group members: your own pet, and the pets of everyone else in your party or raid."] =
+  "Добавляет питомцев после участников группы: вашего и питомцев всех остальных в вашей группе или рейде."
+L["Your Pet"] = "Ваш питомец"
+L["Party Pets"] = "Питомцы группы"
 L["Skip yourself when cycling through group members."] =
   "Пропускает вас при переборе участников группы."
 L["Keep Ally After Harm"] = "Сохранять союзника после атаки"
@@ -454,6 +453,36 @@ L["Scales the size of the Ally HUD."] =
   "Масштабирует размер HUD союзника."
 L["Distance between the Ally HUD and the crosshair."] =
   "Расстояние между HUD союзника и прицелом."
+
+-- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
+L["Support Mode"] = "Режим поддержки"
+L["support mode keybinding"] = "привязка режима поддержки"
+L["SUPPORT MODE"] = "РЕЖИМ ПОДДЕРЖКИ"
+L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
+  "Режим поддержки: при включении переключает основную панель команд на отдельную страницу поддержки и позволяет полезным заклинаниям выбирать целью дружественного юнита под прицелом."
+L["Support Mode Keybind"] = "Клавиша режима поддержки"
+L["Prioritize Crosshair Target"] = "Приоритет цели под прицелом"
+L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
+  "Союзник под прицелом получает заклинание, даже если выбрана другая дружественная цель, например через смену союзника. Отключите, чтобы сначала применять заклинание на выбранную цель."
+L["Tap to toggle Support Mode on or off."] =
+  "Нажмите, чтобы включить или выключить режим поддержки."
+L["Support Bar Page"] = "Страница панели поддержки"
+L["The main action bar page shown while Support Mode is on. Place support abilities here. Exiting Support Mode returns to Page 1."] =
+  "Страница основной панели команд, показываемая в режиме поддержки. Разместите здесь умения поддержки. При выходе из режима поддержки возвращается страница 1."
+L["Don't Swap"] = "Не менять"
+L["Page %d"] = "Страница %d"
+L["Requires Reticle Targeting"] = "Требуется наведение по прицелу"
+L["Support"] = "Поддержка"
+L["Tint Vignette"] = "Окрашивать виньетку"
+L["While Support Mode is active, the Vignette adopts the Support crosshair color. It only appears when the Vignette is enabled."] =
+  "Пока режим поддержки включён, виньетка принимает цвет прицела поддержки. Она появляется только при включённой виньетке."
+L["Nameplate Behavior"] = "Поведение индикаторов здоровья"
+L["Choose which nameplates appear while in Support Mode. Normal settings are restored when exiting Support Mode."] =
+  "Выберите, какие индикаторы показываются в режиме поддержки. При выходе возвращаются обычные настройки."
+L["Don't Change"] = "Не менять"
+L["Friendly Only"] = "Только дружественные"
+L["Friendly and Enemy"] = "Дружественные и вражеские"
+L["Hide All"] = "Скрыть все"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = "Авторазблокировка"
@@ -524,6 +553,8 @@ L["Back"] = "Назад"
 L["Next"] = "Далее"
 L["Finish"] = "Готово"
 L["Skip tour"] = "Пропустить обзор"
+L["Click to learn more about this feature"] =
+  "Нажмите, чтобы узнать больше об этой функции"
 L["Assist HUD"] = "HUD помощника"
 L["Target Lock"] = "Захват цели"
 L["Party Wheel"] = "Колесо группы"
@@ -539,6 +570,9 @@ L["Set an Ally Cycle - Next key"] =
   "Назначьте клавишу «Смена союзника – Следующий»"
 L["Set an Ally Cycle - Previous key"] =
   "Назначьте клавишу «Смена союзника – Предыдущий»"
+L["Set a Support Mode key"] = "Назначьте клавишу режима поддержки"
+L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
+  "Режим поддержки: при включении переключает основную панель команд на отдельную {страницу поддержки} и позволяет {полезным заклинаниям} выбирать целью дружественного юнита под прицелом.\n\nНазначьте клавишу."
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "Включение или выключение наведения по прицелу перезагружает интерфейс."
 L["Needs Reticle Targeting."] = "Требуется наведение по прицелу."
@@ -548,14 +582,14 @@ L["A reactive, fully customizable crosshair that adapts to your target and comba
   "Реактивный полностью настраиваемый прицел, который подстраивается под вашу цель и состояние боя.\n\nВыберите {вид}, {размер} и {положение}."
 L["Aim at an enemy and the HUD next to your crosshair suggests your {next spell} and shows its key.\n\nAim at something you can interact with and it shows its {name} and your {Interact key} instead.\n\nTurn either on or off, and set its {side}, {size} and {distance} from the crosshair."] =
   "Наведите прицел на врага, и HUD рядом с прицелом предложит {следующее заклинание} и покажет его клавишу.\n\nНаведите на объект взаимодействия, и HUD покажет его {название} и вашу {клавишу взаимодействия}.\n\nВключайте и выключайте любой из них и задайте {сторону}, {размер} и {расстояние} от прицела."
-L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting.\n\n{Ignore Friendlies} makes it skip allies."] =
-  "Выбирайте врагов, просто наводя на них прицел, и применяйте заклинания по площади точно туда, куда указывает прицел, без выбора по Tab.\n\n{Игнорировать союзников} пропускает союзников."
+L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting."] =
+  "Выбирайте врагов, просто наводя на них прицел, и применяйте заклинания по площади точно туда, куда указывает прицел, без выбора по Tab."
 L["Ground-targeted spells that should be cast at the crosshair location.\n\nType a {spell name or ID} to add it."] =
   "Заклинания по площади, которые нужно применять в точку прицела.\n\nВведите {название или ID заклинания}, чтобы добавить его."
 L["{!Action buttons that are macros cannot inherit Reticle Targeting on their own.}\n\nPress {+} to open the {Macro Composer}, write your macro there and it gets the targeting logic added for you.\n\nThen drag it from this list onto your action bars; {right-click} an icon to edit it."] =
   "{!Кнопки действий, являющиеся макросами, не могут сами наследовать наведение по прицелу.}\n\nНажмите {+}, чтобы открыть {Конструктор макросов}, напишите там макрос, и логика наведения добавится автоматически.\n\nЗатем перетащите его из этого списка на панели команд; {щелкните правой кнопкой} по значку, чтобы изменить его."
-L["Lock onto a target with one tap so the reticle stops swapping. While locked, the cycle keys jump to nearby enemies.\n\n{Target Lock Behavior} decides whether tapping again unlocks ({Toggle}) or moves the lock to whatever is under the crosshair ({Switch Target}).\n\nSet your keys."] =
-  "Захватите цель одним нажатием, чтобы прицел перестал переключаться. Пока цель захвачена, клавиши смены переходят к ближайшим врагам.\n\n{Поведение захвата цели} определяет, снимает ли повторное нажатие захват ({Переключить}) или переносит его на то, что под прицелом ({Сменить цель}).\n\nНазначьте клавиши."
+L["Lock onto a target with one tap so the reticle stops swapping. While locked, the cycle keys jump to nearby enemies, or to nearby allies in Support Mode.\n\n{Target Lock Behavior} decides whether tapping again unlocks ({Toggle}) or moves the lock to whatever is under the crosshair ({Switch Target}).\n\nSet your keys."] =
+  "Захватите цель одним нажатием, чтобы прицел перестал переключаться. Пока цель захвачена, клавиши смены переходят к ближайшим врагам, а в режиме поддержки — к ближайшим союзникам.\n\n{Поведение захвата цели} определяет, снимает ли повторное нажатие захват ({Переключить}) или переносит его на то, что под прицелом ({Сменить цель}).\n\nНазначьте клавиши."
 L["Turn your mouse clicks into actions while in Mouse Look, such as casting your action bar spells with {Left and Right Click}.\n\nPick what each click does, with or without a {modifier key}."] =
   "Превращайте щелчки мыши в действия в режиме обзора мышью, например применяйте заклинания с панели команд {левым и правым щелчком}.\n\nВыберите, что делает каждый щелчок, с {клавишей-модификатором} или без нее."
 L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to switch between wheels."] =
@@ -576,7 +610,6 @@ L["Copy the %s link (Ctrl+C), then paste it in your browser."] =
   "Скопируйте ссылку на %s (Ctrl+C) и вставьте ее в браузер."
 L["Character-specific option."] =
   "Настройка для отдельного персонажа."
-L["NEW"] = "НОВОЕ"
 L["ON"] = "ВКЛ"
 L["OFF"] = "ВЫКЛ"
 L["Are you sure?"] = "Вы уверены?"
@@ -628,16 +661,9 @@ L["Open Options"] = "Открыть настройки"
 -- Editors: macro composer, prelines, crosshair colors and textures, CVar editor
 L["%d / %d characters"] = "%d / %d символов"
 L["%s (over the macro limit)"] = "%s (превышен лимит макроса)"
-L["Ignore Friendlies: %s"] = "Игнорировать союзников: %s"
 L["Auto Target Lock: %s"] = "Автозахват цели: %s"
-L["Preline: Ignore Friendlies + No Auto Lock"] =
-  "Предстрока: игнорировать союзников + без автозахвата"
-L["Preline: Ignore Friendlies + Auto Lock"] =
-  "Предстрока: игнорировать союзников + автозахват"
-L["Preline: Target Any Unit + No Auto Lock"] =
-  "Предстрока: любая цель + без автозахвата"
-L["Preline: Target Any Unit + Auto Lock"] =
-  "Предстрока: любая цель + автозахват"
+L["Preline: No Auto Lock"] = "Предстрока: без автозахвата"
+L["Preline: Auto Lock"] = "Предстрока: автозахват"
 L["Macro Composer"] = "Конструктор макросов"
 L["The targeting logic preline matching your current Reticle Targeting settings is added automatically before your lines, as the highlighted portion of the macro. To modify it, use the Prelines Editor under %s."] =
   "Предстрока наведения, соответствующая текущим настройкам наведения по прицелу, автоматически добавляется перед вашими строками как выделенная часть макроса. Чтобы изменить ее, используйте редактор предстрок в разделе «%s»."
@@ -658,12 +684,8 @@ L["Inactive — Auto Target Lock is OFF"] =
   "Неактивно — автозахват цели ВЫКЛЮЧЕН"
 L["Inactive — Auto Target Lock is ON"] =
   "Неактивно — автозахват цели ВКЛЮЧЕН"
-L["Inactive — Ignore Friendlies is OFF"] =
-  "Неактивно — «Игнорировать союзников» ВЫКЛЮЧЕНО"
-L["Inactive — Ignore Friendlies is ON"] =
-  "Неактивно — «Игнорировать союзников» ВКЛЮЧЕНО"
-L["Customize the targeting prelines injected before each ability when Reticle Targeting is enabled.\n\n• Only the preline matching your current %s X %s settings is active.\n• Max %s characters per preline — SecureActionButton macros are capped at %s; the rest is reserved for the trailing %s line.\n• Use %s to reload and pick up edits."] =
-  "Настройте предстроки наведения, добавляемые перед каждой способностью, когда включено наведение по прицелу.\n\n• Активна только та предстрока, которая соответствует текущим настройкам %s X %s.\n• Не более %s символов на предстроку — макросы SecureActionButton ограничены %s; остальное зарезервировано для завершающей строки %s.\n• Используйте %s, чтобы перезагрузить интерфейс и применить изменения."
+L["Customize the targeting prelines injected before each ability when Reticle Targeting is enabled.\n\n• Only the preline matching your current %s setting is active.\n• Max %s characters per preline — SecureActionButton macros are capped at %s; the rest is reserved for the trailing %s line.\n• Use %s to reload and pick up edits."] =
+  "Настройте предстроки наведения, добавляемые перед каждой способностью, когда включено наведение по прицелу.\n\n• Активна только та предстрока, которая соответствует текущим настройкам %s.\n• Не более %s символов на предстроку — макросы SecureActionButton ограничены %s; остальное зарезервировано для завершающей строки %s.\n• Используйте %s, чтобы перезагрузить интерфейс и применить изменения."
 L["Apply Changes"] = "Применить изменения"
 L["Hostile"] = "Враждебные"
 L["NPC"] = "НИП"
@@ -672,6 +694,7 @@ L["Object"] = "Объект"
 L["Select a tab to customize the color and alpha of the crosshair when targeting different types of units.\n\n• %s and %s animations use the Hostile color.\n• Inactive crosshair states use the Base style."] =
   "Выберите вкладку, чтобы настроить цвет и прозрачность прицела при наведении на разные типы целей.\n\n• Анимации «%s» и «%s» используют цвет враждебных целей.\n• Неактивные состояния прицела используют базовый стиль."
 L["Reset to Default"] = "Сбросить"
+L["Reset All Colors"] = "Сбросить все цвета"
 L["Show the inactive crosshair"] = "Показать неактивный прицел"
 L["Show the active crosshair"] = "Показать активный прицел"
 L["Show the mounted crosshair"] = "Показать прицел верхом"
@@ -692,6 +715,15 @@ L["Not aiming at anything"] = "Ни на что не наведен"
 L["Aiming at a unit or object"] = "Наведен на цель или объект"
 L["While you are mounted"] = "Пока вы в седле"
 L["While Target Lock holds"] = "Пока активен захват цели"
+L["SUPPORT"] = "ПОДДЕРЖКА"
+L["Use a Support Mode crosshair"] =
+  "Использовать прицел для режима поддержки"
+L["Use the normal crosshair in Support Mode"] =
+  "Использовать обычный прицел в режиме поддержки"
+L["Support Mode keeps your Inactive and Active textures."] =
+  "Режим поддержки сохраняет ваши текстуры «Неактивен» и «Активен»."
+L["While Support Mode is on, in place of Inactive and Active"] =
+  "Пока включен режим поддержки, вместо «Неактивен» и «Активен»"
 L["Brings back the texture you had before hiding it."] =
   "Возвращает текстуру, которая была до скрытия."
 L["Crosshair Textures"] = "Текстуры прицела"

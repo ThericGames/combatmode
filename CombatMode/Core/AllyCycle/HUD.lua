@@ -204,6 +204,12 @@ local function UpdateRoleIcon(unit)
   local atlas
   if previewActive then
     atlas = Target.GetRoleAtlasFor(PreviewStage().role)
+  elseif Target.IsExtraUnit(unit) then
+    -- Pets have no group role: our own crest takes the role icon's place.
+    roleIcon:SetTexture(CM.Constants.PetCrest)
+    roleIcon:SetTexCoord(0, 1, 0, 1)
+    roleIcon:Show()
+    return
   else
     atlas = Target.GetRoleAtlas(unit)
   end

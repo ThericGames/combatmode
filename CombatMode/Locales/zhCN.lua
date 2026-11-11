@@ -186,9 +186,6 @@ L["Enables aim-based unit targeting and precise placement of ground-targeted spe
 L["Enable Reticle Targeting"] = "启用准星瞄准"
 L["Aim the crosshair at units to pick targets instead of tab-targeting."] =
   "将准星对准单位来选取目标，取代Tab选取。"
-L["Ignore Friendlies"] = "忽略友方"
-L["Ignore friendly NPCs and Players, and only target hostile units."] =
-  "忽略友方NPC和玩家，只选取敌对单位。"
 L["Click Casting Only"] = "仅点击施法"
 L["Apply reticle targeting logic only to Click Casting binds."] =
   "仅对点击施法绑定应用准星瞄准逻辑。"
@@ -197,8 +194,8 @@ L["Spells to skip the reticle targeting logic."] = "跳过准星瞄准逻辑的�
 L["Cast at Crosshair"] = "在准星处施放"
 L["Ground spells to cast at the crosshair location."] = "在准星位置施放的地面法术。"
 L["TARGET LOCK"] = "目标锁定"
-L["Lock onto a target to prevent accidental switching, and cycle between units to prioritize specific enemies."] =
-  "锁定目标以防止误切换，并在单位间循环以优先处理特定敌人。"
+L["Lock onto a target to prevent accidental switching, and cycle between units to prioritize specific ones."] =
+  "锁定目标以防止误切换，并在单位间循环以优先处理特定单位。"
 L["Warning: Target Lock uses your Focus Target. Anything else that sets your focus will interfere with it."] =
   "警告：目标锁定会使用你的焦点目标。其他任何设置焦点的功能都会与之冲突。"
 L["Target Lock Keybind"] = "目标锁定按键"
@@ -216,17 +213,15 @@ L["Locks your target, or the unit under the crosshair. Tap again to unlock."] =
   "锁定你的目标或准星下的单位。再次点按可解除锁定。"
 L["Locks the unit under the crosshair, replacing any current lock. Tap with nothing under the crosshair to unlock. Aiming at the unit you already locked keeps the lock."] =
   "锁定准星下的单位，并替换当前的锁定。准星下没有目标时点按可解除锁定。瞄准已锁定的单位则保持锁定。"
-L["With Ignore Friendlies on, a friendly or dead unit under the crosshair is ignored: the lock stays where it is."] =
-  "开启“忽略友方”后，准星下的友方或已死亡单位会被忽略：锁定保持不变。"
 L["Auto Target Lock"] = "自动目标锁定"
-L["Target Lock engages automatically when attacking units."] =
-  "攻击单位时自动启用目标锁定。"
+L["Target Lock engages automatically when attacking units. In Support Mode it only locks the ally you heal."] =
+  "攻击单位时自动启用目标锁定。在辅助模式下，只会锁定你治疗的友方。"
 L["Target Lock Marker"] = "目标锁定标记"
 L["Show a crosshair marker on the nameplate of the locked target."] =
   "在被锁定目标的姓名板上显示准星标记。"
 L["Focus Locked Target"] = "聚焦锁定目标"
-L["Pulls the camera toward your locked target, keeping it in focus."] =
-  "将镜头拉向被锁定的目标，使其保持在焦点中。"
+L["Pulls the camera toward your locked target, keeping it in focus. Works on hostile targets only."] =
+  "将镜头拉向被锁定的目标，使其保持在焦点中。仅对敌对目标有效。"
 L["TARGETING INDICATORS"] = "目标指示"
 L["Visual indicators that highlight targets in the world for easier identification."] =
   "在世界中高亮显示目标的视觉指示，便于辨认。"
@@ -309,7 +304,6 @@ L["Target Crosshair"] = "以准星选取目标"
 L["Clear Focus"] = "清除焦点"
 L["Start Attack"] = "开始攻击"
 L["Pet Attack"] = "宠物攻击"
-L["Toggle Focus Any"] = "切换焦点（任意）"
 L["Toggle Focus Enemy"] = "切换焦点（敌人）"
 L["Run MACRO"] = "运行 MACRO"
 L["— none —"] = "— 无 —"
@@ -400,6 +394,11 @@ L["Target the next group member."] = "选定下一位队伍成员。"
 L["Ally Cycle - Previous"] = "友方循环 - 上一个"
 L["Target the previous group member."] = "选定上一位队伍成员。"
 L["Skip Self"] = "跳过自己"
+L["Also Cycle Through"] = "同时循环选取"
+L["Adds pets after the group members: your own pet, and the pets of everyone else in your party or raid."] =
+  "在队伍成员之后加入宠物：你自己的宠物，以及队伍或团队中其他所有人的宠物。"
+L["Your Pet"] = "你的宠物"
+L["Party Pets"] = "队伍宠物"
 L["Skip yourself when cycling through group members."] =
   "在循环切换队伍成员时跳过自己。"
 L["Keep Ally After Harm"] = "攻击后保留友方"
@@ -415,6 +414,35 @@ L["Show a unit frame for the currently selected group member."] =
 L["Where the Ally HUD sits relative to the crosshair."] = "友方 HUD 相对于准星的位置。"
 L["Scales the size of the Ally HUD."] = "缩放友方 HUD 的大小。"
 L["Distance between the Ally HUD and the crosshair."] = "友方 HUD 与准星之间的距离。"
+
+-- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
+L["Support Mode"] = "辅助模式"
+L["support mode keybinding"] = "辅助模式按键绑定"
+L["SUPPORT MODE"] = "辅助模式"
+L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
+  "一种以支援为核心的模式：启用后会将主动作条切换到专用的支援页，并允许增益法术以准星下的友方单位为目标。"
+L["Support Mode Keybind"] = "辅助模式按键"
+L["Prioritize Crosshair Target"] = "优先准星目标"
+L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
+  "即使已选中其他友方目标（例如通过友方循环选中），准星下的盟友也会优先获得法术。关闭后将优先施放给已选中的目标。"
+L["Tap to toggle Support Mode on or off."] = "点按以开启或关闭辅助模式。"
+L["Support Bar Page"] = "辅助动作条页"
+L["The main action bar page shown while Support Mode is on. Place support abilities here. Exiting Support Mode returns to Page 1."] =
+  "支援模式开启期间显示的主动作条页面。请将支援技能放在这里。退出支援模式后会返回第 1 页。"
+L["Don't Swap"] = "不切换"
+L["Page %d"] = "第 %d 页"
+L["Requires Reticle Targeting"] = "需要准星瞄准"
+L["Support"] = "辅助"
+L["Tint Vignette"] = "暗角着色"
+L["While Support Mode is active, the Vignette adopts the Support crosshair color. It only appears when the Vignette is enabled."] =
+  "辅助模式开启时，暗角会采用辅助准星的颜色。仅在启用暗角时显示。"
+L["Nameplate Behavior"] = "姓名板行为"
+L["Choose which nameplates appear while in Support Mode. Normal settings are restored when exiting Support Mode."] =
+  "选择辅助模式下显示哪些姓名板。退出后会恢复正常设置。"
+L["Don't Change"] = "不更改"
+L["Friendly Only"] = "仅友方"
+L["Friendly and Enemy"] = "友方和敌方"
+L["Hide All"] = "全部隐藏"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = "自动解锁"
@@ -482,6 +510,7 @@ L["Back"] = "上一步"
 L["Next"] = "下一步"
 L["Finish"] = "完成"
 L["Skip tour"] = "跳过引导"
+L["Click to learn more about this feature"] = "点击了解此功能的更多信息"
 L["Assist HUD"] = "辅助 HUD"
 L["Target Lock"] = "目标锁定"
 L["Party Wheel"] = "队伍轮盘"
@@ -493,6 +522,9 @@ L["Set a Cycle Lock - Previous key"] = "设置“循环锁定 - 上一个”按�
 L["Set a Radial Menu key"] = "设置轮盘菜单按键"
 L["Set an Ally Cycle - Next key"] = "设置“友方循环 - 下一个”按键"
 L["Set an Ally Cycle - Previous key"] = "设置“友方循环 - 上一个”按键"
+L["Set a Support Mode key"] = "设置支援模式按键"
+L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
+  "一种以支援为核心的模式：启用后会将主动作条切换到专用的{支援页}，并允许{增益法术}以准星下的友方单位为目标。\n\n请设置你的按键。"
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "开启或关闭准星瞄准会重新加载界面。"
 L["Needs Reticle Targeting."] = "需要准星瞄准。"
@@ -502,14 +534,14 @@ L["A reactive, fully customizable crosshair that adapts to your target and comba
   "可根据目标和战斗状态自动变化、完全可自定义的准星。\n\n选择它的{外观}、{大小}和{位置}。"
 L["Aim at an enemy and the HUD next to your crosshair suggests your {next spell} and shows its key.\n\nAim at something you can interact with and it shows its {name} and your {Interact key} instead.\n\nTurn either on or off, and set its {side}, {size} and {distance} from the crosshair."] =
   "瞄准敌人时，准星旁的 HUD 会建议你的{下一个法术}并显示其按键。\n\n瞄准可交互的目标时，则显示其{名称}和你的{交互按键}。\n\n可分别开启或关闭，并设置它相对准星的{方位}、{大小}和{距离}。"
-L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting.\n\n{Ignore Friendlies} makes it skip allies."] =
-  "只需瞄准即可选定敌人，并将指向性法术和范围技能直接释放在准星所指之处，无需 Tab 选目标。\n\n{忽略友方}会让它跳过友方。"
+L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting."] =
+  "只需瞄准即可选定敌人，并将指向性法术和范围技能直接释放在准星所指之处，无需 Tab 选目标。"
 L["Ground-targeted spells that should be cast at the crosshair location.\n\nType a {spell name or ID} to add it."] =
   "应在准星位置释放的指向性法术。\n\n输入{法术名称或 ID}即可添加。"
 L["{!Action buttons that are macros cannot inherit Reticle Targeting on their own.}\n\nPress {+} to open the {Macro Composer}, write your macro there and it gets the targeting logic added for you.\n\nThen drag it from this list onto your action bars; {right-click} an icon to edit it."] =
   "{!作为宏的动作按钮无法自行继承准星瞄准。}\n\n点击 {+} 打开{宏编辑器}，在其中编写宏，系统会自动为其添加瞄准逻辑。\n\n然后将它从此列表拖到你的动作条上；{右键点击}图标可进行编辑。"
-L["Lock onto a target with one tap so the reticle stops swapping. While locked, the cycle keys jump to nearby enemies.\n\n{Target Lock Behavior} decides whether tapping again unlocks ({Toggle}) or moves the lock to whatever is under the crosshair ({Switch Target}).\n\nSet your keys."] =
-  "一键锁定目标，让准星不再切换。锁定期间，循环按键会跳到附近的敌人。\n\n{目标锁定行为}决定再次按键是解除锁定（{切换}），还是将锁定转移到准星下的目标（{切换目标}）。\n\n设置你的按键。"
+L["Lock onto a target with one tap so the reticle stops swapping. While locked, the cycle keys jump to nearby enemies, or to nearby allies in Support Mode.\n\n{Target Lock Behavior} decides whether tapping again unlocks ({Toggle}) or moves the lock to whatever is under the crosshair ({Switch Target}).\n\nSet your keys."] =
+  "一键锁定目标，让准星不再切换。锁定期间，循环按键会跳到附近的敌人，在辅助模式下则跳到附近的盟友。\n\n{目标锁定行为}决定再次按键是解除锁定（{切换}），还是将锁定转移到准星下的目标（{切换目标}）。\n\n设置你的按键。"
 L["Turn your mouse clicks into actions while in Mouse Look, such as casting your action bar spells with {Left and Right Click}.\n\nPick what each click does, with or without a {modifier key}."] =
   "在鼠标视角下将鼠标点击变为动作，例如用{左键和右键}施放动作条上的法术。\n\n选择每次点击的功能，可搭配或不搭配{修饰键}。"
 L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to switch between wheels."] =
@@ -528,7 +560,6 @@ L["Link"] = "链接"
 L["Copy the %s link (Ctrl+C), then paste it in your browser."] =
   "复制 %s 的链接（Ctrl+C），然后粘贴到浏览器中。"
 L["Character-specific option."] = "角色专属选项。"
-L["NEW"] = "新"
 L["ON"] = "开"
 L["OFF"] = "关"
 L["Are you sure?"] = "确定吗？"
@@ -578,12 +609,9 @@ L["Open Options"] = "打开选项"
 -- Editors: macro composer, prelines, crosshair colors and textures, CVar editor
 L["%d / %d characters"] = "%d / %d 个字符"
 L["%s (over the macro limit)"] = "%s（超出宏长度限制）"
-L["Ignore Friendlies: %s"] = "忽略友方：%s"
 L["Auto Target Lock: %s"] = "自动目标锁定：%s"
-L["Preline: Ignore Friendlies + No Auto Lock"] = "前置行：忽略友方 + 无自动锁定"
-L["Preline: Ignore Friendlies + Auto Lock"] = "前置行：忽略友方 + 自动锁定"
-L["Preline: Target Any Unit + No Auto Lock"] = "前置行：选中任意单位 + 无自动锁定"
-L["Preline: Target Any Unit + Auto Lock"] = "前置行：选中任意单位 + 自动锁定"
+L["Preline: No Auto Lock"] = "前置行：无自动锁定"
+L["Preline: Auto Lock"] = "前置行：自动锁定"
 L["Macro Composer"] = "宏编辑器"
 L["The targeting logic preline matching your current Reticle Targeting settings is added automatically before your lines, as the highlighted portion of the macro. To modify it, use the Prelines Editor under %s."] =
   "与你当前准星瞄准设置相匹配的瞄准前置行会自动添加到你的行之前，作为宏中的高亮部分。如需修改，请使用“%s”下的前置行编辑器。"
@@ -600,10 +628,8 @@ L["Preline must be %d characters or fewer (room for /click under the 255 macro l
   "前置行不得超过 %d 个字符（需在宏的 255 字符上限内为 /click 留出空间）。"
 L["Inactive — Auto Target Lock is OFF"] = "未激活 — 自动目标锁定已关闭"
 L["Inactive — Auto Target Lock is ON"] = "未激活 — 自动目标锁定已开启"
-L["Inactive — Ignore Friendlies is OFF"] = "未激活 — 忽略友方已关闭"
-L["Inactive — Ignore Friendlies is ON"] = "未激活 — 忽略友方已开启"
-L["Customize the targeting prelines injected before each ability when Reticle Targeting is enabled.\n\n• Only the preline matching your current %s X %s settings is active.\n• Max %s characters per preline — SecureActionButton macros are capped at %s; the rest is reserved for the trailing %s line.\n• Use %s to reload and pick up edits."] =
-  "自定义启用准星瞄准时在每个技能前注入的瞄准前置行。\n\n• 只有与你当前 %s X %s 设置相匹配的前置行处于激活状态。\n• 每条前置行最多 %s 个字符——SecureActionButton 宏上限为 %s，其余部分保留给末尾的 %s 行。\n• 使用 %s 重新加载并应用修改。"
+L["Customize the targeting prelines injected before each ability when Reticle Targeting is enabled.\n\n• Only the preline matching your current %s setting is active.\n• Max %s characters per preline — SecureActionButton macros are capped at %s; the rest is reserved for the trailing %s line.\n• Use %s to reload and pick up edits."] =
+  "自定义启用准星瞄准时在每个技能前注入的瞄准前置行。\n\n• 只有与你当前 %s 设置相匹配的前置行处于激活状态。\n• 每条前置行最多 %s 个字符——SecureActionButton 宏上限为 %s，其余部分保留给末尾的 %s 行。\n• 使用 %s 重新加载并应用修改。"
 L["Apply Changes"] = "应用更改"
 L["Hostile"] = "敌对"
 L["NPC"] = "NPC"
@@ -612,6 +638,7 @@ L["Object"] = "物体"
 L["Select a tab to customize the color and alpha of the crosshair when targeting different types of units.\n\n• %s and %s animations use the Hostile color.\n• Inactive crosshair states use the Base style."] =
   "选择一个标签页，自定义准星在瞄准不同类型单位时的颜色和透明度。\n\n• %s和%s动画使用敌对颜色。\n• 未激活的准星状态使用基础样式。"
 L["Reset to Default"] = "恢复默认"
+L["Reset All Colors"] = "恢复所有颜色默认值"
 L["Show the inactive crosshair"] = "显示未激活的准星"
 L["Show the active crosshair"] = "显示激活的准星"
 L["Show the mounted crosshair"] = "显示骑乘时的准星"
@@ -631,6 +658,13 @@ L["Not aiming at anything"] = "未瞄准任何目标"
 L["Aiming at a unit or object"] = "正在瞄准单位或物体"
 L["While you are mounted"] = "骑乘时"
 L["While Target Lock holds"] = "目标锁定期间"
+L["SUPPORT"] = "辅助"
+L["Use a Support Mode crosshair"] = "使用辅助模式准星"
+L["Use the normal crosshair in Support Mode"] = "在辅助模式中使用普通准星"
+L["Support Mode keeps your Inactive and Active textures."] =
+  "辅助模式沿用你的未激活和已激活纹理。"
+L["While Support Mode is on, in place of Inactive and Active"] =
+  "辅助模式开启时，取代未激活和已激活"
 L["Brings back the texture you had before hiding it."] = "恢复隐藏之前使用的纹理。"
 L["Crosshair Textures"] = "准星纹理"
 L["Select a state, then pick a texture below, or apply a preset for a curated appearance."] =

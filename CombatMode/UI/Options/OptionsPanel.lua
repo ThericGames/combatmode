@@ -17,6 +17,8 @@
 --    • ctx:WatermarkPage(text) stamps the tab scroll viewport (same overlay as
 --      per-row watermarkWhenDisabled) so a whole page can be inert.
 --    • Layout ctx passed to build() wraps Widgets factories.
+--    • Sidebar tab buttons live in a scroll area above the pinned footer; a selected tab's
+--      button is scrolled into view (EnsureTabButtonVisible).
 --    • Combat-guarded open where needed; not a Blizzard Settings host.
 --  Does not: Own per-feature option wiring (Tabs/*) or changelog body text.
 --  Related: UI/Options/Draw.lua, UI/Options/Widgets.lua,
@@ -71,6 +73,17 @@ local CONTENT_LEFT = 15
 
 local frame
 local chrome
+-- The tab buttons live in their own scroll area (the footer below stays pinned).
+local sidebarScroll
+local sidebarContent
+local TAB_BUTTON_H = 34
+-- Buttons start right of the scrollbar gutter (bar at x 3-8) and end at the same distance from
+-- the divider as before.
+local TAB_BUTTON_X = 15
+local TAB_BUTTON_W = SIDEBAR_W - 15 - 10
+local TAB_PITCH = 38
+local TAB_LIST_TOP = 11 -- gap under the header line, inside the sidebar scroll area
+local TAB_LIST_BOTTOM_PAD = 8
 local tabs = {}
 local activeTab
 local tabActivated = false
@@ -205,7 +218,26 @@ local function NewLayout(content, width, clip)
     return control
   end
 
+  --- Adds the "i" button when the setup wizard has a step for this section header (`section`)
+  --- or option label (`label`) on the layout's tab; it opens that step's explanation popup.
+  local function AttachWizardInfo(self, control, section, label)
+    local wizard = CM.Wizard
+    local tab = self.search and self.search.tab
+    if not (wizard and wizard.FindStep and tab) then
+      return
+    end
+    local step = wizard.FindStep(tab, section, label)
+    if step then
+      UI.AttachInfoButton(control, function()
+        wizard.ShowInfo(step)
+      end)
+    end
+  end
+
   function ctx:Place(control, o)
+    if o and type(o.label) == "string" and control.frame then
+      AttachWizardInfo(self, control, nil, UI.StripColors(o.label))
+    end
     if control.SetWidthTo then
       control.SetWidthTo(self.width)
     end
@@ -219,7 +251,9 @@ local function NewLayout(content, width, clip)
     self.section = UI.StripColors(name)
     -- The previous section ends before this header, so close it before placing.
     self.sectionRec = nil
-    local control = self:Place(UI.MakeHeader(self.content, text))
+    local headerControl = UI.MakeHeader(self.content, text)
+    AttachWizardInfo(self, headerControl, self.section, nil)
+    local control = self:Place(headerControl)
     if self.search and self.section and self.section ~= "" then
       self.sectionRec = {
         label = self.section,
@@ -565,6 +599,25 @@ local function DeactivateTab()
   end
 end
 
+--- Scrolls the sidebar tab list just enough to bring `tab`'s button fully into view.
+local function EnsureTabButtonVisible(tab)
+  if not (sidebarScroll and tab and tab.index and sidebarScroll.cmScrollTo) then
+    return
+  end
+  local viewH = sidebarScroll:GetHeight() or 0
+  if viewH <= 1 then
+    return
+  end
+  local top = TAB_LIST_TOP + (tab.index - 1) * TAB_PITCH
+  local bottom = top + TAB_BUTTON_H
+  local current = sidebarScroll:GetVerticalScroll() or 0
+  if top - TAB_LIST_TOP < current then
+    sidebarScroll.cmScrollTo(max(0, top - TAB_LIST_TOP), true)
+  elseif bottom + TAB_LIST_BOTTOM_PAD > current + viewH then
+    sidebarScroll.cmScrollTo(bottom + TAB_LIST_BOTTOM_PAD - viewH, true)
+  end
+end
+
 local function SelectTab(tab)
   if activeTab == tab and tab.scroll:IsShown() then
     return
@@ -594,6 +647,7 @@ local function SelectTab(tab)
   end
 
   activeTab = tab
+  EnsureTabButtonVisible(tab)
   if shown then
     ActivateTab()
   end
@@ -693,15 +747,21 @@ function Options.RegisterSegmentSelector(tabId, select)
 end
 
 local function BuildSidebarButton(def, index)
-  local button = CreateFrame("Button", nil, frame)
+  local button = CreateFrame("Button", nil, sidebarContent)
   -- Mockup: 148x29 rows, 32px pitch, first row centred ~80px below the window top.
-  button:SetSize(SIDEBAR_W - 18, 34)
-  button:SetPoint("TOPLEFT", frame, "TOPLEFT", 8, -72 - (index - 1) * 38)
+  button:SetSize(TAB_BUTTON_W, TAB_BUTTON_H)
+  button:SetPoint(
+    "TOPLEFT",
+    sidebarContent,
+    "TOPLEFT",
+    TAB_BUTTON_X,
+    -TAB_LIST_TOP - (index - 1) * TAB_PITCH
+  )
   local label = UI.CreateFontString(button, "OVERLAY", UI.Fonts.nav, "GameFontNormal")
   label:SetPoint("LEFT", button, "LEFT", 20, 0)
   label:SetText(UI.StripColors(def.label) or "")
   -- A long translation ends in "..." instead of running past the sidebar edge or under the badge.
-  local maxLabelW = SIDEBAR_W - 18 - 20 - 14
+  local maxLabelW = TAB_BUTTON_W - 20 - 14
   if (label:GetStringWidth() or 0) > maxLabelW then
     label:SetWidth(maxLabelW)
     label:SetWordWrap(false)
@@ -742,7 +802,7 @@ local function BuildTab(def, index)
   -- the last row can be scrolled fully into view with a little room below it.
   content:SetHeight(content:GetHeight() + TAB_BOTTOM_PAD)
 
-  local tab = { def = def, scroll = scroll, bar = scroll.cmScrollBar }
+  local tab = { def = def, index = index, scroll = scroll, bar = scroll.cmScrollBar }
   tab.button = BuildSidebarButton(def, index)
   tab.button:SetScript("OnClick", function()
     SelectTab(tab)
@@ -828,6 +888,10 @@ local function BuildSidebarFooter()
   sep:SetHeight(1)
   sep:SetPoint("BOTTOMLEFT", footer, "TOPLEFT", 0, 10)
   sep:SetPoint("BOTTOMRIGHT", footer, "TOPRIGHT", 0, 10)
+
+  -- Height of the pinned footer block (bottom margin + footer + divider gap), so the tab scroll
+  -- area can stop above it.
+  return 8 + footer:GetHeight() + 10
 end
 
 local function RefreshActiveTabScroll()
@@ -992,6 +1056,10 @@ local function BuildShell()
 
   frame:HookScript("OnShow", function()
     Options.RefreshWhatsNewButton()
+    if sidebarScroll and sidebarScroll.cmUpdate then
+      sidebarScroll.cmUpdate()
+      EnsureTabButtonVisible(activeTab)
+    end
     ActivateTab()
     RefreshActiveTabScroll()
     -- Layout heights settle after Show; refresh once more so the thumb/bar appear.
@@ -1034,11 +1102,22 @@ local function BuildShell()
   divider:SetPoint("TOPLEFT", frame, "TOPLEFT", SIDEBAR_W - 4, -61)
   divider:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", SIDEBAR_W - 4, 0)
 
+  -- Tab buttons scroll inside this area; its bottom is set once the footer's height is known.
+  sidebarScroll, sidebarContent = UI.CreateScrollFrame(frame)
+  sidebarScroll:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, -61)
+  sidebarContent:SetSize(SIDEBAR_W - 4, 10)
+
   for index, def in ipairs(Options.tabDefs) do
     BuildTab(def, index)
   end
 
-  BuildSidebarFooter()
+  local footerReserve = BuildSidebarFooter()
+  sidebarScroll:SetPoint("BOTTOMRIGHT", frame, "BOTTOMLEFT", SIDEBAR_W - 4, footerReserve + 4)
+  local bar = sidebarScroll.cmScrollBar
+  bar:SetPoint("TOP", sidebarScroll, "TOP", 0, -SCROLLBAR_PAD_Y)
+  bar:SetPoint("BOTTOM", sidebarScroll, "BOTTOM", 0, SCROLLBAR_PAD_Y)
+  bar:SetPoint("LEFT", frame, "LEFT", 3, 0) -- left gutter, clear of the tab buttons
+  sidebarContent:SetHeight(TAB_LIST_TOP + #tabs * TAB_PITCH + TAB_LIST_BOTTOM_PAD)
 
   if tabs[1] then
     SelectTab(tabs[1])

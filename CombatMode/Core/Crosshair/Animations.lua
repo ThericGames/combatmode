@@ -242,12 +242,14 @@ local function ApplyCrosshairAppearanceToWidget(
   end
 
   local appearance = CrosshairAppearance
+  local situationalApplied = false
   if CM.IsCrosshairSituationalActive and CM.IsCrosshairSituationalActive() then
     -- InitDatabase and the editor already store normalized tables (or the Hidden constant).
     local situational =
       CM.Constants.NormalizeCrosshairAppearance(CM.DB.global.crosshairSituationalAppearance)
     if situational then
       appearance = situational
+      situationalApplied = true
     end
   end
 
@@ -275,9 +277,18 @@ local function ApplyCrosshairAppearanceToWidget(
     return
   end
 
-  local color = CM.GetCrosshairReactionColor(state)
+  -- The idle reticle takes the Support Mode color while that mode is on (scale unchanged).
+  local color =
+    CM.GetCrosshairReactionColor(state == "base" and CM.GetCrosshairIdleColorState() or state)
   local targetR, targetG, targetB, targetA = color[1], color[2], color[3], color[4]
   local textureToUse = state == "base" and appearance.Base or appearance.Active
+  -- Support Mode: its own texture for both states (the situational appearance still wins).
+  local supportTexture = not situationalApplied
+    and CM.GetCrosshairSupportTexturePath
+    and CM.GetCrosshairSupportTexturePath()
+  if supportTexture then
+    textureToUse = supportTexture
+  end
   local reverseAnimation = state == "base" and true or false
 
   -- An empty path is a slot the player chose to hide: draw nothing for that state.
@@ -372,6 +383,7 @@ local lockInStartScale = 1.3
 local lockInStartAlpha = 0.0
 local lockInTargetScale = 1.0
 local lockInTargetAlpha = 1.0
+local lockInDuration = LOCK_IN_DURATION
 
 local castGUID = nil
 local castIsChannel = false
@@ -385,6 +397,19 @@ local crosshairOuterFrame
 local crosshairVisualFrame
 local crosshairTexture
 local onCrosshairLockInComplete
+
+-- Lock out: a throwaway copy of the old reticle that swells and fades while the new one locks in
+-- (Support Mode on / off, CM.PlayCrosshairModeSwap).
+-- Slower and bigger than the Mouse Look lock in, so the hand-over reads.
+local SWAP_DURATION = 0.5
+local SWAP_SCALE = 1.7
+local GHOST_DURATION = SWAP_DURATION
+local GHOST_END_SCALE = SWAP_SCALE
+local ghostFrame
+local ghostTexture
+local ghostElapsed = 0
+local ghostActive = false
+local ghostStartScale = 1
 
 local function CenterVisual()
   if crosshairVisualFrame and crosshairOuterFrame then
@@ -493,7 +518,7 @@ end
 
 local function UpdateLockIn(elapsed)
   motionElapsed = motionElapsed + elapsed
-  if motionElapsed >= LOCK_IN_DURATION then
+  if motionElapsed >= lockInDuration then
     SetMotionIdle()
     if crosshairVisualFrame then
       crosshairVisualFrame:SetScale(lockInTargetScale)
@@ -506,7 +531,7 @@ local function UpdateLockIn(elapsed)
     return
   end
 
-  local t = EaseOutQuad(Clamp01(motionElapsed / LOCK_IN_DURATION))
+  local t = EaseOutQuad(Clamp01(motionElapsed / lockInDuration))
   if crosshairVisualFrame then
     local scale = lockInStartScale + (lockInTargetScale - lockInStartScale) * t
     local alpha = lockInStartAlpha + (lockInTargetAlpha - lockInStartAlpha) * t
@@ -614,8 +639,25 @@ local motionUpdaters = {
   [MOTION_RESTORE] = UpdateRestore,
 }
 
+local function UpdateGhost(elapsed)
+  if not ghostActive then
+    return
+  end
+  ghostElapsed = ghostElapsed + elapsed
+  local t = Clamp01(ghostElapsed / GHOST_DURATION)
+  if t >= 1 then
+    ghostActive = false
+    ghostFrame:Hide()
+    return
+  end
+  local e = EaseOutQuad(t)
+  ghostFrame:SetScale(math.max(0.01, ghostStartScale * (1 + (GHOST_END_SCALE - 1) * e)))
+  ghostFrame:SetAlpha(1 - e)
+end
+
 local function OnCrosshairMotionUpdate(_, elapsed)
   CM.Profile("Anim:CrosshairMotion", function()
+    UpdateGhost(elapsed)
     UpdateReactionColorTween(elapsed)
     local updater = motionUpdaters[motionState]
     if updater then
@@ -637,7 +679,8 @@ function CM.InitCrosshairAnimations(opts)
   end
 end
 
-function CM.ShowCrosshairLockIn()
+--- `opts` (optional): `duration` seconds and `scale` start multiplier; default is the Mouse Look lock in.
+function CM.ShowCrosshairLockIn(opts)
   if CM.IsFocusLockReticleSuppressed and CM.IsFocusLockReticleSuppressed() then
     return
   end
@@ -655,7 +698,8 @@ function CM.ShowCrosshairLockIn()
   CancelReactionColorTween()
   crosshairTexture:Show()
 
-  lockInStartScale = crosshairVisualFrame:GetScale() * 1.3
+  lockInDuration = opts and opts.duration or LOCK_IN_DURATION
+  lockInStartScale = crosshairVisualFrame:GetScale() * (opts and opts.scale or 1.3)
   lockInStartAlpha = 0.0
   lockInTargetScale = CAST_BASE_SCALE
   lockInTargetAlpha = 1
@@ -665,6 +709,46 @@ function CM.ShowCrosshairLockIn()
   crosshairVisualFrame:SetAlpha(lockInStartAlpha)
   motionState = MOTION_LOCK_IN
   motionElapsed = 0
+end
+
+--- Runs `applyFn` (which swaps the reticle's texture / tint) with a lock out of the old look and a
+--- lock in of the new one. Falls back to a plain `applyFn()` while the reticle isn't on screen.
+function CM.PlayCrosshairModeSwap(applyFn)
+  local canPlay = crosshairOuterFrame
+    and crosshairVisualFrame
+    and crosshairTexture
+    and crosshairTexture:IsShown()
+    and CM.IsMouselooking
+    and CM.IsMouselooking()
+  local oldPath, r, g, b, a
+  if canPlay then
+    oldPath = crosshairTexture:GetTexture()
+    r, g, b, a = crosshairTexture:GetVertexColor()
+  end
+  applyFn()
+  if not (canPlay and crosshairTexture:IsShown()) then
+    return
+  end
+  if oldPath then
+    if not ghostFrame then
+      ghostFrame = CreateFrame("Frame", nil, crosshairOuterFrame)
+      ghostTexture = ghostFrame:CreateTexture(nil, "OVERLAY")
+      ghostTexture:SetAllPoints(ghostFrame)
+    end
+    local w, h = crosshairVisualFrame:GetSize()
+    ghostFrame:SetSize(w, h)
+    ghostFrame:ClearAllPoints()
+    ghostFrame:SetPoint("CENTER", crosshairOuterFrame, "CENTER", 0, 0)
+    ghostStartScale = crosshairVisualFrame:GetScale()
+    ghostFrame:SetScale(ghostStartScale)
+    ghostFrame:SetAlpha(1)
+    ghostTexture:SetTexture(oldPath)
+    ghostTexture:SetVertexColor(r or 1, g or 1, b or 1, a or 1)
+    ghostElapsed = 0
+    ghostActive = true
+    ghostFrame:Show()
+  end
+  CM.ShowCrosshairLockIn({ duration = SWAP_DURATION, scale = SWAP_SCALE })
 end
 
 function CM.StartCrosshairCastGrow(eventGUID, isChannel)

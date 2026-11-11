@@ -2,19 +2,17 @@
 --  UI/Editors/TargetingMacroPrelinesEditor.lua — EDITOR — targeting macro prelines
 ---------------------------------------------------------------------------------------
 --  What it does: Standalone editor (CM.OpenTargetingMacroPrelinesEditor) for customizing
---  the targeting prelines injected into click-cast macros. Shows all four preline fields
---  (normal any/enemy + Auto Target Lock any/enemy); inactive fields use the disabled
---  watermark overlay based on Auto Target Lock and Ignore Friendlies.
+--  the targeting prelines injected into click-cast macros. Shows both preline fields
+--  (normal + Auto Target Lock); the inactive one uses the disabled watermark overlay
+--  based on Auto Target Lock.
 --  Architecture / how it works:
 --    • Defaults from TargetingMacroBuilder.TargetingMacroPrelinesDefaults.
---    • Override keys: targetingMacroPrelineAnyOverride / EnemyOverride,
---      AutoLockAnyOverride / AutoLockEnemyOverride.
---    • Active field = Auto Target Lock mode × Ignore Friendlies; others stay visible but
---      stamped Inactive (same pattern as the Ignore Friendlies pair overlay).
+--    • Override keys: targetingMacroPrelineEnemyOverride / AutoLockEnemyOverride.
+--    • Active field = Auto Target Lock mode; the other stays visible but stamped Inactive.
 --    • Max length = CM.TargetingMacroPrelineMaxLen (255 − worst /click − newline);
 --      EditBox SetMaxLetters + validate refuse oversized input. Each field shows a live
 --      "used / max characters" counter under its label (like the Macro Composer).
---    • Reset clears all four overrides. Combat-guarded open; uses CM.UI CreateWindow.
+--    • Reset clears both overrides. Combat-guarded open; uses CM.UI CreateWindow.
 --  Does not: Rebuild secure macrotext until reload / RefreshClickCastMacros path runs.
 --  Related: Core/ClickCasting/TargetingMacroBuilder.lua,
 --  UI/Options/Tabs/TabReticleTargeting.lua, Constants/DatabaseDefaults.lua,
@@ -63,32 +61,18 @@ local function ValidatePreline(value)
   return true
 end
 
-local function EnemyOnly()
-  return CM.DB and CM.DB.char and CM.DB.char.reticleTargetingEnemyOnly == true
-end
-
 local function AutoTargetLock()
   return CM.DB and CM.DB.char and CM.DB.char.autoTargetLockOnAttack == true
 end
 
--- forAutoLock / forEnemyOnly describe which mode this field belongs to.
-local function FieldDisabled(forAutoLock, forEnemyOnly)
+-- forAutoLock describes which Auto Target Lock mode this field belongs to.
+local function FieldDisabled(forAutoLock)
   return function()
-    if forAutoLock then
-      if not AutoTargetLock() then
-        return true
-      end
-    elseif AutoTargetLock() then
-      return true
-    end
-    if forEnemyOnly then
-      return not EnemyOnly()
-    end
-    return EnemyOnly()
+    return forAutoLock ~= AutoTargetLock()
   end
 end
 
-local function FieldWatermark(forAutoLock, forEnemyOnly)
+local function FieldWatermark(forAutoLock)
   return function()
     if forAutoLock then
       if not AutoTargetLock() then
@@ -96,13 +80,6 @@ local function FieldWatermark(forAutoLock, forEnemyOnly)
       end
     elseif AutoTargetLock() then
       return L["Inactive — Auto Target Lock is ON"]
-    end
-    if forEnemyOnly then
-      if not EnemyOnly() then
-        return L["Inactive — Ignore Friendlies is OFF"]
-      end
-    elseif EnemyOnly() then
-      return L["Inactive — Ignore Friendlies is ON"]
     end
     return L["Inactive"]
   end
@@ -126,8 +103,7 @@ local function Build()
     color = UI.Colors.textDim,
     allowColors = true,
     text = format(
-      L["Customize the targeting prelines injected before each ability when Reticle Targeting is enabled.\n\n• Only the preline matching your current %s X %s settings is active.\n• Max %s characters per preline — SecureActionButton macros are capped at %s; the rest is reserved for the trailing %s line.\n• Use %s to reload and pick up edits."],
-      UI.AccentWrap(L["Ignore Friendlies"]),
+      L["Customize the targeting prelines injected before each ability when Reticle Targeting is enabled.\n\n• Only the preline matching your current %s setting is active.\n• Max %s characters per preline — SecureActionButton macros are capped at %s; the rest is reserved for the trailing %s line.\n• Use %s to reload and pick up edits."],
       UI.AccentWrap(L["Auto Target Lock"]),
       maxLenMarkup,
       UI.AccentWrap("255"),
@@ -136,10 +112,8 @@ local function Build()
     ),
   })
 
-  local function StateLines(enemiesOn, autoLockOn)
-    return format(L["Ignore Friendlies: %s"], UI.OnOffWrap(enemiesOn))
-      .. "\n"
-      .. format(L["Auto Target Lock: %s"], UI.OnOffWrap(autoLockOn))
+  local function StateLines(autoLockOn)
+    return format(L["Auto Target Lock: %s"], UI.OnOffWrap(autoLockOn))
   end
 
   local function AddPrelineField(opts)
@@ -149,7 +123,7 @@ local function Build()
       label = opts.label,
       labelAllowColors = true,
       labelSize = UI.Fonts.small,
-      -- Ignore Friendlies / Auto Target Lock state, shown as the small muted helper under the label.
+      -- Auto Target Lock state, shown as the small muted helper under the label.
       desc = function()
         local text = format(L["%d / %d characters"], used, maxLen)
         if used > maxLen then
@@ -173,54 +147,29 @@ local function Build()
   end
 
   AddPrelineField({
-    label = L["Preline: Ignore Friendlies + No Auto Lock"],
-    state = StateLines(true, false),
+    label = L["Preline: No Auto Lock"],
+    state = StateLines(false),
     get = function()
       return CM.DB.global.targetingMacroPrelineEnemyOverride or defaults.enemy or ""
     end,
     set = function(value)
       CM.DB.global.targetingMacroPrelineEnemyOverride = NormalizeInput(value)
     end,
-    disabled = FieldDisabled(false, true),
-    watermarkWhenDisabled = FieldWatermark(false, true),
+    disabled = FieldDisabled(false),
+    watermarkWhenDisabled = FieldWatermark(false),
   })
   AddPrelineField({
-    label = L["Preline: Ignore Friendlies + Auto Lock"],
-    state = StateLines(true, true),
+    label = L["Preline: Auto Lock"],
+    state = StateLines(true),
     get = function()
       return CM.DB.global.targetingMacroPrelineAutoLockEnemyOverride or defaults.autoLockEnemy or ""
     end,
     set = function(value)
       CM.DB.global.targetingMacroPrelineAutoLockEnemyOverride = NormalizeInput(value)
     end,
-    disabled = FieldDisabled(true, true),
-    watermarkWhenDisabled = FieldWatermark(true, true),
+    disabled = FieldDisabled(true),
+    watermarkWhenDisabled = FieldWatermark(true),
   })
-  AddPrelineField({
-    label = L["Preline: Target Any Unit + No Auto Lock"],
-    state = StateLines(false, false),
-    get = function()
-      return CM.DB.global.targetingMacroPrelineAnyOverride or defaults.any or ""
-    end,
-    set = function(value)
-      CM.DB.global.targetingMacroPrelineAnyOverride = NormalizeInput(value)
-    end,
-    disabled = FieldDisabled(false, false),
-    watermarkWhenDisabled = FieldWatermark(false, false),
-  })
-  AddPrelineField({
-    label = L["Preline: Target Any Unit + Auto Lock"],
-    state = StateLines(false, true),
-    get = function()
-      return CM.DB.global.targetingMacroPrelineAutoLockAnyOverride or defaults.autoLockAny or ""
-    end,
-    set = function(value)
-      CM.DB.global.targetingMacroPrelineAutoLockAnyOverride = NormalizeInput(value)
-    end,
-    disabled = FieldDisabled(true, false),
-    watermarkWhenDisabled = FieldWatermark(true, false),
-  })
-
   ctx:Gap()
   ctx:ButtonRow({
     {
@@ -229,9 +178,7 @@ local function Build()
       confirmText = RELOAD_CONFIRM,
       reload = true,
       func = function()
-        CM.DB.global.targetingMacroPrelineAnyOverride = nil
         CM.DB.global.targetingMacroPrelineEnemyOverride = nil
-        CM.DB.global.targetingMacroPrelineAutoLockAnyOverride = nil
         CM.DB.global.targetingMacroPrelineAutoLockEnemyOverride = nil
         CM.ReloadUI()
       end,

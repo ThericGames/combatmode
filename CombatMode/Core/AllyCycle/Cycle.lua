@@ -8,6 +8,10 @@
 --      via PlayerCanAssist (RestrictedEnv has no UnitIsUnit). Frame refs must be
 --      SecureGroupHeaderTemplate.
 --    • skipPlayer attribute set OOC from DB (RestrictedEnv cannot read CM.DB).
+--    • Also Cycle Through (allyCycle.extraUnits CSV playerPet|partyPets → extraPlayerPet /
+--      extraPartyPets attributes): the snippet walks members, then "pet", then partypet1-4 /
+--      raidpet1-40 (own raidpetN skipped), backwards for Previous. CM.IsAllyCycleExtraUnit
+--      and GetAllyCycleIndex use the same tokens (CollectExtraUnits).
 --    • PrepareCycle / ResetAllyCycleCursor OOC only (SetAttribute is lockdown-blocked).
 --    • GetAllyCycleIndex for the HUD (reuses a child scratch table); NotifyCycle on
 --      advance (not restore) plays the Radial Menu's slice-aim click.
@@ -30,6 +34,7 @@ local GetNormalizedRealmName = _G.GetNormalizedRealmName
 local GetRealmName = _G.GetRealmName
 local InCombatLockdown = _G.InCombatLockdown
 local IsInGroup = _G.IsInGroup
+local IsInRaid = _G.IsInRaid
 local C_Map = _G.C_Map
 local C_Timer = _G.C_Timer
 local PlaySound = _G.PlaySound
@@ -48,6 +53,7 @@ local UnitName = _G.UnitName
 local ipairs = _G.ipairs
 local select = _G.select
 local tostring = _G.tostring
+local type = _G.type
 local wipe = _G.wipe
 
 local BIND_UP = "Combat Mode - Ally Cycle Next"
@@ -141,6 +147,90 @@ function CM.IsAllyCycleSkipPlayer()
   return true
 end
 
+local IsSecret = CM.Safe.IsSecret
+local PublicBool = CM.Safe.PublicBool
+
+--- Extra units cycled after the group (`allyCycle.extraUnits`, CSV of playerPet | partyPets).
+--- Returns playerPet, partyPets booleans. The secure snippet reads them as attributes.
+function CM.GetAllyCycleExtraUnits()
+  local ac = CM.DB and CM.DB.global and CM.DB.global.allyCycle
+  local csv = ac and ac.extraUnits
+  local playerPet, partyPets = false, false
+  if type(csv) == "string" then
+    for key in csv:gmatch("[^,]+") do
+      if key == "playerPet" then
+        playerPet = true
+      elseif key == "partyPets" then
+        partyPets = true
+      end
+    end
+  end
+  return playerPet, partyPets
+end
+
+function CM.SetAllyCycleExtraUnits(csv)
+  local ac = CM.DB and CM.DB.global and CM.DB.global.allyCycle
+  if not ac then
+    return
+  end
+  ac.extraUnits = csv or ""
+  CM.ResetAllyCycleCursor()
+  CM.ApplyAllyCycleBindings()
+end
+
+-- Pet unit tokens, in cycle order after the group (the secure snippet builds the same ones).
+local PARTY_PET_TOKENS = {}
+for n = 1, 4 do
+  PARTY_PET_TOKENS[n] = "partypet" .. n
+end
+local RAID_PET_TOKENS = {}
+for n = 1, 40 do
+  RAID_PET_TOKENS[n] = "raidpet" .. n
+end
+
+local extraScratch = {}
+
+-- Existing extra-unit tokens for the enabled kinds: "pet" first, then others' pets. In a raid the
+-- player's own raidpetN is left out (it is "pet").
+local function CollectExtraUnits(dest)
+  wipe(dest)
+  local playerPet, partyPets = CM.GetAllyCycleExtraUnits()
+  if not (playerPet or partyPets) then
+    return dest
+  end
+  if playerPet and UnitExists("pet") then
+    dest[#dest + 1] = "pet"
+  end
+  if partyPets then
+    local raid = IsInRaid and IsInRaid()
+    local tokens = raid and RAID_PET_TOKENS or PARTY_PET_TOKENS
+    for i = 1, #tokens do
+      local token = tokens[i]
+      if UnitExists(token) then
+        local isOwn = raid and UnitIsUnit and PublicBool(UnitIsUnit(token, "pet")) == true
+        if not isOwn then
+          dest[#dest + 1] = token
+        end
+      end
+    end
+  end
+  return dest
+end
+
+--- True when `unit` (e.g. "target") is one of the enabled extra units.
+function CM.IsAllyCycleExtraUnit(unit)
+  if not unit or not UnitIsUnit then
+    return false
+  end
+  local extras = CollectExtraUnits(extraScratch)
+  for i = 1, #extras do
+    if PublicBool(UnitIsUnit(extras[i], unit)) == true then
+      return true
+    end
+  end
+  return false
+end
+
 -- OOC only: SetAttribute on this button is lockdown-blocked.
 function CycleButton:PrepareCycle()
   if InCombatLockdown and InCombatLockdown() then
@@ -161,6 +251,14 @@ function CycleButton:PrepareCycle()
       if not skipPlayer or not isSelf then
         self:SetAttribute("lastUnit", unit)
       end
+      return
+    end
+  end
+  -- Target is not a group member: it may be one of the extra units (pets).
+  local extras = CollectExtraUnits(extraScratch)
+  for _, token in ipairs(extras) do
+    if UnitIsUnit and PublicBool(UnitIsUnit(token, "target")) == true then
+      self:SetAttribute("lastUnit", token)
       return
     end
   end
@@ -185,7 +283,8 @@ if SecureHandlerWrapScript then
       self:CallMethod("PrepareCycle")
 
       local mode = SecureCmdOptionParse("[group:raid] raid;[group:party] party;solo")
-      if mode == "solo" then
+      -- Solo still cycles your pet(s) when Also Cycle Through is on (the headers show you alone).
+      if mode == "solo" and not (self:GetAttribute("extraPlayerPet") or self:GetAttribute("extraPartyPets")) then
         self:SetAttribute("unit", nil)
         self:SetAttribute("lastUnit", nil)
         return
@@ -210,6 +309,22 @@ if SecureHandlerWrapScript then
           end
         end
       end
+      -- Extra units (pets) cycled after the group; flags are mirrored from the DB out of combat.
+      local playerPet = self:GetAttribute("extraPlayerPet")
+      local partyPets = self:GetAttribute("extraPartyPets")
+      if playerPet and UnitExists("pet") then
+        signature = signature .. ";pet"
+      end
+      if partyPets then
+        for n = 1, 40 do
+          if mode == "raid" or n <= 4 then
+            local token = (mode == "raid" and "raidpet" or "partypet") .. n
+            if UnitExists(token) then
+              signature = signature .. ";" .. token
+            end
+          end
+        end
+      end
       if mode ~= self:GetAttribute("mode") or signature ~= self:GetAttribute("rosterSignature") then
         lastUnit = nil
       end
@@ -230,9 +345,35 @@ if SecureHandlerWrapScript then
       local skipPlayer = self:GetAttribute("skipPlayer") ~= false
 
       if not chosen and header then
-        for slot = 1, 40 do
-          local member = header:GetFrameRef("child" .. slot)
-          local unit = member and member:GetAttribute("unit")
+        -- Order: group members (slots 1-40), then "pet", then others' pets (41 slots). Previous
+        -- (goDown) walks it backwards: pets 41..1, then the DESC header's members.
+        for k = 1, 81 do
+          local pet = 0
+          if goDown then
+            if k <= 41 then
+              pet = 42 - k
+            end
+          elseif k > 40 then
+            pet = k - 40
+          end
+          local unit = nil
+          if pet == 0 then
+            local member = header:GetFrameRef("child" .. (goDown and (k - 41) or k))
+            unit = member and member:GetAttribute("unit")
+          elseif pet == 1 then
+            if playerPet then
+              unit = "pet"
+            end
+          elseif partyPets then
+            local n = pet - 1
+            if mode == "raid" then
+              if not (selfUnit and selfUnit == "raid" .. n) then
+                unit = "raidpet" .. n
+              end
+            elseif n <= 4 then
+              unit = "partypet" .. n
+            end
+          end
           local isSelf = unit == "player" or (selfUnit and unit == selfUnit)
           if unit and UnitExists(unit) and not (skipPlayer and isSelf) then
             -- away-<unit>: offline / in another zone or instance (set out of combat by
@@ -314,9 +455,6 @@ end
 function CM.FlushPendingAllyCycleRoster()
   CM.RefreshAllyCycleRoster()
 end
-
-local IsSecret = CM.Safe.IsSecret
-local PublicBool = CM.Safe.PublicBool
 
 local rosterKids = {}
 
@@ -507,6 +645,14 @@ local function GetAllyCycleIndexImpl(unit)
       end
     end
   end
+  -- Extra units (pets) count after the group, in cycle order.
+  local extras = CollectExtraUnits(extraScratch)
+  for _, token in ipairs(extras) do
+    total = total + 1
+    if unit and UnitIsUnit and PublicBool(UnitIsUnit(token, unit)) == true then
+      current = total
+    end
+  end
   return current, total
 end
 
@@ -530,6 +676,9 @@ end
 
 local function ApplyAllyCycleBindingsImpl()
   CycleButton:SetAttribute("skipPlayer", CM.IsAllyCycleSkipPlayer())
+  local playerPet, partyPets = CM.GetAllyCycleExtraUnits()
+  CycleButton:SetAttribute("extraPlayerPet", playerPet)
+  CycleButton:SetAttribute("extraPartyPets", partyPets)
   ClearOverrideBindings(OverrideOwner)
   if not CM.IsAllyCycleEnabled() then
     CM.DebugPrint("Ally Cycle bindings cleared (unbound)")

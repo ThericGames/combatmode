@@ -186,9 +186,6 @@ L["Enables aim-based unit targeting and precise placement of ground-targeted spe
 L["Enable Reticle Targeting"] = "啟用準星瞄準"
 L["Aim the crosshair at units to pick targets instead of tab-targeting."] =
   "將準星對準單位來選取目標，取代Tab選取。"
-L["Ignore Friendlies"] = "忽略友方"
-L["Ignore friendly NPCs and Players, and only target hostile units."] =
-  "忽略友方NPC和玩家，只選取敵對單位。"
 L["Click Casting Only"] = "僅點擊施法"
 L["Apply reticle targeting logic only to Click Casting binds."] =
   "僅對點擊施法綁定套用準星瞄準邏輯。"
@@ -197,8 +194,8 @@ L["Spells to skip the reticle targeting logic."] = "跳過準星瞄準邏輯的�
 L["Cast at Crosshair"] = "在準星處施放"
 L["Ground spells to cast at the crosshair location."] = "在準星位置施放的地面法術。"
 L["TARGET LOCK"] = "目標鎖定"
-L["Lock onto a target to prevent accidental switching, and cycle between units to prioritize specific enemies."] =
-  "鎖定目標以防止誤切換，並在單位間循環以優先處理特定敵人。"
+L["Lock onto a target to prevent accidental switching, and cycle between units to prioritize specific ones."] =
+  "鎖定目標以防止誤切換，並在單位間循環以優先處理特定單位。"
 L["Warning: Target Lock uses your Focus Target. Anything else that sets your focus will interfere with it."] =
   "警告：目標鎖定會使用你的專注目標。其他任何設定專注目標的功能都會與之衝突。"
 L["Target Lock Keybind"] = "目標鎖定按鍵"
@@ -216,17 +213,15 @@ L["Locks your target, or the unit under the crosshair. Tap again to unlock."] =
   "鎖定你的目標或準星下的單位。再次點按可解除鎖定。"
 L["Locks the unit under the crosshair, replacing any current lock. Tap with nothing under the crosshair to unlock. Aiming at the unit you already locked keeps the lock."] =
   "鎖定準星下的單位，並取代目前的鎖定。準星下沒有目標時點按可解除鎖定。瞄準已鎖定的單位則維持鎖定。"
-L["With Ignore Friendlies on, a friendly or dead unit under the crosshair is ignored: the lock stays where it is."] =
-  "開啟「忽略友方」後，準星下的友方或已死亡單位會被忽略：鎖定維持不變。"
 L["Auto Target Lock"] = "自動目標鎖定"
-L["Target Lock engages automatically when attacking units."] =
-  "攻擊單位時自動啟用目標鎖定。"
+L["Target Lock engages automatically when attacking units. In Support Mode it only locks the ally you heal."] =
+  "攻擊單位時自動啟用目標鎖定。在輔助模式下，只會鎖定你治療的友方。"
 L["Target Lock Marker"] = "目標鎖定標記"
 L["Show a crosshair marker on the nameplate of the locked target."] =
   "在被鎖定目標的名條上顯示準星標記。"
 L["Focus Locked Target"] = "聚焦鎖定目標"
-L["Pulls the camera toward your locked target, keeping it in focus."] =
-  "將鏡頭拉向被鎖定的目標，使其保持在焦點中。"
+L["Pulls the camera toward your locked target, keeping it in focus. Works on hostile targets only."] =
+  "將鏡頭拉向被鎖定的目標，使其保持在焦點中。僅對敵對目標有效。"
 L["TARGETING INDICATORS"] = "目標指示"
 L["Visual indicators that highlight targets in the world for easier identification."] =
   "在世界中醒目標示目標的視覺指示，便於辨認。"
@@ -309,7 +304,6 @@ L["Target Crosshair"] = "以準星選取目標"
 L["Clear Focus"] = "清除專注目標"
 L["Start Attack"] = "開始攻擊"
 L["Pet Attack"] = "寵物攻擊"
-L["Toggle Focus Any"] = "切換專注目標（任意）"
 L["Toggle Focus Enemy"] = "切換專注目標（敵人）"
 L["Run MACRO"] = "執行 MACRO"
 L["— none —"] = "— 無 —"
@@ -400,6 +394,11 @@ L["Target the next group member."] = "選定下一位隊伍成員。"
 L["Ally Cycle - Previous"] = "友方循環 - 上一個"
 L["Target the previous group member."] = "選定上一位隊伍成員。"
 L["Skip Self"] = "跳過自己"
+L["Also Cycle Through"] = "同時循環選取"
+L["Adds pets after the group members: your own pet, and the pets of everyone else in your party or raid."] =
+  "在隊伍成員之後加入寵物：你自己的寵物，以及隊伍或團隊中其他所有人的寵物。"
+L["Your Pet"] = "你的寵物"
+L["Party Pets"] = "隊伍寵物"
 L["Skip yourself when cycling through group members."] =
   "在循環切換隊伍成員時跳過自己。"
 L["Keep Ally After Harm"] = "攻擊後保留友方"
@@ -415,6 +414,35 @@ L["Show a unit frame for the currently selected group member."] =
 L["Where the Ally HUD sits relative to the crosshair."] = "友方 HUD 相對於準星的位置。"
 L["Scales the size of the Ally HUD."] = "縮放友方 HUD 的大小。"
 L["Distance between the Ally HUD and the crosshair."] = "友方 HUD 與準星之間的距離。"
+
+-- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
+L["Support Mode"] = "輔助模式"
+L["support mode keybinding"] = "輔助模式按鍵綁定"
+L["SUPPORT MODE"] = "輔助模式"
+L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
+  "一種以支援為核心的模式：啟用後會將主動作列切換到專用的支援頁，並允許增益法術以準星下的友方單位為目標。"
+L["Support Mode Keybind"] = "輔助模式按鍵"
+L["Prioritize Crosshair Target"] = "優先準星目標"
+L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
+  "即使已選取其他友方目標（例如透過友方循環選取），準星下的盟友也會優先獲得法術。關閉後將優先施放給已選取的目標。"
+L["Tap to toggle Support Mode on or off."] = "點按以開啟或關閉輔助模式。"
+L["Support Bar Page"] = "輔助快捷列頁"
+L["The main action bar page shown while Support Mode is on. Place support abilities here. Exiting Support Mode returns to Page 1."] =
+  "支援模式開啟期間顯示的主動作列頁面。請將支援技能放在這裡。退出支援模式後會返回第 1 頁。"
+L["Don't Swap"] = "不切換"
+L["Page %d"] = "第 %d 頁"
+L["Requires Reticle Targeting"] = "需要準星瞄準"
+L["Support"] = "輔助"
+L["Tint Vignette"] = "暗角著色"
+L["While Support Mode is active, the Vignette adopts the Support crosshair color. It only appears when the Vignette is enabled."] =
+  "輔助模式開啟時，暗角會採用輔助準星的顏色。僅在啟用暗角時顯示。"
+L["Nameplate Behavior"] = "名條行為"
+L["Choose which nameplates appear while in Support Mode. Normal settings are restored when exiting Support Mode."] =
+  "選擇輔助模式下顯示哪些名條。離開後會恢復一般設定。"
+L["Don't Change"] = "不變更"
+L["Friendly Only"] = "僅友方"
+L["Friendly and Enemy"] = "友方和敵方"
+L["Hide All"] = "全部隱藏"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = "自動解鎖"
@@ -482,6 +510,7 @@ L["Back"] = "上一步"
 L["Next"] = "下一步"
 L["Finish"] = "完成"
 L["Skip tour"] = "跳過導覽"
+L["Click to learn more about this feature"] = "點擊以了解此功能的更多資訊"
 L["Assist HUD"] = "輔助 HUD"
 L["Target Lock"] = "目標鎖定"
 L["Party Wheel"] = "隊伍輪盤"
@@ -493,6 +522,9 @@ L["Set a Cycle Lock - Previous key"] = "設定「循環鎖定 - 上一個」按�
 L["Set a Radial Menu key"] = "設定輪盤選單按鍵"
 L["Set an Ally Cycle - Next key"] = "設定「友方循環 - 下一個」按鍵"
 L["Set an Ally Cycle - Previous key"] = "設定「友方循環 - 上一個」按鍵"
+L["Set a Support Mode key"] = "設定支援模式按鍵"
+L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
+  "一種以支援為核心的模式：啟用後會將主動作列切換到專用的{支援頁}，並允許{增益法術}以準星下的友方單位為目標。\n\n請設定你的按鍵。"
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "開啟或關閉準星瞄準會重新載入介面。"
 L["Needs Reticle Targeting."] = "需要準星瞄準。"
@@ -502,14 +534,14 @@ L["A reactive, fully customizable crosshair that adapts to your target and comba
   "可依據目標和戰鬥狀態自動變化、完全可自訂的準星。\n\n選擇它的{外觀}、{大小}和{位置}。"
 L["Aim at an enemy and the HUD next to your crosshair suggests your {next spell} and shows its key.\n\nAim at something you can interact with and it shows its {name} and your {Interact key} instead.\n\nTurn either on or off, and set its {side}, {size} and {distance} from the crosshair."] =
   "瞄準敵人時，準星旁的 HUD 會建議你的{下一個法術}並顯示其按鍵。\n\n瞄準可互動的目標時，則顯示其{名稱}和你的{互動按鍵}。\n\n可分別開啟或關閉，並設定它相對準星的{方位}、{大小}和{距離}。"
-L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting.\n\n{Ignore Friendlies} makes it skip allies."] =
-  "只需瞄準即可選定敵人，並將指向性法術和範圍技能直接施放在準星所指之處，無需 Tab 選目標。\n\n{忽略友方}會讓它跳過友方。"
+L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting."] =
+  "只需瞄準即可選定敵人，並將指向性法術和範圍技能直接施放在準星所指之處，無需 Tab 選目標。"
 L["Ground-targeted spells that should be cast at the crosshair location.\n\nType a {spell name or ID} to add it."] =
   "應在準星位置施放的指向性法術。\n\n輸入{法術名稱或 ID}即可新增。"
 L["{!Action buttons that are macros cannot inherit Reticle Targeting on their own.}\n\nPress {+} to open the {Macro Composer}, write your macro there and it gets the targeting logic added for you.\n\nThen drag it from this list onto your action bars; {right-click} an icon to edit it."] =
   "{!作為巨集的動作按鈕無法自行繼承準星瞄準。}\n\n點擊 {+} 開啟{巨集編輯器}，在其中編寫巨集，系統會自動為其加入瞄準邏輯。\n\n然後將它從此清單拖到你的動作列上；{右鍵點擊}圖示可進行編輯。"
-L["Lock onto a target with one tap so the reticle stops swapping. While locked, the cycle keys jump to nearby enemies.\n\n{Target Lock Behavior} decides whether tapping again unlocks ({Toggle}) or moves the lock to whatever is under the crosshair ({Switch Target}).\n\nSet your keys."] =
-  "一鍵鎖定目標，讓準星不再切換。鎖定期間，循環按鍵會跳到附近的敵人。\n\n{目標鎖定行為}決定再次按鍵是解除鎖定（{切換}），還是將鎖定轉移到準星下的目標（{切換目標}）。\n\n設定你的按鍵。"
+L["Lock onto a target with one tap so the reticle stops swapping. While locked, the cycle keys jump to nearby enemies, or to nearby allies in Support Mode.\n\n{Target Lock Behavior} decides whether tapping again unlocks ({Toggle}) or moves the lock to whatever is under the crosshair ({Switch Target}).\n\nSet your keys."] =
+  "一鍵鎖定目標，讓準星不再切換。鎖定期間，循環按鍵會跳到附近的敵人，在輔助模式下則跳到附近的盟友。\n\n{目標鎖定行為}決定再次按鍵是解除鎖定（{切換}），還是將鎖定轉移到準星下的目標（{切換目標}）。\n\n設定你的按鍵。"
 L["Turn your mouse clicks into actions while in Mouse Look, such as casting your action bar spells with {Left and Right Click}.\n\nPick what each click does, with or without a {modifier key}."] =
   "在滑鼠視角下將滑鼠點擊變為動作，例如用{左鍵和右鍵}施放動作列上的法術。\n\n選擇每次點擊的功能，可搭配或不搭配{修飾鍵}。"
 L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to switch between wheels."] =
@@ -528,7 +560,6 @@ L["Link"] = "連結"
 L["Copy the %s link (Ctrl+C), then paste it in your browser."] =
   "複製 %s 的連結（Ctrl+C），然後貼上到瀏覽器中。"
 L["Character-specific option."] = "角色專屬選項。"
-L["NEW"] = "新"
 L["ON"] = "開"
 L["OFF"] = "關"
 L["Are you sure?"] = "確定嗎？"
@@ -578,12 +609,9 @@ L["Open Options"] = "開啟選項"
 -- Editors: macro composer, prelines, crosshair colors and textures, CVar editor
 L["%d / %d characters"] = "%d / %d 個字元"
 L["%s (over the macro limit)"] = "%s（超出巨集長度限制）"
-L["Ignore Friendlies: %s"] = "忽略友方：%s"
 L["Auto Target Lock: %s"] = "自動目標鎖定：%s"
-L["Preline: Ignore Friendlies + No Auto Lock"] = "前置行：忽略友方 + 無自動鎖定"
-L["Preline: Ignore Friendlies + Auto Lock"] = "前置行：忽略友方 + 自動鎖定"
-L["Preline: Target Any Unit + No Auto Lock"] = "前置行：選取任意單位 + 無自動鎖定"
-L["Preline: Target Any Unit + Auto Lock"] = "前置行：選取任意單位 + 自動鎖定"
+L["Preline: No Auto Lock"] = "前置行：無自動鎖定"
+L["Preline: Auto Lock"] = "前置行：自動鎖定"
 L["Macro Composer"] = "巨集編輯器"
 L["The targeting logic preline matching your current Reticle Targeting settings is added automatically before your lines, as the highlighted portion of the macro. To modify it, use the Prelines Editor under %s."] =
   "與你目前準星瞄準設定相符的瞄準前置行會自動加到你的行之前，作為巨集中的醒目部分。如需修改，請使用「%s」下的前置行編輯器。"
@@ -600,10 +628,8 @@ L["Preline must be %d characters or fewer (room for /click under the 255 macro l
   "前置行不得超過 %d 個字元（需在巨集的 255 字元上限內為 /click 留出空間）。"
 L["Inactive — Auto Target Lock is OFF"] = "未啟用 — 自動目標鎖定已關閉"
 L["Inactive — Auto Target Lock is ON"] = "未啟用 — 自動目標鎖定已開啟"
-L["Inactive — Ignore Friendlies is OFF"] = "未啟用 — 忽略友方已關閉"
-L["Inactive — Ignore Friendlies is ON"] = "未啟用 — 忽略友方已開啟"
-L["Customize the targeting prelines injected before each ability when Reticle Targeting is enabled.\n\n• Only the preline matching your current %s X %s settings is active.\n• Max %s characters per preline — SecureActionButton macros are capped at %s; the rest is reserved for the trailing %s line.\n• Use %s to reload and pick up edits."] =
-  "自訂啟用準星瞄準時在每個技能前注入的瞄準前置行。\n\n• 只有與你目前 %s X %s 設定相符的前置行處於啟用狀態。\n• 每條前置行最多 %s 個字元——SecureActionButton 巨集上限為 %s，其餘部分保留給結尾的 %s 行。\n• 使用 %s 重新載入並套用修改。"
+L["Customize the targeting prelines injected before each ability when Reticle Targeting is enabled.\n\n• Only the preline matching your current %s setting is active.\n• Max %s characters per preline — SecureActionButton macros are capped at %s; the rest is reserved for the trailing %s line.\n• Use %s to reload and pick up edits."] =
+  "自訂啟用準星瞄準時在每個技能前注入的瞄準前置行。\n\n• 只有與你目前 %s 設定相符的前置行處於啟用狀態。\n• 每條前置行最多 %s 個字元——SecureActionButton 巨集上限為 %s，其餘部分保留給結尾的 %s 行。\n• 使用 %s 重新載入並套用修改。"
 L["Apply Changes"] = "套用變更"
 L["Hostile"] = "敵對"
 L["NPC"] = "NPC"
@@ -612,6 +638,7 @@ L["Object"] = "物件"
 L["Select a tab to customize the color and alpha of the crosshair when targeting different types of units.\n\n• %s and %s animations use the Hostile color.\n• Inactive crosshair states use the Base style."] =
   "選擇一個分頁，自訂準星在瞄準不同類型單位時的顏色和透明度。\n\n• %s和%s動畫使用敵對顏色。\n• 未啟用的準星狀態使用基礎樣式。"
 L["Reset to Default"] = "還原預設"
+L["Reset All Colors"] = "還原所有顏色預設值"
 L["Show the inactive crosshair"] = "顯示未啟用的準星"
 L["Show the active crosshair"] = "顯示啟用的準星"
 L["Show the mounted crosshair"] = "顯示騎乘時的準星"
@@ -631,6 +658,13 @@ L["Not aiming at anything"] = "未瞄準任何目標"
 L["Aiming at a unit or object"] = "正在瞄準單位或物件"
 L["While you are mounted"] = "騎乘時"
 L["While Target Lock holds"] = "目標鎖定期間"
+L["SUPPORT"] = "輔助"
+L["Use a Support Mode crosshair"] = "使用輔助模式準星"
+L["Use the normal crosshair in Support Mode"] = "在輔助模式中使用一般準星"
+L["Support Mode keeps your Inactive and Active textures."] =
+  "輔助模式沿用你的未啟用和已啟用材質。"
+L["While Support Mode is on, in place of Inactive and Active"] =
+  "輔助模式開啟時，取代未啟用和已啟用"
 L["Brings back the texture you had before hiding it."] = "還原隱藏之前使用的紋理。"
 L["Crosshair Textures"] = "準星紋理"
 L["Select a state, then pick a texture below, or apply a preset for a curated appearance."] =

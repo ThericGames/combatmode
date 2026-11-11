@@ -20,6 +20,8 @@
 --      (crosshair, Assist HUD or Ally HUD) undimmed with its own outline, and the balloon keeps clear.
 --    • Steps with `slides = { key, count[, hold[, fade]] }` show those screenshots (Assets/wizard/<key>_<n>.blp,
 --      built by scripts/art/make-wizard-previews.py) flipping in order inside the balloon.
+--    • Wizard.FindStep / Wizard.ShowInfo: Options adds an "i" button to every header / option that has
+--      a step; it opens that step alone as an info popup (UI.ShowSpotlight `info`), never during the tour.
 --    • global.seenWizard is set when the tour finishes or is skipped (Skip / ESC).
 --    • Combat: Start waits for combat to end; entering combat mid-tour ends the tour.
 --  Does not: Cover every option (only the basics and the major features), or own any setting
@@ -104,7 +106,7 @@ local STEPS = {
     section = L["RETICLE TARGETING"],
     title = L["Reticle Targeting"],
     slides = { "reticle", 5 },
-    body = L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting.\n\n{Ignore Friendlies} makes it skip allies."],
+    body = L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting."],
     warning = L["Turning Reticle Targeting on or off reloads the UI."],
   },
   {
@@ -125,7 +127,7 @@ local STEPS = {
     section = L["TARGET LOCK"],
     title = L["Target Lock"],
     slides = { "targetlock", 4 },
-    body = L["Lock onto a target with one tap so the reticle stops swapping. While locked, the cycle keys jump to nearby enemies.\n\n{Target Lock Behavior} decides whether tapping again unlocks ({Toggle}) or moves the lock to whatever is under the crosshair ({Switch Target}).\n\nSet your keys."],
+    body = L["Lock onto a target with one tap so the reticle stops swapping. While locked, the cycle keys jump to nearby enemies, or to nearby allies in Support Mode.\n\n{Target Lock Behavior} decides whether tapping again unlocks ({Toggle}) or moves the lock to whatever is under the crosshair ({Switch Target}).\n\nSet your keys."],
     -- These keys can't be set while Reticle Targeting is off, so they don't block then.
     tasks = {
       {
@@ -197,6 +199,23 @@ local STEPS = {
         label = L["Set an Ally Cycle - Previous key"],
         done = function()
           return Bound(CM.AllyCycleBindDown or "Combat Mode - Ally Cycle Previous")
+        end,
+      },
+    },
+  },
+  {
+    tab = "supportmode",
+    section = L["SUPPORT MODE"],
+    title = L["Support Mode"],
+    slides = { "supportmode", 3 },
+    body = L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."],
+    warning = L["Needs Reticle Targeting."],
+    -- The key can't be set while Reticle Targeting is off, so it doesn't block then.
+    tasks = {
+      {
+        label = L["Set a Support Mode key"],
+        done = function()
+          return not CM.DB.char.reticleTargeting or Bound("Combat Mode - Support Mode")
         end,
       },
     },
@@ -388,6 +407,39 @@ function ShowStep(i)
     end
   end
   C_Timer.After(SETTLE_DELAY, WaitForScroll)
+end
+
+--- The step that explains the section headed `section` (a ctx:Header title) or the option labelled
+--- `label` on tab `tab`, or nil. Options puts an "i" button on those headers / rows.
+function Wizard.FindStep(tab, section, label)
+  for _, step in ipairs(STEPS) do
+    if step.tab == tab then
+      if section and step.section == section then
+        return step
+      end
+      if label and not step.section and step.label == label then
+        return step
+      end
+    end
+  end
+end
+
+--- Shows a step's explanation alone (slides, text, warning) in a centred popup with a Close
+--- button: no dim, step count or Back / Next. Ignored while the tour runs.
+function Wizard.ShowInfo(step)
+  if active or not step then
+    return
+  end
+  UI.ShowSpotlight({}, {
+    info = true,
+    title = step.title,
+    body = step.body,
+    warning = step.warning,
+    slides = SlidePaths(step.slides),
+    slideHold = step.slides and step.slides[3],
+    slideFade = step.slides and step.slides[4],
+    onSkip = UI.HideSpotlight,
+  })
 end
 
 --- Starts (or restarts) the tour from the first step. Waits for combat to end.

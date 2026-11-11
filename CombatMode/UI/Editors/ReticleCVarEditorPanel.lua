@@ -138,6 +138,16 @@ local function NormalizeSortText(str)
   return str:lower()
 end
 
+--- Tooltip body for a row: the one-line description, then the longer explanation when we wrote one.
+local function TooltipText(rowData)
+  local summary = rowData.description or ""
+  local details = rowData.details
+  if details and details ~= "" then
+    return summary .. "\n\n" .. details
+  end
+  return summary ~= "" and summary or nil
+end
+
 local function BuildListFrame(parent, width, height)
   local frame = CreateFrame("Frame", nil, parent)
   frame:SetSize(width, height)
@@ -361,7 +371,7 @@ local function BuildListFrame(parent, width, height)
       end
       UI.ShowTooltip(self, {
         title = rowData.cvar,
-        text = rowData.description ~= "" and rowData.description or nil,
+        text = TooltipText(rowData),
         lines = lines,
       }, "ANCHOR_TOPLEFT")
     end)

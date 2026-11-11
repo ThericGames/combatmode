@@ -439,7 +439,7 @@ end
 
 --- Keyboard key of `bindingName` (index `idx` in the click-cast binding list) should open the Party
 --- Wheel: sets up its route button and bar ref and returns the frame name + button to click, else nil.
-function CM.PartyWheelPrepareKey(idx, bindingName, macroText)
+function CM.PartyWheelPrepareKey(idx, bindingName, macroText, supportText)
   if not KeyButton or InCombatLockdown() or not HasAnySpell() or not macroText then
     return nil
   end
@@ -463,7 +463,11 @@ function CM.PartyWheelPrepareKey(idx, bindingName, macroText)
     RouteButtons[idx] = route
     KeyButton:SetAttribute("*clickbutton-r" .. idx, route)
   end
-  route:SetAttribute("macrotext", macroText)
+  -- Support Mode swaps the route's macro with the key's own (main-bar keys have a second text).
+  if supportText then
+    CM.SupportModeRegisterProxy(route)
+  end
+  CM.SetModeMacroText(route, macroText, supportText)
   SecureHandlerSetFrameRef(Wheel, "bar" .. idx, bar)
   return KeyButton:GetName(), "b" .. idx
 end

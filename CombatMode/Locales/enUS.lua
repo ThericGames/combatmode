@@ -156,8 +156,6 @@ L["Enables aim-based unit targeting and precise placement of ground-targeted spe
   true
 L["Enable Reticle Targeting"] = true
 L["Aim the crosshair at units to pick targets instead of tab-targeting."] = true
-L["Ignore Friendlies"] = true
-L["Ignore friendly NPCs and Players, and only target hostile units."] = true
 L["Click Casting Only"] = true
 L["Apply reticle targeting logic only to Click Casting binds."] = true
 L["Excluded Spells"] = true
@@ -165,7 +163,7 @@ L["Spells to skip the reticle targeting logic."] = true
 L["Cast at Crosshair"] = true
 L["Ground spells to cast at the crosshair location."] = true
 L["TARGET LOCK"] = true
-L["Lock onto a target to prevent accidental switching, and cycle between units to prioritize specific enemies."] =
+L["Lock onto a target to prevent accidental switching, and cycle between units to prioritize specific ones."] =
   true
 L["Warning: Target Lock uses your Focus Target. Anything else that sets your focus will interfere with it."] =
   true
@@ -180,14 +178,14 @@ L["What the Target Lock key does when you press it."] = true
 L["Locks your target, or the unit under the crosshair. Tap again to unlock."] = true
 L["Locks the unit under the crosshair, replacing any current lock. Tap with nothing under the crosshair to unlock. Aiming at the unit you already locked keeps the lock."] =
   true
-L["With Ignore Friendlies on, a friendly or dead unit under the crosshair is ignored: the lock stays where it is."] =
-  true
 L["Auto Target Lock"] = true
-L["Target Lock engages automatically when attacking units."] = true
+L["Target Lock engages automatically when attacking units. In Support Mode it only locks the ally you heal."] =
+  true
 L["Target Lock Marker"] = true
 L["Show a crosshair marker on the nameplate of the locked target."] = true
 L["Focus Locked Target"] = true
-L["Pulls the camera toward your locked target, keeping it in focus."] = true
+L["Pulls the camera toward your locked target, keeping it in focus. Works on hostile targets only."] =
+  true
 L["TARGETING INDICATORS"] = true
 L["Visual indicators that highlight targets in the world for easier identification."] = true
 L["Target Outline"] = true
@@ -260,7 +258,6 @@ L["Target Crosshair"] = true
 L["Clear Focus"] = true
 L["Start Attack"] = true
 L["Pet Attack"] = true
-L["Toggle Focus Any"] = true
 L["Toggle Focus Enemy"] = true
 L["Run MACRO"] = true
 L["— none —"] = true
@@ -344,6 +341,11 @@ L["Target the next group member."] = true
 L["Ally Cycle - Previous"] = true
 L["Target the previous group member."] = true
 L["Skip Self"] = true
+L["Also Cycle Through"] = true
+L["Adds pets after the group members: your own pet, and the pets of everyone else in your party or raid."] =
+  true
+L["Your Pet"] = true
+L["Party Pets"] = true
 L["Skip yourself when cycling through group members."] = true
 L["Keep Ally After Harm"] = true
 L["After a harmful spell targets the reticle enemy, restore the previous ally. On by default for Healer specs until changed."] =
@@ -356,6 +358,35 @@ L["Show a unit frame for the currently selected group member."] = true
 L["Where the Ally HUD sits relative to the crosshair."] = true
 L["Scales the size of the Ally HUD."] = true
 L["Distance between the Ally HUD and the crosshair."] = true
+
+-- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
+L["Support Mode"] = true
+L["support mode keybinding"] = true
+L["SUPPORT MODE"] = true
+L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
+  true
+L["Support Mode Keybind"] = true
+L["Prioritize Crosshair Target"] = true
+L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
+  true
+L["Tap to toggle Support Mode on or off."] = true
+L["Support Bar Page"] = true
+L["The main action bar page shown while Support Mode is on. Place support abilities here. Exiting Support Mode returns to Page 1."] =
+  true
+L["Don't Swap"] = true
+L["Page %d"] = true
+L["Requires Reticle Targeting"] = true
+L["Support"] = true
+L["Tint Vignette"] = true
+L["While Support Mode is active, the Vignette adopts the Support crosshair color. It only appears when the Vignette is enabled."] =
+  true
+L["Nameplate Behavior"] = true
+L["Choose which nameplates appear while in Support Mode. Normal settings are restored when exiting Support Mode."] =
+  true
+L["Don't Change"] = true
+L["Friendly Only"] = true
+L["Friendly and Enemy"] = true
+L["Hide All"] = true
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = true
@@ -412,6 +443,7 @@ L["Back"] = true
 L["Next"] = true
 L["Finish"] = true
 L["Skip tour"] = true
+L["Click to learn more about this feature"] = true
 L["Assist HUD"] = true
 L["Target Lock"] = true
 L["Party Wheel"] = true
@@ -423,6 +455,9 @@ L["Set a Cycle Lock - Previous key"] = true
 L["Set a Radial Menu key"] = true
 L["Set an Ally Cycle - Next key"] = true
 L["Set an Ally Cycle - Previous key"] = true
+L["Set a Support Mode key"] = true
+L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
+  true
 L["Turning Reticle Targeting on or off reloads the UI."] = true
 L["Needs Reticle Targeting."] = true
 L["Lock your cursor to the center of the screen and steer by moving the mouse, no more holding right-click.\n\nSet a {key to toggle it}, and {one to interact with} whatever you're aiming at."] =
@@ -431,13 +466,13 @@ L["A reactive, fully customizable crosshair that adapts to your target and comba
   true
 L["Aim at an enemy and the HUD next to your crosshair suggests your {next spell} and shows its key.\n\nAim at something you can interact with and it shows its {name} and your {Interact key} instead.\n\nTurn either on or off, and set its {side}, {size} and {distance} from the crosshair."] =
   true
-L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting.\n\n{Ignore Friendlies} makes it skip allies."] =
+L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting."] =
   true
 L["Ground-targeted spells that should be cast at the crosshair location.\n\nType a {spell name or ID} to add it."] =
   true
 L["{!Action buttons that are macros cannot inherit Reticle Targeting on their own.}\n\nPress {+} to open the {Macro Composer}, write your macro there and it gets the targeting logic added for you.\n\nThen drag it from this list onto your action bars; {right-click} an icon to edit it."] =
   true
-L["Lock onto a target with one tap so the reticle stops swapping. While locked, the cycle keys jump to nearby enemies.\n\n{Target Lock Behavior} decides whether tapping again unlocks ({Toggle}) or moves the lock to whatever is under the crosshair ({Switch Target}).\n\nSet your keys."] =
+L["Lock onto a target with one tap so the reticle stops swapping. While locked, the cycle keys jump to nearby enemies, or to nearby allies in Support Mode.\n\n{Target Lock Behavior} decides whether tapping again unlocks ({Toggle}) or moves the lock to whatever is under the crosshair ({Switch Target}).\n\nSet your keys."] =
   true
 L["Turn your mouse clicks into actions while in Mouse Look, such as casting your action bar spells with {Left and Right Click}.\n\nPick what each click does, with or without a {modifier key}."] =
   true
@@ -456,7 +491,6 @@ L["See what's new in this version"] = true
 L["Link"] = true
 L["Copy the %s link (Ctrl+C), then paste it in your browser."] = true
 L["Character-specific option."] = true
-L["NEW"] = true
 L["ON"] = true
 L["OFF"] = true
 L["Are you sure?"] = true
@@ -502,12 +536,9 @@ L["Open Options"] = true
 -- Editors: macro composer, prelines, crosshair colors and textures, CVar editor
 L["%d / %d characters"] = true
 L["%s (over the macro limit)"] = true
-L["Ignore Friendlies: %s"] = true
 L["Auto Target Lock: %s"] = true
-L["Preline: Ignore Friendlies + No Auto Lock"] = true
-L["Preline: Ignore Friendlies + Auto Lock"] = true
-L["Preline: Target Any Unit + No Auto Lock"] = true
-L["Preline: Target Any Unit + Auto Lock"] = true
+L["Preline: No Auto Lock"] = true
+L["Preline: Auto Lock"] = true
 L["Macro Composer"] = true
 L["The targeting logic preline matching your current Reticle Targeting settings is added automatically before your lines, as the highlighted portion of the macro. To modify it, use the Prelines Editor under %s."] =
   true
@@ -522,9 +553,7 @@ L["Save Macro"] = true
 L["Preline must be %d characters or fewer (room for /click under the 255 macro limit)."] = true
 L["Inactive — Auto Target Lock is OFF"] = true
 L["Inactive — Auto Target Lock is ON"] = true
-L["Inactive — Ignore Friendlies is OFF"] = true
-L["Inactive — Ignore Friendlies is ON"] = true
-L["Customize the targeting prelines injected before each ability when Reticle Targeting is enabled.\n\n• Only the preline matching your current %s X %s settings is active.\n• Max %s characters per preline — SecureActionButton macros are capped at %s; the rest is reserved for the trailing %s line.\n• Use %s to reload and pick up edits."] =
+L["Customize the targeting prelines injected before each ability when Reticle Targeting is enabled.\n\n• Only the preline matching your current %s setting is active.\n• Max %s characters per preline — SecureActionButton macros are capped at %s; the rest is reserved for the trailing %s line.\n• Use %s to reload and pick up edits."] =
   true
 L["Apply Changes"] = true
 L["Hostile"] = true
@@ -534,6 +563,7 @@ L["Object"] = true
 L["Select a tab to customize the color and alpha of the crosshair when targeting different types of units.\n\n• %s and %s animations use the Hostile color.\n• Inactive crosshair states use the Base style."] =
   true
 L["Reset to Default"] = true
+L["Reset All Colors"] = true
 L["Show the inactive crosshair"] = true
 L["Show the active crosshair"] = true
 L["Show the mounted crosshair"] = true
@@ -550,6 +580,11 @@ L["Not aiming at anything"] = true
 L["Aiming at a unit or object"] = true
 L["While you are mounted"] = true
 L["While Target Lock holds"] = true
+L["SUPPORT"] = true
+L["Use a Support Mode crosshair"] = true
+L["Use the normal crosshair in Support Mode"] = true
+L["Support Mode keeps your Inactive and Active textures."] = true
+L["While Support Mode is on, in place of Inactive and Active"] = true
 L["Brings back the texture you had before hiding it."] = true
 L["Crosshair Textures"] = true
 L["Select a state, then pick a texture below, or apply a preset for a curated appearance."] = true

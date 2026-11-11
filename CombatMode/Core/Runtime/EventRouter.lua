@@ -86,9 +86,13 @@ local function RememberActionBarFingerprint()
   end
 end
 
+-- CVAR_UPDATE names that rebuild the click-cast macros: the /click phase and, in Support Mode,
+-- the game's Auto Self Cast (TargetingMacroBuilder reads both when it builds a text).
+local CLICKCAST_MACRO_CVARS = { ActionButtonUseKeyDown = true, autoSelfCast = true }
+
 local function DebugPrintClickCastRefreshReason()
   if clickCastRefreshReason == "cvar" then
-    CM.DebugPrint("ActionButtonUseKeyDown changed, refreshing binding macros")
+    CM.DebugPrint("ActionButtonUseKeyDown or autoSelfCast changed, refreshing binding macros")
   elseif clickCastRefreshReason == "ACTIONBAR_SLOT_CHANGED" and clickCastRefreshSlot ~= nil then
     CM.DebugPrint(
       "Refreshing binding macros (ACTIONBAR_SLOT_CHANGED slot="
@@ -105,6 +109,10 @@ local function RunClickCastBindingRefresh()
     -- Binding/attribute writes can echo UPDATE_BINDINGS and ACTIONBAR_SLOT_CHANGED.
     SuppressSelfBindingEvents(0.5)
     DebugPrintClickCastRefreshReason()
+    -- Before the macros: they are built in two versions only while the Support Mode key is bound.
+    if CM.ApplySupportModeBinding and clickCastRefreshReason == "UPDATE_BINDINGS" then
+      CM.ApplySupportModeBinding()
+    end
     CM.RefreshClickCastMacros()
     if
       CM.ApplyToggleFocusTargetBinding
@@ -192,6 +200,10 @@ local function HandleEventByCategory(category, event, ...)
           CM.OnAllyCycleCombatEnd()
         end
         CM.FlushDeferredBindingChanges()
+        -- Support Mode first: a key rebound in combat changes which macros the refresh builds.
+        if CM.FlushSupportMode then
+          CM.FlushSupportMode()
+        end
         if CM.FlushPendingClickCastRefresh then
           CM.FlushPendingClickCastRefresh()
         end
@@ -209,7 +221,8 @@ local function HandleEventByCategory(category, event, ...)
       end
     end,
     REFRESH_BINDINGS_EVENTS = function()
-      if event == "CVAR_UPDATE" and cvarName ~= "ActionButtonUseKeyDown" then
+      -- Only the CVars the click-cast macro texts are built from (autoSelfCast: Support Mode).
+      if event == "CVAR_UPDATE" and not CLICKCAST_MACRO_CVARS[cvarName] then
         return
       end
       -- Payload is unitTarget; only the player's spec changes restore-after-harm defaults.
@@ -300,6 +313,9 @@ local function HandleEventByCategory(category, event, ...)
     ALLY_AVAILABILITY_EVENTS = function()
       if CM.RefreshAllyCycleAvailability then
         CM.RefreshAllyCycleAvailability()
+      end
+      if event == "UNIT_PET" and CM.RefreshAllyCycleHUD then
+        CM.RefreshAllyCycleHUD()
       end
     end,
     INTERACT_HUD_EVENTS = function()

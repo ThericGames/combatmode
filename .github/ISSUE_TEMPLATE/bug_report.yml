@@ -4,7 +4,7 @@ labels: [bug]
 body:
   - type: markdown
     attributes:
-      value: Thanks for the report! Please install [BugSack](https://www.curseforge.com/wow/addons/bugsack) + BugGrabber so Lua errors can be copied in full.
+      value: Thanks for the report! Please install [BugSack](https://www.curseforge.com/wow/addons/bugsack) + BugGrabber so Lua errors can be copied in full. Before reporting, disable every other addon and check whether the problem still happens with only Action Combat Mode enabled.
   - type: input
     id: version
     attributes:
@@ -47,6 +47,17 @@ body:
       label: Lua error
       description: Paste the full BugSack text, if there was one.
       render: text
+  - type: dropdown
+    id: isolated
+    attributes:
+      label: Happens with only Action Combat Mode enabled?
+      description: Disable every other addon (keep BugSack if you need it), `/reload`, and try again.
+      options:
+        - "Yes, it still happens"
+        - "No, it only happens with other addons enabled"
+        - "I haven't tried"
+    validations:
+      required: true
   - type: textarea
     id: addons
     attributes:

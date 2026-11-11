@@ -1062,7 +1062,6 @@ end
 UI.Options.AddTab({
   id = "radialmenu",
   label = L["Radial Menu"],
-  newFeatureFlag = true,
   build = function(ctx)
     if #CM.RadialGetWheels() == 0 then
       CM.RadialCreateWheel()
@@ -1105,7 +1104,6 @@ UI.Options.AddTab({
 
     ctx:SpellMultiSelect({
       label = L["Party Wheel Spells"],
-      newFeatureFlag = true,
       desc = L["Helpful spells that open a party targeting wheel while their key is held. Flick toward a party member and release to cast on them, or return to the center to cast on yourself. Tap to cast on your friendly target, or yourself if none is selected."],
       charSpecific = true,
       spellFilter = CM.PartyWheelIsEligibleSpell,

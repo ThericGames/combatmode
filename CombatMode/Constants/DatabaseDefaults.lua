@@ -11,7 +11,8 @@
 --      minCameraZoom, dynamicPitch, dynamicPitchStrength, vignette, shoulderFollowsMouseLook, respectMotionSickness,
 --      autofocusLockedTarget) / allyCycle / debug.
 --      Crosshair also stores crosshairSituationalCondition + crosshairSituationalAppearance.
---    • char: reticle targeting, click-cast bindings, useGlobalBindings, shoulderOffset.
+--    • char: reticle targeting, click-cast bindings, useGlobalBindings, shoulderOffset,
+--      supportMode* (Support Mode page / nameplates / Vignette tint).
 --    • InitDatabase merges missing keys, then coerces Forever-style 1/0 flags to real
 --      booleans wherever these defaults declare a boolean (CM.DbBool / NormalizeBools).
 --    • MigrateMouseLookCameraDB (CVarManager) seeds shoulder/dynamicPitch from legacy
@@ -107,6 +108,7 @@ CM.Constants.DatabaseDefaults = {
     crosshairAppearance = CM.Constants.CrosshairTextureObj.Default,
     crosshairMountedId = CM.Constants.CrosshairIdleDefaultId, -- texture while mounted
     crosshairTargetLockId = CM.Constants.CrosshairIdleDefaultId, -- texture while Target Lock holds
+    crosshairSupportId = CM.Constants.CrosshairSupportDefaultId, -- texture in Support Mode
     crosshairScale = 1.0,
     crosshairY = 100,
     -- crosshair HUD: interaction mode toggle (layout is shared with combat assist)
@@ -125,9 +127,7 @@ CM.Constants.DatabaseDefaults = {
     -- reticle targeting
     reticleTargetingCVarOverrides = {},
     priorCVarSnapshot = nil,
-    targetingMacroPrelineAnyOverride = nil,
     targetingMacroPrelineEnemyOverride = nil,
-    targetingMacroPrelineAutoLockAnyOverride = nil,
     targetingMacroPrelineAutoLockEnemyOverride = nil,
     composedMacros = {},
     crosshairReactionColors = {},
@@ -176,6 +176,8 @@ return false
       scale = 1.0,
       padding = 24,
       skipPlayer = true,
+      -- Extra units cycled after the group: CSV of playerPet | partyPets ("" = group only)
+      extraUnits = "playerPet",
       -- false + Set=false → follow healer spec until the user toggles.
       restoreAllyAfterHarm = false,
       restoreAllyAfterHarmSet = false,
@@ -201,7 +203,6 @@ return false
     shoulderOffset = 1.2,
     -- reticle targeting
     reticleTargeting = true,
-    reticleTargetingEnemyOnly = true,
     autoTargetLockOnAttack = false,
     -- Target Lock key: "toggle" = lock / tap again to unlock; "switch" = lock the unit under the
     -- crosshair (replacing any lock), tap with nothing under the crosshair to unlock.
@@ -212,5 +213,13 @@ return false
     -- click casting
     useGlobalBindings = true,
     bindings = DefaultBindings,
+    -- Support Mode (enable = keybind bound; Core/ClickCasting/SupportMode.lua)
+    supportModePage = 2, -- bar page shown while the mode is on (2-6); 0 = no page swap
+    -- Nameplates while the mode is on: "keep" (untouched) | "friendly" | "all" | "none"
+    supportModeNameplateMode = "friendly",
+    -- The unit under the crosshair beats a hard target / Ally Cycle pick (false: the target first)
+    supportModeCrosshairFirst = false,
+    supportModeTintVignette = true, -- the Vignette takes the Support crosshair color while on
+    supportModeActive = false, -- session flag: a reload while on returns to page 1
   },
 }

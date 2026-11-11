@@ -16,7 +16,8 @@
 --      CVarManager's (CM.BeginCameraSpeedDip / CM.EndCameraSpeedDip); this file only
 --      schedules the restore with one shared callback. The cursor then reappears at the
 --      crosshair on unlock. See the comment above StartFreeLookFresh / issue 189.
---    • ShouldFreeLookBeOff consults AutoCursorUnlock predicates, SpellIsTargeting,
+--    • ShouldFreeLookBeOff consults AutoCursorUnlock predicates, SpellIsTargeting (+ the
+--      pet Move To noted by a CastPetAction hook until the next click or Esc, since it is not a spell cast),
 --      cinematics, FreeLookOverride, default LMB/RMB held. customLockCondition
 --      (IsCustomLockConditionTrue) beats tap/hold unlock and the Auto Unlock
 --      custom condition only; feign, pet battle, ground targeting, cinematics,
@@ -61,6 +62,7 @@ local MouselookStop = _G.MouselookStop
 local PlaySound = _G.PlaySound
 local SOUNDKIT = _G.SOUNDKIT
 local SpellIsTargeting = _G.SpellIsTargeting
+local GetPetActionInfo = _G.GetPetActionInfo
 local ToggleSheath = _G.ToggleSheath
 local UIParent = _G.UIParent
 local UnitExists = _G.UnitExists
@@ -145,12 +147,81 @@ local function ApplyWeaponsSheathed(wantSheathed)
   end)
 end
 
+-- Pet "Move To" shows a ground marker but is not a spell cast: SpellIsTargeting() stays
+-- false, the cursor holds nothing and the pet bar never flags the slot active (verified in
+-- game), so nothing can be polled. Instead the CastPetAction hook below notes when Move To
+-- was triggered and unlocks at once (ReconcileFreeLook would wait: it bails while a mouse
+-- button is held, and Move To is often bound to one). A per-frame poller, shown only while it
+-- is pending, ends it on a fresh click (placing or cancelling), Escape, or a timeout: a quick
+-- Esc or right-click press is gone before the 0.15 s tick or GLOBAL_MOUSE_DOWN would see it.
+local PET_MOVE_TO_TOKEN = "PET_ACTION_MOVE_TO"
+local PET_MOVE_TO_CLICK_GRACE = 0.25 -- the press that triggered it must not end it
+local PET_MOVE_TO_TIMEOUT = 10
+local petMoveToAt = nil
+local petMoveToArmed = false -- all mouse buttons seen up since it was triggered
+local petMoveToPoller = nil
+
+local function IsPetGroundTargeting()
+  return petMoveToAt ~= nil
+end
+
+local function EndPetMoveTo()
+  petMoveToAt = nil
+  if petMoveToPoller then
+    petMoveToPoller:Hide()
+  end
+  -- Bails while a button is still down; the tick re-locks right after release.
+  if CM.ReconcileFreeLook then
+    CM.ReconcileFreeLook()
+  end
+end
+
+local function PetMoveToPoll()
+  if not petMoveToAt then
+    petMoveToPoller:Hide()
+    return
+  end
+  local now = GetTime()
+  if now - petMoveToAt > PET_MOVE_TO_TIMEOUT or IsKeyDown("ESCAPE") then
+    EndPetMoveTo()
+    return
+  end
+  local anyDown = IsMouseButtonDown("LeftButton")
+    or IsMouseButtonDown("RightButton")
+    or IsMouseButtonDown("MiddleButton")
+  if not anyDown then
+    petMoveToArmed = true
+  elseif petMoveToArmed and now - petMoveToAt > PET_MOVE_TO_CLICK_GRACE then
+    EndPetMoveTo()
+  end
+end
+
+if _G.hooksecurefunc and _G.CastPetAction and GetPetActionInfo and _G.CreateFrame then
+  petMoveToPoller = _G.CreateFrame("Frame")
+  petMoveToPoller:Hide()
+  petMoveToPoller:SetScript("OnUpdate", PetMoveToPoll)
+  _G.hooksecurefunc("CastPetAction", function(index)
+    local name, _, isToken = GetPetActionInfo(index)
+    if isToken and name == PET_MOVE_TO_TOKEN then
+      petMoveToAt = GetTime()
+      petMoveToArmed = false
+      petMoveToPoller:Show()
+      -- Direct: the held click that triggered it would stall a reconcile.
+      CM.UnlockFreeLook()
+    end
+  end)
+end
+
+local function IsGroundTargeting()
+  return SpellIsTargeting() or IsPetGroundTargeting()
+end
+
 -- Temporary gameplay unlocks keep weapons drawn; Auto Cursor Unlock / etc. may sheath.
 local function ShouldKeepWeaponsDrawnOnTempUnlock()
   if FreeLookOverride then
     return true
   end
-  if SpellIsTargeting() then
+  if IsGroundTargeting() then
     return true
   end
   if CM.IsRadialMenuOpen and CM.IsRadialMenuOpen() then
@@ -450,7 +521,7 @@ function CM.ShouldFreeLookBeOff()
       return true
     end
     if
-      SpellIsTargeting()
+      IsGroundTargeting()
       or InCinematic()
       or IsInCinematicScene()
       or CM.IsUnlockFrameVisible()

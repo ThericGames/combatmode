@@ -57,6 +57,7 @@ local BINDING_DISPLAY_NAMES = {
   { id = "Cycle Focus Next", text = L["Cycle Focus Next"] },
   { id = "Cycle Focus Previous", text = L["Cycle Focus Previous"] },
   { id = "Radial Menu", text = L["Radial Menu"] },
+  { id = "Support Mode", text = L["Support Mode"] },
 }
 for _, entry in ipairs(BINDING_DISPLAY_NAMES) do
   _G["BINDING_NAME_Combat Mode - " .. entry.id] = "Action Combat Mode - " .. entry.text
@@ -66,6 +67,7 @@ end
 _G["BINDING_HEADER_Action Combat Mode - Mouse Look"] = "Action Combat Mode - " .. L["Mouse Look"]
 _G["BINDING_HEADER_Ally Cycle"] = L["Ally Cycle"]
 _G["BINDING_HEADER_Radial Menu"] = L["Radial Menu"]
+_G["BINDING_HEADER_Support Mode"] = L["Support Mode"]
 _G["BINDING_HEADER_Reticle Targeting"] = L["Reticle Targeting"]
 
 CM.Constants.BasePrintMsg = CM.METADATA["TITLE"]
@@ -91,11 +93,25 @@ end
 -- Soft window drop shadow: 128x128 TGA, a blurred rounded box (box 48..80, radius 10) sliced as
 -- 9 pieces by UI.AddWindowShadow.
 CM.Constants.Shadow = uiPath .. "shadow.tga"
+-- The vignette art (Assets/atlas/Artifacts-BG-Shadow.tga, black) with white RGB and the same
+-- alpha, so Core/Vignette.lua can tint it (scripts/art/make-vignette-tint.py builds it).
+CM.Constants.VignetteTint = uiPath .. "vignette-tint.tga"
 -- Blizzard textures shipped as TGAs (so they do not depend on the client): color picker thumbs
 -- (64x16 sheet), the wizard check mark and the frame picker's fallback addon icon.
 CM.Constants.ColorPickerThumbs = uiPath .. "colorpicker-buttons.tga"
 CM.Constants.CheckMark = uiPath .. "checkbox-check.tga"
 CM.Constants.UnknownAddonIcon = uiPath .. "question-mark.tga"
+-- The character-specific "C" badge: a gold round button like Blizzard's "i" info button, 64x64 with
+-- the disc filling the canvas (scripts/art/make-char-badge.py builds it).
+CM.Constants.CharBadge = uiPath .. "char-badge.tga"
+-- The same gold button with a "?", beside options that have a short explanation tooltip
+-- (scripts/art/make-help-badge.py builds it).
+CM.Constants.HelpBadge = uiPath .. "help-badge.tga"
+-- The gold pill behind the "NEW" tag (no text; scripts/art/make-new-badge.py builds it).
+CM.Constants.NewBadge = uiPath .. "new-badge.tga"
+-- The Ally HUD's pet crest (a paw print on the same gold button, in the role icon's place for pets;
+-- scripts/art/make-pet-crest.py builds it).
+CM.Constants.PetCrest = uiPath .. "pet-crest.tga"
 -- Setup wizard preview slides: `<key>_<n>.blp` (16:9 crops of in-game screenshots stored as 512x256 DXT1, drawn back at 16:9) and the
 -- shared frame drawn over them (680x438, transparent 552x310 window centred), both built by
 -- scripts/art/make-wizard-previews.py.
@@ -144,6 +160,12 @@ local crosshairAssetNames = {
 -- can pick any catalog texture for it (global.crosshairMountedId / crosshairTargetLockId); the Dot is a plain catalog entry.
 CM.Constants.CrosshairDotTexture = crosshairPath .. "crosshairDot.blp"
 CM.Constants.CrosshairIdleDefaultId = "Dot"
+-- Support Mode reticle (global.crosshairSupportId): one texture in place of Inactive and Active
+-- while that mode is on, so the shape tells the mode and the color still tells the target.
+-- Default: crosshairDefault-support.blp, a plain catalog entry (id below). "none" = no Support
+-- texture (the normal ones stay).
+CM.Constants.CrosshairSupportDefaultId = "Default-support"
+CM.Constants.CrosshairSupportTexture = crosshairPath .. "crosshairDefault-support.blp"
 
 local PACK_COUNT = 202
 
@@ -200,6 +222,12 @@ do
     CM.Constants.CrosshairIdleDefaultId,
     CM.Constants.CrosshairDotTexture,
     "Dot",
+    "curated"
+  )
+  AddCrosshairTexture(
+    CM.Constants.CrosshairSupportDefaultId,
+    CM.Constants.CrosshairSupportTexture,
+    "Support",
     "curated"
   )
   for i = 0, PACK_COUNT - 1 do
@@ -265,6 +293,7 @@ CM.Constants.CrosshairReactionColors = {
   friendly_player = { 0.3, 0.6, 1, 0.8 }, -- blue (friendly players)
   object = { 1, 0.8, 0.2, 0.8 }, -- yellow
   base = { 1, 1, 1, 0.5 }, -- white
+  support = { 0.333, 1, 0.737, 0.7 }, -- #55FFBC, mint green with a touch of light blue: the idle (base) reticle while Support Mode is on
   mounted = { 1, 1, 1, 0 }, -- transparent
   --  focus = { 1, 0.2, 0.3, 1 }, -- defaults only; runtime focus tint uses hostile via getter
 }

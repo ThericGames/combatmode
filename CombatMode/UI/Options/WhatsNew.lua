@@ -234,8 +234,10 @@ local function EnsureBalloon(anchor)
   scroll, content = UI.CreateScrollFrame(balloon)
   scroll:SetPoint("TOPLEFT", balloon, "TOPLEFT", PAD - 2, -TOP_CHROME)
   scroll:SetPoint("BOTTOMRIGHT", balloon, "BOTTOMRIGHT", -(PAD + BAR_GUTTER), PAD)
-  scroll.cmScrollBar:SetPoint("TOPLEFT", scroll, "TOPRIGHT", 3, -4)
-  scroll.cmScrollBar:SetPoint("BOTTOMLEFT", scroll, "BOTTOMRIGHT", 3, 4)
+  -- Bar against the window's right edge, like the options window and the other editors.
+  scroll.cmScrollBar:SetPoint("TOP", scroll, "TOP", 0, -4)
+  scroll.cmScrollBar:SetPoint("BOTTOM", scroll, "BOTTOM", 0, 4)
+  scroll.cmScrollBar:SetPoint("RIGHT", balloon, "RIGHT", -6, 0)
   content:SetWidth(BALLOON_W - PAD * 2 - BAR_GUTTER)
 
   -- The balloon belongs to the options window: it goes with it.

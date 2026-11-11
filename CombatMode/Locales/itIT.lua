@@ -192,9 +192,6 @@ L["Enables aim-based unit targeting and precise placement of ground-targeted spe
 L["Enable Reticle Targeting"] = "Attiva puntamento a mirino"
 L["Aim the crosshair at units to pick targets instead of tab-targeting."] =
   "Punta il mirino sulle unità per scegliere i bersagli invece di usare il tab."
-L["Ignore Friendlies"] = "Ignora amichevoli"
-L["Ignore friendly NPCs and Players, and only target hostile units."] =
-  "Ignora PNG e giocatori amichevoli e seleziona solo unità ostili."
 L["Click Casting Only"] = "Solo lancio con clic"
 L["Apply reticle targeting logic only to Click Casting binds."] =
   "Applica la logica del puntamento a mirino solo ai tasti di lancio con clic."
@@ -205,8 +202,8 @@ L["Cast at Crosshair"] = "Lancia sul mirino"
 L["Ground spells to cast at the crosshair location."] =
   "Incantesimi a terra da lanciare nella posizione del mirino."
 L["TARGET LOCK"] = "BLOCCO BERSAGLIO"
-L["Lock onto a target to prevent accidental switching, and cycle between units to prioritize specific enemies."] =
-  "Blocca un bersaglio per evitare cambi accidentali e passa da un'unità all'altra per dare priorità a nemici specifici."
+L["Lock onto a target to prevent accidental switching, and cycle between units to prioritize specific ones."] =
+  "Blocca un bersaglio per evitare cambi accidentali e passa da un'unità all'altra per dare priorità a unità specifiche."
 L["Warning: Target Lock uses your Focus Target. Anything else that sets your focus will interfere with it."] =
   "Attenzione: il Blocco bersaglio usa il tuo bersaglio focus. Qualsiasi altra cosa che imposta il focus interferirà."
 L["Target Lock Keybind"] = "Tasto blocco bersaglio"
@@ -225,17 +222,15 @@ L["Locks your target, or the unit under the crosshair. Tap again to unlock."] =
   "Blocca il tuo bersaglio o l'unità sotto il mirino. Premi di nuovo per sbloccare."
 L["Locks the unit under the crosshair, replacing any current lock. Tap with nothing under the crosshair to unlock. Aiming at the unit you already locked keeps the lock."] =
   "Blocca l'unità sotto il mirino sostituendo qualsiasi blocco attuale. Premi senza nulla sotto il mirino per sbloccare. Mirare l'unità già bloccata mantiene il blocco."
-L["With Ignore Friendlies on, a friendly or dead unit under the crosshair is ignored: the lock stays where it is."] =
-  "Con «Ignora amichevoli» attivo, un'unità amichevole o morta sotto il mirino viene ignorata: il blocco resta dov'è."
 L["Auto Target Lock"] = "Blocco bersaglio automatico"
-L["Target Lock engages automatically when attacking units."] =
-  "Il blocco bersaglio si attiva automaticamente quando attacchi le unità."
+L["Target Lock engages automatically when attacking units. In Support Mode it only locks the ally you heal."] =
+  "Il blocco bersaglio si attiva automaticamente quando attacchi le unità. In Modalità supporto blocca solo l'alleato che curi."
 L["Target Lock Marker"] = "Indicatore di blocco bersaglio"
 L["Show a crosshair marker on the nameplate of the locked target."] =
   "Mostra un indicatore a mirino sulla targhetta del bersaglio bloccato."
 L["Focus Locked Target"] = "Metti a fuoco il bersaglio bloccato"
-L["Pulls the camera toward your locked target, keeping it in focus."] =
-  "Attira la telecamera verso il bersaglio bloccato, mantenendolo a fuoco."
+L["Pulls the camera toward your locked target, keeping it in focus. Works on hostile targets only."] =
+  "Attira la telecamera verso il bersaglio bloccato, mantenendolo a fuoco. Funziona solo con bersagli ostili."
 L["TARGETING INDICATORS"] = "INDICATORI DEL BERSAGLIO"
 L["Visual indicators that highlight targets in the world for easier identification."] =
   "Indicatori visivi che evidenziano i bersagli nel mondo per riconoscerli più facilmente."
@@ -319,7 +314,6 @@ L["Target Crosshair"] = "Bersaglia il mirino"
 L["Clear Focus"] = "Cancella focus"
 L["Start Attack"] = "Inizia attacco"
 L["Pet Attack"] = "Attacco del famiglio"
-L["Toggle Focus Any"] = "Attiva/disattiva focus (qualsiasi)"
 L["Toggle Focus Enemy"] = "Attiva/disattiva focus (nemico)"
 L["Run MACRO"] = "Esegui MACRO"
 L["— none —"] = "— nessuna —"
@@ -412,6 +406,11 @@ L["Target the next group member."] = "Bersaglia il membro del gruppo successivo.
 L["Ally Cycle - Previous"] = "Ciclo alleati – Precedente"
 L["Target the previous group member."] = "Bersaglia il membro del gruppo precedente."
 L["Skip Self"] = "Salta te stesso"
+L["Also Cycle Through"] = "Scorri anche"
+L["Adds pets after the group members: your own pet, and the pets of everyone else in your party or raid."] =
+  "Aggiunge i famigli dopo i membri del gruppo: il tuo e quelli di tutti gli altri nel tuo gruppo o incursione."
+L["Your Pet"] = "Il tuo famiglio"
+L["Party Pets"] = "Famigli del gruppo"
 L["Skip yourself when cycling through group members."] =
   "Ti salta quando scorri i membri del gruppo."
 L["Keep Ally After Harm"] = "Mantieni alleato dopo danno"
@@ -429,6 +428,36 @@ L["Where the Ally HUD sits relative to the crosshair."] =
   "Dove si trova l'HUD alleato rispetto al mirino."
 L["Scales the size of the Ally HUD."] = "Scala le dimensioni dell'HUD alleato."
 L["Distance between the Ally HUD and the crosshair."] = "Distanza tra l'HUD alleato e il mirino."
+
+-- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
+L["Support Mode"] = "Modalità supporto"
+L["support mode keybinding"] = "assegnazione della modalità supporto"
+L["SUPPORT MODE"] = "MODALITÀ SUPPORTO"
+L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
+  "Una modalità orientata al supporto che, quando è attiva, porta la barra delle azioni principale su una pagina di supporto dedicata e permette agli incantesimi benefici di bersagliare l'unità amica sotto il mirino."
+L["Support Mode Keybind"] = "Tasto della modalità supporto"
+L["Prioritize Crosshair Target"] = "Dai priorità al bersaglio del mirino"
+L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
+  "L'alleato sotto il mirino riceve l'incantesimo anche se hai selezionato un altro bersaglio amico, come una scelta del Ciclo alleati. Disattiva per lanciare prima sul bersaglio selezionato."
+L["Tap to toggle Support Mode on or off."] =
+  "Premi per attivare o disattivare la Modalità supporto."
+L["Support Bar Page"] = "Pagina della barra di supporto"
+L["The main action bar page shown while Support Mode is on. Place support abilities here. Exiting Support Mode returns to Page 1."] =
+  "La pagina della barra delle azioni principale mostrata mentre la Modalità supporto è attiva. Inserisci qui le abilità di supporto. Uscendo dalla Modalità supporto si torna alla pagina 1."
+L["Don't Swap"] = "Non cambiare"
+L["Page %d"] = "Pagina %d"
+L["Requires Reticle Targeting"] = "Richiede Puntamento a mirino"
+L["Support"] = "Supporto"
+L["Tint Vignette"] = "Colora la vignettatura"
+L["While Support Mode is active, the Vignette adopts the Support crosshair color. It only appears when the Vignette is enabled."] =
+  "Con la Modalità supporto attiva, la vignettatura assume il colore del mirino di supporto. Appare solo se la vignettatura è attiva."
+L["Nameplate Behavior"] = "Comportamento delle targhette"
+L["Choose which nameplates appear while in Support Mode. Normal settings are restored when exiting Support Mode."] =
+  "Scegli quali targhette appaiono nella Modalità supporto. Uscendo vengono ripristinate le impostazioni normali."
+L["Don't Change"] = "Non modificare"
+L["Friendly Only"] = "Solo amiche"
+L["Friendly and Enemy"] = "Amiche e nemiche"
+L["Hide All"] = "Nascondi tutte"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = "Sblocco automatico"
@@ -498,6 +527,7 @@ L["Back"] = "Indietro"
 L["Next"] = "Avanti"
 L["Finish"] = "Fine"
 L["Skip tour"] = "Salta il tour"
+L["Click to learn more about this feature"] = "Clicca per saperne di più su questa funzione"
 L["Assist HUD"] = "HUD assistente"
 L["Target Lock"] = "Blocco bersaglio"
 L["Party Wheel"] = "Ruota del gruppo"
@@ -509,6 +539,9 @@ L["Set a Cycle Lock - Previous key"] = "Imposta un tasto Ciclo blocco – Preced
 L["Set a Radial Menu key"] = "Imposta un tasto per il menu radiale"
 L["Set an Ally Cycle - Next key"] = "Imposta un tasto Ciclo alleati – Successivo"
 L["Set an Ally Cycle - Previous key"] = "Imposta un tasto Ciclo alleati – Precedente"
+L["Set a Support Mode key"] = "Imposta un tasto Modalità supporto"
+L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
+  "Una modalità orientata al supporto che, quando è attiva, porta la barra delle azioni principale su una {pagina di supporto} dedicata e permette agli {incantesimi benefici} di bersagliare l'unità amica sotto il mirino.\n\nImposta il tuo tasto."
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "Attivare o disattivare il puntamento a mirino ricarica l'interfaccia."
 L["Needs Reticle Targeting."] = "Richiede il puntamento a mirino."
@@ -518,14 +551,14 @@ L["A reactive, fully customizable crosshair that adapts to your target and comba
   "Un mirino reattivo e completamente personalizzabile che si adatta al bersaglio e allo stato di combattimento.\n\nScegli {aspetto}, {dimensione} e {posizione}."
 L["Aim at an enemy and the HUD next to your crosshair suggests your {next spell} and shows its key.\n\nAim at something you can interact with and it shows its {name} and your {Interact key} instead.\n\nTurn either on or off, and set its {side}, {size} and {distance} from the crosshair."] =
   "Mira un nemico e l'HUD accanto al mirino suggerisce il tuo {prossimo incantesimo} e ne mostra il tasto.\n\nMira qualcosa con cui puoi interagire e mostra invece il suo {nome} e il tuo {tasto di interazione}.\n\nAttiva o disattiva ciascuno e imposta {lato}, {dimensione} e {distanza} dal mirino."
-L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting.\n\n{Ignore Friendlies} makes it skip allies."] =
-  "Bersaglia i nemici semplicemente mirandoli e lancia incantesimi a terra e abilità ad area proprio dove punta il mirino, senza il puntamento con Tab.\n\n{Ignora amichevoli} fa saltare gli alleati."
+L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting."] =
+  "Bersaglia i nemici semplicemente mirandoli e lancia incantesimi a terra e abilità ad area proprio dove punta il mirino, senza il puntamento con Tab."
 L["Ground-targeted spells that should be cast at the crosshair location.\n\nType a {spell name or ID} to add it."] =
   "Incantesimi a terra che devono essere lanciati nel punto del mirino.\n\nDigita il {nome o l'ID di un incantesimo} per aggiungerlo."
 L["{!Action buttons that are macros cannot inherit Reticle Targeting on their own.}\n\nPress {+} to open the {Macro Composer}, write your macro there and it gets the targeting logic added for you.\n\nThen drag it from this list onto your action bars; {right-click} an icon to edit it."] =
   "{!I pulsanti azione che sono macro non possono ereditare da soli il puntamento a mirino.}\n\nPremi {+} per aprire il {Compositore di macro}, scrivi lì la tua macro e la logica di puntamento verrà aggiunta per te.\n\nPoi trascinala da questo elenco sulle barre delle azioni; {clic destro} su un'icona per modificarla."
-L["Lock onto a target with one tap so the reticle stops swapping. While locked, the cycle keys jump to nearby enemies.\n\n{Target Lock Behavior} decides whether tapping again unlocks ({Toggle}) or moves the lock to whatever is under the crosshair ({Switch Target}).\n\nSet your keys."] =
-  "Blocca un bersaglio con un tocco così il mirino smette di cambiare. Mentre è bloccato, i tasti di ciclo passano ai nemici vicini.\n\n{Comportamento blocco bersaglio} decide se premere di nuovo sblocca ({Attiva/disattiva}) o sposta il blocco su ciò che è sotto il mirino ({Cambia bersaglio}).\n\nImposta i tuoi tasti."
+L["Lock onto a target with one tap so the reticle stops swapping. While locked, the cycle keys jump to nearby enemies, or to nearby allies in Support Mode.\n\n{Target Lock Behavior} decides whether tapping again unlocks ({Toggle}) or moves the lock to whatever is under the crosshair ({Switch Target}).\n\nSet your keys."] =
+  "Blocca un bersaglio con un tocco così il mirino smette di cambiare. Mentre è bloccato, i tasti di ciclo passano ai nemici vicini, o agli alleati vicini in modalità supporto.\n\n{Comportamento blocco bersaglio} decide se premere di nuovo sblocca ({Attiva/disattiva}) o sposta il blocco su ciò che è sotto il mirino ({Cambia bersaglio}).\n\nImposta i tuoi tasti."
 L["Turn your mouse clicks into actions while in Mouse Look, such as casting your action bar spells with {Left and Right Click}.\n\nPick what each click does, with or without a {modifier key}."] =
   "Trasforma i clic del mouse in azioni durante la vista con mouse, ad esempio lanciare gli incantesimi della barra delle azioni con {clic sinistro e destro}.\n\nScegli cosa fa ogni clic, con o senza un {tasto modificatore}."
 L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to switch between wheels."] =
@@ -544,7 +577,6 @@ L["Link"] = "link"
 L["Copy the %s link (Ctrl+C), then paste it in your browser."] =
   "Copia il link a %s (Ctrl+C), poi incollalo nel browser."
 L["Character-specific option."] = "Opzione specifica del personaggio."
-L["NEW"] = "NUOVO"
 L["ON"] = "ON"
 L["OFF"] = "OFF"
 L["Are you sure?"] = "Sei sicuro?"
@@ -594,15 +626,9 @@ L["Open Options"] = "Apri opzioni"
 -- Editors: macro composer, prelines, crosshair colors and textures, CVar editor
 L["%d / %d characters"] = "%d / %d caratteri"
 L["%s (over the macro limit)"] = "%s (oltre il limite della macro)"
-L["Ignore Friendlies: %s"] = "Ignora amichevoli: %s"
 L["Auto Target Lock: %s"] = "Blocco bersaglio automatico: %s"
-L["Preline: Ignore Friendlies + No Auto Lock"] =
-  "Preriga: Ignora amichevoli + senza blocco automatico"
-L["Preline: Ignore Friendlies + Auto Lock"] = "Preriga: Ignora amichevoli + blocco automatico"
-L["Preline: Target Any Unit + No Auto Lock"] =
-  "Preriga: Bersaglia qualsiasi unità + senza blocco automatico"
-L["Preline: Target Any Unit + Auto Lock"] =
-  "Preriga: Bersaglia qualsiasi unità + blocco automatico"
+L["Preline: No Auto Lock"] = "Preriga: senza blocco automatico"
+L["Preline: Auto Lock"] = "Preriga: blocco automatico"
 L["Macro Composer"] = "Compositore di macro"
 L["The targeting logic preline matching your current Reticle Targeting settings is added automatically before your lines, as the highlighted portion of the macro. To modify it, use the Prelines Editor under %s."] =
   "La preriga di puntamento corrispondente alle tue impostazioni attuali di puntamento a mirino viene aggiunta automaticamente prima delle tue righe, come parte evidenziata della macro. Per modificarla, usa l'editor di prerighe in %s."
@@ -620,10 +646,8 @@ L["Preline must be %d characters or fewer (room for /click under the 255 macro l
 L["Inactive — Auto Target Lock is OFF"] =
   "Inattivo — Il blocco bersaglio automatico è DISATTIVATO"
 L["Inactive — Auto Target Lock is ON"] = "Inattivo — Il blocco bersaglio automatico è ATTIVO"
-L["Inactive — Ignore Friendlies is OFF"] = "Inattivo — Ignora amichevoli è DISATTIVATO"
-L["Inactive — Ignore Friendlies is ON"] = "Inattivo — Ignora amichevoli è ATTIVO"
-L["Customize the targeting prelines injected before each ability when Reticle Targeting is enabled.\n\n• Only the preline matching your current %s X %s settings is active.\n• Max %s characters per preline — SecureActionButton macros are capped at %s; the rest is reserved for the trailing %s line.\n• Use %s to reload and pick up edits."] =
-  "Personalizza le prerighe di puntamento inserite prima di ogni abilità quando il puntamento a mirino è attivo.\n\n• È attiva solo la preriga corrispondente alle tue impostazioni attuali %s X %s.\n• Massimo %s caratteri per preriga — le macro SecureActionButton sono limitate a %s; il resto è riservato alla riga finale %s.\n• Usa %s per ricaricare e applicare le modifiche."
+L["Customize the targeting prelines injected before each ability when Reticle Targeting is enabled.\n\n• Only the preline matching your current %s setting is active.\n• Max %s characters per preline — SecureActionButton macros are capped at %s; the rest is reserved for the trailing %s line.\n• Use %s to reload and pick up edits."] =
+  "Personalizza le prerighe di puntamento inserite prima di ogni abilità quando il puntamento a mirino è attivo.\n\n• È attiva solo la preriga corrispondente alle tue impostazioni attuali %s.\n• Massimo %s caratteri per preriga — le macro SecureActionButton sono limitate a %s; il resto è riservato alla riga finale %s.\n• Usa %s per ricaricare e applicare le modifiche."
 L["Apply Changes"] = "Applica modifiche"
 L["Hostile"] = "Ostile"
 L["NPC"] = "PNG"
@@ -632,6 +656,7 @@ L["Object"] = "Oggetto"
 L["Select a tab to customize the color and alpha of the crosshair when targeting different types of units.\n\n• %s and %s animations use the Hostile color.\n• Inactive crosshair states use the Base style."] =
   "Seleziona una scheda per personalizzare colore e opacità del mirino quando punti a diversi tipi di unità.\n\n• Le animazioni di %s e %s usano il colore Ostile.\n• Gli stati inattivi del mirino usano lo stile Base."
 L["Reset to Default"] = "Ripristina predefinito"
+L["Reset All Colors"] = "Ripristina tutti i colori"
 L["Show the inactive crosshair"] = "Mostra il mirino inattivo"
 L["Show the active crosshair"] = "Mostra il mirino attivo"
 L["Show the mounted crosshair"] = "Mostra il mirino in sella"
@@ -651,6 +676,13 @@ L["Not aiming at anything"] = "Non stai mirando a niente"
 L["Aiming at a unit or object"] = "Stai mirando a un'unità o a un oggetto"
 L["While you are mounted"] = "Mentre sei in sella"
 L["While Target Lock holds"] = "Finché il blocco bersaglio è attivo"
+L["SUPPORT"] = "SUPPORTO"
+L["Use a Support Mode crosshair"] = "Usa un mirino per la Modalità supporto"
+L["Use the normal crosshair in Support Mode"] = "Usa il mirino normale in Modalità supporto"
+L["Support Mode keeps your Inactive and Active textures."] =
+  "La Modalità supporto mantiene le tue texture Inattivo e Attivo."
+L["While Support Mode is on, in place of Inactive and Active"] =
+  "Finché la Modalità supporto è attiva, al posto di Inattivo e Attivo"
 L["Brings back the texture you had before hiding it."] =
   "Ripristina la texture che avevi prima di nasconderla."
 L["Crosshair Textures"] = "Texture del mirino"

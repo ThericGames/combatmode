@@ -57,23 +57,14 @@ local function PrelineText()
 end
 
 local function StateLines()
-  local enemiesOn = CM.DB.char.reticleTargetingEnemyOnly == true
   local autoLockOn = CM.DB.char.autoTargetLockOnAttack == true
-  return format(L["Ignore Friendlies: %s"], UI.OnOffWrap(enemiesOn))
-    .. "\n"
-    .. format(L["Auto Target Lock: %s"], UI.OnOffWrap(autoLockOn))
+  return format(L["Auto Target Lock: %s"], UI.OnOffWrap(autoLockOn))
 end
 
 -- Same names as the Prelines Editor fields.
 local function PrelineLabel()
-  local enemiesOn = CM.DB.char.reticleTargetingEnemyOnly == true
   local autoLockOn = CM.DB.char.autoTargetLockOnAttack == true
-  if enemiesOn then
-    return autoLockOn and L["Preline: Ignore Friendlies + Auto Lock"]
-      or L["Preline: Ignore Friendlies + No Auto Lock"]
-  end
-  return autoLockOn and L["Preline: Target Any Unit + Auto Lock"]
-    or L["Preline: Target Any Unit + No Auto Lock"]
+  return autoLockOn and L["Preline: Auto Lock"] or L["Preline: No Auto Lock"]
 end
 
 local function BuildKey()

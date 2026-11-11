@@ -21,6 +21,8 @@
 --      forces MS off while focus+option active unless Motion Sickness Protection).
 --    • ConfigStickyCrosshair: Blizzard-reset helper for Uninstall only.
 --    • SetCursorFreelookCenteringCVar + SetCursorCenteredYPos — FreeLook bounce + Y sync.
+--    • SyncSupportModeNameplates — Support Mode's enemy → friendly nameplate swap; the player's
+--      values wait in global.supportModeSavedNameplates until the mode ends (or Uninstall).
 --  Does not: Own SoftTarget UI widgets or freelook state machine.
 --  Related: Constants/CVars.lua, Constants/DatabaseDefaults.lua,
 --  Core/FreeLook/FreeLookController.lua, Core/Crosshair/Crosshair.lua,
@@ -158,6 +160,8 @@ function CM.RestorePriorCVars()
   restoringCVars = true
   -- A pending speed dip must not put its saved speeds back over the restored snapshot.
   cameraSpeedDipPending = false
+  -- Nameplates Support Mode swapped are not in the snapshot; put the player's own back.
+  CM.SyncSupportModeNameplates(true)
 
   if SnapshotIsPopulated(snap) then
     for name, value in pairs(snap) do
@@ -179,7 +183,7 @@ function CM.RestorePriorCVars()
     CM.ConfigReticleTargeting("blizzard")
     CM.SetCVars(CM.Constants.BlizzardMouseLookCameraCVarValues)
     CM.ConfigStickyCrosshair("blizzard")
-    CM.HandleSoftTargetFriend(false)
+    CM.SetCVar("SoftTargetFriend", 0)
     SetCVar("CursorFreelookCentering", 0)
     local yawDefault = GetCVarDefault and GetCVarDefault("cameraYawMoveSpeed")
     local pitchDefault = GetCVarDefault and GetCVarDefault("cameraPitchMoveSpeed")
@@ -226,6 +230,9 @@ local function UnitsMatch(unitA, unitB)
   return ok and same == true
 end
 
+local SUPPORT_SOFT_FRIEND = "SoftTargetFriend"
+local SUPPORT_SOFT_FRIEND_ON = 3 -- always (0 = off in the reticle preset)
+
 function CM.GetEffectiveReticleTargetingCVarValues()
   local resolved = {}
   local defaults = CM.Constants.ReticleTargetingCVarValues
@@ -238,6 +245,13 @@ function CM.GetEffectiveReticleTargetingCVarValues()
     else
       resolved[cvar] = value
     end
+  end
+
+  -- Support Mode casts on @softfriend when no ally's model is under the crosshair (a nameplate
+  -- is not a mouseover unit in Mouse Look), so friendly soft targeting is on for as long as the
+  -- mode is (CM.SyncSupportModeNameplates writes it when the mode flips).
+  if CM.IsSupportModeActive and CM.IsSupportModeActive() then
+    resolved[SUPPORT_SOFT_FRIEND] = SUPPORT_SOFT_FRIEND_ON
   end
 
   -- Friend / Interact / GameObject soft-target icons: hidden only while the Interactable
@@ -509,16 +523,6 @@ function CM.ConfigReticleTargeting(CVarType)
   }
 
   CM.ApplyCVarConfig(info)
-end
-
-function CM.HandleSoftTargetFriend(enabled)
-  if enabled then
-    CM.SetCVar("SoftTargetFriend", 3)
-    CM.DebugPrint("Enabling Friendly Targeting out of combat")
-  else
-    CM.SetCVar("SoftTargetFriend", 0)
-    CM.DebugPrint("Disabling Friendly Targeting in combat")
-  end
 end
 
 --- SoftTarget subset for Interaction HUD when Reticle Targeting is disabled (full preset is ConfigReticleTargeting).
@@ -1192,6 +1196,106 @@ function CM.ApplyMinCameraZoom()
   end
   minZoomFrame:SetShown(active)
   EnforceMinCameraZoom()
+end
+
+---------------------------------------------------------------------------------------
+-- Support Mode nameplates
+---------------------------------------------------------------------------------------
+local SUPPORT_ENEMY_PLATES = "nameplateShowEnemies"
+-- nameplateShowFriendlyPlayers on Mainline and Forever, nameplateShowFriends on older Classic.
+local SUPPORT_FRIENDLY_PLATES = { "nameplateShowFriendlyPlayers", "nameplateShowFriends" }
+
+local function FriendlyNameplateCVar()
+  for _, name in ipairs(SUPPORT_FRIENDLY_PLATES) do
+    if GetCVar(name) ~= nil then
+      return name
+    end
+  end
+  return nil
+end
+
+-- A combat-protected CVar (isSecure, 6th return of GetCVarInfo) raises ADDON_ACTION_BLOCKED when
+-- an addon writes it in combat. Unknown counts as protected. The nameplate CVars reported false
+-- (not protected) when checked in game, so the wait is a safety net for clients that differ.
+local function IsCVarLockedNow(name)
+  if not InCombatLockdown() then
+    return false
+  end
+  local GetCVarInfo = _G.C_CVar.GetCVarInfo
+  if not GetCVarInfo then
+    return true
+  end
+  local ok, _, _, _, _, _, isSecure = pcall(GetCVarInfo, name)
+  return not ok or isSecure ~= false
+end
+
+-- char.supportModeNameplateMode -> the two CVar values while the mode is on. "keep" (or anything
+-- unknown) has no entry: the player's nameplates are left alone.
+local SUPPORT_NAMEPLATE_MODES = {
+  friendly = { enemy = "0", friendly = "1" },
+  all = { enemy = "1", friendly = "1" },
+  none = { enemy = "0", friendly = "0" },
+}
+
+--- Brings the nameplate CVars in line with Support Mode (Core/ClickCasting/SupportMode.lua).
+--- Mode on and char.supportModeNameplateMode is "friendly" / "all" / "none": remember the
+--- player's values (once), then show that set of nameplates. Mode off, "keep", or
+--- `forceRestore` (Uninstall): put the remembered values back. Returns false when the CVars are
+--- protected right now (combat); call again after combat.
+function CM.SyncSupportModeNameplates(forceRestore)
+  local globalDB = CM.DB and CM.DB.global
+  local char = CM.DB and CM.DB.char
+  if not globalDB or not char then
+    return true
+  end
+  -- Friendly soft targeting follows the mode too (3 while on, else the reticle preset's value;
+  -- see CM.GetEffectiveReticleTargetingCVarValues). Uninstall restores it from the snapshot.
+  if not forceRestore and char.reticleTargeting then
+    local wanted = CM.GetEffectiveReticleTargetingCVarValues()[SUPPORT_SOFT_FRIEND]
+    if wanted ~= nil and GetCVar(SUPPORT_SOFT_FRIEND) ~= tostring(wanted) then
+      if IsCVarLockedNow(SUPPORT_SOFT_FRIEND) then
+        return false
+      end
+      CM.SetCVar(SUPPORT_SOFT_FRIEND, wanted)
+    end
+  end
+  local plates = not forceRestore
+    and CM.IsSupportModeActive ~= nil
+    and CM.IsSupportModeActive()
+    and SUPPORT_NAMEPLATE_MODES[char.supportModeNameplateMode]
+  local saved = globalDB.supportModeSavedNameplates
+  if type(saved) ~= "table" then
+    saved = nil
+  end
+  if not plates and not saved then
+    return true
+  end
+  local friendly = FriendlyNameplateCVar()
+  if IsCVarLockedNow(SUPPORT_ENEMY_PLATES) or (friendly and IsCVarLockedNow(friendly)) then
+    return false
+  end
+  if plates then
+    -- Already saved = the mode is on and only the dropdown changed: keep the first snapshot.
+    if not saved then
+      saved = { [SUPPORT_ENEMY_PLATES] = GetCVar(SUPPORT_ENEMY_PLATES) }
+      if friendly then
+        saved[friendly] = GetCVar(friendly)
+      end
+      globalDB.supportModeSavedNameplates = saved
+    end
+    if GetCVar(SUPPORT_ENEMY_PLATES) ~= plates.enemy then
+      SetCVar(SUPPORT_ENEMY_PLATES, plates.enemy)
+    end
+    if friendly and GetCVar(friendly) ~= plates.friendly then
+      SetCVar(friendly, plates.friendly)
+    end
+  elseif saved then
+    for name, value in pairs(saved) do
+      SetCVar(name, value)
+    end
+    globalDB.supportModeSavedNameplates = nil
+  end
+  return true
 end
 
 --- Restore the player's pre-Combat Mode CVars (snapshot preferred; Blizzard tables fallback).

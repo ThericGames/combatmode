@@ -1028,6 +1028,28 @@ function UI.CreateShineSweep(host, width, alpha)
   return sweep
 end
 
+--- A shine sweep (see CreateShineSweep) that repeats every few seconds, the What's New button's
+--- effect. The loop runs on the clip frame, so it only ticks while `host` is on screen.
+--- `insetX` / `insetY` (default 1 / 1) pull the clip in from the host's edges, e.g. to keep the
+--- band off the empty corners of a pill. `fx.reset()` restarts the loop.
+function UI.CreateShineLoop(host, width, alpha, insetX, insetY)
+  local fx = UI.CreateShineSweep(host, width, alpha)
+  if insetX or insetY then
+    fx.clip:ClearAllPoints()
+    fx.clip:SetPoint("TOPLEFT", host, "TOPLEFT", insetX or 1, -(insetY or 1))
+    fx.clip:SetPoint("BOTTOMRIGHT", host, "BOTTOMRIGHT", -(insetX or 1), insetY or 1)
+  end
+  local cycle = 0
+  fx.clip:SetScript("OnUpdate", function(_, elapsed)
+    cycle = (cycle + (elapsed or 0)) % ATTENTION_CYCLE
+    fx.SetProgress(cycle / ATTENTION_SWEEP)
+  end)
+  fx.reset = function()
+    cycle = 0
+  end
+  return fx
+end
+
 --- Draws the eye to a "primary" control: a bright outline plus a soft highlight that sweeps
 --- across it every few seconds (clipped to the control). Turn off with `on = false`. Callers
 --- showing dark label text should also drop the font shadow (`label:SetShadowOffset(0, 0)`),
@@ -1038,16 +1060,7 @@ function UI.SetControlAttention(frame, on)
     if not on then
       return
     end
-    fx = UI.CreateShineSweep(frame)
-    -- The loop runs on the clip frame, so it only ticks while the control is on screen.
-    local cycle = 0
-    fx.clip:SetScript("OnUpdate", function(_, elapsed)
-      cycle = (cycle + (elapsed or 0)) % ATTENTION_CYCLE
-      fx.SetProgress(cycle / ATTENTION_SWEEP)
-    end)
-    fx.reset = function()
-      cycle = 0
-    end
+    fx = UI.CreateShineLoop(frame)
     frame.cmAttention = fx
   end
   fx.clip:SetShown(on and true or false)

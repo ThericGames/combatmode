@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/2.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.5.0] - 2026-11-11
+
+### Added
+
+- **Support Mode**, a toggle with its own options tab and keybind (needs Reticle Targeting). It switches your main action bar to a dedicated support page and lets helpful spells on your click-cast buttons target the friendly unit under your crosshair, else your friendly target (such as an **Ally Cycle** pick), else the ally the game soft-targets in front of you. With no ally to take the spell, the game's own Self Cast setting decides whether it lands on you (Auto Self Cast and the Self Cast key both work). Friendly soft targeting is switched on while the mode is on. Harmful spells keep targeting enemies. It works in combat.
+  - **Prioritize Crosshair Target** (off by default) puts the ally under your crosshair ahead of other friendly targets, such as an Ally Cycle pick (Target Lock still comes first), and the ally who takes the heal becomes your target. Leave it off to prioritize your selected target; the heal then leaves your target alone.
+  - **Target Lock** works on allies while the mode is on. The Target Lock key locks your friendly target, or the ally you aim at, and the **Cycle Lock** keys move the lock to the next or previous nearby friendly unit. Helpful spells on your click-cast buttons go to the locked ally first, and the lock marker takes the Support color. With **Auto Target Lock** on, the ally you heal with a click-cast button is locked automatically, the way an enemy is when you attack; harmful spells don't lock enemies while the mode is on. Switching modes drops a lock the new mode can't use: a hostile lock when you enter Support Mode, a friendly one when you leave it.
+  - **Support Bar Page** is the main action bar page shown while the mode is on (page 2 by default). Place your support abilities there; leaving the mode returns to page 1.
+  - **Nameplate Behavior** picks which nameplates show while Support Mode is on: friendly only (the default), friendly and enemy, none, or your own settings unchanged. Your settings come back when you leave.
+  - The crosshair shows the mode: it switches to a **Support** texture (pick another, or turn it off, in **Appearance** on the Crosshair tab) and turns a mint green while idle (the new **Support** tab of **Reaction Colors**). Entering and leaving the mode swaps the reticle with a lock-out of the old look and a lock-in of the new one.
+  - **Tint Vignette** gives the Vignette that same color while Support Mode is on, as a soft, slowly breathing glow. It shows only when your Vignette does.
+  - The **Setup Wizard** has a **Support Mode** step, with screenshots and a check for your Support Mode key.
+- **Reset All Colors** button in the **Reaction Colors** editor, to clear every custom crosshair color at once.
+- **Also Cycle Through** on the **Ally Cycle** tab: add **Your Pet** and/or **Party Pets** (everyone else's pets) to the cycle, after the group members. The Ally HUD shows a targeted pet with a gold paw-print crest in place of the role icon, and the count includes them. **Your Pet** is on by default.
+- A small gold **"i" button** beside each section header and option that the **Setup Wizard** covers. Click it to read that feature's explanation, with its screenshots, in a popup, without running the tour.
+
+### Changed
+
+- The tab list in the options sidebar now scrolls when the window is too short to show every tab, and selecting a tab (from search, What's New or the wizard) scrolls it into view.
+- The help buttons in the options (beside dropdowns and keybinds, and in the code boxes) now use a gold round "?" button, matching the character-specific "C" badge.
+- The **Reticle CVar** editor explains every CVar in full: hover a row for what its values mean, what Action Combat Mode sets and why, and which features depend on it (including how **SoftTargetMatchLocked** and **SoftTargetWithLocked** differ).
+- **Ignore Friendlies** is gone: Reticle Targeting now always skips friendly units. Use **Ally Cycle**, **Support Mode** and the **Party Wheel** to target allies. Friendly soft targeting is no longer switched on by that option; set **SoftTargetFriend** in the Reticle CVar editor (it stays on for characters that had Ignore Friendlies off). The **Toggle Focus Any** click-cast action is replaced by **Toggle Focus Enemy**, and the Prelines editor shows one preline per Auto Target Lock state.
+
+### Fixed
+
+- Pet ground abilities such as **Move To** now free your cursor so you can place the marker, then lock Mouse Look again once you click or press Escape. Before, the marker appeared but the cursor stayed locked.
+- **Target Lock** no longer locks a friendly NPC. After interacting with an NPC (it becomes your target), pressing Target Lock locked it anyway.
+
 ## [5.4.7] - 2026-11-09
 
 ### Changed
@@ -903,7 +931,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rapidly toggling OPie rings could leave the cursor stuck and visible while Mouse Look was active.
 - Reloading could leave the cursor visible while still in the Mouse Look state after the loading screen.
 
-[Unreleased]: https://github.com/ThericGames/combatmode/compare/5.4.7...HEAD
+[Unreleased]: https://github.com/ThericGames/combatmode/compare/5.5.0...HEAD
+[5.5.0]: https://github.com/ThericGames/combatmode/compare/5.4.7...5.5.0
 [5.4.7]: https://github.com/ThericGames/combatmode/compare/5.4.6...5.4.7
 [5.4.6]: https://github.com/ThericGames/combatmode/compare/5.4.5...5.4.6
 [5.4.5]: https://github.com/ThericGames/combatmode/compare/5.4.4...5.4.5

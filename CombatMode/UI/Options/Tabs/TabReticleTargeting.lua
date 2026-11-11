@@ -7,7 +7,7 @@
 --  Also hosts the Reticle Targeting Macros shelf (option below the spell lists).
 --  The CVar and macro-preline editors live on Advanced.
 --  Architecture / how it works:
---    • DB.char: reticleTargeting, reticleTargetingEnemyOnly, autoTargetLockOnAttack,
+--    • DB.char: reticleTargeting, autoTargetLockOnAttack,
 --      targetLockBehavior (Target Lock Behavior dropdown: toggle / switch),
 --      macroInjectionClickCastOnly, stickyCrosshair, excludeFromTargetingSpells,
 --      castAtCursorSpells.
@@ -281,24 +281,6 @@ UI.Options.AddTab({
       end,
     })
     ctx:Toggle({
-      label = L["Ignore Friendlies"],
-      desc = L["Ignore friendly NPCs and Players, and only target hostile units."],
-      charSpecific = true,
-      confirm = true,
-      confirmText = RELOAD_CONFIRM,
-      reload = true,
-      get = function()
-        return CM.DB.char.reticleTargetingEnemyOnly
-      end,
-      set = function(value)
-        CM.DB.char.reticleTargetingEnemyOnly = value
-        CM.ReloadUI()
-      end,
-      disabled = function()
-        return not CM.DB.char.reticleTargeting
-      end,
-    })
-    ctx:Toggle({
       label = L["Click Casting Only"],
       desc = L["Apply reticle targeting logic only to Click Casting binds."],
       charSpecific = true,
@@ -387,7 +369,7 @@ UI.Options.AddTab({
     ctx:Gap()
     ctx:Header(L["TARGET LOCK"])
     ctx:Description({
-      text = L["Lock onto a target to prevent accidental switching, and cycle between units to prioritize specific enemies."],
+      text = L["Lock onto a target to prevent accidental switching, and cycle between units to prioritize specific ones."],
       warning = L["Warning: Target Lock uses your Focus Target. Anything else that sets your focus will interfere with it."],
     })
 
@@ -450,7 +432,6 @@ UI.Options.AddTab({
           {
             label = L["Switch Target"],
             value = L["Locks the unit under the crosshair, replacing any current lock. Tap with nothing under the crosshair to unlock. Aiming at the unit you already locked keeps the lock."],
-            warning = L["With Ignore Friendlies on, a friendly or dead unit under the crosshair is ignored: the lock stays where it is."],
           },
         },
       },
@@ -472,7 +453,7 @@ UI.Options.AddTab({
     })
     ctx:Toggle({
       label = L["Auto Target Lock"],
-      desc = L["Target Lock engages automatically when attacking units."],
+      desc = L["Target Lock engages automatically when attacking units. In Support Mode it only locks the ally you heal."],
       charSpecific = true,
       confirm = true,
       confirmText = RELOAD_CONFIRM,
@@ -509,7 +490,7 @@ UI.Options.AddTab({
     })
     ctx:Toggle({
       label = L["Focus Locked Target"],
-      desc = L["Pulls the camera toward your locked target, keeping it in focus."],
+      desc = L["Pulls the camera toward your locked target, keeping it in focus. Works on hostile targets only."],
       watermarkWhenDisabled = function()
         if CM.MotionSicknessProtectionOn and CM.MotionSicknessProtectionOn() == true then
           return L["Disabled while Motion Sickness Protection is on"]

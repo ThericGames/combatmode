@@ -14,6 +14,8 @@
 --      reticleHideSoftIndicator toggle into global.selectionCircleMode and the
 --      assistedHighlightEnabled toggle into global.assistedHighlightMode, drops the
 --      interactionHUDSide / Scale / Padding keys (Interaction HUD merged into Combat Assist).
+--      Drops the removed Ignore Friendlies option (5.5.0: keeps friendly soft targeting on as a
+--      CVar override for characters that had it off; Toggle Focus Any slots become Enemy).
 --      Rewrites the shipped situational default (dead-or-stealth + Arrows) to
 --      dead-only + Invisible when the saved values still match that default.
 --    • GetBindingsLocation → "global" vs "char" from useGlobalBindings.
@@ -395,7 +397,56 @@ function CM.InitDatabase()
         sv.global.seenWizard = sv.global.seenWizard or CM.DbBool(charDb.seenWizard, false)
         charDb.seenWizard = nil
       end
+      -- Support Mode's Swap Nameplates toggle became the Nameplates dropdown (5.5.0, before its
+      -- first release): off = "keep", on = the default "friendly".
+      if charDb.supportModeNameplates ~= nil then
+        if not CM.DbBool(charDb.supportModeNameplates, true) then
+          charDb.supportModeNameplateMode = "keep"
+        end
+        charDb.supportModeNameplates = nil
+      end
+      -- Its Key Behavior (toggle / hold) and Self-Cast Modifier options were removed before
+      -- release: the key toggles, and self-casting is left to a player macro.
+      charDb.supportModeKeyBehavior = nil
+      charDb.supportModeSelfCastModifier = nil
+      -- 5.5.0: Ignore Friendlies was removed (Reticle Targeting is always enemy-only). A character
+      -- that had it off also had friendly soft targeting switched on by it; that CVar is now set in
+      -- the Reticle CVar editor, so keep it on (account-wide, unless the player already set it).
+      if charDb.reticleTargetingEnemyOnly ~= nil then
+        if not CM.DbBool(charDb.reticleTargetingEnemyOnly, true) then
+          local overrides = sv.global.reticleTargetingCVarOverrides
+          if type(overrides) ~= "table" then
+            overrides = {}
+            sv.global.reticleTargetingCVarOverrides = overrides
+          end
+          if overrides.SoftTargetFriend == nil then
+            overrides.SoftTargetFriend = 3
+          end
+        end
+        charDb.reticleTargetingEnemyOnly = nil
+      end
+      -- Toggle Focus Any click-cast slots become Toggle Focus Enemy (the Any action was removed).
+      if type(charDb.bindings) == "table" then
+        for _, slot in pairs(charDb.bindings) do
+          if type(slot) == "table" and slot.value == "TOGGLEFOCUSANY" then
+            slot.value = "TOGGLEFOCUSENEMY"
+          end
+        end
+      end
     end
+  end
+  if sv.global then
+    -- Same for the account-wide click-cast slots, and the preline overrides of the removed
+    -- "target any unit" modes.
+    if type(sv.global.bindings) == "table" then
+      for _, slot in pairs(sv.global.bindings) do
+        if type(slot) == "table" and slot.value == "TOGGLEFOCUSANY" then
+          slot.value = "TOGGLEFOCUSENEMY"
+        end
+      end
+    end
+    sv.global.targetingMacroPrelineAnyOverride = nil
+    sv.global.targetingMacroPrelineAutoLockAnyOverride = nil
   end
   -- Party Radial removed in 4.7.0; drop leftover settings so they do not linger in SV.
   if sv.global then
@@ -551,10 +602,6 @@ local function Rematch()
 
   if CM.DB.char.reticleTargeting then
     CM.ConfigReticleTargeting("combatmode")
-
-    if not CM.DB.char.reticleTargetingEnemyOnly then
-      CM.HandleSoftTargetFriend(true)
-    end
   elseif CM.IsCrosshairEnabled() and CM.IsInteractionHUDEnabled() then
     CM.ConfigInteractionHUDSoftTarget()
   end

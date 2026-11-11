@@ -192,9 +192,6 @@ L["Enables aim-based unit targeting and precise placement of ground-targeted spe
 L["Enable Reticle Targeting"] = "조준선 대상 지정 사용"
 L["Aim the crosshair at units to pick targets instead of tab-targeting."] =
   "탭 대상 지정 대신 조준점을 유닛에 맞춰 대상을 선택합니다."
-L["Ignore Friendlies"] = "아군 무시"
-L["Ignore friendly NPCs and Players, and only target hostile units."] =
-  "우호적인 NPC와 플레이어를 무시하고 적대적인 유닛만 대상으로 지정합니다."
 L["Click Casting Only"] = "클릭 시전만"
 L["Apply reticle targeting logic only to Click Casting binds."] =
   "조준선 대상 지정 로직을 클릭 시전 단축키에만 적용합니다."
@@ -205,8 +202,8 @@ L["Cast at Crosshair"] = "조준점에 시전"
 L["Ground spells to cast at the crosshair location."] =
   "조준점 위치에 시전할 지면 지정 주문입니다."
 L["TARGET LOCK"] = "대상 고정"
-L["Lock onto a target to prevent accidental switching, and cycle between units to prioritize specific enemies."] =
-  "대상을 고정해 실수로 바뀌는 것을 막고, 유닛을 순환하며 특정 적을 우선 지정합니다."
+L["Lock onto a target to prevent accidental switching, and cycle between units to prioritize specific ones."] =
+  "대상을 고정해 실수로 바뀌는 것을 막고, 유닛을 순환하며 특정 대상을 우선 지정합니다."
 L["Warning: Target Lock uses your Focus Target. Anything else that sets your focus will interfere with it."] =
   "경고: 대상 고정은 주시 대상을 사용합니다. 주시 대상을 바꾸는 다른 기능은 이를 방해합니다."
 L["Target Lock Keybind"] = "대상 고정 단축키"
@@ -225,17 +222,15 @@ L["Locks your target, or the unit under the crosshair. Tap again to unlock."] =
   "현재 대상 또는 조준점 아래의 유닛을 고정합니다. 다시 누르면 해제됩니다."
 L["Locks the unit under the crosshair, replacing any current lock. Tap with nothing under the crosshair to unlock. Aiming at the unit you already locked keeps the lock."] =
   "조준점 아래의 유닛을 고정하며 기존 고정을 대체합니다. 조준점 아래에 아무것도 없을 때 누르면 해제됩니다. 이미 고정한 유닛을 조준하면 고정이 유지됩니다."
-L["With Ignore Friendlies on, a friendly or dead unit under the crosshair is ignored: the lock stays where it is."] =
-  "'아군 무시'가 켜져 있으면 조준점 아래의 아군이나 죽은 유닛은 무시되며 고정은 그대로 유지됩니다."
 L["Auto Target Lock"] = "자동 대상 고정"
-L["Target Lock engages automatically when attacking units."] =
-  "유닛을 공격할 때 대상 고정이 자동으로 적용됩니다."
+L["Target Lock engages automatically when attacking units. In Support Mode it only locks the ally you heal."] =
+  "유닛을 공격할 때 대상 고정이 자동으로 적용됩니다. 지원 모드에서는 치유하는 아군만 고정합니다."
 L["Target Lock Marker"] = "대상 고정 표시"
 L["Show a crosshair marker on the nameplate of the locked target."] =
   "고정된 대상의 이름표에 조준점 표시를 보여줍니다."
 L["Focus Locked Target"] = "고정된 대상에 집중"
-L["Pulls the camera toward your locked target, keeping it in focus."] =
-  "카메라를 고정된 대상 쪽으로 당겨 계속 초점을 맞춥니다."
+L["Pulls the camera toward your locked target, keeping it in focus. Works on hostile targets only."] =
+  "카메라를 고정된 대상 쪽으로 당겨 계속 초점을 맞춥니다. 적대적 대상에서만 작동합니다."
 L["TARGETING INDICATORS"] = "대상 표시기"
 L["Visual indicators that highlight targets in the world for easier identification."] =
   "월드의 대상을 강조하여 더 쉽게 식별할 수 있게 하는 시각 표시기입니다."
@@ -321,7 +316,6 @@ L["Target Crosshair"] = "조준점 대상 지정"
 L["Clear Focus"] = "주시 대상 해제"
 L["Start Attack"] = "공격 시작"
 L["Pet Attack"] = "소환수 공격"
-L["Toggle Focus Any"] = "주시 대상 전환 (모두)"
 L["Toggle Focus Enemy"] = "주시 대상 전환 (적)"
 L["Run MACRO"] = "MACRO 실행"
 L["— none —"] = "— 없음 —"
@@ -414,6 +408,11 @@ L["Target the next group member."] = "다음 파티원을 대상으로 지정합
 L["Ally Cycle - Previous"] = "아군 순환 - 이전"
 L["Target the previous group member."] = "이전 파티원을 대상으로 지정합니다."
 L["Skip Self"] = "자신 건너뛰기"
+L["Also Cycle Through"] = "함께 순환할 대상"
+L["Adds pets after the group members: your own pet, and the pets of everyone else in your party or raid."] =
+  "그룹원 다음에 소환수를 추가합니다: 내 소환수와 파티 또는 공격대 내 다른 모든 사람의 소환수."
+L["Your Pet"] = "내 소환수"
+L["Party Pets"] = "파티 소환수"
 L["Skip yourself when cycling through group members."] =
   "파티원을 순환할 때 자신을 건너뜁니다."
 L["Keep Ally After Harm"] = "공격 후 아군 유지"
@@ -432,6 +431,35 @@ L["Where the Ally HUD sits relative to the crosshair."] =
 L["Scales the size of the Ally HUD."] = "아군 HUD의 크기를 조절합니다."
 L["Distance between the Ally HUD and the crosshair."] =
   "아군 HUD와 조준점 사이의 거리입니다."
+
+-- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
+L["Support Mode"] = "지원 모드"
+L["support mode keybinding"] = "지원 모드 단축키"
+L["SUPPORT MODE"] = "지원 모드"
+L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
+  "활성화하면 주 행동 단축바를 전용 지원 페이지로 전환하고, 이로운 주문이 조준점 아래의 우호적 대상을 지정할 수 있게 하는 지원 중심 모드입니다."
+L["Support Mode Keybind"] = "지원 모드 단축키"
+L["Prioritize Crosshair Target"] = "조준점 대상 우선"
+L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
+  "다른 우호적 대상(아군 순환으로 고른 대상 등)을 선택해 두었더라도 조준점 아래의 아군에게 주문이 시전됩니다. 끄면 선택한 대상에게 먼저 시전합니다."
+L["Tap to toggle Support Mode on or off."] = "눌러서 지원 모드를 켜거나 끕니다."
+L["Support Bar Page"] = "지원 단축바 페이지"
+L["The main action bar page shown while Support Mode is on. Place support abilities here. Exiting Support Mode returns to Page 1."] =
+  "지원 모드가 켜져 있는 동안 표시되는 주 행동 단축바 페이지입니다. 지원 능력을 여기에 두세요. 지원 모드를 끝내면 1페이지로 돌아갑니다."
+L["Don't Swap"] = "전환 안 함"
+L["Page %d"] = "%d페이지"
+L["Requires Reticle Targeting"] = "조준선 대상 지정 필요"
+L["Support"] = "지원"
+L["Tint Vignette"] = "비네트 색 입히기"
+L["While Support Mode is active, the Vignette adopts the Support crosshair color. It only appears when the Vignette is enabled."] =
+  "지원 모드가 켜져 있는 동안 비네트가 지원 조준점 색을 띱니다. 비네트가 켜져 있을 때만 나타납니다."
+L["Nameplate Behavior"] = "이름표 동작"
+L["Choose which nameplates appear while in Support Mode. Normal settings are restored when exiting Support Mode."] =
+  "지원 모드 중에 표시할 이름표를 선택합니다. 종료하면 기본 설정이 복원됩니다."
+L["Don't Change"] = "변경 안 함"
+L["Friendly Only"] = "우호적 대상만"
+L["Friendly and Enemy"] = "우호적 대상과 적"
+L["Hide All"] = "모두 숨기기"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = "자동 해제"
@@ -500,6 +528,8 @@ L["Back"] = "뒤로"
 L["Next"] = "다음"
 L["Finish"] = "완료"
 L["Skip tour"] = "둘러보기 건너뛰기"
+L["Click to learn more about this feature"] =
+  "클릭하여 이 기능에 대해 자세히 알아보세요"
 L["Assist HUD"] = "보조 HUD"
 L["Target Lock"] = "대상 고정"
 L["Party Wheel"] = "파티 휠"
@@ -511,6 +541,9 @@ L["Set a Cycle Lock - Previous key"] = "고정 순환 - 이전 단축키 지정"
 L["Set a Radial Menu key"] = "방사형 메뉴 단축키 지정"
 L["Set an Ally Cycle - Next key"] = "아군 순환 - 다음 단축키 지정"
 L["Set an Ally Cycle - Previous key"] = "아군 순환 - 이전 단축키 지정"
+L["Set a Support Mode key"] = "지원 모드 단축키 지정"
+L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
+  "활성화하면 주 행동 단축바를 전용 {지원 페이지}로 전환하고, {이로운 주문}이 조준점 아래의 우호적 대상을 지정할 수 있게 하는 지원 중심 모드입니다.\n\n단축키를 지정하세요."
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "조준선 대상 지정을 켜거나 끄면 UI가 다시 불러와집니다."
 L["Needs Reticle Targeting."] = "조준선 대상 지정이 필요합니다."
@@ -520,14 +553,14 @@ L["A reactive, fully customizable crosshair that adapts to your target and comba
   "대상과 전투 상태에 따라 반응하는, 완전히 사용자 지정 가능한 조준점입니다.\n\n{모양}, {크기}, {위치}를 선택하세요."
 L["Aim at an enemy and the HUD next to your crosshair suggests your {next spell} and shows its key.\n\nAim at something you can interact with and it shows its {name} and your {Interact key} instead.\n\nTurn either on or off, and set its {side}, {size} and {distance} from the crosshair."] =
   "적을 조준하면 조준점 옆의 HUD가 {다음 주문}을 추천하고 단축키를 보여줍니다.\n\n상호작용할 수 있는 대상을 조준하면 대신 그 {이름}과 {상호작용 단축키}를 보여줍니다.\n\n각각 켜거나 끌 수 있으며 조준점에 대한 {방향}, {크기}, {거리}를 설정하세요."
-L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting.\n\n{Ignore Friendlies} makes it skip allies."] =
-  "적을 조준하는 것만으로 대상을 지정하고, 지면 지정 주문과 광역 능력을 Tab 대상 지정 없이 조준점이 가리키는 곳에 바로 사용하세요.\n\n{아군 무시}를 켜면 아군을 건너뜁니다."
+L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting."] =
+  "적을 조준하는 것만으로 대상을 지정하고, 지면 지정 주문과 광역 능력을 Tab 대상 지정 없이 조준점이 가리키는 곳에 바로 사용하세요."
 L["Ground-targeted spells that should be cast at the crosshair location.\n\nType a {spell name or ID} to add it."] =
   "조준점 위치에 시전할 지면 지정 주문입니다.\n\n{주문 이름 또는 ID}를 입력해 추가하세요."
 L["{!Action buttons that are macros cannot inherit Reticle Targeting on their own.}\n\nPress {+} to open the {Macro Composer}, write your macro there and it gets the targeting logic added for you.\n\nThen drag it from this list onto your action bars; {right-click} an icon to edit it."] =
   "{!매크로인 행동 버튼은 조준선 대상 지정을 스스로 적용받을 수 없습니다.}\n\n{+}를 눌러 {매크로 작성기}를 열고 매크로를 작성하면 대상 지정 로직이 자동으로 추가됩니다.\n\n그런 다음 이 목록에서 행동 단축바로 끌어다 놓으세요. 아이콘을 {오른쪽 클릭}하면 편집할 수 있습니다."
-L["Lock onto a target with one tap so the reticle stops swapping. While locked, the cycle keys jump to nearby enemies.\n\n{Target Lock Behavior} decides whether tapping again unlocks ({Toggle}) or moves the lock to whatever is under the crosshair ({Switch Target}).\n\nSet your keys."] =
-  "한 번 눌러 대상을 고정하면 조준점이 더 이상 대상을 바꾸지 않습니다. 고정 중에는 순환 단축키가 근처 적으로 넘어갑니다.\n\n{대상 고정 동작}은 다시 눌렀을 때 해제할지({전환}) 조준점 아래의 대상으로 고정을 옮길지({대상 교체}) 정합니다.\n\n단축키를 지정하세요."
+L["Lock onto a target with one tap so the reticle stops swapping. While locked, the cycle keys jump to nearby enemies, or to nearby allies in Support Mode.\n\n{Target Lock Behavior} decides whether tapping again unlocks ({Toggle}) or moves the lock to whatever is under the crosshair ({Switch Target}).\n\nSet your keys."] =
+  "한 번 눌러 대상을 고정하면 조준점이 더 이상 대상을 바꾸지 않습니다. 고정 중에는 순환 단축키가 근처 적으로, 지원 모드에서는 근처 아군으로 넘어갑니다.\n\n{대상 고정 동작}은 다시 눌렀을 때 해제할지({전환}) 조준점 아래의 대상으로 고정을 옮길지({대상 교체}) 정합니다.\n\n단축키를 지정하세요."
 L["Turn your mouse clicks into actions while in Mouse Look, such as casting your action bar spells with {Left and Right Click}.\n\nPick what each click does, with or without a {modifier key}."] =
   "마우스 룩 중에 마우스 클릭을 동작으로 바꿉니다. 예를 들어 {왼쪽·오른쪽 클릭}으로 행동 단축바의 주문을 시전할 수 있습니다.\n\n{보조 키}를 함께 쓰거나 쓰지 않고 각 클릭이 하는 일을 정하세요."
 L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to switch between wheels."] =
@@ -546,7 +579,6 @@ L["Link"] = "링크"
 L["Copy the %s link (Ctrl+C), then paste it in your browser."] =
   "%s 링크를 복사(Ctrl+C)한 뒤 브라우저에 붙여넣으세요."
 L["Character-specific option."] = "캐릭터별 옵션입니다."
-L["NEW"] = "신규"
 L["ON"] = "켬"
 L["OFF"] = "끔"
 L["Are you sure?"] = "정말 진행하시겠습니까?"
@@ -596,13 +628,9 @@ L["Open Options"] = "옵션 열기"
 -- Editors: macro composer, prelines, crosshair colors and textures, CVar editor
 L["%d / %d characters"] = "%d / %d자"
 L["%s (over the macro limit)"] = "%s (매크로 제한 초과)"
-L["Ignore Friendlies: %s"] = "아군 무시: %s"
 L["Auto Target Lock: %s"] = "자동 대상 고정: %s"
-L["Preline: Ignore Friendlies + No Auto Lock"] = "사전 줄: 아군 무시 + 자동 고정 없음"
-L["Preline: Ignore Friendlies + Auto Lock"] = "사전 줄: 아군 무시 + 자동 고정"
-L["Preline: Target Any Unit + No Auto Lock"] =
-  "사전 줄: 모든 유닛 대상 + 자동 고정 없음"
-L["Preline: Target Any Unit + Auto Lock"] = "사전 줄: 모든 유닛 대상 + 자동 고정"
+L["Preline: No Auto Lock"] = "사전 줄: 자동 고정 없음"
+L["Preline: Auto Lock"] = "사전 줄: 자동 고정"
 L["Macro Composer"] = "매크로 작성기"
 L["The targeting logic preline matching your current Reticle Targeting settings is added automatically before your lines, as the highlighted portion of the macro. To modify it, use the Prelines Editor under %s."] =
   "현재 조준선 대상 지정 설정에 맞는 대상 지정 사전 줄이 매크로의 강조 표시된 부분으로 내 줄 앞에 자동으로 추가됩니다. 수정하려면 %s의 사전 줄 편집기를 사용하세요."
@@ -619,10 +647,8 @@ L["Preline must be %d characters or fewer (room for /click under the 255 macro l
   "사전 줄은 %d자 이하여야 합니다 (매크로 제한 255자 안에서 /click을 위한 공간 확보)."
 L["Inactive — Auto Target Lock is OFF"] = "비활성 — 자동 대상 고정이 꺼져 있음"
 L["Inactive — Auto Target Lock is ON"] = "비활성 — 자동 대상 고정이 켜져 있음"
-L["Inactive — Ignore Friendlies is OFF"] = "비활성 — 아군 무시가 꺼져 있음"
-L["Inactive — Ignore Friendlies is ON"] = "비활성 — 아군 무시가 켜져 있음"
-L["Customize the targeting prelines injected before each ability when Reticle Targeting is enabled.\n\n• Only the preline matching your current %s X %s settings is active.\n• Max %s characters per preline — SecureActionButton macros are capped at %s; the rest is reserved for the trailing %s line.\n• Use %s to reload and pick up edits."] =
-  "조준선 대상 지정이 켜져 있을 때 각 능력 앞에 삽입되는 대상 지정 사전 줄을 사용자 지정합니다.\n\n• 현재 %s X %s 설정에 맞는 사전 줄만 활성화됩니다.\n• 사전 줄당 최대 %s자 — SecureActionButton 매크로는 %s자로 제한되며, 나머지는 마지막 %s 줄을 위해 남겨 둡니다.\n• %s을(를) 사용해 UI를 다시 불러오고 변경 사항을 적용하세요."
+L["Customize the targeting prelines injected before each ability when Reticle Targeting is enabled.\n\n• Only the preline matching your current %s setting is active.\n• Max %s characters per preline — SecureActionButton macros are capped at %s; the rest is reserved for the trailing %s line.\n• Use %s to reload and pick up edits."] =
+  "조준선 대상 지정이 켜져 있을 때 각 능력 앞에 삽입되는 대상 지정 사전 줄을 사용자 지정합니다.\n\n• 현재 %s 설정에 맞는 사전 줄만 활성화됩니다.\n• 사전 줄당 최대 %s자 — SecureActionButton 매크로는 %s자로 제한되며, 나머지는 마지막 %s 줄을 위해 남겨 둡니다.\n• %s을(를) 사용해 UI를 다시 불러오고 변경 사항을 적용하세요."
 L["Apply Changes"] = "변경 사항 적용"
 L["Hostile"] = "적대"
 L["NPC"] = "NPC"
@@ -631,6 +657,7 @@ L["Object"] = "오브젝트"
 L["Select a tab to customize the color and alpha of the crosshair when targeting different types of units.\n\n• %s and %s animations use the Hostile color.\n• Inactive crosshair states use the Base style."] =
   "탭을 선택해 서로 다른 유형의 유닛을 조준할 때의 조준점 색상과 투명도를 사용자 지정합니다.\n\n• %s 및 %s 애니메이션은 적대 색상을 사용합니다.\n• 비활성 조준점 상태는 기본 스타일을 사용합니다."
 L["Reset to Default"] = "기본값으로 초기화"
+L["Reset All Colors"] = "모든 색상 초기화"
 L["Show the inactive crosshair"] = "비활성 조준점 표시"
 L["Show the active crosshair"] = "활성 조준점 표시"
 L["Show the mounted crosshair"] = "탈것 조준점 표시"
@@ -651,6 +678,13 @@ L["Not aiming at anything"] = "아무것도 조준하지 않음"
 L["Aiming at a unit or object"] = "유닛이나 오브젝트를 조준 중"
 L["While you are mounted"] = "탈것에 탑승한 동안"
 L["While Target Lock holds"] = "대상 고정이 유지되는 동안"
+L["SUPPORT"] = "지원"
+L["Use a Support Mode crosshair"] = "지원 모드 조준점 사용"
+L["Use the normal crosshair in Support Mode"] = "지원 모드에서 일반 조준점 사용"
+L["Support Mode keeps your Inactive and Active textures."] =
+  "지원 모드에서도 비활성 및 활성 텍스처를 그대로 사용합니다."
+L["While Support Mode is on, in place of Inactive and Active"] =
+  "지원 모드가 켜져 있는 동안 비활성 및 활성 대신 사용"
 L["Brings back the texture you had before hiding it."] =
   "숨기기 전에 사용하던 텍스처를 되돌립니다."
 L["Crosshair Textures"] = "조준점 텍스처"

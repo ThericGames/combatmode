@@ -9,7 +9,9 @@
 --      macro list): CM_ClearTarget/Focus, CM_ToggleFocus{Any,Enemy} + CM_SwitchFocus{Any,Enemy} (Target Lock key)
 --      (Toggle: target-first-then-mouseover on lock, clear focus + target on unlock; Switch: the unit
 --      under the crosshair becomes the lock, an empty crosshair unlocks),
---      CM_CycleFocusEnemy{Next,Prev}, CM_StartAttack / CM_PetAttack (hostile /tar
+--      CM_CycleFocusEnemy{Next,Prev}, their Support Mode twins that only take friendly units
+--      (CM_ToggleFocusSupport / CM_SwitchFocusSupport / CM_CycleFocusFriend{Next,Prev}),
+--      CM_StartAttack / CM_PetAttack (hostile /tar
 --      then /startattack or /petattack; hides raw Blizzard STARTATTACK / PETATTACK)
 --    • BLIZZARD_EVENTS groups: UNLOCK/LOCK/FREELOOK_RECONCILE/REMATCH, FRIENDLY_TARGETING,
 --      SELECTION_CIRCLE,
@@ -42,17 +44,31 @@ CM.Constants.Macros = {
   CM_ClearTarget = "/stopmacro [noexists]\n/cleartarget",
   CM_ClearFocus = "/stopmacro [noexists]\n/clearfocus",
   -- A condition group with only @unit (no boolean) is ALWAYS true — need ,exists
-  -- (or harm/nodead/etc.) so unlock / fallthrough works. [] = focus player last.
-  CM_ToggleFocusAny = "/cleartarget [@focus,exists]\n/focus [@focus,exists] none; [@target,exists]; [@mouseover,exists][]\n/tar [@focus,exists]",
-  CM_ToggleFocusEnemy = "/cleartarget [@focus,exists]\n/focus [@focus,exists] none; [@target,harm,nodead]; [@mouseover,harm,nodead][]\n/tar [@focus,exists]",
+  -- (or harm/nodead/etc.) so unlock / fallthrough works. No trailing [] (it would focus any target).
+  CM_ToggleFocusEnemy = "/cleartarget [@focus,exists]\n/focus [@focus,exists] none; [@target,harm,nodead]; [@mouseover,harm,nodead]\n/tar [@focus,exists]",
   -- Target Lock "Switch" behavior: the unit under the crosshair becomes the lock (replacing any
-  -- current one); an empty crosshair unlocks. The Enemy variant ignores a friendly / dead unit under
-  -- the crosshair (the lock stays: cleartarget + the focus re-target below restore the same target).
-  CM_SwitchFocusAny = "/cleartarget [@focus,exists]\n/focus [@mouseover,exists]; [@mouseover,noexists] none\n/tar [@focus,exists]",
+  -- current one); an empty crosshair unlocks. A friendly / dead unit under
+  -- the crosshair is ignored (the lock stays: cleartarget + the focus re-target below restore the same target).
   CM_SwitchFocusEnemy = "/cleartarget [@focus,exists]\n/focus [@mouseover,harm,nodead]; [@mouseover,noexists] none\n/tar [@focus,exists]",
   -- Mouse-wheel Target Lock cycle (nearest / previous enemy, then focus).
   CM_CycleFocusEnemyNext = "/targetenemy [@focus,exists]\n/focus [@target,exists]",
   CM_CycleFocusEnemyPrev = "/targetenemy [@focus,exists] 1\n/focus [@target,exists]",
+  -- Support Mode Target Lock (swapped in by the Support Mode key, SupportMode.lua): the same keys,
+  -- friendly units only. `help` is true for a dead ally, so one can be locked for a resurrection.
+  -- No trailing []: with no ally to lock, the key does nothing.
+  --  • Toggle: your friendly target first (an Ally Cycle pick), else the ally under the
+  --    crosshair, else the friendly soft target (a nameplate is not a mouseover unit in Mouse
+  --    Look; Support Mode turns SoftTargetFriend on).
+  --  • Switch: the ally under the crosshair becomes the lock; an empty crosshair unlocks. No soft
+  --    friend here: with SoftTargetMatchLocked it sits on the locked ally, so the key could
+  --    never unlock or move on.
+  CM_ToggleFocusSupport = "/cleartarget [@focus,exists]\n/focus [@focus,exists] none; [@target,help]; [@mouseover,help][@softfriend,help]\n/tar [@focus,exists]",
+  CM_SwitchFocusSupport = "/cleartarget [@focus,exists]\n/focus [@mouseover,help]; [@mouseover,noexists] none\n/tar [@focus,exists]",
+  -- Cycle keys in Support Mode: nearest / previous friendly unit (Blizzard's /targetfriend, the
+  -- friendly twin of /targetenemy: players, pets and NPCs), then lock it. `help` keeps the lock
+  -- where it is when the hard target is not an ally.
+  CM_CycleFocusFriendNext = "/targetfriend [@focus,exists]\n/focus [@target,help]",
+  CM_CycleFocusFriendPrev = "/targetfriend [@focus,exists] 1\n/focus [@target,help]",
   -- Click-cast Start Attack / Pet Attack: hostile under the reticle, then swing.
   CM_StartAttack = "/tar [@focus,harm];[nomounted,@mouseover,harm,nodead][nomounted,@anyenemy]\n/startattack",
   CM_PetAttack = "/tar [@focus,harm];[nomounted,@mouseover,harm,nodead][nomounted,@anyenemy]\n/petattack",
@@ -180,6 +196,7 @@ CM.Constants.BLIZZARD_EVENTS = {
     "UNIT_CONNECTION",
     "ZONE_CHANGED_NEW_AREA",
     "PLAYER_ENTERING_WORLD",
+    "UNIT_PET", -- A pet (un)summoned: the cycle count follows the extra units
   },
   -- Soft-interact target changed: refresh the interaction mode of the crosshair HUD
   INTERACT_HUD_EVENTS = {
@@ -365,7 +382,6 @@ CM.Constants.OverrideActions = {
   CLEARFOCUS = "|cff69ccf0Clear Focus|r",
   STARTATTACK = "|cff69ccf0Start Attack|r",
   PETATTACK = "|cff69ccf0Pet Attack|r",
-  TOGGLEFOCUSANY = "|cff69ccf0Toggle Focus Any|r",
   TOGGLEFOCUSENEMY = "|cff69ccf0Toggle Focus Enemy|r",
   MACRO = "|cff69ccf0Run MACRO|r",
 }

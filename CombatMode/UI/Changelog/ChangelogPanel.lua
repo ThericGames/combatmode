@@ -38,6 +38,8 @@ local SECTION_GAP = 10
 local CONTENT_PAD_TOP = 8
 local CONTENT_PAD_BOTTOM = 24 -- space under the last entry, inside the scrolling content
 local BAR_PAD_Y = 10 -- gap above / below the scroll bars so they clear the frame
+local SIDEBAR_TOP = 37 -- the version list's panel starts just under the title rule
+local NAV_TOP_PAD = 7 -- first version button's offset inside that panel
 
 local changelogFrame
 
@@ -458,7 +460,7 @@ local function RebuildNavButtons(frame, sections)
 
   local navChild = frame.navChild
   local btnW = SIDEBAR_W - 24
-  local y = 0
+  local y = NAV_TOP_PAD
   for i, sec in ipairs(sections) do
     local button = CreateFrame("Button", nil, navChild)
     button:SetSize(btnW, NAV_BTN_H)
@@ -581,17 +583,32 @@ local function EnsureChangelogFrame()
   frame:SetFrameLevel(200)
   frame:Hide()
 
-  local divider = UI.CreateLine(frame, true, C.divider, "ends")
+  -- Version list panel: darker sidebar fill with its gradient and inner shadow, like the options
+  -- window's tab column. Created first so the buttons and the divider draw over it.
+  local sidebarZone = UI.CreateZone(frame, C.sidebarBg, UI.Radius.window, { BOTTOMLEFT = true })
+  sidebarZone:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, -SIDEBAR_TOP)
+  sidebarZone:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 0, 0)
+  sidebarZone:SetWidth(SIDEBAR_W - 4)
+  sidebarZone:cmSetFillGradient(C.sidebarBgTop, C.sidebarBgBottom)
+  UI.AddZoneShadow(sidebarZone, frame)
+
+  -- Hairlines live on an overlay frame: a frame's own textures draw under its child zones.
+  local chrome = CreateFrame("Frame", nil, frame)
+  chrome:SetAllPoints(frame)
+  local divider = UI.CreateLine(chrome, true, C.divider, "ends")
   divider:SetWidth(1)
-  divider:SetPoint("TOPLEFT", frame, "TOPLEFT", SIDEBAR_W - 4, -40)
-  divider:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", SIDEBAR_W - 4, 12)
+  divider:SetPoint("TOPLEFT", frame, "TOPLEFT", SIDEBAR_W - 4, -SIDEBAR_TOP)
+  divider:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", SIDEBAR_W - 4, 0)
 
   local navScroll, navChild = UI.CreateScrollFrame(frame)
-  navScroll:SetPoint("TOPLEFT", frame, "TOPLEFT", 12, -44)
-  navScroll:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 12, 0)
-  navScroll:SetWidth(SIDEBAR_W - 20)
-  navScroll.cmScrollBar:SetPoint("TOPLEFT", navScroll, "TOPRIGHT", 2, -BAR_PAD_Y)
-  navScroll.cmScrollBar:SetPoint("BOTTOMLEFT", navScroll, "BOTTOMRIGHT", 2, BAR_PAD_Y)
+  -- The bar sits in the left gutter (x 3-8), clear of the version buttons that start at x 15.
+  -- The scroll area spans the whole panel, so the bar matches the panel's height.
+  navScroll:SetPoint("TOPLEFT", frame, "TOPLEFT", 15, -SIDEBAR_TOP)
+  navScroll:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 15, 0)
+  navScroll:SetWidth(SIDEBAR_W - 24)
+  navScroll.cmScrollBar:SetPoint("TOP", navScroll, "TOP", 0, -BAR_PAD_Y)
+  navScroll.cmScrollBar:SetPoint("BOTTOM", navScroll, "BOTTOM", 0, BAR_PAD_Y)
+  navScroll.cmScrollBar:SetPoint("LEFT", frame, "LEFT", 3, 0)
   navChild:SetWidth(SIDEBAR_W - 24)
 
   local scroll, scrollChild = UI.CreateScrollFrame(frame)

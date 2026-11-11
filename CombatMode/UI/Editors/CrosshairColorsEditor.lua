@@ -4,8 +4,9 @@
 --  What it does: Standalone editor (CM.OpenCrosshairColorsEditor) with reaction
 --  tabs and an embedded color picker (no modal-on-modal). Live-updates crosshair tints.
 --  Architecture / how it works:
---    • Tabs: hostile, friendly_npc, friendly_player, object, base.
---    • DB.global.crosshairReactionColors[state] = { r, g, b, a }; Reset Color clears one override.
+--    • Tabs: hostile, friendly_npc, friendly_player, object, base, support (idle reticle in
+--      Support Mode). CM.OpenCrosshairColorsEditor(key) opens on that tab.
+--    • DB.global.crosshairReactionColors[state] = { r, g, b, a }; Reset to Default clears one override, Reset All Colors (last button) all of them.
 --    • Opens beside CombatModeOptionsFrame when visible; combat-guarded.
 --  Does not: Edit mounted/focus colors (mounted fixed; focus → hostile at runtime).
 --  Related: Core/Crosshair/Crosshair.lua, UI/Options/ColorPickerDialog.lua,
@@ -32,11 +33,14 @@ local REACTION_STATES = {
   { key = "friendly_player", tab = L["Player"] },
   { key = "object", tab = L["Object"] },
   { key = "base", tab = L["Base"] },
+  -- The idle reticle while Support Mode is on (CM.GetCrosshairIdleColorState).
+  { key = "support", tab = L["Support"] },
 }
 
-local TAB_BAR_W = 330
+local TAB_BAR_W = 396 -- one 66 px step per reaction tab
 local EDITOR_W = TAB_BAR_W + 32
-local EDITOR_H = 398
+local EDITOR_GAP = 8
+local EDITOR_H = 398 + UI.Sizes.control + EDITOR_GAP
 local PICKER_CARD_PAD = 10
 local RESET_BTN_H = UI.Sizes.control
 local PICKER_BODY_H = UI.PickerBodyHeight
@@ -47,9 +51,12 @@ local tabButtons = {}
 local activeKey = "hostile"
 local switchingTab
 
---- Re-tints everything that previews the reaction colors: the Appearance rows' tiles and the
---- Crosshair Textures editor (cards + presets).
+--- Re-tints everything that previews the reaction colors: the Appearance rows' tiles, the
+--- Crosshair Textures editor (cards + presets) and the Support Mode Vignette tint.
 local function RefreshColorPreviews()
+  if CM.RefreshVignetteTint then
+    CM.RefreshVignetteTint()
+  end
   if UI.Options and UI.Options.Sync then
     UI.Options.Sync()
   end
@@ -195,6 +202,24 @@ local function Build()
     end
   end)
 
+  local resetAllBtn = CreateFrame("Button", nil, content)
+  resetAllBtn:SetHeight(RESET_BTN_H)
+  resetAllBtn:SetPoint("TOPLEFT", pickerCard, "BOTTOMLEFT", 0, -EDITOR_GAP)
+  resetAllBtn:SetPoint("TOPRIGHT", pickerCard, "BOTTOMRIGHT", 0, -EDITOR_GAP)
+  UI.StyleControl(resetAllBtn)
+  local resetAllText =
+    UI.CreateFontString(resetAllBtn, "OVERLAY", UI.Fonts.button, "GameFontNormal")
+  resetAllText:SetPoint("CENTER")
+  resetAllText:SetText(L["Reset All Colors"])
+  UI.WireControlHover(resetAllBtn, resetAllText)
+  resetAllBtn:SetScript("OnClick", function()
+    for _, state in ipairs(REACTION_STATES) do
+      CM.ResetCrosshairReactionColor(state.key)
+    end
+    RefreshColorPreviews()
+    SelectReactionTab(activeKey)
+  end)
+
   window:SetScript("OnShow", function()
     picker.LayoutInParent()
     picker.StartPolling()
@@ -205,7 +230,8 @@ local function Build()
   end)
 end
 
-function CM.OpenCrosshairColorsEditor()
+--- `key` (optional): the reaction tab to open on, e.g. "support".
+function CM.OpenCrosshairColorsEditor(key)
   if InCombatLockdown and InCombatLockdown() then
     print(
       CM.Constants.BasePrintMsg
@@ -218,6 +244,13 @@ function CM.OpenCrosshairColorsEditor()
 
   if not window then
     Build()
+  end
+  if key and tabButtons[key] then
+    -- OnShow selects activeKey; an already open window needs the switch now.
+    activeKey = key
+    if window:IsShown() then
+      SelectReactionTab(key)
+    end
   end
 
   local anchor = CM.GetOptionsFrame and CM.GetOptionsFrame()

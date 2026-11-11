@@ -192,9 +192,6 @@ L["Enables aim-based unit targeting and precise placement of ground-targeted spe
 L["Enable Reticle Targeting"] = "Fadenkreuz-Zielerfassung aktivieren"
 L["Aim the crosshair at units to pick targets instead of tab-targeting."] =
   "Ziele mit dem Fadenkreuz auf Einheiten, um Ziele statt per Tab-Auswahl zu wählen."
-L["Ignore Friendlies"] = "Freundliche ignorieren"
-L["Ignore friendly NPCs and Players, and only target hostile units."] =
-  "Ignoriert freundliche NPCs und Spieler und wählt nur feindliche Einheiten."
 L["Click Casting Only"] = "Nur Klick-Zauber"
 L["Apply reticle targeting logic only to Click Casting binds."] =
   "Wendet die Fadenkreuz-Zielerfassung nur auf Klick-Zauber-Belegungen an."
@@ -205,8 +202,8 @@ L["Cast at Crosshair"] = "Auf Fadenkreuz wirken"
 L["Ground spells to cast at the crosshair location."] =
   "Bodenzauber, die an der Fadenkreuzposition gewirkt werden."
 L["TARGET LOCK"] = "ZIELSPERRE"
-L["Lock onto a target to prevent accidental switching, and cycle between units to prioritize specific enemies."] =
-  "Sperre ein Ziel, um versehentliches Wechseln zu verhindern, und wechsle zwischen Einheiten, um bestimmte Gegner zu priorisieren."
+L["Lock onto a target to prevent accidental switching, and cycle between units to prioritize specific ones."] =
+  "Sperre ein Ziel, um versehentliches Wechseln zu verhindern, und wechsle zwischen Einheiten, um bestimmte Ziele zu priorisieren."
 L["Warning: Target Lock uses your Focus Target. Anything else that sets your focus will interfere with it."] =
   "Warnung: Die Zielsperre nutzt dein Fokusziel. Alles andere, was deinen Fokus setzt, stört sie."
 L["Target Lock Keybind"] = "Taste für Zielsperre"
@@ -225,17 +222,15 @@ L["Locks your target, or the unit under the crosshair. Tap again to unlock."] =
   "Sperrt dein Ziel oder die Einheit unter dem Fadenkreuz. Erneutes Antippen hebt die Sperre auf."
 L["Locks the unit under the crosshair, replacing any current lock. Tap with nothing under the crosshair to unlock. Aiming at the unit you already locked keeps the lock."] =
   "Sperrt die Einheit unter dem Fadenkreuz und ersetzt eine bestehende Sperre. Antippen ohne Einheit unter dem Fadenkreuz hebt die Sperre auf. Zielst du auf die bereits gesperrte Einheit, bleibt die Sperre bestehen."
-L["With Ignore Friendlies on, a friendly or dead unit under the crosshair is ignored: the lock stays where it is."] =
-  "Bei aktivem „Freundliche ignorieren“ wird eine freundliche oder tote Einheit unter dem Fadenkreuz ignoriert: Die Sperre bleibt bestehen."
 L["Auto Target Lock"] = "Automatische Zielsperre"
-L["Target Lock engages automatically when attacking units."] =
-  "Die Zielsperre greift automatisch, wenn du Einheiten angreifst."
+L["Target Lock engages automatically when attacking units. In Support Mode it only locks the ally you heal."] =
+  "Die Zielsperre greift automatisch, wenn du Einheiten angreifst. Im Unterstützungsmodus sperrt sie nur den Verbündeten, den du heilst."
 L["Target Lock Marker"] = "Zielsperren-Markierung"
 L["Show a crosshair marker on the nameplate of the locked target."] =
   "Zeigt eine Fadenkreuz-Markierung auf der Namensplakette des gesperrten Ziels."
 L["Focus Locked Target"] = "Gesperrtes Ziel fokussieren"
-L["Pulls the camera toward your locked target, keeping it in focus."] =
-  "Zieht die Kamera zum gesperrten Ziel und hält es im Fokus."
+L["Pulls the camera toward your locked target, keeping it in focus. Works on hostile targets only."] =
+  "Zieht die Kamera zum gesperrten Ziel und hält es im Fokus. Funktioniert nur bei feindlichen Zielen."
 L["TARGETING INDICATORS"] = "ZIELANZEIGEN"
 L["Visual indicators that highlight targets in the world for easier identification."] =
   "Visuelle Anzeigen, die Ziele in der Welt hervorheben, damit sie leichter zu erkennen sind."
@@ -320,7 +315,6 @@ L["Target Crosshair"] = "Fadenkreuz anvisieren"
 L["Clear Focus"] = "Fokus löschen"
 L["Start Attack"] = "Angriff starten"
 L["Pet Attack"] = "Begleiterangriff"
-L["Toggle Focus Any"] = "Fokus umschalten (beliebig)"
 L["Toggle Focus Enemy"] = "Fokus umschalten (Feind)"
 L["Run MACRO"] = "MACRO ausführen"
 L["— none —"] = "— keine —"
@@ -413,6 +407,11 @@ L["Target the next group member."] = "Nächstes Gruppenmitglied anvisieren."
 L["Ally Cycle - Previous"] = "Verbündetenwechsel – Vorheriger"
 L["Target the previous group member."] = "Vorheriges Gruppenmitglied anvisieren."
 L["Skip Self"] = "Sich selbst überspringen"
+L["Also Cycle Through"] = "Auch durchschalten"
+L["Adds pets after the group members: your own pet, and the pets of everyone else in your party or raid."] =
+  "Fügt nach den Gruppenmitgliedern Begleiter hinzu: dein eigener und die aller anderen in deiner Gruppe oder deinem Schlachtzug."
+L["Your Pet"] = "Dein Begleiter"
+L["Party Pets"] = "Gruppenbegleiter"
 L["Skip yourself when cycling through group members."] =
   "Überspringt dich selbst beim Durchwechseln der Gruppenmitglieder."
 L["Keep Ally After Harm"] = "Verbündeten nach Schaden behalten"
@@ -431,6 +430,36 @@ L["Where the Ally HUD sits relative to the crosshair."] =
 L["Scales the size of the Ally HUD."] = "Skaliert die Größe des Verbündeten-HUD."
 L["Distance between the Ally HUD and the crosshair."] =
   "Abstand zwischen Verbündeten-HUD und Fadenkreuz."
+
+-- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
+L["Support Mode"] = "Unterstützungsmodus"
+L["support mode keybinding"] = "Belegung für Unterstützungsmodus"
+L["SUPPORT MODE"] = "UNTERSTÜTZUNGSMODUS"
+L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
+  "Ein unterstützungsorientierter Modus, der im aktiven Zustand deine Hauptaktionsleiste auf eine eigene Unterstützungsseite umschaltet und es hilfreichen Zaubern erlaubt, die freundliche Einheit unter deinem Fadenkreuz anzuvisieren."
+L["Support Mode Keybind"] = "Tastenbelegung für Unterstützungsmodus"
+L["Prioritize Crosshair Target"] = "Fadenkreuz-Ziel priorisieren"
+L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
+  "Der Verbündete unter deinem Fadenkreuz erhält den Zauber, auch wenn ein anderes freundliches Ziel ausgewählt ist, etwa eine Auswahl per Verbündetenwechsel. Ausschalten, um zuerst auf das ausgewählte Ziel zu wirken."
+L["Tap to toggle Support Mode on or off."] =
+  "Tippen, um den Unterstützungsmodus ein- oder auszuschalten."
+L["Support Bar Page"] = "Unterstützungsleistenseite"
+L["The main action bar page shown while Support Mode is on. Place support abilities here. Exiting Support Mode returns to Page 1."] =
+  "Die Hauptaktionsleistenseite, die im Unterstützungsmodus angezeigt wird. Lege hier deine Unterstützungsfähigkeiten ab. Beim Verlassen des Unterstützungsmodus geht es zurück zu Seite 1."
+L["Don't Swap"] = "Nicht wechseln"
+L["Page %d"] = "Seite %d"
+L["Requires Reticle Targeting"] = "Erfordert Fadenkreuz-Zielerfassung"
+L["Support"] = "Support"
+L["Tint Vignette"] = "Vignette einfärben"
+L["While Support Mode is active, the Vignette adopts the Support crosshair color. It only appears when the Vignette is enabled."] =
+  "Solange der Unterstützungsmodus aktiv ist, übernimmt die Vignette die Fadenkreuzfarbe des Unterstützungsmodus. Sie erscheint nur, wenn die Vignette aktiviert ist."
+L["Nameplate Behavior"] = "Verhalten der Namensplaketten"
+L["Choose which nameplates appear while in Support Mode. Normal settings are restored when exiting Support Mode."] =
+  "Wähle, welche Namensplaketten im Unterstützungsmodus erscheinen. Beim Verlassen werden die normalen Einstellungen wiederhergestellt."
+L["Don't Change"] = "Nicht ändern"
+L["Friendly Only"] = "Nur freundliche"
+L["Friendly and Enemy"] = "Freundliche und feindliche"
+L["Hide All"] = "Alle ausblenden"
 
 -- TabAutoCursorUnlock.lua: Auto Unlock tab
 L["Auto Unlock"] = "Auto-Entsperren"
@@ -500,6 +529,7 @@ L["Back"] = "Zurück"
 L["Next"] = "Weiter"
 L["Finish"] = "Fertig"
 L["Skip tour"] = "Tour überspringen"
+L["Click to learn more about this feature"] = "Klicke, um mehr über diese Funktion zu erfahren"
 L["Assist HUD"] = "Assistenz-HUD"
 L["Target Lock"] = "Zielsperre"
 L["Party Wheel"] = "Gruppenrad"
@@ -511,6 +541,9 @@ L["Set a Cycle Lock - Previous key"] = "Taste „Sperre wechseln – Vorheriger�
 L["Set a Radial Menu key"] = "Radialmenü-Taste festlegen"
 L["Set an Ally Cycle - Next key"] = "Taste „Verbündetenwechsel – Nächster“ festlegen"
 L["Set an Ally Cycle - Previous key"] = "Taste „Verbündetenwechsel – Vorheriger“ festlegen"
+L["Set a Support Mode key"] = "Taste für den Unterstützungsmodus festlegen"
+L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
+  "Ein unterstützungsorientierter Modus, der im aktiven Zustand deine Hauptaktionsleiste auf eine eigene {Unterstützungsseite} umschaltet und {hilfreichen Zaubern} erlaubt, die freundliche Einheit unter deinem Fadenkreuz anzuvisieren.\n\nLege deine Taste fest."
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "Das Ein- oder Ausschalten der Fadenkreuz-Zielerfassung lädt die Benutzeroberfläche neu."
 L["Needs Reticle Targeting."] = "Benötigt die Fadenkreuz-Zielerfassung."
@@ -520,14 +553,14 @@ L["A reactive, fully customizable crosshair that adapts to your target and comba
   "Ein reaktives, vollständig anpassbares Fadenkreuz, das sich an dein Ziel und den Kampfstatus anpasst.\n\nWähle {Aussehen}, {Größe} und {Position}."
 L["Aim at an enemy and the HUD next to your crosshair suggests your {next spell} and shows its key.\n\nAim at something you can interact with and it shows its {name} and your {Interact key} instead.\n\nTurn either on or off, and set its {side}, {size} and {distance} from the crosshair."] =
   "Ziele auf einen Feind, und das HUD neben deinem Fadenkreuz schlägt deinen {nächsten Zauber} vor und zeigt dessen Taste.\n\nZiele auf etwas, mit dem du interagieren kannst, und es zeigt stattdessen dessen {Namen} und deine {Interaktionstaste}.\n\nSchalte beides ein oder aus und lege {Seite}, {Größe} und {Abstand} zum Fadenkreuz fest."
-L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting.\n\n{Ignore Friendlies} makes it skip allies."] =
-  "Erfasse Feinde allein durch Zielen und platziere Bodenzauber und Flächenfähigkeiten genau dort, wohin dein Fadenkreuz zeigt, ganz ohne Tab-Zielwahl.\n\n{Freundliche ignorieren} lässt Verbündete aus."
+L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting."] =
+  "Erfasse Feinde allein durch Zielen und platziere Bodenzauber und Flächenfähigkeiten genau dort, wohin dein Fadenkreuz zeigt, ganz ohne Tab-Zielwahl."
 L["Ground-targeted spells that should be cast at the crosshair location.\n\nType a {spell name or ID} to add it."] =
   "Bodenzauber, die an der Position des Fadenkreuzes gewirkt werden sollen.\n\nGib einen {Zaubernamen oder eine ID} ein, um ihn hinzuzufügen."
 L["{!Action buttons that are macros cannot inherit Reticle Targeting on their own.}\n\nPress {+} to open the {Macro Composer}, write your macro there and it gets the targeting logic added for you.\n\nThen drag it from this list onto your action bars; {right-click} an icon to edit it."] =
   "{!Aktionsschaltflächen, die Makros sind, können die Fadenkreuz-Zielerfassung nicht von selbst übernehmen.}\n\nDrücke {+}, um den {Makro-Composer} zu öffnen. Schreibe dort dein Makro, und die Zielerfassungslogik wird automatisch ergänzt.\n\nZiehe es dann aus dieser Liste auf deine Aktionsleisten; per {Rechtsklick} auf ein Symbol bearbeitest du es."
-L["Lock onto a target with one tap so the reticle stops swapping. While locked, the cycle keys jump to nearby enemies.\n\n{Target Lock Behavior} decides whether tapping again unlocks ({Toggle}) or moves the lock to whatever is under the crosshair ({Switch Target}).\n\nSet your keys."] =
-  "Fixiere mit einem Tastendruck ein Ziel, damit das Fadenkreuz nicht mehr wechselt. Solange gesperrt, springen die Wechseltasten zu Feinden in der Nähe.\n\n{Verhalten der Zielsperre} legt fest, ob erneutes Drücken entsperrt ({Umschalten}) oder die Sperre auf das verschiebt, was unter dem Fadenkreuz liegt ({Ziel wechseln}).\n\nLege deine Tasten fest."
+L["Lock onto a target with one tap so the reticle stops swapping. While locked, the cycle keys jump to nearby enemies, or to nearby allies in Support Mode.\n\n{Target Lock Behavior} decides whether tapping again unlocks ({Toggle}) or moves the lock to whatever is under the crosshair ({Switch Target}).\n\nSet your keys."] =
+  "Fixiere mit einem Tastendruck ein Ziel, damit das Fadenkreuz nicht mehr wechselt. Solange gesperrt, springen die Wechseltasten zu Feinden in der Nähe, im Unterstützungsmodus zu Verbündeten in der Nähe.\n\n{Verhalten der Zielsperre} legt fest, ob erneutes Drücken entsperrt ({Umschalten}) oder die Sperre auf das verschiebt, was unter dem Fadenkreuz liegt ({Ziel wechseln}).\n\nLege deine Tasten fest."
 L["Turn your mouse clicks into actions while in Mouse Look, such as casting your action bar spells with {Left and Right Click}.\n\nPick what each click does, with or without a {modifier key}."] =
   "Verwandle deine Mausklicks im Mausblick in Aktionen, etwa um Zauber deiner Aktionsleiste per {Links- und Rechtsklick} zu wirken.\n\nWähle, was jeder Klick bewirkt, mit oder ohne {Zusatztaste}."
 L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to switch between wheels."] =
@@ -546,7 +579,6 @@ L["Link"] = "Link"
 L["Copy the %s link (Ctrl+C), then paste it in your browser."] =
   "Kopiere den Link zu %s (Strg+C) und füge ihn in deinen Browser ein."
 L["Character-specific option."] = "Charakterspezifische Option."
-L["NEW"] = "NEU"
 L["ON"] = "AN"
 L["OFF"] = "AUS"
 L["Are you sure?"] = "Bist du sicher?"
@@ -596,16 +628,9 @@ L["Open Options"] = "Optionen öffnen"
 -- Editors: macro composer, prelines, crosshair colors and textures, CVar editor
 L["%d / %d characters"] = "%d / %d Zeichen"
 L["%s (over the macro limit)"] = "%s (über dem Makro-Limit)"
-L["Ignore Friendlies: %s"] = "Freundliche ignorieren: %s"
 L["Auto Target Lock: %s"] = "Automatische Zielsperre: %s"
-L["Preline: Ignore Friendlies + No Auto Lock"] =
-  "Vorzeile: Freundliche ignorieren + keine automatische Sperre"
-L["Preline: Ignore Friendlies + Auto Lock"] =
-  "Vorzeile: Freundliche ignorieren + automatische Sperre"
-L["Preline: Target Any Unit + No Auto Lock"] =
-  "Vorzeile: Beliebige Einheit anvisieren + keine automatische Sperre"
-L["Preline: Target Any Unit + Auto Lock"] =
-  "Vorzeile: Beliebige Einheit anvisieren + automatische Sperre"
+L["Preline: No Auto Lock"] = "Vorzeile: keine automatische Sperre"
+L["Preline: Auto Lock"] = "Vorzeile: automatische Sperre"
 L["Macro Composer"] = "Makro-Composer"
 L["The targeting logic preline matching your current Reticle Targeting settings is added automatically before your lines, as the highlighted portion of the macro. To modify it, use the Prelines Editor under %s."] =
   "Die zu deinen aktuellen Einstellungen der Fadenkreuz-Zielerfassung passende Zielvorzeile wird automatisch vor deinen Zeilen eingefügt, als hervorgehobener Teil des Makros. Um sie zu ändern, nutze den Vorzeilen-Editor unter %s."
@@ -622,10 +647,8 @@ L["Preline must be %d characters or fewer (room for /click under the 255 macro l
   "Die Vorzeile darf höchstens %d Zeichen lang sein (Platz für /click unter dem Makro-Limit von 255)."
 L["Inactive — Auto Target Lock is OFF"] = "Inaktiv — Automatische Zielsperre ist AUS"
 L["Inactive — Auto Target Lock is ON"] = "Inaktiv — Automatische Zielsperre ist AN"
-L["Inactive — Ignore Friendlies is OFF"] = "Inaktiv — Freundliche ignorieren ist AUS"
-L["Inactive — Ignore Friendlies is ON"] = "Inaktiv — Freundliche ignorieren ist AN"
-L["Customize the targeting prelines injected before each ability when Reticle Targeting is enabled.\n\n• Only the preline matching your current %s X %s settings is active.\n• Max %s characters per preline — SecureActionButton macros are capped at %s; the rest is reserved for the trailing %s line.\n• Use %s to reload and pick up edits."] =
-  "Passe die Zielvorzeilen an, die vor jede Fähigkeit eingefügt werden, wenn die Fadenkreuz-Zielerfassung aktiv ist.\n\n• Nur die Vorzeile, die zu deinen aktuellen Einstellungen %s X %s passt, ist aktiv.\n• Maximal %s Zeichen pro Vorzeile — SecureActionButton-Makros sind auf %s begrenzt; der Rest ist für die abschließende Zeile %s reserviert.\n• Nutze %s, um neu zu laden und Änderungen zu übernehmen."
+L["Customize the targeting prelines injected before each ability when Reticle Targeting is enabled.\n\n• Only the preline matching your current %s setting is active.\n• Max %s characters per preline — SecureActionButton macros are capped at %s; the rest is reserved for the trailing %s line.\n• Use %s to reload and pick up edits."] =
+  "Passe die Zielvorzeilen an, die vor jede Fähigkeit eingefügt werden, wenn die Fadenkreuz-Zielerfassung aktiv ist.\n\n• Nur die Vorzeile, die zu deinen aktuellen Einstellungen %s passt, ist aktiv.\n• Maximal %s Zeichen pro Vorzeile — SecureActionButton-Makros sind auf %s begrenzt; der Rest ist für die abschließende Zeile %s reserviert.\n• Nutze %s, um neu zu laden und Änderungen zu übernehmen."
 L["Apply Changes"] = "Änderungen anwenden"
 L["Hostile"] = "Feindlich"
 L["NPC"] = "NPC"
@@ -634,6 +657,7 @@ L["Object"] = "Objekt"
 L["Select a tab to customize the color and alpha of the crosshair when targeting different types of units.\n\n• %s and %s animations use the Hostile color.\n• Inactive crosshair states use the Base style."] =
   "Wähle einen Reiter, um Farbe und Transparenz des Fadenkreuzes für verschiedene Einheitentypen anzupassen.\n\n• Die Animationen von %s und %s verwenden die Farbe für Feindlich.\n• Inaktive Fadenkreuz-Zustände verwenden den Basis-Stil."
 L["Reset to Default"] = "Auf Standard zurücksetzen"
+L["Reset All Colors"] = "Alle Farben zurücksetzen"
 L["Show the inactive crosshair"] = "Inaktives Fadenkreuz anzeigen"
 L["Show the active crosshair"] = "Aktives Fadenkreuz anzeigen"
 L["Show the mounted crosshair"] = "Fadenkreuz beim Reiten anzeigen"
@@ -653,6 +677,14 @@ L["Not aiming at anything"] = "Zielt auf nichts"
 L["Aiming at a unit or object"] = "Zielt auf eine Einheit oder ein Objekt"
 L["While you are mounted"] = "Solange du reitest"
 L["While Target Lock holds"] = "Solange die Zielsperre aktiv ist"
+L["SUPPORT"] = "SUPPORT"
+L["Use a Support Mode crosshair"] = "Ein Fadenkreuz für den Unterstützungsmodus verwenden"
+L["Use the normal crosshair in Support Mode"] =
+  "Im Unterstützungsmodus das normale Fadenkreuz verwenden"
+L["Support Mode keeps your Inactive and Active textures."] =
+  "Der Unterstützungsmodus behält deine Texturen für Inaktiv und Aktiv."
+L["While Support Mode is on, in place of Inactive and Active"] =
+  "Solange der Unterstützungsmodus an ist, anstelle von Inaktiv und Aktiv"
 L["Brings back the texture you had before hiding it."] =
   "Stellt die Textur wieder her, die du vor dem Ausblenden hattest."
 L["Crosshair Textures"] = "Fadenkreuz-Texturen"

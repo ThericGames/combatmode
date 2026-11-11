@@ -13,9 +13,10 @@
 --      set both slots to a curated pair. Each card has an eye button that hides just that
 --      slot (id "none", empty path); situational with both slots hidden stores
 --      CrosshairSituationalHidden (the whole reticle is suppressed).
---    • Main target also shows Mounted and Disabled (Target Lock) cards
---      (DB.global.crosshairMountedId / crosshairTargetLockId), picked independently. Same eye
---      button and grid behavior; presets and Reset to Default set both back to the Dot.
+--    • Main target also shows Mounted, Disabled (Target Lock) and Support (Support Mode) cards
+--      (DB.global.crosshairMountedId / crosshairTargetLockId / crosshairSupportId), picked
+--      independently. Same eye button and grid behavior; presets and Reset to Default set them
+--      back to their defaults. Support's eye means "no Support texture", not a hidden reticle.
 --    • Grid: one scroll frame of lightweight cells (texture + tinted background, no rounded
 --      9-slice per cell) built once from CM.Constants.CrosshairTextures on first open.
 --    • Every change calls CM.CreateCrosshair / CM.RefreshCrosshairAppearance (the Crosshair tab
@@ -46,7 +47,7 @@ local M = CM.METADATA
 
 local CONTENT_W = 348
 local EDITOR_W = CONTENT_W + 32
-local EDITOR_H = 560
+local EDITOR_H = 620 -- room for the three slot rows of the main target above the grid
 local SLOT_H = 64
 local PRESET_COLS = 5
 local PRESET_GAP = 6
@@ -121,14 +122,27 @@ local function SetPair(baseId, activeId)
   end
 end
 
--- Idle slots (main target only): each has its own DB key, picked independently.
-local IDLE_KEYS = { mounted = "crosshairMountedId", lock = "crosshairTargetLockId" }
+-- Idle slots (main target only): each has its own DB key, picked independently. "support" is
+-- the Support Mode texture (in place of Inactive and Active while that mode is on); its "none"
+-- means no Support texture, not a hidden reticle.
+local IDLE_KEYS = {
+  mounted = "crosshairMountedId",
+  lock = "crosshairTargetLockId",
+  support = "crosshairSupportId",
+}
+local IDLE_DEFAULTS = {
+  mounted = CM.Constants.CrosshairIdleDefaultId,
+  lock = CM.Constants.CrosshairIdleDefaultId,
+  support = CM.Constants.CrosshairSupportDefaultId,
+}
+-- Reaction color each card's preview is tinted with (default "base").
+local SLOT_TINTS = { active = "hostile", support = "support" }
 
 --- Texture id of an idle slot, "none" when hidden.
 local function GetIdleId(slot)
   local id = CM.DB.global[IDLE_KEYS[slot]]
   if not CM.Constants.CrosshairTextureById[id] then
-    id = CM.Constants.CrosshairIdleDefaultId
+    id = IDLE_DEFAULTS[slot]
   end
   return id
 end
@@ -172,19 +186,29 @@ local function ToggleSlotHidden(slot)
     SetSlot(slot, NONE)
     return
   end
-  local fallback = CM.Constants.CrosshairIdleDefaultId
-  if not IDLE_KEYS[slot] then
+  local fallback = IDLE_DEFAULTS[slot]
+  if not fallback then
     local default = CM.Constants.CrosshairTextureObj.Default
     fallback = slot == "base" and default.BaseId or default.ActiveId
   end
   SetSlot(slot, rememberedId[slot] or fallback)
 end
 
---- Mounted and Disabled go back to the Dot (every preset and Reset to Default pair with it).
+--- Mounted and Disabled go back to the Dot and Support to its three chevrons (every preset and
+--- Reset to Default pair with them).
 local function ResetIdleSlots()
-  for _, key in pairs(IDLE_KEYS) do
-    CM.DB.global[key] = CM.Constants.CrosshairIdleDefaultId
+  for slot, key in pairs(IDLE_KEYS) do
+    CM.DB.global[key] = IDLE_DEFAULTS[slot]
   end
+end
+
+local function IdleSlotsAtDefault()
+  for slot in pairs(IDLE_KEYS) do
+    if GetIdleId(slot) ~= IDLE_DEFAULTS[slot] then
+      return false
+    end
+  end
+  return true
 end
 
 local function Tint(texture, state)
@@ -205,7 +229,7 @@ Refresh = function()
   local byId = CM.Constants.CrosshairTextureById
 
   local mainTarget = target == "main"
-  slotsHost:SetHeight(mainTarget and (SLOT_H + IDLE_H + 8) or SLOT_H)
+  slotsHost:SetHeight(mainTarget and (SLOT_H + 2 * (IDLE_H + 8)) or SLOT_H)
 
   for slot, card in pairs(slotCards) do
     local id = baseId
@@ -220,7 +244,7 @@ Refresh = function()
     card.texture:SetShown(entry ~= nil and not isHidden)
     if entry and not isHidden then
       card.texture:SetTexture(entry.path)
-      Tint(card.texture, slot == "active" and "hostile" or "base")
+      Tint(card.texture, SLOT_TINTS[slot] or "base")
     end
     card.button:cmSetTabSelected(slot == activeSlot)
     card.eye:SetIcon(EyeIcon(isHidden))
@@ -251,16 +275,11 @@ Refresh = function()
   for _, entry in ipairs(presetButtons) do
     Tint(entry.inactive, "base")
     Tint(entry.active, "hostile")
-    -- A preset is a full set: Inactive/Active pair plus the Dot for Mounted and Disabled (main).
+    -- A preset is a full set: Inactive/Active pair plus the default Mounted, Disabled and
+    -- Support textures (main).
     local selected = entry.preset.BaseId == baseId
       and entry.preset.ActiveId == activeId
-      and (
-        not mainTarget
-        or (
-          GetIdleId("mounted") == CM.Constants.CrosshairIdleDefaultId
-          and GetIdleId("lock") == CM.Constants.CrosshairIdleDefaultId
-        )
-      )
+      and (not mainTarget or IdleSlotsAtDefault())
     if selected then
       entry.button:cmSetBorderGradient(C.accentTop, C.accentBottom)
     else
@@ -274,18 +293,21 @@ local SLOT_SHOW_TITLES = {
   active = L["Show the active crosshair"],
   mounted = L["Show the mounted crosshair"],
   lock = L["Show the disabled crosshair"],
+  support = L["Use a Support Mode crosshair"],
 }
 local SLOT_HIDE_TITLES = {
   base = L["Hide the inactive crosshair"],
   active = L["Hide the active crosshair"],
   mounted = L["Hide the mounted crosshair"],
   lock = L["Hide the disabled crosshair"],
+  support = L["Use the normal crosshair in Support Mode"],
 }
 local SLOT_HIDE_HINTS = {
   base = L["Nothing is drawn while you are not aiming at anything."],
   active = L["Nothing is drawn while you are aiming at a unit or object."],
   mounted = L["Nothing is drawn while you are mounted."],
   lock = L["Nothing is drawn while Target Lock holds the reticle."],
+  support = L["Support Mode keeps your Inactive and Active textures."],
 }
 
 -- Caption under each card title: when that state applies (the preview already shows the texture).
@@ -294,6 +316,7 @@ local SLOT_DESCRIPTIONS = {
   active = L["Aiming at a unit or object"],
   mounted = L["While you are mounted"],
   lock = L["While Target Lock holds"],
+  support = L["While Support Mode is on, in place of Inactive and Active"],
 }
 
 local function MakeSlotCard(parent, slot, label, anchorX, anchorY, width, height)
@@ -466,6 +489,8 @@ local function Build()
   MakeSlotCard(slotsHost, "active", L["ACTIVE"], slotW + 8, 0, slotW, SLOT_H)
   MakeSlotCard(slotsHost, "mounted", L["MOUNTED"], 0, -(SLOT_H + 8), slotW, IDLE_H)
   MakeSlotCard(slotsHost, "lock", L["DISABLED"], slotW + 8, -(SLOT_H + 8), slotW, IDLE_H)
+  local supportY = -(SLOT_H + 8 + IDLE_H + 8)
+  MakeSlotCard(slotsHost, "support", L["SUPPORT"], 0, supportY, CONTENT_W, IDLE_H)
 
   local presetLabel = MakeSectionLabel(content, L["PRESETS"])
   presetLabel:SetPoint("TOPLEFT", slotsHost, "BOTTOMLEFT", 0, -14)
@@ -537,8 +562,8 @@ function CM.RefreshCrosshairTextureEditor()
 end
 
 --- Opens the texture browser. `which` is "main" (Crosshair tab Appearance) or "situational"
---- (Advanced tab Situational Appearance). `slot` ("base"/"active"/"mounted"/"lock", the last
---- two main only) preselects the slot to edit.
+--- (Advanced tab Situational Appearance). `slot` ("base"/"active"/"mounted"/"lock"/"support",
+--- the last three main only) preselects the slot to edit.
 function CM.OpenCrosshairTextureEditor(which, slot)
   if InCombatLockdown and InCombatLockdown() then
     print(

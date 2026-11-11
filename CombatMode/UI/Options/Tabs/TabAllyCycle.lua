@@ -6,6 +6,7 @@
 --  Architecture / how it works:
 --    • DB.global.allyCycle; onSelect/onDeselect → SetAllyCycleOptionsPreview.
 --    • Skip Self → skipPlayer + ApplyAllyCycleBindings (secure attribute).
+--    • Also Cycle Through (multi dropdown) → CM.SetAllyCycleExtraUnits (Your Pet / Party Pets).
 --    • Keep Ally After Harm → SetAllyCycleRestoreAfterHarm + RefreshClickCastMacros.
 --  Does not: Own secure roster or build click-cast macrotext.
 --  Related: Core/AllyCycle/{Cycle,Target,HealthBar,Motion,HUD,AllyCycle}.lua, Constants/DatabaseDefaults.lua,
@@ -26,6 +27,44 @@ local HUD_SIDE_VALUES = {
 }
 local HUD_SIDE_ORDER = { "TOP", "BOTTOM" }
 
+local EXTRA_UNIT_VALUES = {
+  playerPet = L["Your Pet"],
+  partyPets = L["Party Pets"],
+}
+local EXTRA_UNIT_ORDER = { "playerPet", "partyPets" }
+
+local function ExtraUnitsSelected()
+  local playerPet, partyPets = CM.GetAllyCycleExtraUnits()
+  return { playerPet = playerPet, partyPets = partyPets }
+end
+
+local function ExtraUnitOn(id)
+  return ExtraUnitsSelected()[id] == true
+end
+
+local function ToggleExtraUnit(id)
+  local set = ExtraUnitsSelected()
+  set[id] = not set[id]
+  local keys = {}
+  for _, key in ipairs(EXTRA_UNIT_ORDER) do
+    if set[key] then
+      keys[#keys + 1] = key
+    end
+  end
+  CM.SetAllyCycleExtraUnits(table.concat(keys, ","))
+end
+
+local function ExtraUnitsSummary()
+  local set = ExtraUnitsSelected()
+  local names = {}
+  for _, key in ipairs(EXTRA_UNIT_ORDER) do
+    if set[key] then
+      names[#names + 1] = EXTRA_UNIT_VALUES[key]
+    end
+  end
+  return #names > 0 and table.concat(names, ", ") or L["Off"]
+end
+
 local function ApplyHud()
   if CM.ApplyAllyCycleHUDLayout then
     CM.ApplyAllyCycleHUDLayout()
@@ -43,6 +82,7 @@ local function AllyCycleDb()
       scale = 1.0,
       padding = 24,
       skipPlayer = true,
+      extraUnits = "playerPet",
       restoreAllyAfterHarm = false,
       restoreAllyAfterHarmSet = false,
     }
@@ -53,6 +93,7 @@ end
 UI.Options.AddTab({
   id = "allycycle",
   label = L["Ally Cycle"],
+  newFeatureFlag = true,
   onSelect = function()
     if CM.SetAllyCycleOptionsPreview then
       CM.SetAllyCycleOptionsPreview(true)
@@ -118,6 +159,18 @@ UI.Options.AddTab({
           CM.ApplyAllyCycleBindings()
         end
       end,
+    })
+    ctx:Dropdown({
+      label = L["Also Cycle Through"],
+      desc = L["Adds pets after the group members: your own pet, and the pets of everyone else in your party or raid."],
+      multi = true,
+      newFeatureFlag = true,
+      values = EXTRA_UNIT_VALUES,
+      order = EXTRA_UNIT_ORDER,
+      isOn = ExtraUnitOn,
+      toggle = ToggleExtraUnit,
+      summary = ExtraUnitsSummary,
+      get = ExtraUnitsSummary,
     })
     ctx:Toggle({
       label = L["Keep Ally After Harm"],
