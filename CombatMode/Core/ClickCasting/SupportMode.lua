@@ -9,7 +9,8 @@
 --  Architecture / how it works:
 --    • Enabled = Reticle Targeting on and the key bound (no master toggle).
 --    • CombatModeSupportMode (SecureHandlerBaseTemplate) holds the state (attribute sm = 1 / 0)
---      and a frame ref to every click-cast proxy with more than one macro text.
+--      and a frame ref to every click-cast proxy with more than one macro text (the Target
+--      Lock and cycle keys too: their Support Mode texts only take friendly units).
 --      BindingOverrides and the Party Wheel route buttons store them out of combat
 --      (CM.SetModeMacroText: sm-off / sm-on attributes); the key's wrapped OnClick copies the
 --      right one into macrotext, so the swap works in combat.

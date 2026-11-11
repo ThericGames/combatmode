@@ -18,7 +18,8 @@
 --      Blizzard health-bar alpha does not multiply with our arrive fade or color pulse.
 --    • While focus exists and the marker option is on, center stays on the static Dot
 --      even if no nameplate is visible. Unlock / marker-off Clears and restores.
---    • Marker tint uses CM.GetCrosshairReactionColor("focus") → effective hostile.
+--    • Marker tint uses CM.GetCrosshairReactionColor("focus") → effective hostile; in Support
+--      Mode (the lock is an ally there) the "support" color instead (GetFocusColorState).
 --    • Anchors centered on Blizzard/Platynator/Plater health bar (IsVisible + under-plate).
 --      Platynator, then Plater (plate.unitFrame.healthBar), are preferred over
 --      UnitFrame.healthBar; widgets iterated with pairs
@@ -37,6 +38,7 @@ local _G = _G
 
 -- WoW API
 local CreateFrame = _G.CreateFrame
+local UnitCanAttack = _G.UnitCanAttack
 local UnitExists = _G.UnitExists
 local UnitIsUnit = _G.UnitIsUnit
 local UIParent = _G.UIParent
@@ -89,6 +91,7 @@ local driverFrame
 -- Public number for compares/arithmetic; secret measures (e.g. tainted StatusBar
 -- GetWidth/GetAlpha) fall back so we never branch on secret values under taint.
 local PublicNumber = CM.Safe.PublicNumber
+local PublicTruthy = CM.Safe.PublicTruthy
 
 local function Clamp01(value)
   return math.max(0, math.min(1, value))
@@ -99,8 +102,20 @@ local function EaseOutQuad(progress)
   return 1 - inv * inv
 end
 
+-- Reaction-color state of the marker: "focus" (the hostile tint), or "support" while Support Mode
+-- is on, where the Target Lock keys only lock allies. Only a public "can attack" (an enemy lock
+-- carried into the mode) keeps the hostile tint there; a secret answer counts as the ally.
+local function GetFocusColorState()
+  if CM.IsSupportModeActive and CM.IsSupportModeActive() then
+    if PublicTruthy(UnitCanAttack("player", "focus")) ~= true then
+      return "support"
+    end
+  end
+  return "focus"
+end
+
 local function GetFocusColor()
-  local c = CM.GetCrosshairReactionColor("focus")
+  local c = CM.GetCrosshairReactionColor(GetFocusColorState())
   if type(c) == "table" then
     return c[1] or 1, c[2] or 0, c[3] or 1, c[4] or 1
   end

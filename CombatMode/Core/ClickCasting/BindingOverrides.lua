@@ -29,7 +29,8 @@
 --    • RefreshClickCastMacros also runs CM.RebuildComposedMacros so composer-built
 --      macros follow the active preline (lockdown refreshes are queued, flushed on regen).
 --    • Support Mode: click-cast and main-bar proxies store a second macro text
---      (BuildModeMacroTexts → CM.SetModeMacroText) that SupportMode.lua's secure key swaps in.
+--      (BuildModeMacroTexts → CM.SetModeMacroText) that SupportMode.lua's secure key swaps in;
+--      the Target Lock / cycle keys and Toggle Focus actions get friendly-only twins the same way.
 --  Does not: Resolve ElvUI/BT4 frame names (AddonActionBarResolver) or build preline text
 --  (TargetingMacroBuilder).
 --  Related: Core/ClickCasting/TargetingMacroBuilder.lua, Core/ClickCasting/ComposedMacros.lua,
@@ -141,6 +142,8 @@ local ToggleFocusTargetButton = CreateFrame(
 ToggleFocusTargetButton:SetAttribute("type", "macro")
 -- macrotext set by UpdateToggleFocusTargetMacroText() based on reticleTargetingEnemyOnly
 ToggleFocusTargetButton:RegisterForClicks("AnyUp", "AnyDown")
+-- Support Mode swaps in the friendly-only lock macro (and the friendly cycle macros below).
+CM.SupportModeRegisterProxy(ToggleFocusTargetButton)
 
 -- Configurable Target Lock cycle (nearest / previous enemy → focus).
 -- Dedicated Bindings.xml keys + SetOverrideBindingClick (same model as Target Lock).
@@ -165,6 +168,8 @@ local CycleFocusEnemyPrevButton = CreateFrame(
 )
 CycleFocusEnemyPrevButton:SetAttribute("type", "macro")
 CycleFocusEnemyPrevButton:RegisterForClicks("AnyUp", "AnyDown")
+CM.SupportModeRegisterProxy(CycleFocusEnemyNextButton)
+CM.SupportModeRegisterProxy(CycleFocusEnemyPrevButton)
 
 if SecureHandlerWrapScript then
   SecureHandlerWrapScript(
@@ -198,12 +203,17 @@ local function EnsureFocusCycleMacroText()
   if not macros_const or InCombatLockdown() then
     return
   end
-  if macros_const.CM_CycleFocusEnemyNext then
-    CycleFocusEnemyNextButton:SetAttribute("macrotext", macros_const.CM_CycleFocusEnemyNext)
-  end
-  if macros_const.CM_CycleFocusEnemyPrev then
-    CycleFocusEnemyPrevButton:SetAttribute("macrotext", macros_const.CM_CycleFocusEnemyPrev)
-  end
+  -- Second text: Support Mode cycles friendly units instead (the secure key swaps them in combat).
+  CM.SetModeMacroText(
+    CycleFocusEnemyNextButton,
+    macros_const.CM_CycleFocusEnemyNext,
+    macros_const.CM_CycleFocusFriendNext
+  )
+  CM.SetModeMacroText(
+    CycleFocusEnemyPrevButton,
+    macros_const.CM_CycleFocusEnemyPrev,
+    macros_const.CM_CycleFocusFriendPrev
+  )
 end
 
 --- Target Lock (focus toggle, wheel cycle, marker, sounds) requires Reticle Targeting.
@@ -252,6 +262,16 @@ function CM.UpdateFocusCycleWheelBindings()
   CM.ApplyCycleFocusBindings()
 end
 
+--- Support Mode text of the Target Lock key / Toggle Focus actions: friendly units only, same
+--- Target Lock Behavior (Toggle / Switch Target).
+local function SupportFocusMacroText()
+  local macros_const = CM.Constants.Macros
+  if CM.DB.char.targetLockBehavior == "switch" then
+    return macros_const.CM_SwitchFocusSupport
+  end
+  return macros_const.CM_ToggleFocusSupport
+end
+
 local function UpdateToggleFocusTargetMacroText()
   if not ToggleFocusTargetButton then
     return
@@ -265,7 +285,7 @@ local function UpdateToggleFocusTargetMacroText()
   else
     macroText = enemyOnly and macros_const.CM_ToggleFocusEnemy or macros_const.CM_ToggleFocusAny
   end
-  ToggleFocusTargetButton:SetAttribute("macrotext", macroText)
+  CM.SetModeMacroText(ToggleFocusTargetButton, macroText, SupportFocusMacroText())
 end
 
 -- BuildClickCastMacroText moved to TargetingMacroBuilder.lua
@@ -517,11 +537,12 @@ local FOCUS_ACTION_MACRO_KEYS = {
   TOGGLEFOCUSANY = { toggle = "CM_ToggleFocusAny", switch = "CM_SwitchFocusAny" },
   TOGGLEFOCUSENEMY = { toggle = "CM_ToggleFocusEnemy", switch = "CM_SwitchFocusEnemy" },
 }
+-- Second return: the Support Mode text (Toggle Focus actions lock friendly units there), or nil.
 local function ActionMacroText(value)
   local focus = FOCUS_ACTION_MACRO_KEYS[value]
   if focus then
     local behavior = CM.DB.char.targetLockBehavior == "switch" and "switch" or "toggle"
-    return CM.Constants.Macros[focus[behavior]]
+    return CM.Constants.Macros[focus[behavior]], SupportFocusMacroText()
   end
   return ACTION_MACRO_TEXTS[value]
 end
@@ -542,9 +563,9 @@ function CM.SetNewBinding(buttonSettings)
     -- Combat Mode's own click-cast actions: their macro text goes on this key's proxy button and
     -- the key clicks it, so nothing has to exist in the player's macro list.
     local frame = ClickCastFramesByKey[key]
-    local macroText = ActionMacroText(value)
+    local macroText, supportText = ActionMacroText(value)
     if frame and macroText then
-      SetClickCastFrameMacro(frame, macroText)
+      SetClickCastFrameMacro(frame, macroText, supportText)
       valueToUse = "CLICK " .. frame:GetName() .. ":" .. ClickCastMouseButton(key)
     end
   else

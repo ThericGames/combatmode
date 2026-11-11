@@ -855,14 +855,21 @@ local SUPPORT_ALLY_UNITS = "[@mouseover,help][@softfriend,help]"
 -- on the aimed-at ally. Dead, it is the last resort (SupportCastLine), so a resurrection on a
 -- cycled ally still works when nobody else is aimed at.
 local SUPPORT_LIVING_TARGET = "[@target,help,nodead]"
-local SUPPORT_CAST_UNITS = SUPPORT_LIVING_TARGET .. SUPPORT_ALLY_UNITS
+-- Target Lock on an ally (a living friendly focus; the Target Lock and cycle keys pick friendly
+-- units in Support Mode) beats everything else in both orders, as a lock does for enemies. The
+-- lock key also hard-targets it, so this only matters once the target moved on (a harmful cast,
+-- an Ally Cycle press). Dead, it steps aside like a dead hard target and is a last resort.
+local SUPPORT_LOCKED_ALLY = "[@focus,help,nodead]"
+local SUPPORT_CAST_UNITS = SUPPORT_LOCKED_ALLY .. SUPPORT_LIVING_TARGET .. SUPPORT_ALLY_UNITS
 -- Crosshair First (char.supportModeCrosshairFirst, default off): the unit under the crosshair
--- beats a hard target or an Ally Cycle pick, but not Target Lock (a living friendly focus), as
--- with enemies; then the living hard target, then the soft friend. Off: the order above (the
--- hard target first).
-local SUPPORT_CAST_UNITS_CROSSHAIR_FIRST = "[@focus,help,nodead][@mouseover,help]"
+-- beats a hard target or an Ally Cycle pick, but not Target Lock; then the living hard target,
+-- then the soft friend. Off: the order above (the hard target before the crosshair).
+local SUPPORT_CAST_UNITS_CROSSHAIR_FIRST = SUPPORT_LOCKED_ALLY
+  .. "[@mouseover,help]"
   .. SUPPORT_LIVING_TARGET
   .. "[@softfriend,help]"
+-- Last resorts, for resurrections: the hard target, then the lock, when it is a dead ally.
+local SUPPORT_DEAD_UNITS = "[@target,help][@focus,help]"
 
 local function SupportCastUnits()
   local char = CM.DB and CM.DB.char
@@ -893,10 +900,11 @@ local function SupportPreLine()
 end
 
 -- Support Mode cast as one line that never changes your hard target. Order (SupportCastUnits):
--- you while the game's Self Cast key is held, then either the aimed-at ally first (Crosshair
--- First, default) or your living friendly hard target first (an Ally Cycle pick wins over
--- whatever you aim at; clear the target to heal by aim again), then the other, the soft friend,
--- the hard target when it is a dead ally, and last
+-- you while the game's Self Cast key is held, then your living locked ally (Target Lock), then
+-- either your living friendly hard target first (the default: an Ally Cycle pick wins over
+-- whatever you aim at; clear the target to heal by aim again) or the aimed-at ally first
+-- (Prioritize Crosshair Target), then the other, the soft friend, the hard target or the lock
+-- when it is a dead ally (SUPPORT_DEAD_UNITS), and last
 -- you when the game's Auto Self Cast is on (off: every condition fails and nothing is cast).
 -- Any friendly hard target counts: a macro can't tell who picked it.
 -- /click can't name a unit, so this is a named /cast of the spell on the slot when the macro is
@@ -918,7 +926,7 @@ local function SupportCastLine(spellId)
       name = name .. "(" .. subtext .. ")"
     end
   end
-  local units = SUPPORT_SELF_KEY .. SupportCastUnits() .. "[@target,help]"
+  local units = SUPPORT_SELF_KEY .. SupportCastUnits() .. SUPPORT_DEAD_UNITS
   if AutoSelfCastOn() then
     units = units .. "[@player]"
   end

@@ -9,7 +9,9 @@
 --      macro list): CM_ClearTarget/Focus, CM_ToggleFocus{Any,Enemy} + CM_SwitchFocus{Any,Enemy} (Target Lock key)
 --      (Toggle: target-first-then-mouseover on lock, clear focus + target on unlock; Switch: the unit
 --      under the crosshair becomes the lock, an empty crosshair unlocks),
---      CM_CycleFocusEnemy{Next,Prev}, CM_StartAttack / CM_PetAttack (hostile /tar
+--      CM_CycleFocusEnemy{Next,Prev}, their Support Mode twins that only take friendly units
+--      (CM_ToggleFocusSupport / CM_SwitchFocusSupport / CM_CycleFocusFriend{Next,Prev}),
+--      CM_StartAttack / CM_PetAttack (hostile /tar
 --      then /startattack or /petattack; hides raw Blizzard STARTATTACK / PETATTACK)
 --    • BLIZZARD_EVENTS groups: UNLOCK/LOCK/FREELOOK_RECONCILE/REMATCH, FRIENDLY_TARGETING,
 --      SELECTION_CIRCLE,
@@ -53,6 +55,22 @@ CM.Constants.Macros = {
   -- Mouse-wheel Target Lock cycle (nearest / previous enemy, then focus).
   CM_CycleFocusEnemyNext = "/targetenemy [@focus,exists]\n/focus [@target,exists]",
   CM_CycleFocusEnemyPrev = "/targetenemy [@focus,exists] 1\n/focus [@target,exists]",
+  -- Support Mode Target Lock (swapped in by the Support Mode key, SupportMode.lua): the same keys,
+  -- friendly units only. `help` is true for a dead ally, so one can be locked for a resurrection.
+  -- No trailing []: with no ally to lock, the key does nothing.
+  --  • Toggle: your friendly target first (an Ally Cycle pick), else the ally under the
+  --    crosshair, else the friendly soft target (a nameplate is not a mouseover unit in Mouse
+  --    Look; Support Mode turns SoftTargetFriend on).
+  --  • Switch: the ally under the crosshair becomes the lock; an empty crosshair unlocks. No soft
+  --    friend here: with SoftTargetMatchLocked it sits on the locked ally, so the key could
+  --    never unlock or move on.
+  CM_ToggleFocusSupport = "/cleartarget [@focus,exists]\n/focus [@focus,exists] none; [@target,help]; [@mouseover,help][@softfriend,help]\n/tar [@focus,exists]",
+  CM_SwitchFocusSupport = "/cleartarget [@focus,exists]\n/focus [@mouseover,help]; [@mouseover,noexists] none\n/tar [@focus,exists]",
+  -- Cycle keys in Support Mode: nearest / previous friendly unit (Blizzard's /targetfriend, the
+  -- friendly twin of /targetenemy: players, pets and NPCs), then lock it. `help` keeps the lock
+  -- where it is when the hard target is not an ally.
+  CM_CycleFocusFriendNext = "/targetfriend [@focus,exists]\n/focus [@target,help]",
+  CM_CycleFocusFriendPrev = "/targetfriend [@focus,exists] 1\n/focus [@target,help]",
   -- Click-cast Start Attack / Pet Attack: hostile under the reticle, then swing.
   CM_StartAttack = "/tar [@focus,harm];[nomounted,@mouseover,harm,nodead][nomounted,@anyenemy]\n/startattack",
   CM_PetAttack = "/tar [@focus,harm];[nomounted,@mouseover,harm,nodead][nomounted,@anyenemy]\n/petattack",
