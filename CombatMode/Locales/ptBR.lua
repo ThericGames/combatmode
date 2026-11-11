@@ -228,8 +228,8 @@ L["Locks the unit under the crosshair, replacing any current lock. Tap with noth
 L["With Ignore Friendlies on, a friendly or dead unit under the crosshair is ignored: the lock stays where it is."] =
   "Com “Ignorar aliados” ativado, uma unidade aliada ou morta sob a mira é ignorada: a trava permanece onde está."
 L["Auto Target Lock"] = "Travar alvo automaticamente"
-L["Target Lock engages automatically when attacking units."] =
-  "Travar alvo é ativado automaticamente ao atacar unidades."
+L["Target Lock engages automatically when attacking units, and in Support Mode when healing an ally."] =
+  "Travar alvo é ativado automaticamente ao atacar unidades e, no Modo de Suporte, ao curar um aliado."
 L["Target Lock Marker"] = "Marcador de trava de alvo"
 L["Show a crosshair marker on the nameplate of the locked target."] =
   "Mostra um marcador de mira na placa de nome do alvo travado."

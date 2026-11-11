@@ -237,8 +237,8 @@ L["Locks the unit under the crosshair, replacing any current lock. Tap with noth
 L["With Ignore Friendlies on, a friendly or dead unit under the crosshair is ignored: the lock stays where it is."] =
   "Если включено «Игнорировать союзников», дружественная или мёртвая цель под прицелом игнорируется: захват остаётся на месте."
 L["Auto Target Lock"] = "Автозахват цели"
-L["Target Lock engages automatically when attacking units."] =
-  "Захват цели включается автоматически при атаке юнитов."
+L["Target Lock engages automatically when attacking units, and in Support Mode when healing an ally."] =
+  "Захват цели включается автоматически при атаке юнитов, а в режиме поддержки — при исцелении союзника."
 L["Target Lock Marker"] = "Метка захвата цели"
 L["Show a crosshair marker on the nameplate of the locked target."] =
   "Показывает метку прицела на индикаторе имени захваченной цели."

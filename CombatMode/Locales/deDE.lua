@@ -228,8 +228,8 @@ L["Locks the unit under the crosshair, replacing any current lock. Tap with noth
 L["With Ignore Friendlies on, a friendly or dead unit under the crosshair is ignored: the lock stays where it is."] =
   "Bei aktivem „Freundliche ignorieren“ wird eine freundliche oder tote Einheit unter dem Fadenkreuz ignoriert: Die Sperre bleibt bestehen."
 L["Auto Target Lock"] = "Automatische Zielsperre"
-L["Target Lock engages automatically when attacking units."] =
-  "Die Zielsperre greift automatisch, wenn du Einheiten angreifst."
+L["Target Lock engages automatically when attacking units, and in Support Mode when healing an ally."] =
+  "Die Zielsperre greift automatisch, wenn du Einheiten angreifst, und im Unterstützungsmodus, wenn du einen Verbündeten heilst."
 L["Target Lock Marker"] = "Zielsperren-Markierung"
 L["Show a crosshair marker on the nameplate of the locked target."] =
   "Zeigt eine Fadenkreuz-Markierung auf der Namensplakette des gesperrten Ziels."

@@ -183,7 +183,8 @@ L["Locks the unit under the crosshair, replacing any current lock. Tap with noth
 L["With Ignore Friendlies on, a friendly or dead unit under the crosshair is ignored: the lock stays where it is."] =
   true
 L["Auto Target Lock"] = true
-L["Target Lock engages automatically when attacking units."] = true
+L["Target Lock engages automatically when attacking units, and in Support Mode when healing an ally."] =
+  true
 L["Target Lock Marker"] = true
 L["Show a crosshair marker on the nameplate of the locked target."] = true
 L["Focus Locked Target"] = true

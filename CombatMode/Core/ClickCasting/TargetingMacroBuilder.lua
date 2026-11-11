@@ -860,23 +860,29 @@ local SUPPORT_LIVING_TARGET = "[@target,help,nodead]"
 -- lock key also hard-targets it, so this only matters once the target moved on (a harmful cast,
 -- an Ally Cycle press). Dead, it steps aside like a dead hard target and is a last resort.
 local SUPPORT_LOCKED_ALLY = "[@focus,help,nodead]"
-local SUPPORT_CAST_UNITS = SUPPORT_LOCKED_ALLY .. SUPPORT_LIVING_TARGET .. SUPPORT_ALLY_UNITS
+-- The allies after the lock (SupportCastUnits = the lock + these): the hard target before the
+-- crosshair.
+local SUPPORT_ALLY_ORDER = SUPPORT_LIVING_TARGET .. SUPPORT_ALLY_UNITS
 -- Crosshair First (char.supportModeCrosshairFirst, default off): the unit under the crosshair
 -- beats a hard target or an Ally Cycle pick, but not Target Lock; then the living hard target,
--- then the soft friend. Off: the order above (the hard target before the crosshair).
-local SUPPORT_CAST_UNITS_CROSSHAIR_FIRST = SUPPORT_LOCKED_ALLY
-  .. "[@mouseover,help]"
+-- then the soft friend. Off: the order above.
+local SUPPORT_ALLY_ORDER_CROSSHAIR_FIRST = "[@mouseover,help]"
   .. SUPPORT_LIVING_TARGET
   .. "[@softfriend,help]"
 -- Last resorts, for resurrections: the hard target, then the lock, when it is a dead ally.
-local SUPPORT_DEAD_UNITS = "[@target,help][@focus,help]"
+local SUPPORT_DEAD_TARGET = "[@target,help]"
+local SUPPORT_DEAD_LOCK = "[@focus,help]"
 
-local function SupportCastUnits()
+local function SupportAllyOrder()
   local char = CM.DB and CM.DB.char
   if char and CM.DbBool(char.supportModeCrosshairFirst, false) then
-    return SUPPORT_CAST_UNITS_CROSSHAIR_FIRST
+    return SUPPORT_ALLY_ORDER_CROSSHAIR_FIRST
   end
-  return SUPPORT_CAST_UNITS
+  return SUPPORT_ALLY_ORDER
+end
+
+local function SupportCastUnits()
+  return SUPPORT_LOCKED_ALLY .. SupportAllyOrder()
 end
 
 local SUPPORT_SELF_KEY = "[mod:SELFCAST,@player]"
@@ -899,17 +905,108 @@ local function SupportPreLine()
   return line .. "\n/stopmacro [nomod:SELFCAST,nohelp]"
 end
 
--- Support Mode cast as one line that never changes your hard target. Order (SupportCastUnits):
+-- Auto Target Lock (char.autoTargetLockOnAttack) for allies, the user's call: the option locks
+-- what you attack, so in Support Mode it also locks who you heal. The cast line is followed by
+--   /stopmacro [mod:SELFCAST][@focus,help,nodead]
+--   /focus <the allies in cast order, without the lock>
+-- A living locked ally already took the heal, so the macro stops and the lock stays. Otherwise
+-- the /focus line walks the same units the cast just walked and locks the one that took it; a
+-- heal that went to you, or to a dead hard target, matches nothing and locks nobody. A dead or
+-- hostile lock gives way to the next ally healed. Your hard target is never changed.
+-- The /focus line must not name @focus: Blizzard's /focus swaps a "focus" target for the (empty)
+-- action and calls FocusUnit("") (read in SlashCommands.lua, live and forever branches). That
+-- is what a bare [] does too, and in game a bare [] locked the soft interact target, so it
+-- would move the lock; hence /stopmacro for the "lock alive" case.
+-- 255 characters is tight with the spell named in the cast, so extras go one by one until it
+-- fits: the Self Cast key guard on /stopmacro (a self-cast with that key then also locks the
+-- aimed-at ally), the dead-lock last resort, the dead-target last resort. nil = even that is too
+-- long: the caller uses the plain cast line (no auto-lock for that spell).
+local function SupportAutoLockText(units, selfCast, name)
+  local lockLine = "\n/focus " .. SupportAllyOrder()
+  local stop = "\n/stopmacro [mod:SELFCAST]" .. SUPPORT_LOCKED_ALLY
+  local deadTarget, deadLock = SUPPORT_DEAD_TARGET, SUPPORT_DEAD_LOCK
+  for step = 1, 4 do
+    if step == 2 then
+      stop = "\n/stopmacro " .. SUPPORT_LOCKED_ALLY
+    elseif step == 3 then
+      deadLock = ""
+    elseif step == 4 then
+      deadTarget = ""
+    end
+    local cast = "/cast " .. units .. deadTarget .. deadLock .. selfCast .. " " .. name
+    local text = cast .. stop .. lockLine
+    if #text <= SECURE_MACROTEXT_MAX then
+      return text
+    end
+  end
+  return nil
+end
+
+-- Prioritize Crosshair Target on (the user's call after testing: with it on, the ally you aim
+-- at should also become your target, as an enemy does with Reticle Targeting; with it off the
+-- heal must leave the target alone so an Ally Cycle pick stays selected): a /tar line ahead of
+-- the cast hard-targets the ally the cast is about to pick. The cast below it is unchanged and
+-- still resolves to that ally. Falls back to lock + crosshair only, then to no line, when the
+-- macro would pass 255 characters. A self-cast with the Self Cast key still moves the target.
+local function SupportCrosshairTargetLine(text)
+  local char = CM.DB and CM.DB.char
+  if not (char and CM.DbBool(char.supportModeCrosshairFirst, false)) then
+    return ""
+  end
+  local full = "/tar " .. SupportCastUnits() .. "\n"
+  if #full + #text <= SECURE_MACROTEXT_MAX then
+    return full
+  end
+  local short = "/tar " .. SUPPORT_LOCKED_ALLY .. "[@mouseover,help]\n"
+  if #short + #text <= SECURE_MACROTEXT_MAX then
+    return short
+  end
+  return ""
+end
+
+-- Auto Target Lock and Prioritize Crosshair Target both on. SupportAutoLockText fills the 255
+-- characters by itself, which would leave no room for the /tar line above, so this is one text
+-- of its own. The /tar line puts the ally on your target first, so the cast only needs the
+-- target (and the dead-lock last resort), and the lock is the enemy auto-lock's own line:
+-- "/focus [help,nodead]" has no unit, so it focuses your target. The /stopmacro before it keeps
+-- a living lock (already targeted by the /tar line) from being focused again on every heal, and
+-- stops a self-cast with the Self Cast key from locking. nil = Prioritize Crosshair Target is
+-- off, or the text is too long (the caller then builds the separate forms).
+local function SupportAutoLockTargetText(selfCast, name)
+  local char = CM.DB and CM.DB.char
+  if not (char and CM.DbBool(char.supportModeCrosshairFirst, false)) then
+    return nil
+  end
+  local cast = "/cast " .. SUPPORT_SELF_KEY .. SUPPORT_DEAD_TARGET .. SUPPORT_DEAD_LOCK .. selfCast
+  local text = "/tar "
+    .. SupportCastUnits()
+    .. "\n"
+    .. cast
+    .. " "
+    .. name
+    .. "\n/stopmacro [mod:SELFCAST]"
+    .. SUPPORT_LOCKED_ALLY
+    .. "\n/focus [help,nodead]"
+  if #text <= SECURE_MACROTEXT_MAX then
+    return text
+  end
+  return nil
+end
+
+-- Support Mode cast: one line that never changes your hard target, unless Prioritize Crosshair
+-- Target is on (SupportCrosshairTargetLine above). Order (SupportCastUnits):
 -- you while the game's Self Cast key is held, then your living locked ally (Target Lock), then
 -- either your living friendly hard target first (the default: an Ally Cycle pick wins over
 -- whatever you aim at; clear the target to heal by aim again) or the aimed-at ally first
 -- (Prioritize Crosshair Target), then the other, the soft friend, the hard target or the lock
--- when it is a dead ally (SUPPORT_DEAD_UNITS), and last
+-- when it is a dead ally (SUPPORT_DEAD_TARGET / SUPPORT_DEAD_LOCK), and last
 -- you when the game's Auto Self Cast is on (off: every condition fails and nothing is cast).
 -- Any friendly hard target counts: a macro can't tell who picked it.
 -- /click can't name a unit, so this is a named /cast of the spell on the slot when the macro is
 -- built; a Classic rank rides along as "Name(Rank N)".
--- nil = no name yet: the caller keeps SupportPreLine + /click.
+-- With Auto Target Lock on, two more lines lock the ally who took the heal (SupportAutoLockText,
+-- or SupportAutoLockTargetText when Prioritize Crosshair Target is on as well).
+-- nil = no name yet: the caller keeps SupportPreLine + /click (which never auto-locks).
 local function SupportCastLine(spellId)
   if not spellId or not (C_Spell and C_Spell.GetSpellInfo) then
     return nil
@@ -926,11 +1023,19 @@ local function SupportCastLine(spellId)
       name = name .. "(" .. subtext .. ")"
     end
   end
-  local units = SUPPORT_SELF_KEY .. SupportCastUnits() .. SUPPORT_DEAD_UNITS
-  if AutoSelfCastOn() then
-    units = units .. "[@player]"
+  local units = SUPPORT_SELF_KEY .. SupportCastUnits()
+  local selfCast = AutoSelfCastOn() and "[@player]" or ""
+  local text
+  if CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false) then
+    local combined = SupportAutoLockTargetText(selfCast, name)
+    if combined then
+      return combined
+    end
+    text = SupportAutoLockText(units, selfCast, name)
   end
-  return "/cast " .. units .. " " .. name
+  text = text
+    or ("/cast " .. units .. SUPPORT_DEAD_TARGET .. SUPPORT_DEAD_LOCK .. selfCast .. " " .. name)
+  return SupportCrosshairTargetLine(text) .. text
 end
 
 -- Second return: true when the Support Mode preline was used.

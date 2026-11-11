@@ -228,8 +228,8 @@ L["Locks the unit under the crosshair, replacing any current lock. Tap with noth
 L["With Ignore Friendlies on, a friendly or dead unit under the crosshair is ignored: the lock stays where it is."] =
   "Con «Ignora amichevoli» attivo, un'unità amichevole o morta sotto il mirino viene ignorata: il blocco resta dov'è."
 L["Auto Target Lock"] = "Blocco bersaglio automatico"
-L["Target Lock engages automatically when attacking units."] =
-  "Il blocco bersaglio si attiva automaticamente quando attacchi le unità."
+L["Target Lock engages automatically when attacking units, and in Support Mode when healing an ally."] =
+  "Il blocco bersaglio si attiva automaticamente quando attacchi le unità e, in Modalità supporto, quando curi un alleato."
 L["Target Lock Marker"] = "Indicatore di blocco bersaglio"
 L["Show a crosshair marker on the nameplate of the locked target."] =
   "Mostra un indicatore a mirino sulla targhetta del bersaglio bloccato."

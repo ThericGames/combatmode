@@ -228,8 +228,8 @@ L["Locks the unit under the crosshair, replacing any current lock. Tap with noth
 L["With Ignore Friendlies on, a friendly or dead unit under the crosshair is ignored: the lock stays where it is."] =
   "Con «Ignorar amistosos» activado, se ignora una unidad amistosa o muerta bajo la mira: la fijación se queda donde está."
 L["Auto Target Lock"] = "Fijar objetivo automáticamente"
-L["Target Lock engages automatically when attacking units."] =
-  "Fijar objetivo se activa automáticamente al atacar unidades."
+L["Target Lock engages automatically when attacking units, and in Support Mode when healing an ally."] =
+  "Fijar objetivo se activa automáticamente al atacar unidades y, en el Modo de apoyo, al sanar a un aliado."
 L["Target Lock Marker"] = "Marcador de fijación"
 L["Show a crosshair marker on the nameplate of the locked target."] =
   "Muestra una marca de mira en la placa de nombre del objetivo fijado."

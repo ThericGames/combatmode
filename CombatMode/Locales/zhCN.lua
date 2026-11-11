@@ -219,8 +219,8 @@ L["Locks the unit under the crosshair, replacing any current lock. Tap with noth
 L["With Ignore Friendlies on, a friendly or dead unit under the crosshair is ignored: the lock stays where it is."] =
   "开启“忽略友方”后，准星下的友方或已死亡单位会被忽略：锁定保持不变。"
 L["Auto Target Lock"] = "自动目标锁定"
-L["Target Lock engages automatically when attacking units."] =
-  "攻击单位时自动启用目标锁定。"
+L["Target Lock engages automatically when attacking units, and in Support Mode when healing an ally."] =
+  "攻击单位时自动启用目标锁定；在辅助模式下治疗友方时也会启用。"
 L["Target Lock Marker"] = "目标锁定标记"
 L["Show a crosshair marker on the nameplate of the locked target."] =
   "在被锁定目标的姓名板上显示准星标记。"

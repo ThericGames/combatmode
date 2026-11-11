@@ -228,8 +228,8 @@ L["Locks the unit under the crosshair, replacing any current lock. Tap with noth
 L["With Ignore Friendlies on, a friendly or dead unit under the crosshair is ignored: the lock stays where it is."] =
   "'아군 무시'가 켜져 있으면 조준점 아래의 아군이나 죽은 유닛은 무시되며 고정은 그대로 유지됩니다."
 L["Auto Target Lock"] = "자동 대상 고정"
-L["Target Lock engages automatically when attacking units."] =
-  "유닛을 공격할 때 대상 고정이 자동으로 적용됩니다."
+L["Target Lock engages automatically when attacking units, and in Support Mode when healing an ally."] =
+  "유닛을 공격할 때, 그리고 지원 모드에서 아군을 치유할 때 대상 고정이 자동으로 적용됩니다."
 L["Target Lock Marker"] = "대상 고정 표시"
 L["Show a crosshair marker on the nameplate of the locked target."] =
   "고정된 대상의 이름표에 조준점 표시를 보여줍니다."

@@ -227,8 +227,8 @@ L["Locks the unit under the crosshair, replacing any current lock. Tap with noth
 L["With Ignore Friendlies on, a friendly or dead unit under the crosshair is ignored: the lock stays where it is."] =
   "Avec « Ignorer les amis » activé, une unité amicale ou morte sous le réticule est ignorée : le verrouillage reste en place."
 L["Auto Target Lock"] = "Verrouillage de cible automatique"
-L["Target Lock engages automatically when attacking units."] =
-  "Le verrouillage de cible s'active automatiquement lorsque vous attaquez des unités."
+L["Target Lock engages automatically when attacking units, and in Support Mode when healing an ally."] =
+  "Le verrouillage de cible s'active automatiquement lorsque vous attaquez des unités et, en Mode soutien, lorsque vous soignez un allié."
 L["Target Lock Marker"] = "Marqueur de verrouillage"
 L["Show a crosshair marker on the nameplate of the locked target."] =
   "Affiche un marqueur de réticule sur la barre de nom de la cible verrouillée."

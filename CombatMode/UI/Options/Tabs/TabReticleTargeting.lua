@@ -472,7 +472,7 @@ UI.Options.AddTab({
     })
     ctx:Toggle({
       label = L["Auto Target Lock"],
-      desc = L["Target Lock engages automatically when attacking units."],
+      desc = L["Target Lock engages automatically when attacking units, and in Support Mode when healing an ally."],
       charSpecific = true,
       confirm = true,
       confirmText = RELOAD_CONFIRM,
