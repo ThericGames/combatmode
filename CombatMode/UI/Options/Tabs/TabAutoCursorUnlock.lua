@@ -6,7 +6,7 @@
 --  The customCondition Lua box lives on Advanced.
 --  No direct freelook calls — predicates read these keys each update.
 --  Architecture / how it works:
---    • DB.global.frameWatching, mountsToUnlock (CSV → table), watchlist.
+--    • DB.global.frameWatching, unlockCursorForPing, mountsToUnlock (CSV → table), watchlist.
 --      customCondition is edited on TabAdvanced.
 --    • Vendor Mounts now uses the mount multi-select instead of a toggle. The default
 --      list is seeded with known vendor mounts; users can add any mount they own.
@@ -43,6 +43,16 @@ UI.Options.AddTab({
       end,
       set = function(value)
         CM.DB.global.frameWatching = value
+      end,
+    })
+    ctx:Toggle({
+      label = L["Unlock Cursor for Ping"],
+      desc = L["When middle mouse is bound to Ping, hold it to aim with the cursor instead of the reticle. Release to resume Mouse Look. Off by default."],
+      get = function()
+        return CM.DbBool(CM.DB.global.unlockCursorForPing, false)
+      end,
+      set = function(value)
+        CM.DB.global.unlockCursorForPing = value
       end,
     })
     ctx:MountMultiSelect({

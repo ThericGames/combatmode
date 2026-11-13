@@ -24,3 +24,5 @@ paths:
 
 - SheathWeaponsWithMouselook: unsheath on intentional Mouse Look; sheath on tap unlock (poll detects binding release) and Auto Cursor Unlock. Hold never sheaths. Ground targeting and OPie keep weapons drawn. Sheath requests are debounced (~1.5s) so rapid Mouse Look toggle does not flash sheath/unsheath; unsheath and re-lock cancel any pending sheath.
 - OPie: when a ring is visible, unlock path may free centering; Rematch after the ring closes re-bounces freelook if still desired.
+
+- **Ping cursor unlock**: `global.unlockCursorForPing` (Auto Unlock, default false) frees the cursor while middle mouse is physically held and its current modifier-aware binding is `TOGGLEPINGLISTENER`. Releasing uses normal reconciliation, preserving other unlock conditions and manual cursor mode. Ping is a temporary unlock, so weapons stay drawn; no bindings are reassigned.

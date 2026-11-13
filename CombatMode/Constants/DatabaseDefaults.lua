@@ -141,6 +141,7 @@ return false
     bindings = DefaultBindings,
     -- auto unlock
     frameWatching = true,
+    unlockCursorForPing = false,
     -- Icons of the Extra Frames chips, remembered because their frames may not exist yet after a reload.
     frameIcons = {},
     -- Prefilled with the known vendor mounts on Mainline only; every other client starts empty.

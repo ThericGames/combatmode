@@ -810,3 +810,8 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "巨集「%s」與目前前置行合併後已超出長度限制；請在準星瞄準巨集中編輯。"
 L["Click to print URL to chat"] = "點擊將 URL 輸出到聊天"
+
+-- Auto Unlock: optional cursor aiming for middle-mouse Ping.
+L["Unlock Cursor for Ping"] = "?????????"
+L["When middle mouse is bound to Ping, hold it to aim with the cursor instead of the reticle. Release to resume Mouse Look. Off by default."] =
+  "?????????????????????????????????????????????"

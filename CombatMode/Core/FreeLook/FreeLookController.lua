@@ -18,7 +18,7 @@
 --      crosshair on unlock. See the comment above StartFreeLookFresh / issue 189.
 --    • ShouldFreeLookBeOff consults AutoCursorUnlock predicates, SpellIsTargeting (+ the
 --      pet Move To noted by a CastPetAction hook until the next click or Esc, since it is not a spell cast),
---      cinematics, FreeLookOverride, default LMB/RMB held. customLockCondition
+--      optional middle-mouse Ping cursor unlock, cinematics, FreeLookOverride, default LMB/RMB held. customLockCondition
 --      (IsCustomLockConditionTrue) beats tap/hold unlock and the Auto Unlock
 --      custom condition only; feign, pet battle, ground targeting, cinematics,
 --      frames, and vendor mounts still unlock. customLockConditionOnce latches
@@ -212,6 +212,27 @@ if _G.hooksecurefunc and _G.CastPetAction and GetPetActionInfo and _G.CreateFram
   end)
 end
 
+-- Opt-in cursor aiming for the native Ping binding; existing reticle pings stay unchanged.
+local function IsMiddleMousePingHeld()
+  if not (CM.DB and CM.DB.global and CM.DbBool(CM.DB.global.unlockCursorForPing, false)) then
+    return false
+  end
+  if not IsMouseButtonDown("MiddleButton") or not _G.GetBindingAction then
+    return false
+  end
+  local key = "BUTTON3"
+  if IsShiftKeyDown() then
+    key = "SHIFT-" .. key
+  end
+  if IsControlKeyDown() then
+    key = "CTRL-" .. key
+  end
+  if IsAltKeyDown() then
+    key = "ALT-" .. key
+  end
+  return _G.GetBindingAction(key, true) == "TOGGLEPINGLISTENER"
+end
+
 local function IsGroundTargeting()
   return SpellIsTargeting() or IsPetGroundTargeting()
 end
@@ -221,7 +242,7 @@ local function ShouldKeepWeaponsDrawnOnTempUnlock()
   if FreeLookOverride then
     return true
   end
-  if IsGroundTargeting() then
+  if IsGroundTargeting() or IsMiddleMousePingHeld() then
     return true
   end
   if CM.IsRadialMenuOpen and CM.IsRadialMenuOpen() then
@@ -522,6 +543,7 @@ function CM.ShouldFreeLookBeOff()
     end
     if
       IsGroundTargeting()
+      or IsMiddleMousePingHeld()
       or InCinematic()
       or IsInCinematicScene()
       or CM.IsUnlockFrameVisible()
