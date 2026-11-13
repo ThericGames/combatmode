@@ -651,8 +651,8 @@ local function StoreImpl()
   if centreZone then
     centreZone:SetSize(2 * dead, 2 * dead)
   end
-  local g = CM.DB and CM.DB.global
-  Wheel:SetAttribute("ryoff", (g and g.crosshairY) or 0)
+  local c = CM.DB and CM.DB.char
+  Wheel:SetAttribute("ryoff", (c and c.crosshairY) or 0)
 end
 
 local pendingStore, pendingRebind = false, false

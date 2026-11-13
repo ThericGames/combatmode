@@ -227,6 +227,7 @@ local function BuildMacroShelfRow(parent, width, onHeight)
   label:SetWidth(textW)
   label:SetText(MACRO_LABEL)
   label:SetTextColor(C.text[1], C.text[2], C.text[3])
+  row.label = label -- the "i" button (UI.AttachInfoButton) sits after it
 
   local desc = UI.CreateFontString(row, "OVERLAY", UI.Fonts.small, "GameFontNormal")
   desc:SetPoint("TOPLEFT", label, "BOTTOMLEFT", 0, -4)
@@ -351,6 +352,14 @@ UI.Options.AddTab({
     end)
     ctx:PlaceFrame(shelfRow, shelfH)
     shelfItem = ctx.items[#ctx.items]
+    -- Custom row: ctx:Place would also have added the wizard "i" button.
+    local wizard = CM.Wizard
+    local macroStep = wizard and wizard.FindStep and wizard.FindStep("reticle", nil, MACRO_LABEL)
+    if macroStep then
+      UI.AttachInfoButton({ frame = shelfRow }, function()
+        wizard.ShowInfo(macroStep)
+      end)
+    end
     -- Custom row: add the search metadata ctx:Place would have attached.
     if ctx.search then
       UI.Options.RegisterControl({

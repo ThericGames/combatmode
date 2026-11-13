@@ -42,7 +42,8 @@ def lerp(a, b, t):
     return tuple(a[i] + (b[i] - a[i]) * t for i in range(3))
 
 
-def main(glyph_char="C", out=OUT):
+def main(glyph_char="C", out=OUT, draw_glyph=None):
+    """draw_glyph(draw, cx, cy, r) paints a custom dark glyph on the supersampled face instead of the text one."""
     n = SIZE * SS
     cx = n / 2
     cy = n / 2 - 1.0 * SS  # a little up: the shadow takes the bottom
@@ -80,9 +81,12 @@ def main(glyph_char="C", out=OUT):
     glyph = Image.new("L", (n, n), 0)
     f = font(int(DISC * SS * 0.78))
     d = ImageDraw.Draw(glyph)
-    bbox = d.textbbox((0, 0), glyph_char, font=f)
-    gw, gh = bbox[2] - bbox[0], bbox[3] - bbox[1]
-    d.text((cx - gw / 2 - bbox[0], cy - gh / 2 - bbox[1]), glyph_char, font=f, fill=255)
+    if draw_glyph:
+        draw_glyph(d, cx, cy, r)
+    else:
+        bbox = d.textbbox((0, 0), glyph_char, font=f)
+        gw, gh = bbox[2] - bbox[0], bbox[3] - bbox[1]
+        d.text((cx - gw / 2 - bbox[0], cy - gh / 2 - bbox[1]), glyph_char, font=f, fill=255)
     ink = Image.new("RGBA", (n, n), GLYPH + (0,))
     ink.putalpha(glyph)
     base.alpha_composite(ink)

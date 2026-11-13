@@ -107,6 +107,9 @@ CM.Constants.CharBadge = uiPath .. "char-badge.tga"
 -- The same gold button with a "?", beside options that have a short explanation tooltip
 -- (scripts/art/make-help-badge.py builds it).
 CM.Constants.HelpBadge = uiPath .. "help-badge.tga"
+-- The same gold button with a crosshair, for the Extra Frames "pick a frame on screen" button
+-- (scripts/art/make-pick-badge.py builds it).
+CM.Constants.PickBadge = uiPath .. "pick-badge.tga"
 -- The gold pill behind the "NEW" tag (no text; scripts/art/make-new-badge.py builds it).
 CM.Constants.NewBadge = uiPath .. "new-badge.tga"
 -- The Ally HUD's pet crest (a paw print on the same gold button, in the role icon's place for pets;
@@ -151,7 +154,6 @@ CM.Constants.CrosshairTextureIdByPath = {}
 local crosshairAssetNames = {
   "Arrows",
   "Default",
-  "Diamond",
   "Ornated",
   "Triangle",
 }
@@ -196,6 +198,16 @@ for _, assetName in ipairs(crosshairAssetNames) do
   }
 end
 
+-- The Dot preset has no separate hit art: the same texture serves Inactive and Active (the hit
+-- feedback is the scale pulse and tint). It replaced the Diamond preset.
+CM.Constants.CrosshairTextureObj.Dot = {
+  Name = "Dot",
+  Base = CM.Constants.CrosshairDotTexture,
+  Active = CM.Constants.CrosshairDotTexture,
+  BaseId = CM.Constants.CrosshairIdleDefaultId,
+  ActiveId = CM.Constants.CrosshairIdleDefaultId,
+}
+
 -- Catalog order: curated first (Default, then alphabetical presets), then the pack.
 do
   local curated = {}
@@ -230,6 +242,11 @@ do
     "Support",
     "curated"
   )
+  -- Saved Diamond choices (removed preset) resolve to the Dot, by path and by id.
+  for _, legacy in ipairs({ "crosshairDiamond.blp", "crosshairDiamond-hit.blp" }) do
+    CM.Constants.CrosshairTextureIdByPath[crosshairPath .. legacy] = "Dot"
+  end
+  CM.Constants.CrosshairLegacyIds = { Diamond = "Dot", ["Diamond-hit"] = "Dot" }
   for i = 0, PACK_COUNT - 1 do
     local n = format("%03d", i)
     AddCrosshairTexture(
@@ -274,8 +291,9 @@ function CM.Constants.NormalizeCrosshairAppearance(saved)
   end
   local byPath = CM.Constants.CrosshairTextureIdByPath
   -- Paths first: they are what older versions saved, and always agree with ids on new saves.
-  local baseId = byPath[saved.Base] or saved.BaseId
-  local activeId = byPath[saved.Active] or saved.ActiveId
+  local legacy = CM.Constants.CrosshairLegacyIds
+  local baseId = byPath[saved.Base] or legacy[saved.BaseId] or saved.BaseId
+  local activeId = byPath[saved.Active] or legacy[saved.ActiveId] or saved.ActiveId
   local normalized = baseId and activeId and CM.Constants.MakeCrosshairAppearance(baseId, activeId)
   return normalized or CM.Constants.CrosshairTextureObj[saved.Name]
 end

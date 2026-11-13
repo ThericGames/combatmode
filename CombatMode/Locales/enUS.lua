@@ -367,6 +367,9 @@ L["A support-focused mode that, when active, switches your main action bar to a 
   true
 L["Support Mode Keybind"] = true
 L["Prioritize Crosshair Target"] = true
+L["Cycle NPCs and Pets"] = true
+L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too."] =
+  true
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   true
 L["Tap to toggle Support Mode on or off."] = true
@@ -443,7 +446,7 @@ L["Back"] = true
 L["Next"] = true
 L["Finish"] = true
 L["Skip tour"] = true
-L["Click to learn more about this feature"] = true
+L["Learn more about this feature"] = true
 L["Assist HUD"] = true
 L["Target Lock"] = true
 L["Party Wheel"] = true
@@ -460,11 +463,36 @@ L["A support-focused mode that, when active, switches your main action bar to a 
   true
 L["Turning Reticle Targeting on or off reloads the UI."] = true
 L["Needs Reticle Targeting."] = true
+L["How the keys behave:\n• {Tap} the Mouse Look key to turn it on or off\n• {Hold} it to free your cursor for as long as you hold\n• {Tap} the Interact key to interact with what you aim at\n• {Hold} it on a player to open their menu"] =
+  true
+L["It only shows while Mouse Look is on, and its color follows what you aim at ({Reaction Colors}). {Cast Feedback} makes it react as you cast.\n\nWhile Target Lock is active it becomes a steady dot, and Support Mode uses its own texture."] =
+  true
+L["Aim at a player for a second and the {Player Interaction Prompt} appears; hold Interact to open their menu.\n\nWhile the {Interactable Indicator} is on, Blizzard's own interact icons are hidden, so you don't see them twice."] =
+  true
+L["Composed macros update automatically whenever you change your targeting options.\n\nKeep in mind that macros are limited to 255 characters."] =
+  true
+L["Target Lock uses the game's Focus Target, so other addons or macros that set a focus will interfere with it.\n• The reticle becomes a steady dot and a marker follows the locked nameplate\n• Reticle Targeting casts keep going to the locked unit\n• {Auto Target Lock} locks the enemy you attack on its own (the ally you heal, in Support Mode)"] =
+  true
+L["The wheel shows 8 members per page with portrait, health and role; {scroll} to change page. Dead, offline and out-of-range members are dimmed, and offline ones can't be picked.\n\nSpells that aren't in this list cast as usual. {Esc} or {right-click} closes the wheel without casting."] =
+  true
+L["The cycle skips offline members and those in another zone.\n• {Skip Self} leaves you out of the cycle\n• {Also Cycle Through} adds pets\n• {Keep Ally After Harm} keeps the ally after you cast a harmful spell\n• {Ally HUD} also shows health and role\n\nIn Support Mode, the ally you picked has priority over the one under your crosshair unless {Prioritize Crosshair Target} is on."] =
+  true
+L["Two lists let you add your own:\n• {Unlock Mounts}: mounts that act as vendors, so your cursor is free while you use them\n• {Extra Frames}: any other window; type its name to search, or use the inspect button to find it\n\nFor fully custom rules, the Advanced tab accepts a Lua condition."] =
+  true
+L["While the mode is on, a helpful spell on a click-cast button goes to the first of these that exists:\n• Your {Target Lock} ally\n• Your friendly target (such as an {Ally Cycle} pick)\n• The ally under your crosshair\n• The ally in front of you\n\n{Prioritize Crosshair Target} puts the crosshair ally ahead of your friendly target. With no ally, the game's {Self Cast} setting decides whether it lands on you.\n\nHarmful spells keep targeting enemies, and {Nameplate Behavior} picks which nameplates show. It all works in combat."] =
+  true
+L["Reticle Targeting only picks {enemies}. Helpful spells keep your friendly target, so use {Ally Cycle}, {Support Mode} or the {Party Wheel} to reach allies.\n\nAlso worth knowing:\n• Spells on macro buttons need the {Reticle Targeting Macros} below\n• Spells in {Excluded Spells} skip the targeting logic\n• {Auto Target Lock} locks the enemy you attack so the reticle stops swapping"] =
+  true
+L["Normally a ground-targeted spell cast through Reticle Targeting will temporarily disable Mouse Look so you can place it manually. Spells listed here are automatically cast on the ground at your crosshair location instead.\n\nSpells like {Blizzard}, {Heroic Leap} or {Death and Decay} are typical examples. If a ground spell still stops Mouse Look so you can place it, add it here."] =
+  true
+L["Binds only work while Mouse Look is on. With Reticle Targeting on, a bound spell targets the enemy under your crosshair first, and helpful spells keep your friendly target.\n\n{Account-Wide Binds} shares one set of binds between all your characters."] =
+  true
+L["Each wheel holds up to {8 slices}, and you can keep up to {5 wheels}. In the editor below:\n• {Click} a slice to pick a shortcut or emote\n• {Drop} a spell, item, mount or macro onto it\n• {Right-click} it to remove it\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."] =
+  true
 L["Lock your cursor to the center of the screen and steer by moving the mouse, no more holding right-click.\n\nSet a {key to toggle it}, and {one to interact with} whatever you're aiming at."] =
   true
-L["A reactive, fully customizable crosshair that adapts to your target and combat state.\n\nChoose its {look}, {size} and {position}."] =
-  true
-L["Aim at an enemy and the HUD next to your crosshair suggests your {next spell} and shows its key.\n\nAim at something you can interact with and it shows its {name} and your {Interact key} instead.\n\nTurn either on or off, and set its {side}, {size} and {distance} from the crosshair."] =
+L["A reactive, fully customizable crosshair that adapts to your target and combat state."] = true
+L["Aim at an enemy and the HUD next to your crosshair suggests your {next spell} and shows its key.\n\nAim at something you can interact with and it shows its {name} and your {Interact key} instead."] =
   true
 L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting."] =
   true

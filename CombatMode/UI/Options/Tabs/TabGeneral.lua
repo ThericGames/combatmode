@@ -337,15 +337,16 @@ UI.Options.AddTab({
     ctx:Slider({
       label = L["Minimum Zoom"],
       desc = L["Stops the camera from zooming in closer than this distance. 0 turns it off."],
+      charSpecific = true,
       min = 0,
       max = 10,
       step = 0.5,
       default = 3,
       get = function()
-        return CM.DB.global.minCameraZoom or 3
+        return CM.DB.char.minCameraZoom or 3
       end,
       set = function(value)
-        CM.DB.global.minCameraZoom = value
+        CM.DB.char.minCameraZoom = value
         CM.ApplyMinCameraZoom()
       end,
     })

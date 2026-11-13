@@ -22,6 +22,8 @@
 --      built by scripts/art/make-wizard-previews.py) flipping in order inside the balloon.
 --    • Wizard.FindStep / Wizard.ShowInfo: Options adds an "i" button to every header / option that has
 --      a step; it opens that step alone as an info popup (UI.ShowSpotlight `info`), never during the tour.
+--      A step's optional `details` text is appended to its body in that popup only (the tour stays short),
+--      and `infoDropLast` leaves out its last paragraph there (the "Set your key" instruction).
 --    • global.seenWizard is set when the tour finishes or is skipped (Skip / ESC).
 --    • Combat: Start waits for combat to end; entering combat mid-tour ends the tour.
 --  Does not: Cover every option (only the basics and the major features), or own any setting
@@ -70,6 +72,8 @@ local STEPS = {
     title = L["Mouse Look"],
     slides = { "mouselook", 5, 0.3, 0.1 },
     body = L["Lock your cursor to the center of the screen and steer by moving the mouse, no more holding right-click.\n\nSet a {key to toggle it}, and {one to interact with} whatever you're aiming at."],
+    details = L["How the keys behave:\n• {Tap} the Mouse Look key to turn it on or off\n• {Hold} it to free your cursor for as long as you hold\n• {Tap} the Interact key to interact with what you aim at\n• {Hold} it on a player to open their menu"],
+    infoDropLast = true,
     tasks = {
       {
         label = L["Set a Mouse Look key"],
@@ -91,7 +95,8 @@ local STEPS = {
     preview = "crosshair",
     title = L["Crosshair"],
     slides = { "crosshair", 4 },
-    body = L["A reactive, fully customizable crosshair that adapts to your target and combat state.\n\nChoose its {look}, {size} and {position}."],
+    body = L["A reactive, fully customizable crosshair that adapts to your target and combat state."],
+    details = L["It only shows while Mouse Look is on, and its color follows what you aim at ({Reaction Colors}). {Cast Feedback} makes it react as you cast.\n\nWhile Target Lock is active it becomes a steady dot, and Support Mode uses its own texture."],
   },
   {
     tab = "crosshair",
@@ -99,7 +104,8 @@ local STEPS = {
     preview = "assist",
     title = L["Assist HUD"],
     slides = { "assisthud", 3 },
-    body = L["Aim at an enemy and the HUD next to your crosshair suggests your {next spell} and shows its key.\n\nAim at something you can interact with and it shows its {name} and your {Interact key} instead.\n\nTurn either on or off, and set its {side}, {size} and {distance} from the crosshair."],
+    body = L["Aim at an enemy and the HUD next to your crosshair suggests your {next spell} and shows its key.\n\nAim at something you can interact with and it shows its {name} and your {Interact key} instead."],
+    details = L["Aim at a player for a second and the {Player Interaction Prompt} appears; hold Interact to open their menu.\n\nWhile the {Interactable Indicator} is on, Blizzard's own interact icons are hidden, so you don't see them twice."],
   },
   {
     tab = "reticle",
@@ -107,6 +113,7 @@ local STEPS = {
     title = L["Reticle Targeting"],
     slides = { "reticle", 5 },
     body = L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting."],
+    details = L["Reticle Targeting only picks {enemies}. Helpful spells keep your friendly target, so use {Ally Cycle}, {Support Mode} or the {Party Wheel} to reach allies.\n\nAlso worth knowing:\n• Spells on macro buttons need the {Reticle Targeting Macros} below\n• Spells in {Excluded Spells} skip the targeting logic\n• {Auto Target Lock} locks the enemy you attack so the reticle stops swapping"],
     warning = L["Turning Reticle Targeting on or off reloads the UI."],
   },
   {
@@ -115,12 +122,15 @@ local STEPS = {
     title = L["Cast at Crosshair"],
     slides = { "castatcrosshair", 3 },
     body = L["Ground-targeted spells that should be cast at the crosshair location.\n\nType a {spell name or ID} to add it."],
+    infoDropLast = true,
+    details = L["Normally a ground-targeted spell cast through Reticle Targeting will temporarily disable Mouse Look so you can place it manually. Spells listed here are automatically cast on the ground at your crosshair location instead.\n\nSpells like {Blizzard}, {Heroic Leap} or {Death and Decay} are typical examples. If a ground spell still stops Mouse Look so you can place it, add it here."],
   },
   {
     tab = "reticle",
     label = L["Reticle Targeting Macros"],
     title = L["Reticle Targeting Macros"],
     body = L["{!Action buttons that are macros cannot inherit Reticle Targeting on their own.}\n\nPress {+} to open the {Macro Composer}, write your macro there and it gets the targeting logic added for you.\n\nThen drag it from this list onto your action bars; {right-click} an icon to edit it."],
+    details = L["Composed macros update automatically whenever you change your targeting options.\n\nKeep in mind that macros are limited to 255 characters."],
   },
   {
     tab = "reticle",
@@ -128,6 +138,8 @@ local STEPS = {
     title = L["Target Lock"],
     slides = { "targetlock", 4 },
     body = L["Lock onto a target with one tap so the reticle stops swapping. While locked, the cycle keys jump to nearby enemies, or to nearby allies in Support Mode.\n\n{Target Lock Behavior} decides whether tapping again unlocks ({Toggle}) or moves the lock to whatever is under the crosshair ({Switch Target}).\n\nSet your keys."],
+    details = L["Target Lock uses the game's Focus Target, so other addons or macros that set a focus will interfere with it.\n• The reticle becomes a steady dot and a marker follows the locked nameplate\n• Reticle Targeting casts keep going to the locked unit\n• {Auto Target Lock} locks the enemy you attack on its own (the ally you heal, in Support Mode)"],
+    infoDropLast = true,
     -- These keys can't be set while Reticle Targeting is off, so they don't block then.
     tasks = {
       {
@@ -156,6 +168,7 @@ local STEPS = {
     title = L["Click Casting"],
     slides = { "clickcasting", 3 },
     body = L["Turn your mouse clicks into actions while in Mouse Look, such as casting your action bar spells with {Left and Right Click}.\n\nPick what each click does, with or without a {modifier key}."],
+    details = L["Binds only work while Mouse Look is on. With Reticle Targeting on, a bound spell targets the enemy under your crosshair first, and helpful spells keep your friendly target.\n\n{Account-Wide Binds} shares one set of binds between all your characters."],
   },
   {
     tab = "radialmenu",
@@ -163,6 +176,7 @@ local STEPS = {
     title = L["Radial Menu"],
     slides = { "radial", 4 },
     body = L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to switch between wheels."],
+    details = L["Each wheel holds up to {8 slices}, and you can keep up to {5 wheels}. In the editor below:\n• {Click} a slice to pick a shortcut or emote\n• {Drop} a spell, item, mount or macro onto it\n• {Right-click} it to remove it\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."],
     tasks = {
       {
         label = L["Set a Radial Menu key"],
@@ -178,6 +192,8 @@ local STEPS = {
     title = L["Party Wheel"],
     slides = { "partywheel", 5 },
     body = L["Hold the key of a {helpful spell} listed here to open a wheel of your group members. Move toward one and release to cast on them, or come back to the {center} to cast on yourself.\n\n{Tap} the key to cast on your friendly target, or yourself if you have none.\n\nType a {spell name or ID} to add it."],
+    details = L["The wheel shows 8 members per page with portrait, health and role; {scroll} to change page. Dead, offline and out-of-range members are dimmed, and offline ones can't be picked.\n\nSpells that aren't in this list cast as usual. {Esc} or {right-click} closes the wheel without casting."],
+    infoDropLast = true,
     warning = L["Needs Reticle Targeting."],
   },
   {
@@ -188,6 +204,8 @@ local STEPS = {
     title = L["Ally Cycle"],
     slides = { "allycycle", 3 },
     body = L["Cycle through group members in Mouse Look so {helpful spells} go to the ally while {harmful ones} keep hitting your enemy.\n\nThe {Ally HUD} shows who is selected.\n\nSet your cycle keys."],
+    details = L["The cycle skips offline members and those in another zone.\n• {Skip Self} leaves you out of the cycle\n• {Also Cycle Through} adds pets\n• {Keep Ally After Harm} keeps the ally after you cast a harmful spell\n• {Ally HUD} also shows health and role\n\nIn Support Mode, the ally you picked has priority over the one under your crosshair unless {Prioritize Crosshair Target} is on."],
+    infoDropLast = true,
     tasks = {
       {
         label = L["Set an Ally Cycle - Next key"],
@@ -209,6 +227,8 @@ local STEPS = {
     title = L["Support Mode"],
     slides = { "supportmode", 3 },
     body = L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."],
+    infoDropLast = true,
+    details = L["While the mode is on, a helpful spell on a click-cast button goes to the first of these that exists:\n• Your {Target Lock} ally\n• Your friendly target (such as an {Ally Cycle} pick)\n• The ally under your crosshair\n• The ally in front of you\n\n{Prioritize Crosshair Target} puts the crosshair ally ahead of your friendly target. With no ally, the game's {Self Cast} setting decides whether it lands on you.\n\nHarmful spells keep targeting enemies, and {Nameplate Behavior} picks which nameplates show. It all works in combat."],
     warning = L["Needs Reticle Targeting."],
     -- The key can't be set while Reticle Targeting is off, so it doesn't block then.
     tasks = {
@@ -226,6 +246,8 @@ local STEPS = {
     title = L["Auto Unlock"],
     slides = { "autounlock", 5, 0.5 },
     body = L["Mouse Look pauses when you open {bags, the map or other windows}, then resumes.\n\nAdd {mounts or extra windows} that should pause it too."],
+    infoDropLast = true,
+    details = L["Two lists let you add your own:\n• {Unlock Mounts}: mounts that act as vendors, so your cursor is free while you use them\n• {Extra Frames}: any other window; type its name to search, or use the inspect button to find it\n\nFor fully custom rules, the Advanced tab accepts a Lua condition."],
   },
 }
 
@@ -424,6 +446,19 @@ function Wizard.FindStep(tab, section, label)
   end
 end
 
+--- A step's body for the info popup: without its last paragraph when `infoDropLast` (the
+--- "Set your key" style instruction, which only makes sense in the tour), plus `details`.
+local function InfoBody(step)
+  local body = step.body
+  if step.infoDropLast then
+    body = body:match("^(.*)\n\n") or body
+  end
+  if step.details then
+    body = body .. "\n\n" .. step.details
+  end
+  return body
+end
+
 --- Shows a step's explanation alone (slides, text, warning) in a centred popup with a Close
 --- button: no dim, step count or Back / Next. Ignored while the tour runs.
 function Wizard.ShowInfo(step)
@@ -433,7 +468,7 @@ function Wizard.ShowInfo(step)
   UI.ShowSpotlight({}, {
     info = true,
     title = step.title,
-    body = step.body,
+    body = InfoBody(step),
     warning = step.warning,
     slides = SlidePaths(step.slides),
     slideHold = step.slides and step.slides[3],

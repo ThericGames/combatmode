@@ -64,11 +64,14 @@ CM.Constants.Macros = {
   --    never unlock or move on.
   CM_ToggleFocusSupport = "/cleartarget [@focus,exists]\n/focus [@focus,exists] none; [@target,help]; [@mouseover,help][@softfriend,help]\n/tar [@focus,exists]",
   CM_SwitchFocusSupport = "/cleartarget [@focus,exists]\n/focus [@mouseover,help]; [@mouseover,noexists] none\n/tar [@focus,exists]",
-  -- Cycle keys in Support Mode: nearest / previous friendly unit (Blizzard's /targetfriend, the
-  -- friendly twin of /targetenemy: players, pets and NPCs), then lock it. `help` keeps the lock
-  -- where it is when the hard target is not an ally.
-  CM_CycleFocusFriendNext = "/targetfriend [@focus,exists]\n/focus [@target,help]",
-  CM_CycleFocusFriendPrev = "/targetfriend [@focus,exists] 1\n/focus [@target,help]",
+  -- Cycle keys in Support Mode: nearest / previous friendly player (Blizzard's /targetfriendplayer,
+  -- the player-only twin of /targetfriend, so NPCs and pets are skipped), then lock it. `help`
+  -- keeps the lock where it is when the hard target is not an ally.
+  CM_CycleFocusFriendNext = "/targetfriendplayer [@focus,exists]\n/focus [@target,help]",
+  CM_CycleFocusFriendPrev = "/targetfriendplayer [@focus,exists] 1\n/focus [@target,help]",
+  -- Same with `char.supportModeCycleNPCs` on: /targetfriend also walks NPCs and pets.
+  CM_CycleFocusFriendAllNext = "/targetfriend [@focus,exists]\n/focus [@target,help]",
+  CM_CycleFocusFriendAllPrev = "/targetfriend [@focus,exists] 1\n/focus [@target,help]",
   -- Click-cast Start Attack / Pet Attack: hostile under the reticle, then swing.
   CM_StartAttack = "/tar [@focus,harm];[nomounted,@mouseover,harm,nodead][nomounted,@anyenemy]\n/startattack",
   CM_PetAttack = "/tar [@focus,harm];[nomounted,@mouseover,harm,nodead][nomounted,@anyenemy]\n/petattack",

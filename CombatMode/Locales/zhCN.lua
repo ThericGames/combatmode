@@ -423,6 +423,9 @@ L["A support-focused mode that, when active, switches your main action bar to a 
   "一种以支援为核心的模式：启用后会将主动作条切换到专用的支援页，并允许增益法术以准星下的友方单位为目标。"
 L["Support Mode Keybind"] = "辅助模式按键"
 L["Prioritize Crosshair Target"] = "优先准星目标"
+L["Cycle NPCs and Pets"] = "轮换 NPC 和宠物"
+L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too."] =
+  "在辅助模式下,循环锁定通常只会在附近的玩家之间切换。开启后也会包括附近的 NPC 和宠物。"
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   "即使已选中其他友方目标（例如通过友方循环选中），准星下的盟友也会优先获得法术。关闭后将优先施放给已选中的目标。"
 L["Tap to toggle Support Mode on or off."] = "点按以开启或关闭辅助模式。"
@@ -510,7 +513,7 @@ L["Back"] = "上一步"
 L["Next"] = "下一步"
 L["Finish"] = "完成"
 L["Skip tour"] = "跳过引导"
-L["Click to learn more about this feature"] = "点击了解此功能的更多信息"
+L["Learn more about this feature"] = "了解此功能的更多信息"
 L["Assist HUD"] = "辅助 HUD"
 L["Target Lock"] = "目标锁定"
 L["Party Wheel"] = "队伍轮盘"
@@ -528,12 +531,38 @@ L["A support-focused mode that, when active, switches your main action bar to a 
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "开启或关闭准星瞄准会重新加载界面。"
 L["Needs Reticle Targeting."] = "需要准星瞄准。"
+L["How the keys behave:\n• {Tap} the Mouse Look key to turn it on or off\n• {Hold} it to free your cursor for as long as you hold\n• {Tap} the Interact key to interact with what you aim at\n• {Hold} it on a player to open their menu"] =
+  "按键的作用如下：\n• {点按}鼠标视角键可开启或关闭\n• {按住}可在按住期间释放光标\n• {点按}交互键可与瞄准的目标交互\n• 对玩家{按住}交互键可打开其菜单"
+L["It only shows while Mouse Look is on, and its color follows what you aim at ({Reaction Colors}). {Cast Feedback} makes it react as you cast.\n\nWhile Target Lock is active it becomes a steady dot, and Support Mode uses its own texture."] =
+  "它仅在鼠标视角开启时显示，颜色会随瞄准的对象变化（{反应颜色}）。{施法反馈}会让它在你施法时作出反应。\n\n目标锁定期间它会变成固定的圆点，辅助模式则使用专属纹理。"
+L["Aim at a player for a second and the {Player Interaction Prompt} appears; hold Interact to open their menu.\n\nWhile the {Interactable Indicator} is on, Blizzard's own interact icons are hidden, so you don't see them twice."] =
+  "瞄准玩家一秒后会出现{玩家交互提示}；按住交互键可打开其菜单。\n\n开启{可交互指示}时，暴雪自带的交互图标会被隐藏，以免重复显示。"
+L["Composed macros update automatically whenever you change your targeting options.\n\nKeep in mind that macros are limited to 255 characters."] =
+  "通过宏编辑器生成的宏会在你更改瞄准选项时自动更新。\n\n请注意，宏限制为 255 个字符。"
+L["Target Lock uses the game's Focus Target, so other addons or macros that set a focus will interfere with it.\n• The reticle becomes a steady dot and a marker follows the locked nameplate\n• Reticle Targeting casts keep going to the locked unit\n• {Auto Target Lock} locks the enemy you attack on its own (the ally you heal, in Support Mode)"] =
+  "目标锁定使用游戏的焦点目标，因此其他设置焦点的插件或宏会造成干扰。\n• 准星变为固定的圆点，并有标记跟随被锁定的姓名板\n• 准星瞄准的施法仍会作用于被锁定的单位\n• {自动目标锁定}会自动锁定你所攻击的敌人（辅助模式下为你治疗的友方）"
+L["The wheel shows 8 members per page with portrait, health and role; {scroll} to change page. Dead, offline and out-of-range members are dimmed, and offline ones can't be picked.\n\nSpells that aren't in this list cast as usual. {Esc} or {right-click} closes the wheel without casting."] =
+  "轮盘每页显示 8 名成员，包含头像、生命值和职责；{滚动}鼠标滚轮可翻页。死亡、离线或超出范围的成员会变暗，离线成员无法选取。\n\n不在此列表中的法术照常施放。{Esc} 或{右键}可关闭轮盘而不施法。"
+L["The cycle skips offline members and those in another zone.\n• {Skip Self} leaves you out of the cycle\n• {Also Cycle Through} adds pets\n• {Keep Ally After Harm} keeps the ally after you cast a harmful spell\n• {Ally HUD} also shows health and role\n\nIn Support Mode, the ally you picked has priority over the one under your crosshair unless {Prioritize Crosshair Target} is on."] =
+  "循环会跳过离线成员和位于其他区域的成员。\n• {跳过自己}让你不参与循环\n• {同时循环选取}会加入宠物\n• {攻击后保留友方}在你施放伤害法术后保留该友方\n• {友方 HUD}还会显示生命值和职责\n\n在辅助模式下，除非开启{优先准星目标}，否则你选中的友方优先于准星下的友方。"
+L["Two lists let you add your own:\n• {Unlock Mounts}: mounts that act as vendors, so your cursor is free while you use them\n• {Extra Frames}: any other window; type its name to search, or use the inspect button to find it\n\nFor fully custom rules, the Advanced tab accepts a Lua condition."] =
+  "有两个列表可以自行添加：\n• {解锁坐骑}：兼具商人功能的坐骑，使用时光标保持自由\n• {额外框体}：任何其他窗口；输入名称搜索，或用检查按钮找到它\n\n如需完全自定义的规则，可在高级标签页中填写 Lua 条件。"
+L["While the mode is on, a helpful spell on a click-cast button goes to the first of these that exists:\n• Your {Target Lock} ally\n• Your friendly target (such as an {Ally Cycle} pick)\n• The ally under your crosshair\n• The ally in front of you\n\n{Prioritize Crosshair Target} puts the crosshair ally ahead of your friendly target. With no ally, the game's {Self Cast} setting decides whether it lands on you.\n\nHarmful spells keep targeting enemies, and {Nameplate Behavior} picks which nameplates show. It all works in combat."] =
+  "模式开启时，点击施法按钮上的增益法术会依次作用于下列第一个存在的目标：\n• 你{目标锁定}的盟友\n• 你的友方目标（例如{友方循环}选中的人）\n• 准星下的盟友\n• 你面前的盟友\n\n{优先准星目标}会把准星处的盟友排在友方目标之前。没有盟友时，由游戏的自我施法设置决定是否施放在你身上。\n\n伤害法术仍以敌人为目标，{姓名板行为}决定显示哪些姓名板。这一切在战斗中同样有效。"
+L["Reticle Targeting only picks {enemies}. Helpful spells keep your friendly target, so use {Ally Cycle}, {Support Mode} or the {Party Wheel} to reach allies.\n\nAlso worth knowing:\n• Spells on macro buttons need the {Reticle Targeting Macros} below\n• Spells in {Excluded Spells} skip the targeting logic\n• {Auto Target Lock} locks the enemy you attack so the reticle stops swapping"] =
+  "准星瞄准只会选择{敌人}。增益法术保留你的友方目标，因此请用{友方循环}、{辅助模式}或{队伍轮盘}来选中盟友。\n\n另外值得了解：\n• 宏按钮上的法术需要下方的{准星瞄准宏}\n• {排除的法术}中的法术会跳过瞄准逻辑\n• {自动目标锁定}会锁定你攻击的敌人，使准星不再切换"
+L["Normally a ground-targeted spell cast through Reticle Targeting will temporarily disable Mouse Look so you can place it manually. Spells listed here are automatically cast on the ground at your crosshair location instead.\n\nSpells like {Blizzard}, {Heroic Leap} or {Death and Decay} are typical examples. If a ground spell still stops Mouse Look so you can place it, add it here."] =
+  "通常，通过准星瞄准施放的地面指向法术会暂时关闭鼠标视角，让你手动选择位置。此列表中的法术则会自动施放在准星所指的地面位置。\n\n典型的例子有{暴风雪}、{英勇飞跃}或{枯萎凋零}。如果某个地面法术仍会暂停鼠标视角让你手动放置，就把它加到这里。"
+L["Binds only work while Mouse Look is on. With Reticle Targeting on, a bound spell targets the enemy under your crosshair first, and helpful spells keep your friendly target.\n\n{Account-Wide Binds} shares one set of binds between all your characters."] =
+  "绑定仅在鼠标视角开启时生效。开启准星瞄准后，绑定的法术会先以准星下的敌人为目标，增益法术则保留你的友方目标。\n\n{账号通用绑定}让你所有角色共用同一套绑定。"
+L["Each wheel holds up to {8 slices}, and you can keep up to {5 wheels}. In the editor below:\n• {Click} a slice to pick a shortcut or emote\n• {Drop} a spell, item, mount or macro onto it\n• {Right-click} it to remove it\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."] =
+  "每个轮盘最多有{8个扇区}，最多可保留{5个轮盘}。在下方编辑器中：\n• {点击}扇区选择快捷方式或表情\n• 把法术、物品、坐骑或宏{拖到}扇区上\n• {右键}移除\n• 拖动可移动位置\n\n轮盘打开时按{Esc}或{右键}会取消，不使用任何内容。"
 L["Lock your cursor to the center of the screen and steer by moving the mouse, no more holding right-click.\n\nSet a {key to toggle it}, and {one to interact with} whatever you're aiming at."] =
   "将光标锁定在屏幕中央，通过移动鼠标来转向，无需再按住右键。\n\n设置一个{切换按键}，以及一个与瞄准目标{交互的按键}。"
-L["A reactive, fully customizable crosshair that adapts to your target and combat state.\n\nChoose its {look}, {size} and {position}."] =
-  "可根据目标和战斗状态自动变化、完全可自定义的准星。\n\n选择它的{外观}、{大小}和{位置}。"
-L["Aim at an enemy and the HUD next to your crosshair suggests your {next spell} and shows its key.\n\nAim at something you can interact with and it shows its {name} and your {Interact key} instead.\n\nTurn either on or off, and set its {side}, {size} and {distance} from the crosshair."] =
-  "瞄准敌人时，准星旁的 HUD 会建议你的{下一个法术}并显示其按键。\n\n瞄准可交互的目标时，则显示其{名称}和你的{交互按键}。\n\n可分别开启或关闭，并设置它相对准星的{方位}、{大小}和{距离}。"
+L["A reactive, fully customizable crosshair that adapts to your target and combat state."] =
+  "可根据目标和战斗状态自动变化、完全可自定义的准星。"
+L["Aim at an enemy and the HUD next to your crosshair suggests your {next spell} and shows its key.\n\nAim at something you can interact with and it shows its {name} and your {Interact key} instead."] =
+  "瞄准敌人时，准星旁的 HUD 会建议你的{下一个法术}并显示其按键。\n\n瞄准可交互的目标时，则显示其{名称}和你的{交互按键}。"
 L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting."] =
   "只需瞄准即可选定敌人，并将指向性法术和范围技能直接释放在准星所指之处，无需 Tab 选目标。"
 L["Ground-targeted spells that should be cast at the crosshair location.\n\nType a {spell name or ID} to add it."] =

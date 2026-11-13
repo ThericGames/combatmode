@@ -149,15 +149,16 @@ UI.Options.AddTab({
     ctx:Slider({
       label = L["Vertical Position"],
       desc = L["Move the crosshair up or down from screen center."],
+      charSpecific = true,
       min = -400,
       max = 400,
       step = 1,
       default = 100,
       get = function()
-        return CM.DB.global.crosshairY or CM.Constants.DatabaseDefaults.global.crosshairY
+        return CM.DB.char.crosshairY or CM.Constants.DatabaseDefaults.char.crosshairY
       end,
       set = function(value)
-        CM.DB.global.crosshairY = value
+        CM.DB.char.crosshairY = value
         CM.CreateCrosshair()
       end,
       disabled = CrosshairOff,

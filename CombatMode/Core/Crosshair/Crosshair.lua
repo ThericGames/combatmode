@@ -2,7 +2,7 @@
 --  Core/Crosshair/Crosshair.lua — CROSSHAIR — reticle frame, reaction, companion glue
 ---------------------------------------------------------------------------------------
 --  What it does: Owns the CombatModeCrosshairFrame container/texture, reaction-state
---  tinting, Create/Display/ApplyPosition, CursorCenteredYPos sync from crosshairY, and
+--  tinting, Create/Display/ApplyPosition, CursorCenteredYPos sync from char.crosshairY, and
 --  options preview that forces the Assisted Highlight / Interaction companion HUD visible.
 --  Inits AssistedHighlight (incl. interaction mode) and Animations; routes cast terminals to
 --  Animations (SUCCEEDED also notifies AssistedHighlight via EventRouter).
@@ -348,10 +348,10 @@ local function AdjustCenteredCursorYPos()
 end
 
 local function GetCrosshairY()
-  if not CM.DB or not CM.DB.global then
-    return CM.Constants.DatabaseDefaults.global.crosshairY
+  if not CM.DB or not CM.DB.char then
+    return CM.Constants.DatabaseDefaults.char.crosshairY
   end
-  return CM.DB.global.crosshairY or CM.Constants.DatabaseDefaults.global.crosshairY
+  return CM.DB.char.crosshairY or CM.Constants.DatabaseDefaults.char.crosshairY
 end
 
 local function ApplyCrosshairVertical(y)
@@ -437,7 +437,7 @@ local DebugCrosshairFrame = CreateFrame("Frame", "CombatModeDebugCrosshairFrame"
 DebugCrosshairFrame:SetFrameStrata("DIALOG")
 DebugCrosshairFrame:SetFrameLevel(0)
 local DebugCrosshairTexture = DebugCrosshairFrame:CreateTexture(nil, "OVERLAY")
-DebugCrosshairTexture:SetTexture(CM.Constants.CrosshairTextureObj.Diamond.Base)
+DebugCrosshairTexture:SetTexture(CM.Constants.CrosshairTextureObj.Dot.Base)
 DebugCrosshairTexture:SetAllPoints(DebugCrosshairFrame)
 DebugCrosshairTexture:SetBlendMode("BLEND")
 DebugCrosshairTexture:SetVertexColor(0, 1, 0, 1)

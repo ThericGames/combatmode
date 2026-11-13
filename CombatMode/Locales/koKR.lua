@@ -440,6 +440,9 @@ L["A support-focused mode that, when active, switches your main action bar to a 
   "활성화하면 주 행동 단축바를 전용 지원 페이지로 전환하고, 이로운 주문이 조준점 아래의 우호적 대상을 지정할 수 있게 하는 지원 중심 모드입니다."
 L["Support Mode Keybind"] = "지원 모드 단축키"
 L["Prioritize Crosshair Target"] = "조준점 대상 우선"
+L["Cycle NPCs and Pets"] = "NPC 및 소환수 순환"
+L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too."] =
+  "지원 모드에서 고정 순환은 기본적으로 주변 플레이어 사이에서만 이동합니다. 주변 NPC와 소환수도 포함하려면 이 옵션을 켜세요."
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   "다른 우호적 대상(아군 순환으로 고른 대상 등)을 선택해 두었더라도 조준점 아래의 아군에게 주문이 시전됩니다. 끄면 선택한 대상에게 먼저 시전합니다."
 L["Tap to toggle Support Mode on or off."] = "눌러서 지원 모드를 켜거나 끕니다."
@@ -528,8 +531,7 @@ L["Back"] = "뒤로"
 L["Next"] = "다음"
 L["Finish"] = "완료"
 L["Skip tour"] = "둘러보기 건너뛰기"
-L["Click to learn more about this feature"] =
-  "클릭하여 이 기능에 대해 자세히 알아보세요"
+L["Learn more about this feature"] = "이 기능에 대해 자세히 알아보기"
 L["Assist HUD"] = "보조 HUD"
 L["Target Lock"] = "대상 고정"
 L["Party Wheel"] = "파티 휠"
@@ -547,12 +549,38 @@ L["A support-focused mode that, when active, switches your main action bar to a 
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "조준선 대상 지정을 켜거나 끄면 UI가 다시 불러와집니다."
 L["Needs Reticle Targeting."] = "조준선 대상 지정이 필요합니다."
+L["How the keys behave:\n• {Tap} the Mouse Look key to turn it on or off\n• {Hold} it to free your cursor for as long as you hold\n• {Tap} the Interact key to interact with what you aim at\n• {Hold} it on a player to open their menu"] =
+  "키 동작은 다음과 같습니다:\n• 마우스 시점 키를 {누르면} 켜거나 끕니다\n• {누르고 있으면} 누르는 동안 커서가 풀립니다\n• 상호작용 키를 {누르면} 조준한 대상과 상호작용합니다\n• 플레이어에게 {누르고 있으면} 해당 메뉴가 열립니다"
+L["It only shows while Mouse Look is on, and its color follows what you aim at ({Reaction Colors}). {Cast Feedback} makes it react as you cast.\n\nWhile Target Lock is active it becomes a steady dot, and Support Mode uses its own texture."] =
+  "마우스 시점이 켜져 있을 때만 표시되며, 색상은 조준한 대상을 따라갑니다 ({반응 색상}). {시전 피드백}은 시전할 때 반응하게 합니다.\n\n대상 고정 중에는 고정된 점으로 바뀌며, 지원 모드는 전용 텍스처를 사용합니다."
+L["Aim at a player for a second and the {Player Interaction Prompt} appears; hold Interact to open their menu.\n\nWhile the {Interactable Indicator} is on, Blizzard's own interact icons are hidden, so you don't see them twice."] =
+  "플레이어를 1초간 조준하면 {플레이어 상호작용 안내}가 나타나며, 상호작용 키를 누르고 있으면 해당 메뉴가 열립니다.\n\n{상호작용 표시기}가 켜져 있으면 중복되지 않도록 블리자드의 기본 상호작용 아이콘은 숨겨집니다."
+L["Composed macros update automatically whenever you change your targeting options.\n\nKeep in mind that macros are limited to 255 characters."] =
+  "작성기로 만든 매크로는 대상 지정 옵션을 바꿀 때마다 자동으로 갱신됩니다.\n\n매크로는 255자로 제한된다는 점에 유의하세요."
+L["Target Lock uses the game's Focus Target, so other addons or macros that set a focus will interfere with it.\n• The reticle becomes a steady dot and a marker follows the locked nameplate\n• Reticle Targeting casts keep going to the locked unit\n• {Auto Target Lock} locks the enemy you attack on its own (the ally you heal, in Support Mode)"] =
+  "대상 고정은 게임의 주시 대상을 사용하므로, 주시 대상을 지정하는 다른 애드온이나 매크로가 방해할 수 있습니다.\n• 조준점이 고정된 점으로 바뀌고, 고정된 이름표를 따라가는 표시가 나타납니다\n• 조준선 대상 지정으로 시전한 주문은 계속 고정된 대상에게 갑니다\n• {자동 대상 고정}은 공격한 적을 스스로 고정합니다 (지원 모드에서는 치유한 아군)"
+L["The wheel shows 8 members per page with portrait, health and role; {scroll} to change page. Dead, offline and out-of-range members are dimmed, and offline ones can't be picked.\n\nSpells that aren't in this list cast as usual. {Esc} or {right-click} closes the wheel without casting."] =
+  "휠은 한 페이지에 8명의 파티원을 초상화, 체력, 역할과 함께 보여 주며, {마우스 휠}로 페이지를 넘깁니다. 죽었거나 오프라인이거나 사거리 밖인 파티원은 흐리게 표시되고, 오프라인 파티원은 선택할 수 없습니다.\n\n이 목록에 없는 주문은 평소처럼 시전됩니다. {Esc} 또는 {우클릭}으로 시전하지 않고 휠을 닫습니다."
+L["The cycle skips offline members and those in another zone.\n• {Skip Self} leaves you out of the cycle\n• {Also Cycle Through} adds pets\n• {Keep Ally After Harm} keeps the ally after you cast a harmful spell\n• {Ally HUD} also shows health and role\n\nIn Support Mode, the ally you picked has priority over the one under your crosshair unless {Prioritize Crosshair Target} is on."] =
+  "순환은 오프라인인 파티원과 다른 지역에 있는 파티원을 건너뜁니다.\n• {자신 건너뛰기}는 순환에서 자신을 뺍니다\n• {함께 순환할 대상}은 소환수를 추가합니다\n• {공격 후 아군 유지}는 적대 주문을 시전한 뒤에도 아군을 유지합니다\n• {아군 HUD}는 체력과 역할도 보여 줍니다\n\n지원 모드에서는 {조준점 대상 우선}이 켜져 있지 않으면 선택한 아군이 조준점 아래의 아군보다 우선합니다."
+L["Two lists let you add your own:\n• {Unlock Mounts}: mounts that act as vendors, so your cursor is free while you use them\n• {Extra Frames}: any other window; type its name to search, or use the inspect button to find it\n\nFor fully custom rules, the Advanced tab accepts a Lua condition."] =
+  "두 개의 목록에 직접 추가할 수 있습니다:\n• {해제할 탈것}: 상인 역할을 하는 탈것으로, 사용하는 동안 커서가 풀립니다\n• {추가 프레임}: 그 밖의 모든 창. 이름을 입력해 검색하거나 검사 버튼으로 찾으세요\n\n완전히 직접 만든 규칙은 고급 탭에서 Lua 조건으로 설정할 수 있습니다."
+L["While the mode is on, a helpful spell on a click-cast button goes to the first of these that exists:\n• Your {Target Lock} ally\n• Your friendly target (such as an {Ally Cycle} pick)\n• The ally under your crosshair\n• The ally in front of you\n\n{Prioritize Crosshair Target} puts the crosshair ally ahead of your friendly target. With no ally, the game's {Self Cast} setting decides whether it lands on you.\n\nHarmful spells keep targeting enemies, and {Nameplate Behavior} picks which nameplates show. It all works in combat."] =
+  "모드가 켜져 있는 동안 클릭 시전 버튼의 우호 주문은 다음 중 존재하는 첫 번째 대상에게 갑니다:\n• {대상 고정}한 아군\n• 우호 대상({아군 순환}으로 고른 대상 등)\n• 조준점 아래의 아군\n• 정면의 아군\n\n{조준점 대상 우선}은 조준점의 아군을 우호 대상보다 앞에 둡니다. 아군이 없으면 게임의 자신에게 시전 설정이 본인에게 시전할지 결정합니다.\n\n공격 주문은 계속 적을 대상으로 하며, {이름표 동작}으로 표시할 이름표를 고릅니다. 모두 전투 중에도 작동합니다."
+L["Reticle Targeting only picks {enemies}. Helpful spells keep your friendly target, so use {Ally Cycle}, {Support Mode} or the {Party Wheel} to reach allies.\n\nAlso worth knowing:\n• Spells on macro buttons need the {Reticle Targeting Macros} below\n• Spells in {Excluded Spells} skip the targeting logic\n• {Auto Target Lock} locks the enemy you attack so the reticle stops swapping"] =
+  "조준선 대상 지정은 {적}만 고릅니다. 우호 주문은 우호 대상을 유지하므로 아군에게는 {아군 순환}, {지원 모드} 또는 {파티 휠}을 사용하세요.\n\n알아두면 좋은 점:\n• 매크로 버튼의 주문에는 아래의 {조준선 대상 지정 매크로}가 필요합니다\n• {제외할 주문}에 있는 주문은 대상 지정 로직을 건너뜁니다\n• {자동 대상 고정}은 공격하는 적을 고정해 조준선이 바뀌지 않게 합니다"
+L["Normally a ground-targeted spell cast through Reticle Targeting will temporarily disable Mouse Look so you can place it manually. Spells listed here are automatically cast on the ground at your crosshair location instead.\n\nSpells like {Blizzard}, {Heroic Leap} or {Death and Decay} are typical examples. If a ground spell still stops Mouse Look so you can place it, add it here."] =
+  "보통 조준선 대상 지정으로 시전하는 지면 지정 주문은 직접 위치를 정할 수 있도록 마우스 시점을 일시적으로 끕니다. 이 목록의 주문은 대신 조준점 위치의 지면에 자동으로 시전됩니다.\n\n{눈보라}, {영웅의 도약}, {죽음과 부패} 같은 주문이 대표적입니다. 지면 지정 주문이 여전히 마우스 시점을 멈추고 직접 위치를 정하게 한다면 여기에 추가하세요."
+L["Binds only work while Mouse Look is on. With Reticle Targeting on, a bound spell targets the enemy under your crosshair first, and helpful spells keep your friendly target.\n\n{Account-Wide Binds} shares one set of binds between all your characters."] =
+  "단축키는 마우스 시점이 켜져 있을 때만 작동합니다. 조준선 대상 지정이 켜져 있으면 지정한 주문은 먼저 조준점 아래의 적을 대상으로 하고, 우호 주문은 우호 대상을 유지합니다.\n\n{계정 공통 단축키}는 모든 캐릭터가 하나의 단축키 세트를 공유하게 합니다."
+L["Each wheel holds up to {8 slices}, and you can keep up to {5 wheels}. In the editor below:\n• {Click} a slice to pick a shortcut or emote\n• {Drop} a spell, item, mount or macro onto it\n• {Right-click} it to remove it\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."] =
+  "휠마다 최대 {8개 칸}이 있고 휠은 최대 {5개}까지 둘 수 있습니다. 아래 편집기에서:\n• 칸을 {클릭}해 바로가기나 감정 표현을 고릅니다\n• 주문, 아이템, 탈것, 매크로를 칸에 {끌어다 놓습니다}\n• {우클릭}으로 제거합니다\n• 끌어서 옮깁니다\n\n휠이 열려 있을 때 {Esc} 또는 {우클릭}하면 아무것도 사용하지 않고 취소됩니다."
 L["Lock your cursor to the center of the screen and steer by moving the mouse, no more holding right-click.\n\nSet a {key to toggle it}, and {one to interact with} whatever you're aiming at."] =
   "커서를 화면 중앙에 고정하고 마우스를 움직여 방향을 조절합니다. 더 이상 오른쪽 클릭을 누르고 있을 필요가 없습니다.\n\n{전환 단축키}와 조준 중인 대상과 {상호작용하는 단축키}를 지정하세요."
-L["A reactive, fully customizable crosshair that adapts to your target and combat state.\n\nChoose its {look}, {size} and {position}."] =
-  "대상과 전투 상태에 따라 반응하는, 완전히 사용자 지정 가능한 조준점입니다.\n\n{모양}, {크기}, {위치}를 선택하세요."
-L["Aim at an enemy and the HUD next to your crosshair suggests your {next spell} and shows its key.\n\nAim at something you can interact with and it shows its {name} and your {Interact key} instead.\n\nTurn either on or off, and set its {side}, {size} and {distance} from the crosshair."] =
-  "적을 조준하면 조준점 옆의 HUD가 {다음 주문}을 추천하고 단축키를 보여줍니다.\n\n상호작용할 수 있는 대상을 조준하면 대신 그 {이름}과 {상호작용 단축키}를 보여줍니다.\n\n각각 켜거나 끌 수 있으며 조준점에 대한 {방향}, {크기}, {거리}를 설정하세요."
+L["A reactive, fully customizable crosshair that adapts to your target and combat state."] =
+  "대상과 전투 상태에 따라 반응하는, 완전히 사용자 지정 가능한 조준점입니다."
+L["Aim at an enemy and the HUD next to your crosshair suggests your {next spell} and shows its key.\n\nAim at something you can interact with and it shows its {name} and your {Interact key} instead."] =
+  "적을 조준하면 조준점 옆의 HUD가 {다음 주문}을 추천하고 단축키를 보여줍니다.\n\n상호작용할 수 있는 대상을 조준하면 대신 그 {이름}과 {상호작용 단축키}를 보여줍니다."
 L["Target enemies just by aiming at them, and drop ground-targeted spells and AoE abilities right where your crosshair points, with no tab-targeting."] =
   "적을 조준하는 것만으로 대상을 지정하고, 지면 지정 주문과 광역 능력을 Tab 대상 지정 없이 조준점이 가리키는 곳에 바로 사용하세요."
 L["Ground-targeted spells that should be cast at the crosshair location.\n\nType a {spell name or ID} to add it."] =

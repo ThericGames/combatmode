@@ -376,11 +376,36 @@ function CM.InitDatabase()
       savedSituational
     ) or CM.Constants.CrosshairSituationalHidden
   end
+  -- The Diamond preset became the Dot: the Mounted / Disabled / Support slots saved with its ids move over.
+  for _, key in ipairs({ "crosshairMountedId", "crosshairTargetLockId", "crosshairSupportId" }) do
+    local moved = CM.Constants.CrosshairLegacyIds[sv.global[key]]
+    if moved then
+      sv.global[key] = moved
+    end
+  end
 
   if type(sv.char) ~= "table" then
     sv.char = {}
   end
   local charKey = GetCharKey()
+  -- Minimum Zoom and the crosshair's Vertical Position became per-character settings: every
+  -- character that exists now inherits the old account-wide value once, before the merge fills
+  -- in the defaults; characters created later start from the defaults.
+  if savedGlobal.crosshairY ~= nil or savedGlobal.minCameraZoom ~= nil then
+    sv.char[charKey] = sv.char[charKey] or {}
+    for _, charDb in pairs(sv.char) do
+      if type(charDb) == "table" then
+        if charDb.crosshairY == nil then
+          charDb.crosshairY = savedGlobal.crosshairY
+        end
+        if charDb.minCameraZoom == nil then
+          charDb.minCameraZoom = savedGlobal.minCameraZoom
+        end
+      end
+    end
+    sv.global.crosshairY = nil
+    sv.global.minCameraZoom = nil
+  end
   sv.char[charKey] = MergeDefaults(sv.char[charKey] or {}, defaults.char or {})
   NormalizeBools(sv.char[charKey], defaults.char or {})
 

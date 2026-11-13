@@ -1122,9 +1122,9 @@ local MIN_ZOOM_CHECK_INTERVAL = 0.03
 local minZoomFrame
 local minZoomElapsed = 0
 
---- Pushes the camera back out when it sits closer than global.minCameraZoom (0 = off).
+--- Pushes the camera back out when it sits closer than char.minCameraZoom (0 = off).
 local function EnforceMinCameraZoom()
-  local minZoom = CM.DB and CM.DB.global and CM.DB.global.minCameraZoom
+  local minZoom = CM.DB and CM.DB.char and CM.DB.char.minCameraZoom
   if type(minZoom) ~= "number" or minZoom <= 0 then
     return
   end
@@ -1149,7 +1149,7 @@ minZoomButton:SetScript("OnClick", function()
   if now == minZoomTime then -- down and up of one wheel notch arrive together
     return
   end
-  local minZoom = CM.DB.global.minCameraZoom
+  local minZoom = CM.DB.char.minCameraZoom
   local current = _G.GetCameraZoom()
   local base = (now - minZoomTime < MIN_ZOOM_SETTLE) and minZoomTarget or current
   local step = math.min(MIN_ZOOM_STEP, base - minZoom)
@@ -1163,7 +1163,7 @@ end)
 
 local function ApplyMinZoomBindings()
   _G.ClearOverrideBindings(minZoomOwner)
-  local minZoom = CM.DB.global.minCameraZoom
+  local minZoom = CM.DB.char.minCameraZoom
   if type(minZoom) ~= "number" or minZoom <= 0 then
     return
   end
@@ -1178,7 +1178,7 @@ end
 --- slider changes or UPDATE_BINDINGS.
 function CM.ApplyMinCameraZoom()
   CM.TryApplyBindingChange(L["Minimum Zoom"], ApplyMinZoomBindings)
-  local minZoom = CM.DB and CM.DB.global and CM.DB.global.minCameraZoom
+  local minZoom = CM.DB and CM.DB.char and CM.DB.char.minCameraZoom
   local active = type(minZoom) == "number" and minZoom > 0
   if not minZoomFrame then
     if not active then

@@ -2,7 +2,7 @@
 --  UI/Options/Tabs/TabSupportMode.lua — OPTIONS TAB — Support Mode
 ---------------------------------------------------------------------------------------
 --  What it does: Support Mode keybind (a toggle), Prioritize Crosshair Target, support bar page,
---  Vignette tint toggle and the nameplates dropdown. An unbound Support Mode key disables it.
+--  Cycle NPCs and Pets, Vignette tint toggle and the nameplates dropdown. An unbound Support Mode key disables it.
 --  (The Support crosshair color and texture are on the Crosshair tab: Reaction Colors and
 --  Appearance.)
 --  Architecture / how it works:
@@ -104,6 +104,24 @@ UI.Options.AddTab({
       set = function(value)
         CM.DB.char.supportModeCrosshairFirst = value and true or false
         Apply()
+      end,
+      disabled = ReticleTargetingOff,
+      watermarkWhenDisabled = ReticleTargetingNotice,
+    })
+    ctx:Toggle({
+      label = L["Cycle NPCs and Pets"],
+      desc = L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too."],
+      charSpecific = true,
+      get = function()
+        return CM.DbBool(CM.DB.char.supportModeCycleNPCs, false)
+      end,
+      set = function(value)
+        CM.DB.char.supportModeCycleNPCs = value and true or false
+        Apply()
+        -- The cycle buttons' Support Mode text is stored by this, not by the macro refresh.
+        if CM.ApplyCycleFocusBindings then
+          CM.ApplyCycleFocusBindings()
+        end
       end,
       disabled = ReticleTargetingOff,
       watermarkWhenDisabled = ReticleTargetingNotice,

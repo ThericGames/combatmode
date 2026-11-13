@@ -8,11 +8,11 @@
 --  Architecture / how it works:
 --    • global: free-look / crosshair / Interaction HUD / Assisted Combat / reticle /
 --      click-cast bindings / auto-unlock / Mouse Look camera (mouseLookSpeed,
---      minCameraZoom, dynamicPitch, dynamicPitchStrength, vignette, shoulderFollowsMouseLook, respectMotionSickness,
+--      dynamicPitch, dynamicPitchStrength, vignette, shoulderFollowsMouseLook, respectMotionSickness,
 --      autofocusLockedTarget) / allyCycle / debug.
 --      Crosshair also stores crosshairSituationalCondition + crosshairSituationalAppearance.
 --    • char: reticle targeting, click-cast bindings, useGlobalBindings, shoulderOffset,
---      supportMode* (Support Mode page / nameplates / Vignette tint).
+--      minCameraZoom, crosshairY, supportMode* (Support Mode page / nameplates / Vignette tint).
 --    • InitDatabase merges missing keys, then coerces Forever-style 1/0 flags to real
 --      booleans wherever these defaults declare a boolean (CM.DbBool / NormalizeBools).
 --    • MigrateMouseLookCameraDB (CVarManager) seeds shoulder/dynamicPitch from legacy
@@ -110,7 +110,6 @@ CM.Constants.DatabaseDefaults = {
     crosshairTargetLockId = CM.Constants.CrosshairIdleDefaultId, -- texture while Target Lock holds
     crosshairSupportId = CM.Constants.CrosshairSupportDefaultId, -- texture in Support Mode
     crosshairScale = 1.0,
-    crosshairY = 100,
     -- crosshair HUD: interaction mode toggle (layout is shared with combat assist)
     interactionHUD = true,
     -- Interactable Indicator also prompts for other players (portrait + name) after a short aim
@@ -157,8 +156,6 @@ return false
     customLockConditionOnce = false,
     -- mouse look camera
     mouseLookSpeed = 100,
-    -- Closest the camera may zoom in (yards); 0 = off.
-    minCameraZoom = 3,
     dynamicPitch = true,
     -- Vignette shows when these are true: CSV of mouselook | combat | interaction ("" = off).
     -- A string, not a table: MergeDefaults would graft default keys onto a saved table.
@@ -201,6 +198,10 @@ return false
     partyWheelSpells = "",
     -- mouse look camera
     shoulderOffset = 1.2,
+    -- Closest the camera may zoom in (yards); 0 = off.
+    minCameraZoom = 3,
+    -- crosshair height from screen centre
+    crosshairY = 100,
     -- reticle targeting
     reticleTargeting = true,
     autoTargetLockOnAttack = false,
@@ -219,6 +220,8 @@ return false
     supportModeNameplateMode = "friendly",
     -- The unit under the crosshair beats a hard target / Ally Cycle pick (false: the target first)
     supportModeCrosshairFirst = false,
+    -- Cycle Lock in the mode also walks NPCs and pets (false: nearby players only)
+    supportModeCycleNPCs = false,
     supportModeTintVignette = true, -- the Vignette takes the Support crosshair color while on
     supportModeActive = false, -- session flag: a reload while on returns to page 1
   },

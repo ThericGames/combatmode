@@ -317,8 +317,8 @@ local function StoreDirections()
 end
 
 local function CrosshairYOffset()
-  local g = CM.DB and CM.DB.global
-  return (g and g.crosshairY) or 0
+  local c = CM.DB and CM.DB.char
+  return (c and c.crosshairY) or 0
 end
 
 local function StoreImpl()

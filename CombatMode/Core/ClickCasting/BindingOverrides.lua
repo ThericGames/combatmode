@@ -204,15 +204,17 @@ local function EnsureFocusCycleMacroText()
     return
   end
   -- Second text: Support Mode cycles friendly units instead (the secure key swaps them in combat).
+  -- Players only, unless the Cycle NPCs and Pets option is on.
+  local withNPCs = CM.DbBool(CM.DB.char.supportModeCycleNPCs, false)
   CM.SetModeMacroText(
     CycleFocusEnemyNextButton,
     macros_const.CM_CycleFocusEnemyNext,
-    macros_const.CM_CycleFocusFriendNext
+    withNPCs and macros_const.CM_CycleFocusFriendAllNext or macros_const.CM_CycleFocusFriendNext
   )
   CM.SetModeMacroText(
     CycleFocusEnemyPrevButton,
     macros_const.CM_CycleFocusEnemyPrev,
-    macros_const.CM_CycleFocusFriendPrev
+    withNPCs and macros_const.CM_CycleFocusFriendAllPrev or macros_const.CM_CycleFocusFriendPrev
   )
 end
 

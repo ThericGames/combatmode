@@ -283,7 +283,7 @@ local PICKER_LEVEL = 8000
 local BANNER_W = 340
 local BANNER_PAD = 14
 local BANNER_ICON = 20
-local INSPECT_ICON = { atlas = "decor-controls-inspect-default" } -- shown while nothing is hovered
+local INSPECT_ICON = { icon = CM.Constants.PickBadge, full = true } -- shown while nothing is hovered (not cropped)
 local BANNER_IDLE_TITLE = L["Pick a frame"]
 local pickerOnPick
 local pickerName
@@ -376,7 +376,11 @@ local function BuildPicker()
       CM.SetAtlas(bannerIcon, icon.atlas)
     else
       bannerIcon:SetTexture(icon.icon)
-      bannerIcon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+      if icon.full then
+        bannerIcon:SetTexCoord(0, 1, 0, 1)
+      else
+        bannerIcon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+      end
     end
   end
   SetBannerIcon(BANNER_IDLE_TITLE, INSPECT_ICON)

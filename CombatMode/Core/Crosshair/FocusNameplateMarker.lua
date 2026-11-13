@@ -27,6 +27,8 @@
 --    • Plate GetWidth/GetAlpha/GetScale probes are secret-safe (issecretvalue) so instance
 --      taint cannot error while scanning StatusBars.
 --    • Driven by PLAYER_FOCUS_CHANGED + NAME_PLATE_UNIT_ADDED/REMOVED via EventRouter.
+--    • Settled also pulses every PULSE_INTERVAL seconds: a ghost copy (child frame of the
+--      marker) swells and fades, like the reticle's Support Mode swap.
 --    • Arrive runs once per lock session; plate recycle ResumeSettled (no re-arrive).
 --      flashElapsed also survives recycle. True unlock clears the session.
 --  Does not: Own focus macros, Target Lock keybind, sounds, or third-party nameplate restyles.
@@ -71,6 +73,13 @@ local ARRIVE_START_SCALE = 1.4
 -- Settled idle: color pulse only (arrive owns scale/alpha; never overlap those channels).
 local MARKER_FLASH_PERIOD = 0.8
 
+-- Settled idle also sends out a pulse every few seconds: a ghost copy swells and fades, like the
+-- reticle's Support Mode swap (Animations.lua). Its own child frame, so the marker's scale/alpha
+-- channels stay untouched.
+local PULSE_INTERVAL = 4
+local PULSE_DURATION = 0.6
+local PULSE_END_SCALE = 1.9
+
 local PLATE_ADD_DEFER_SEC = 0.05
 local SIZE_RETRY_SEC = 0.12
 local SIZE_RETRY_MAX = 4
@@ -78,6 +87,8 @@ local SIZE_RETRY_MAX = 4
 local state = STATE_IDLE
 local motionElapsed = 0 -- arrive progress only
 local flashElapsed = 0 -- survives plate recycle while still locked
+local pulseElapsed = 0 -- time since the last pulse (settled only)
+local pulseProgress = nil -- seconds into a running pulse, nil when none
 local lockSessionActive = false -- true after first plate show until unlock/clear
 local activePlate
 local activeAnchor
@@ -123,6 +134,13 @@ local function GetFocusColor()
 end
 
 local function GetMarkerTexturePath()
+  -- Support Mode on an ally lock: the Support texture, like the reticle (unless turned off).
+  if GetFocusColorState() == "support" and CM.GetCrosshairSupportTexturePath then
+    local supportPath = CM.GetCrosshairSupportTexturePath()
+    if supportPath then
+      return supportPath
+    end
+  end
   -- The player's Active texture; Default's hit art when they hid Active (the marker is Target
   -- Lock feedback with its own toggle, so it is never left empty).
   local appearance = CM.DB and CM.DB.global and CM.DB.global.crosshairAppearance
@@ -366,8 +384,52 @@ local function EnsureMarkerFrame()
   markerFrame:EnableMouse(false)
   markerFrame.icon = markerFrame:CreateTexture(nil, "ARTWORK", nil, 0)
   markerFrame.icon:SetAllPoints(markerFrame)
+  markerFrame.pulse = CreateFrame("Frame", nil, markerFrame)
+  markerFrame.pulse:EnableMouse(false)
+  -- One centre anchor + fixed size: two-corner anchors would pin the rect and ignore SetScale.
+  markerFrame.pulse:SetPoint("CENTER", markerFrame, "CENTER", 0, 0)
+  markerFrame.pulse:SetSize(MARKER_SIZE, MARKER_SIZE)
+  markerFrame.pulse.icon = markerFrame.pulse:CreateTexture(nil, "ARTWORK", nil, 1)
+  markerFrame.pulse.icon:SetAllPoints(markerFrame.pulse)
+  markerFrame.pulse:Hide()
   markerFrame:Hide()
   return markerFrame
+end
+
+local function StopPulse()
+  pulseProgress = nil
+  if markerFrame and markerFrame.pulse then
+    markerFrame.pulse:Hide()
+  end
+end
+
+local function StartPulse(marker)
+  local pulse = marker.pulse
+  if not pulse then
+    return
+  end
+  pcall(pulse.icon.SetTexture, pulse.icon, GetMarkerTexturePath())
+  local r, g, b, a = marker.icon:GetVertexColor()
+  pulse.icon:SetVertexColor(r or 1, g or 1, b or 1, a or 1)
+  pulse:SetScale(1)
+  pulse:SetAlpha(1)
+  pulse:Show()
+  pulseProgress = 0
+end
+
+local function StepPulse(marker, elapsed)
+  if not pulseProgress then
+    return
+  end
+  pulseProgress = pulseProgress + elapsed
+  local t = Clamp01(pulseProgress / PULSE_DURATION)
+  if t >= 1 then
+    StopPulse()
+    return
+  end
+  local e = EaseOutQuad(t)
+  marker.pulse:SetScale(1 + (PULSE_END_SCALE - 1) * e)
+  marker.pulse:SetAlpha(1 - e)
 end
 
 local function EnsureDriver()
@@ -385,6 +447,7 @@ local function StopDriver()
 end
 
 local function HideMarkerInstant()
+  StopPulse()
   if markerFrame then
     markerFrame:Hide()
     markerFrame:SetScale(1)
@@ -422,8 +485,10 @@ local function SetIdle(resetFlash)
   motionElapsed = 0
   if resetFlash then
     flashElapsed = 0
+    pulseElapsed = 0
     lockSessionActive = false
   end
+  StopPulse()
   StopDriver()
 end
 
@@ -453,6 +518,7 @@ local function OnDriverUpdate(_, elapsed)
         state = STATE_SETTLED
         motionElapsed = 0
         flashElapsed = 0
+        pulseElapsed = 0
         ApplyFlashColor(marker)
         return
       end
@@ -467,7 +533,17 @@ local function OnDriverUpdate(_, elapsed)
 
     if state == STATE_SETTLED then
       flashElapsed = flashElapsed + elapsed
-      ApplyFlashColor(EnsureMarkerFrame())
+      local marker = EnsureMarkerFrame()
+      ApplyFlashColor(marker)
+      if pulseProgress then
+        StepPulse(marker, elapsed)
+      else
+        pulseElapsed = pulseElapsed + elapsed
+        if pulseElapsed >= PULSE_INTERVAL then
+          pulseElapsed = 0
+          StartPulse(marker)
+        end
+      end
     end
   end)
 end
@@ -489,6 +565,8 @@ local function BeginPlateArrive(plate, anchor)
   state = STATE_PLATE_ARRIVE
   motionElapsed = 0
   flashElapsed = 0
+  pulseElapsed = 0
+  StopPulse()
   lockSessionActive = true
   ApplyFocusColor(marker)
   StartDriver()

@@ -37,7 +37,7 @@ DEFAULT_SOURCE = os.path.join(os.path.expanduser("~"), "Desktop", "previews")
 SLIDE_W, SLIDE_H = 512, 256  # stored size (power of two); shown at 16:9 in game
 CROP_H = 0.4  # crop height as a share of the screenshot's height (1440 -> 1024x576)
 # folder -> CROP_H for sets that need a tighter or looser crop (the crosshair and its HUD are small on screen)
-CROP_OVERRIDE = {"Crosshair": 0.2, "AssistHUD": 0.25, "Mouselook": 0.6, "ReticleTargeting": 0.3, "TargetLock": 0.3, "SupportMode": 0.5}
+CROP_OVERRIDE = {"Crosshair": 0.2, "AssistHUD": 0.25, "Mouselook": 0.6, "ReticleTargeting": 0.3, "TargetLock": 0.3, "SupportMode": 0.42}
 CROSSHAIR_Y = 840 / 1440  # the crosshair's height above the bottom edge; the crop is centred on it
 
 # Screenshot folder -> asset key (the step's `slides` key in SetupWizard.lua).
