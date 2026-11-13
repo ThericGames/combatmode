@@ -524,6 +524,7 @@ function CM.ShouldFreeLookBeOff()
       IsGroundTargeting()
       or InCinematic()
       or IsInCinematicScene()
+      or CM.IsChatInputActive()
       or CM.IsUnlockFrameVisible()
       or CM.IsVendorMountOut()
     then

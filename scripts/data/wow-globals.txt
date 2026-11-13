@@ -101,6 +101,7 @@ CANCEL
 CanLootUnit
 CastPetAction
 ChangeActionBarPage
+ChatEdit_GetActiveWindow
 CLASS_ICON_TCOORDS
 ClearCursor
 ClearOverrideBindings
@@ -244,7 +245,6 @@ ToggleSheath
 tonumber
 tostring
 type
-UIErrorsFrame
 UIParent
 UISpecialFrames
 UnitAffectingCombat

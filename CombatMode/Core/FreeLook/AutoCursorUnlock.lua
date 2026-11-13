@@ -98,6 +98,22 @@ local function IsBlizzardMenuOpen()
   return false
 end
 
+-- Active chat input only: a visible chat history never keeps Mouse Look unlocked.
+function CM.IsChatInputActive()
+  if not CM.DB.global.unlockWhileChatting then
+    return false
+  end
+  local editBox = _G.ChatEdit_GetActiveWindow and _G.ChatEdit_GetActiveWindow()
+  if not editBox or (editBox.IsForbidden and editBox:IsForbidden()) then
+    return false
+  end
+  return editBox.IsShown ~= nil
+      and editBox:IsShown()
+      and editBox.HasFocus ~= nil
+      and editBox:HasFocus()
+    or false
+end
+
 function CM.IsUnlockFrameVisible()
   if GetUIPanel("left") or GetUIPanel("right") or GetUIPanel("center") then
     return true
