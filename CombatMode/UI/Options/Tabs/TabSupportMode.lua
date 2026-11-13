@@ -95,6 +95,20 @@ UI.Options.AddTab({
       watermarkWhenDisabled = ReticleTargetingNotice,
     })
     ctx:Toggle({
+      label = L["Self-cast outside Support Mode"],
+      desc = L["Target yourself with helpful spell bindings outside Support Mode. Requires Reticle Targeting; custom macros keep their own targets."],
+      charSpecific = true,
+      get = function()
+        return CM.DbBool(CM.DB.char.supportModeSelfCast, false)
+      end,
+      set = function(value)
+        CM.DB.char.supportModeSelfCast = value and true or false
+        Apply()
+      end,
+      disabled = ReticleTargetingOff,
+      watermarkWhenDisabled = ReticleTargetingNotice,
+    })
+    ctx:Toggle({
       label = L["Prioritize Crosshair Target"],
       desc = L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."],
       charSpecific = true,

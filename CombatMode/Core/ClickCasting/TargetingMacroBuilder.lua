@@ -858,6 +858,12 @@ local function GetAllyCycleSpellRoute(spellId)
   return nil
 end
 
+-- Shared with keyboard routing so helpful exclusions still receive both mode macros.
+function CM.ShouldSelfCastOutsideSupport(spellId)
+  return CM.DbBool(CM.DB.char.supportModeSelfCast, false)
+    and GetAllyCycleSpellRoute(spellId) == "help"
+end
+
 -- Cycle Up/Down bound. Gates harm/restore routing only — not helpful prelines.
 local function AllyCycleKeysBound()
   return CM.IsAllyCycleEnabled and CM.IsAllyCycleEnabled()
@@ -1069,7 +1075,7 @@ end
 -- With Auto Target Lock on, two more lines lock the ally who took the heal (SupportAutoLockText,
 -- or SupportAutoLockTargetText when Prioritize Crosshair Target is on as well).
 -- nil = no name yet: the caller keeps SupportPreLine + /click (which never auto-locks).
-local function SupportCastLine(spellId)
+local function SupportCastLine(spellId, selfOnly)
   if not spellId or not (C_Spell and C_Spell.GetSpellInfo) then
     return nil
   end
@@ -1084,6 +1090,9 @@ local function SupportCastLine(spellId)
     if ok and type(subtext) == "string" and subtext:find("%d") then
       name = name .. "(" .. subtext .. ")"
     end
+  end
+  if selfOnly then
+    return "/cast [@player] " .. name
   end
   local units = SUPPORT_SELF_KEY .. SupportCastUnits()
   local selfCast = AutoSelfCastOn() and "[@player]" or ""
@@ -1216,6 +1225,16 @@ function CM.BuildClickCastMacroText(bindingValue, opts)
     -- Special action bar abilities (override, bonus, shapeshift): don't inject pre-line, just click the button directly
     if isSpecialBarButton then
       return castLine
+    end
+    -- Explicit self targeting takes precedence over targeting exclusions/cursor casting.
+    -- Support Mode keeps its existing routing and special bars/macros remain untouched.
+    if
+      not isAssistedButton
+      and CM.ShouldSelfCastOutsideSupport(spellIdForPreline)
+      and not (opts and opts.support)
+    then
+      -- Never fall back to /click here: it could cast on an ally while data is unavailable.
+      return SupportCastLine(spellIdForPreline, true) or "/stopmacro"
     end
     -- Spell in blacklist (e.g. self-cast defensives): don't apply targeting pre-line.
     if

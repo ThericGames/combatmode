@@ -810,3 +810,8 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "宏“%s”与当前前置行合并后已超出长度限制；请在准星瞄准宏中编辑。"
 L["Click to print URL to chat"] = "点击将 URL 输出到聊天"
+
+-- Support Mode: optional self targeting.
+L["Self-cast outside Support Mode"] = "在支援模式外对自己施法"
+L["Target yourself with helpful spell bindings outside Support Mode. Requires Reticle Targeting; custom macros keep their own targets."] =
+  "在支援模式外，增益法术按键以自己为目标。需要启用准星选取目标；自定义宏保留其自身的目标设置。"
