@@ -444,8 +444,8 @@ L["Hold while in Support Mode to cast the helpful spells on your click-cast butt
   "Mantenla pulsada en el Modo de apoyo para lanzarte a ti los hechizos beneficiosos de tus botones de clic. Tu objetivo y Fijar objetivo no cambian."
 L["Prioritize Crosshair Target"] = "Priorizar el objetivo de la mira"
 L["Cycle NPCs and Pets"] = "Alternar entre PNJ y mascotas"
-L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too."] =
-  "Alternar fijación normalmente solo cambia entre jugadores cercanos en el modo de apoyo. Actívalo para incluir también PNJ y mascotas cercanos."
+L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. While this is off, Support Mode also hides the nameplates of NPCs and pets."] =
+  "Alternar fijación normalmente solo cambia entre jugadores cercanos en el modo de apoyo. Actívalo para incluir también PNJ y mascotas cercanos. Mientras esté desactivado, el modo de apoyo también oculta las placas de nombre de PNJ y mascotas."
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   "El aliado bajo tu mira recibe el hechizo aunque tengas seleccionado otro objetivo amistoso, como una selección del Ciclo de aliados. Desactívalo para lanzar primero sobre tu objetivo seleccionado."
 L["Tap to toggle Support Mode on or off."] = "Pulsa para activar o desactivar el Modo de apoyo."

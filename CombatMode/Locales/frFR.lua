@@ -444,8 +444,8 @@ L["Hold while in Support Mode to cast the helpful spells on your click-cast butt
   "Maintenez-le en Mode soutien pour lancer sur vous-même les sorts bénéfiques de vos boutons de clic. Votre cible et le Verrouillage de cible ne changent pas."
 L["Prioritize Crosshair Target"] = "Prioriser la cible du réticule"
 L["Cycle NPCs and Pets"] = "Alterner entre PNJ et familiers"
-L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too."] =
-  "Cycler le verrouillage ne passe normalement que d'un joueur proche à l'autre en mode soutien. Activez cette option pour inclure aussi les PNJ et les familiers proches."
+L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. While this is off, Support Mode also hides the nameplates of NPCs and pets."] =
+  "Cycler le verrouillage ne passe normalement que d'un joueur proche à l'autre en mode soutien. Activez cette option pour inclure aussi les PNJ et les familiers proches. Tant qu'elle est désactivée, le mode soutien masque aussi les barres de nom des PNJ et des familiers."
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   "L'allié sous votre réticule reçoit le sort même si une autre cible amicale est sélectionnée, comme un choix du Cycle d'alliés. Désactivez pour lancer d'abord sur votre cible sélectionnée."
 L["Tap to toggle Support Mode on or off."] = "Appuyez pour activer ou désactiver le Mode soutien."

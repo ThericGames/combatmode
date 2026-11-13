@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Support Mode** no longer shows nameplates on pets and NPCs that the **Cycle Lock** keys skip. Turn on **Cycle NPCs and Pets** to see them again.
 - Click-cast buttons no longer stop working after you switch **Support Mode** on or off when the action bar slot holds a macro (such as a **Reticle Targeting Macro**) on one page and a spell on the other. Before, the button did nothing until you reloaded.
 
 ## [5.5.1] - 2026-11-13

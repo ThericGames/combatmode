@@ -373,7 +373,7 @@ L["Hold while in Support Mode to cast the helpful spells on your click-cast butt
   true
 L["Prioritize Crosshair Target"] = true
 L["Cycle NPCs and Pets"] = true
-L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too."] =
+L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. While this is off, Support Mode also hides the nameplates of NPCs and pets."] =
   true
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   true

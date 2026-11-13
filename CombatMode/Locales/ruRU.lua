@@ -469,8 +469,8 @@ L["Hold while in Support Mode to cast the helpful spells on your click-cast butt
   "Удерживайте в режиме поддержки, чтобы применять полезные заклинания кнопок щелчка к себе. Ваша цель и захват цели не меняются."
 L["Prioritize Crosshair Target"] = "Приоритет цели под прицелом"
 L["Cycle NPCs and Pets"] = "Перебор NPC и питомцев"
-L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too."] =
-  "В режиме поддержки смена захвата обычно переключается только между ближайшими игроками. Включите, чтобы также учитывать ближайших NPC и питомцев."
+L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. While this is off, Support Mode also hides the nameplates of NPCs and pets."] =
+  "В режиме поддержки смена захвата обычно переключается только между ближайшими игроками. Включите, чтобы также учитывать ближайших NPC и питомцев. Пока опция выключена, режим поддержки также скрывает индикаторы здоровья NPC и питомцев."
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   "Союзник под прицелом получает заклинание, даже если выбрана другая дружественная цель, например через смену союзника. Отключите, чтобы сначала применять заклинание на выбранную цель."
 L["Tap to toggle Support Mode on or off."] =

@@ -444,8 +444,8 @@ L["Hold while in Support Mode to cast the helpful spells on your click-cast butt
   "Segure no Modo de Suporte para lançar em você os feitiços benéficos dos seus botões de clique. Seu alvo e o Travar alvo permanecem como estão."
 L["Prioritize Crosshair Target"] = "Priorizar o alvo da mira"
 L["Cycle NPCs and Pets"] = "Alternar entre NPCs e ajudantes"
-L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too."] =
-  "Alternar trava normalmente só passa entre jogadores próximos no Modo Suporte. Ative para incluir também NPCs e ajudantes próximos."
+L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. While this is off, Support Mode also hides the nameplates of NPCs and pets."] =
+  "Alternar trava normalmente só passa entre jogadores próximos no Modo Suporte. Ative para incluir também NPCs e ajudantes próximos. Enquanto estiver desativado, o Modo Suporte também oculta as placas de identificação de NPCs e ajudantes."
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   "O aliado sob a mira recebe a magia mesmo que outro alvo amigável esteja selecionado, como uma escolha do Ciclo de aliados. Desative para lançar primeiro no alvo selecionado."
 L["Tap to toggle Support Mode on or off."] = "Toque para ligar ou desligar o Modo de Suporte."

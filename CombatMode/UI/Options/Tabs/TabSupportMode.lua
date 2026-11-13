@@ -127,7 +127,7 @@ UI.Options.AddTab({
     })
     ctx:Toggle({
       label = L["Cycle NPCs and Pets"],
-      desc = L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too."],
+      desc = L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. While this is off, Support Mode also hides the nameplates of NPCs and pets."],
       charSpecific = true,
       get = function()
         return CM.DbBool(CM.DB.char.supportModeCycleNPCs, false)
@@ -138,6 +138,10 @@ UI.Options.AddTab({
         -- The cycle buttons' Support Mode text is stored by this, not by the macro refresh.
         if CM.ApplyCycleFocusBindings then
           CM.ApplyCycleFocusBindings()
+        end
+        -- Pet, minion and NPC nameplates follow this option while the mode is on.
+        if CM.SyncSupportModeNameplates then
+          CM.SyncSupportModeNameplates()
         end
       end,
       disabled = ReticleTargetingOff,

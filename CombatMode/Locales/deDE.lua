@@ -445,8 +445,8 @@ L["Hold while in Support Mode to cast the helpful spells on your click-cast butt
   "Im Unterstützungsmodus gedrückt halten, um die hilfreichen Zauber deiner Klick-Zauber-Tasten auf dich selbst zu wirken. Dein Ziel und deine Zielsperre bleiben unverändert."
 L["Prioritize Crosshair Target"] = "Fadenkreuz-Ziel priorisieren"
 L["Cycle NPCs and Pets"] = "NPCs und Begleiter durchschalten"
-L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too."] =
-  "Zielsperre wechseln springt im Unterstützungsmodus normalerweise nur zwischen Spielern in der Nähe. Aktiviere dies, um auch NPCs und Begleiter in der Nähe einzubeziehen."
+L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. While this is off, Support Mode also hides the nameplates of NPCs and pets."] =
+  "Zielsperre wechseln springt im Unterstützungsmodus normalerweise nur zwischen Spielern in der Nähe. Aktiviere dies, um auch NPCs und Begleiter in der Nähe einzubeziehen. Solange dies aus ist, blendet der Unterstützungsmodus auch die Namensplaketten von NPCs und Begleitern aus."
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   "Der Verbündete unter deinem Fadenkreuz erhält den Zauber, auch wenn ein anderes freundliches Ziel ausgewählt ist, etwa eine Auswahl per Verbündetenwechsel. Ausschalten, um zuerst auf das ausgewählte Ziel zu wirken."
 L["Tap to toggle Support Mode on or off."] =

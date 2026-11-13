@@ -429,8 +429,8 @@ L["Hold while in Support Mode to cast the helpful spells on your click-cast butt
   "在辅助模式中按住此键，可将点击施法按键上的有益法术施放给自己。你的目标和目标锁定保持不变。"
 L["Prioritize Crosshair Target"] = "优先准星目标"
 L["Cycle NPCs and Pets"] = "轮换 NPC 和宠物"
-L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too."] =
-  "在辅助模式下,循环锁定通常只会在附近的玩家之间切换。开启后也会包括附近的 NPC 和宠物。"
+L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. While this is off, Support Mode also hides the nameplates of NPCs and pets."] =
+  "在辅助模式下,循环锁定通常只会在附近的玩家之间切换。开启后也会包括附近的 NPC 和宠物。关闭时,辅助模式还会隐藏 NPC 和宠物的姓名板。"
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   "即使已选中其他友方目标（例如通过友方循环选中），准星下的盟友也会优先获得法术。关闭后将优先施放给已选中的目标。"
 L["Tap to toggle Support Mode on or off."] = "点按以开启或关闭辅助模式。"
