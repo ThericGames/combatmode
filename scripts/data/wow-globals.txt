@@ -122,6 +122,7 @@ EditMacro
 Enum
 EnumerateFrames
 FlipCameraYaw
+FocusFrame
 GameEvent
 GameFontHighlight
 GameFontHighlightMedium

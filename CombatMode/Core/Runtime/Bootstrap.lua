@@ -144,6 +144,7 @@ function CM.BootstrapFeatureModules()
     CM.RebuildComposedMacros()
   end
   CM.ApplyToggleFocusTargetBinding()
+  CM.ApplyFocusFrameVisibility()
   CM.ApplyCycleFocusBindings()
   if CM.InitializeAllyCycle then
     CM.InitializeAllyCycle()

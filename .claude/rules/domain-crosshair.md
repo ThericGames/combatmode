@@ -16,3 +16,5 @@ paths:
 - **Options preview:** Crosshair tab → `CM.SetCrosshairOptionsPreview` via tab `onSelect`/`onDeselect`; do not reuse mouselook-gated Show/Hide.
 
 **In-game checks:** cast feedback and Assist cast-success in the open world and in a dungeon (no errors from secret cast GUID compares; no double fire from assisted action + `UNIT_SPELLCAST_SUCCEEDED`; rapid Single-Button Assistant presses don't spam it); Target Lock lock / cycle / unlock in an instance; the Situational Appearance with both slots hidden hides the reticle while its condition holds.
+
+- **FocusFrameVisibility**: `char.hideFocusFrame`, default false, reparents Blizzard FocusFrame under a hidden holder out of combat. Keeps native unit watches and focus state intact. Toggle-off restores the prior parent only while still owned; combat-end reconciliation reads the latest preference. Third-party focus replacements are untouched.
