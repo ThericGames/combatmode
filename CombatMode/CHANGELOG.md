@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [5.5.2] - 2026-11-13
 
+### Added
+
+- **Unlock Cursor for Ping** in **Auto Unlock**, off by default. When middle mouse is bound to Blizzard's **Ping**, hold it to aim with a free cursor and release to resume Mouse Look and its usual cursor centering. Existing reticle ping behavior is unchanged when the option is off.
+
 ### Fixed
 
 - Click-cast buttons no longer stop working after you switch **Support Mode** on or off when the action bar slot holds a macro (such as a **Reticle Targeting Macro**) on one page and a spell on the other. Before, the button did nothing until you reloaded.

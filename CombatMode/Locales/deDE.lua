@@ -830,3 +830,8 @@ L["Macro is %d characters over the %d limit."] = "Das Makro ist %d Zeichen über
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "Das Makro „%s“ passt mit der aktuellen Vorzeile nicht mehr; bearbeite es unter Fadenkreuz-Zielerfassungs-Makros."
 L["Click to print URL to chat"] = "Klicken, um die URL im Chat auszugeben"
+
+-- Auto Unlock: optional cursor aiming for middle-mouse Ping.
+L["Unlock Cursor for Ping"] = "Cursor f?r Ping freigeben"
+L["When middle mouse is bound to Ping, hold it to aim with the cursor instead of the reticle. Release to resume Mouse Look. Off by default."] =
+  "Wenn die mittlere Maustaste mit Ping belegt ist, halte sie gedr?ckt, um mit dem Cursor statt dem Fadenkreuz zu zielen. Loslassen aktiviert wieder die Maussteuerung. Standardm??ig aus."

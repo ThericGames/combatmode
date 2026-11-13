@@ -725,3 +725,8 @@ L["Macro is %d characters over the %d limit."] = true
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   true
 L["Click to print URL to chat"] = true
+
+-- Auto Unlock: optional cursor aiming for middle-mouse Ping.
+L["Unlock Cursor for Ping"] = true
+L["When middle mouse is bound to Ping, hold it to aim with the cursor instead of the reticle. Release to resume Mouse Look. Off by default."] =
+  true

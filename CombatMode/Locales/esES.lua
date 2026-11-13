@@ -832,3 +832,8 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "La macro «%s» ya no cabe con la prelínea actual; edítala desde las macros de selección por retícula."
 L["Click to print URL to chat"] = "Haz clic para mostrar la URL en el chat"
+
+-- Auto Unlock: optional cursor aiming for middle-mouse Ping.
+L["Unlock Cursor for Ping"] = "Liberar cursor para se?ales"
+L["When middle mouse is bound to Ping, hold it to aim with the cursor instead of the reticle. Release to resume Mouse Look. Off by default."] =
+  "Si el bot?n central est? asignado a Se?al, mantenlo pulsado para apuntar con el cursor en lugar de la ret?cula. Su?ltalo para volver a la vista con rat?n. Desactivado por defecto."
