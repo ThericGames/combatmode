@@ -28,7 +28,7 @@
 --    • Combat-safe via BindingQueue when options change mid-combat.
 --    • RefreshClickCastMacros also runs CM.RebuildComposedMacros so composer-built
 --      macros follow the active preline (lockdown refreshes are queued, flushed on regen).
---    • Support Mode: click-cast and main-bar proxies store a second macro text
+--    • Support Mode: click-cast and all action-bar proxies store a second macro text
 --      (BuildModeMacroTexts → CM.SetModeMacroText) that SupportMode.lua's secure key swaps in;
 --      the Target Lock / cycle keys and Toggle Focus actions get friendly-only twins the same way.
 --  Does not: Resolve ElvUI/BT4 frame names (AddonActionBarResolver) or build preline text
@@ -103,10 +103,8 @@ for idx, bindingName in ipairs(OrderedBindingNames) do
   f:SetAttribute("type", "macro")
   f:RegisterForClicks("AnyUp", "AnyDown")
   SlotFramesByBindingName[bindingName] = f
-  -- Only the main bar is paged, so only its keys have a second (Support Mode) macro text.
-  if bindingName:match("^ACTIONBUTTON%d+$") then
-    CM.SupportModeRegisterProxy(f)
-  end
+  -- Every bar needs the helpful-spell routing swap, even when it does not page.
+  CM.SupportModeRegisterProxy(f)
 end
 
 -- Click pre-line moved to TargetingMacroBuilder.lua
@@ -297,28 +295,18 @@ local function SetClickCastFrameMacro(frame, macroText, supportText)
   CM.SetModeMacroText(frame, macroText, supportText)
 end
 
--- Normal and Support Mode macro texts for a bar binding (nil = no extra text).
---  • `strict` (click-cast mouse buttons): helpful spells become a cast on your living friendly
---    hard target (an Ally Cycle pick), else on the ally under the crosshair or soft-targeted
---    (it never changes your target). Keyboard keys keep the normal routing, classified for the
---    support page.
---  • While the mode is on the support page is the one showing, so the normal text is classified
---    from the page the mode returns to (page 1) instead of the displayed slot.
-local function BuildModeMacroTexts(bindingValue, strict)
+-- Mouse and keyboard casts share Support Mode targeting on every action bar.
+-- Only the main bar changes page. While it shows the support page, classify the normal
+-- text from page 1 (the page restored on exit), not from the displayed slot.
+local function BuildModeMacroTexts(bindingValue)
   local ctx = CM.GetSupportModeBuildContext()
   if not ctx then
     return (CM.BuildClickCastMacroText(bindingValue)), nil
   end
-  local page, active = ctx.page, ctx.active
   local isMainBar = bindingValue:match("^ACTIONBUTTON%d+$") ~= nil
-  if not strict and not (page and isMainBar) then
-    return (CM.BuildClickCastMacroText(bindingValue)), nil
-  end
+  local page = isMainBar and ctx.page or nil
   local normalText =
-    CM.BuildClickCastMacroText(bindingValue, active and page and { page = 1 } or nil)
-  if not strict then
-    return normalText, (CM.BuildClickCastMacroText(bindingValue, { page = page }))
-  end
+    CM.BuildClickCastMacroText(bindingValue, ctx.active and page and { page = 1 } or nil)
   local supportText = CM.BuildClickCastMacroText(bindingValue, { page = page, support = true })
   return normalText, supportText
 end
@@ -456,7 +444,7 @@ function CM.ApplyGroundCastKeyOverrides()
             )
           else
             local frame = SlotFramesByBindingName[bindingName]
-            local macroText, supportText = BuildModeMacroTexts(bindingName, false)
+            local macroText, supportText = BuildModeMacroTexts(bindingName)
             if frame and macroText then
               SetClickCastFrameMacro(frame, macroText, supportText)
               -- Party Wheel spell on this key: the wheel's key button runs the same macro on a tap.
@@ -583,7 +571,7 @@ function CM.SetNewBinding(buttonSettings)
         valueToUse = "CLICK " .. realFrame .. ":" .. ClickCastMouseButton(key)
       else
         local frame = ClickCastFramesByKey[key]
-        local macroText, supportText = BuildModeMacroTexts(value, true)
+        local macroText, supportText = BuildModeMacroTexts(value)
         if frame and macroText then
           SetClickCastFrameMacro(frame, macroText, supportText)
           valueToUse = "CLICK " .. frame:GetName() .. ":" .. ClickCastMouseButton(key)

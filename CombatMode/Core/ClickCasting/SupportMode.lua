@@ -2,7 +2,7 @@
 --  Core/ClickCasting/SupportMode.lua — CLICKCAST — Support Mode key + secure mode swap
 ---------------------------------------------------------------------------------------
 --  What it does: The Support Mode keybind. While the mode is on, helpful spells on the
---  click-cast mouse buttons only go to your friendly hard target (an Ally Cycle pick), else to
+--  click-cast mouse buttons and action-bar keys go to your friendly hard target, else to
 --  the ally under the crosshair or soft-targeted, else to you if the game's Self Cast setting
 --  says so; the main action bar shows the support page, and enemy nameplates give way to
 --  friendly ones. Leaving it puts page 1 and the nameplates back.
