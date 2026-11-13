@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [5.5.2] - 2026-11-13
 
+### Added
+
+- **Support Mode** has a new **Self-Cast Keybind**. Hold it and the helpful spells on your click-cast buttons land on you, without changing your target or **Target Lock**.
+
 ### Fixed
 
 - Click-cast buttons no longer stop working after you switch **Support Mode** on or off when the action bar slot holds a macro (such as a **Reticle Targeting Macro**) on one page and a spell on the other. Before, the button did nothing until you reloaded.

@@ -17,8 +17,12 @@
 --    • CombatModeSupportModeKey (SecureActionButtonTemplate, type macro) runs
 --      /changeactionbar <page> for the page swap, the only secure way to page in combat.
 --      The key is a toggle: each press flips the mode, the release does nothing.
---    • No self-cast option of its own (a hold key and a modifier existed before release and
---      were removed); the macro texts follow the game's Self Cast setting instead.
+--    • Self-cast hold key (CombatModeSupportModeSelfKey, its own keybind): while it is down
+--      (attribute smself = 1) and the mode is on, proxies that hold a third text (sm-self:
+--      /cast [@player] <spell>, helpful spells on click-cast buttons only) run that one. Its
+--      wrapped OnClick sets the state on press and release and casts nothing itself. Asked for
+--      once Auto Target Lock could lock an ally: a living lock takes every heal, and the
+--      game's Self Cast key takes over every click bind that includes its modifier.
 --    • Insecure side: Handler.SupportModeChanged (CallMethod) → nameplates
 --      (CM.SyncSupportModeNameplates in CVarManager; only if a client protects those CVars in
 --      combat do they wait for PLAYER_REGEN_ENABLED), the crosshair
@@ -53,6 +57,7 @@ local pcall = _G.pcall
 local tonumber = _G.tonumber
 
 local BIND_NAME = "Combat Mode - Support Mode"
+local SELF_BIND_NAME = "Combat Mode - Support Mode Self Cast"
 -- Leaving Support Mode always returns to the first bar page.
 local EXIT_PAGE = 1
 -- Target Lock is mode-specific (Support Mode locks allies, the regular mode enemies), so a mode
@@ -62,6 +67,7 @@ local DROP_FRIENDLY_LOCK = "/clearfocus [@focus,help]"
 
 local Handler
 local KeyButton
+local SelfKeyButton
 local OverrideOwner = CreateFrame("Frame", nil, UIParent)
 local proxyCount = 0
 local pendingApply = false
@@ -74,15 +80,20 @@ local buildContext = {}
 -- Snippets (restricted environment)
 ---------------------------------------------------------------------------------------
 -- Needs `owner` (the handler): gives every registered proxy the macro text of the stored state
--- (sm-off, or sm-on in Support Mode).
+-- (sm-off, or sm-on in Support Mode; sm-self where a proxy has one while the self-cast key is
+-- held in Support Mode).
 local APPLY = [[
-  local attr = owner:GetAttribute("sm") == 1 and "sm-on" or "sm-off"
+  local on = owner:GetAttribute("sm") == 1
+  local attr = on and "sm-on" or "sm-off"
+  local selfHeld = on and owner:GetAttribute("smself") == 1
   local count = owner:GetAttribute("smcount") or 0
   for i = 1, count do
     local proxy = owner:GetFrameRef("p" .. i)
-    local text = proxy and proxy:GetAttribute(attr)
-    if text then
-      proxy:SetAttribute("macrotext", text)
+    if proxy then
+      local text = (selfHeld and proxy:GetAttribute("sm-self")) or proxy:GetAttribute(attr)
+      if text then
+        proxy:SetAttribute("macrotext", text)
+      end
     end
   end
 ]]
@@ -108,6 +119,26 @@ local KEY_PRE = [[
 ]]
 
 local FORCE_OFF = "local owner = self\nlocal want = false\n" .. SWAP
+
+-- The self-cast key: held = 1, released = 0. Outside Support Mode only the state is kept (the
+-- proxies already show sm-off, and entering the mode applies it). The click itself does nothing.
+local SELF_KEY_PRE = [[
+  local owner = owner or self
+  owner:SetAttribute("smself", down and 1 or 0)
+  if owner:GetAttribute("sm") == 1 then
+    ]] .. APPLY .. [[
+  end
+  return false
+]]
+
+-- Back to "not held" (ApplyImpl, when the key is unbound and its release can't arrive any more).
+local RESET_SELF = [[
+  local owner = self
+  if owner:GetAttribute("smself") == 1 then
+    owner:SetAttribute("smself", 0)
+    ]] .. APPLY .. [[
+  end
+]]
 
 ---------------------------------------------------------------------------------------
 -- Settings
@@ -166,16 +197,23 @@ function CM.SupportModeRegisterProxy(frame)
   Handler:SetAttribute("smcount", proxyCount)
 end
 
---- Stores a proxy's macro texts: normal and Support Mode (`supportText`, nil = same as normal),
---- and shows the one for the current state. Out of combat only.
-function CM.SetModeMacroText(frame, normalText, supportText)
+--- Stores a proxy's macro texts: normal, Support Mode (`supportText`, nil = same as normal) and
+--- Support Mode with the self-cast key held (`selfText`, nil = same as Support Mode), and shows
+--- the one for the current state. Out of combat only.
+function CM.SetModeMacroText(frame, normalText, supportText, selfText)
   if not frame or not normalText or InCombatLockdown() then
     return
   end
   supportText = supportText or normalText
   frame:SetAttribute("sm-off", normalText)
   frame:SetAttribute("sm-on", supportText)
-  frame:SetAttribute("macrotext", CM.IsSupportModeActive() and supportText or normalText)
+  frame:SetAttribute("sm-self", selfText)
+  local text = normalText
+  if CM.IsSupportModeActive() then
+    local selfHeld = Handler and Handler:GetAttribute("smself") == 1
+    text = (selfHeld and selfText) or supportText
+  end
+  frame:SetAttribute("macrotext", text)
 end
 
 ---------------------------------------------------------------------------------------
@@ -239,6 +277,7 @@ end
 if SecureHandlerWrapScript then
   Handler = CreateFrame("Frame", "CombatModeSupportMode", UIParent, "SecureHandlerBaseTemplate")
   Handler:SetAttribute("sm", 0)
+  Handler:SetAttribute("smself", 0)
   Handler:SetAttribute("smcount", 0)
   Handler.SupportModeChanged = OnModeChanged
 
@@ -248,6 +287,12 @@ if SecureHandlerWrapScript then
   KeyButton:SetAttribute("type", "macro")
   KeyButton:SetAttribute("useOnKeyDown", true)
   SecureHandlerWrapScript(KeyButton, "OnClick", Handler, KEY_PRE)
+
+  -- No `type`: it only carries the wrapped OnClick, for the press and the release.
+  SelfKeyButton =
+    CreateFrame("Button", "CombatModeSupportModeSelfKey", UIParent, "SecureActionButtonTemplate")
+  SelfKeyButton:RegisterForClicks("AnyDown", "AnyUp")
+  SecureHandlerWrapScript(SelfKeyButton, "OnClick", Handler, SELF_KEY_PRE)
 end
 
 ---------------------------------------------------------------------------------------
@@ -270,12 +315,22 @@ local function ApplyImpl()
     "smexit",
     DROP_FRIENDLY_LOCK .. (page and ("\n/changeactionbar " .. EXIT_PAGE) or "")
   )
+  -- With no self-cast key left, a release can never arrive: don't stay "held". With one bound the
+  -- state is left alone (this runs on every bindings refresh, also while the key is down; its
+  -- next press and release put a stale state right).
+  local selfKeys = { GetBindingKey(SELF_BIND_NAME) }
+  if #selfKeys == 0 then
+    SecureHandlerExecute(Handler, RESET_SELF)
+  end
   if not CM.IsSupportModeEnabled() then
     ForceOff()
     return
   end
   for _, key in ipairs({ GetBindingKey(BIND_NAME) }) do
     SetOverrideBindingClick(OverrideOwner, false, key, KeyButton:GetName(), "LeftButton")
+  end
+  for _, key in ipairs(selfKeys) do
+    SetOverrideBindingClick(OverrideOwner, false, key, SelfKeyButton:GetName(), "LeftButton")
   end
 end
 

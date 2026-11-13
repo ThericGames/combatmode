@@ -58,6 +58,7 @@ local BINDING_DISPLAY_NAMES = {
   { id = "Cycle Focus Previous", text = L["Cycle Focus Previous"] },
   { id = "Radial Menu", text = L["Radial Menu"] },
   { id = "Support Mode", text = L["Support Mode"] },
+  { id = "Support Mode Self Cast", text = L["Support Mode Self-Cast"] },
 }
 for _, entry in ipairs(BINDING_DISPLAY_NAMES) do
   _G["BINDING_NAME_Combat Mode - " .. entry.id] = "Action Combat Mode - " .. entry.text

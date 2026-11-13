@@ -434,11 +434,16 @@ L["Distance between the Ally HUD and the crosshair."] =
 
 -- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
 L["Support Mode"] = "지원 모드"
+L["Support Mode Self-Cast"] = "지원 모드 자신에게 시전"
 L["support mode keybinding"] = "지원 모드 단축키"
+L["support mode self-cast keybinding"] = "지원 모드 자신에게 시전 단축키"
 L["SUPPORT MODE"] = "지원 모드"
 L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
   "활성화하면 주 행동 단축바를 전용 지원 페이지로 전환하고, 이로운 주문이 조준점 아래의 우호적 대상을 지정할 수 있게 하는 지원 중심 모드입니다."
 L["Support Mode Keybind"] = "지원 모드 단축키"
+L["Self-Cast Keybind"] = "자신에게 시전 단축키"
+L["Hold while in Support Mode to cast the helpful spells on your click-cast buttons on yourself. Your target and Target Lock stay as they are."] =
+  "지원 모드에서 누르고 있으면 클릭 시전 버튼의 이로운 주문을 자신에게 시전합니다. 대상과 대상 고정은 그대로 유지됩니다."
 L["Prioritize Crosshair Target"] = "조준점 대상 우선"
 L["Cycle NPCs and Pets"] = "NPC 및 소환수 순환"
 L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too."] =

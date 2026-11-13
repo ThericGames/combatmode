@@ -432,11 +432,16 @@ L["Distance between the Ally HUD and the crosshair."] =
 
 -- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
 L["Support Mode"] = "Modo de apoyo"
+L["Support Mode Self-Cast"] = "Modo de apoyo: autolanzamiento"
 L["support mode keybinding"] = "asignación del modo de apoyo"
+L["support mode self-cast keybinding"] = "asignación de autolanzamiento del modo de apoyo"
 L["SUPPORT MODE"] = "MODO DE APOYO"
 L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
   "Un modo centrado en el apoyo que, al activarse, cambia tu barra de acción principal a una página de apoyo dedicada y permite que los hechizos beneficiosos apunten a la unidad amistosa bajo tu mira."
 L["Support Mode Keybind"] = "Tecla del modo de apoyo"
+L["Self-Cast Keybind"] = "Tecla de autolanzamiento"
+L["Hold while in Support Mode to cast the helpful spells on your click-cast buttons on yourself. Your target and Target Lock stay as they are."] =
+  "Mantenla presionada en el Modo de apoyo para lanzarte a ti los hechizos beneficiosos de tus botones de clic. Tu objetivo y Fijar objetivo no cambian."
 L["Prioritize Crosshair Target"] = "Priorizar el objetivo de la mira"
 L["Cycle NPCs and Pets"] = "Alternar entre PNJ y mascotas"
 L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too."] =

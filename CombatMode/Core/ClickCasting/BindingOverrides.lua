@@ -291,13 +291,15 @@ end
 
 -- BuildClickCastMacroText moved to TargetingMacroBuilder.lua
 
--- `supportText` (optional) is what the proxy runs while Support Mode is on; the secure key swaps
--- the two in combat (CM.SetModeMacroText).
-local function SetClickCastFrameMacro(frame, macroText, supportText)
-  CM.SetModeMacroText(frame, macroText, supportText)
+-- `supportText` (optional) is what the proxy runs while Support Mode is on, `selfText`
+-- (optional) while its self-cast key is held as well; the secure keys swap them in combat
+-- (CM.SetModeMacroText).
+local function SetClickCastFrameMacro(frame, macroText, supportText, selfText)
+  CM.SetModeMacroText(frame, macroText, supportText, selfText)
 end
 
--- Normal and Support Mode macro texts for a bar binding (nil = no extra text).
+-- Normal, Support Mode and Support Mode self-cast macro texts for a bar binding (nil = no extra
+-- text; only a helpful spell on a click-cast mouse button has the third).
 --  • `strict` (click-cast mouse buttons): helpful spells become a cast on your living friendly
 --    hard target (an Ally Cycle pick), else on the ally under the crosshair or soft-targeted
 --    (it never changes your target). Keyboard keys keep the normal routing, classified for the
@@ -319,8 +321,9 @@ local function BuildModeMacroTexts(bindingValue, strict)
   if not strict then
     return normalText, (CM.BuildClickCastMacroText(bindingValue, { page = page }))
   end
-  local supportText = CM.BuildClickCastMacroText(bindingValue, { page = page, support = true })
-  return normalText, supportText
+  local supportText, _, selfText =
+    CM.BuildClickCastMacroText(bindingValue, { page = page, support = true })
+  return normalText, supportText, selfText
 end
 
 -- Returns true if the given action bar binding currently has a macro in the
@@ -583,9 +586,9 @@ function CM.SetNewBinding(buttonSettings)
         valueToUse = "CLICK " .. realFrame .. ":" .. ClickCastMouseButton(key)
       else
         local frame = ClickCastFramesByKey[key]
-        local macroText, supportText = BuildModeMacroTexts(value, true)
+        local macroText, supportText, selfText = BuildModeMacroTexts(value, true)
         if frame and macroText then
-          SetClickCastFrameMacro(frame, macroText, supportText)
+          SetClickCastFrameMacro(frame, macroText, supportText, selfText)
           valueToUse = "CLICK " .. frame:GetName() .. ":" .. ClickCastMouseButton(key)
         else
           valueToUse = value

@@ -905,8 +905,9 @@ end
 --    on you ([@player] last). Off: nothing is cast.
 --  • Self Cast key: [mod:SELFCAST,@player] first, evaluated live (never true when the key is
 --    "None"). Like the game, it also fires on a click bind that includes that key.
--- The addon has no self-cast option of its own: a hold key and a Shift / Ctrl / Alt modifier
--- were built and removed before release.
+-- The addon's own way is the Support Mode self-cast key (a hold; SupportMode.lua), which runs
+-- a separate text (SupportCastLine's second return). A Shift / Ctrl / Alt modifier option was
+-- built and removed before release.
 -- The aimed-at ally: the unit whose model is under the crosshair, else the friendly soft target.
 -- A nameplate is not a mouseover unit in Mouse Look (reported in game: aiming at a friendly
 -- nameplate cast nothing), so Support Mode turns friendly soft targeting on (SoftTargetFriend,
@@ -1069,6 +1070,9 @@ end
 -- With Auto Target Lock on, two more lines lock the ally who took the heal (SupportAutoLockText,
 -- or SupportAutoLockTargetText when Prioritize Crosshair Target is on as well).
 -- nil = no name yet: the caller keeps SupportPreLine + /click (which never auto-locks).
+-- Second return: the text for the Support Mode self-cast key (SupportMode.lua swaps it in while
+-- that key is held): the spell on you and nothing else, so the target, the lock and the
+-- Shoulder Offset camera stay as they are (/tar player + /click re-centres that camera).
 local function SupportCastLine(spellId)
   if not spellId or not (C_Spell and C_Spell.GetSpellInfo) then
     return nil
@@ -1085,19 +1089,20 @@ local function SupportCastLine(spellId)
       name = name .. "(" .. subtext .. ")"
     end
   end
+  local selfText = "/cast [@player] " .. name
   local units = SUPPORT_SELF_KEY .. SupportCastUnits()
   local selfCast = AutoSelfCastOn() and "[@player]" or ""
   local text
   if CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false) then
     local combined = SupportAutoLockTargetText(selfCast, name)
     if combined then
-      return combined
+      return combined, selfText
     end
     text = SupportAutoLockText(units, selfCast, name)
   end
   text = text
     or ("/cast " .. units .. SUPPORT_DEAD_TARGET .. SUPPORT_DEAD_LOCK .. selfCast .. " " .. name)
-  return SupportCrosshairTargetLine(text) .. text
+  return SupportCrosshairTargetLine(text) .. text, selfText
 end
 
 -- Second return: true when the Support Mode preline was used.
@@ -1147,7 +1152,8 @@ end
 --- `opts` (optional, Support Mode): `page` classifies an ACTIONBUTTON by that bar page instead of
 --- the shown one; `support = true` gives helpful spells the Support Mode cast (your living
 --- friendly hard target, else the ally under the crosshair or soft-targeted, else you if the
---- game's Self Cast setting says so). Second return: true when that cast was used.
+--- game's Self Cast setting says so). Second return: true when that cast was used; third, with
+--- it: the text to run while the Support Mode self-cast key is held.
 function CM.BuildClickCastMacroText(bindingValue, opts)
   -- When reticle targeting is off, no macro wrapping (no pre-line, no castAtCursor, no excludeFromTargeting).
   if not CM.DB.char.reticleTargeting then
@@ -1258,9 +1264,9 @@ function CM.BuildClickCastMacroText(bindingValue, opts)
   local routeOverride = isAssistedButton and "harm" or nil
   local pre, supportPreline = GetClickCastPreLine(spellIdForPreline, routeOverride, opts)
   if supportPreline then
-    local supportLine = SupportCastLine(spellIdForPreline)
+    local supportLine, selfText = SupportCastLine(spellIdForPreline)
     if supportLine then
-      return supportLine, true
+      return supportLine, true, selfText
     end
   end
   local post = GetClickCastPostLine(spellIdForPreline, routeOverride, opts)

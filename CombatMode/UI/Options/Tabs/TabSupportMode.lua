@@ -1,7 +1,8 @@
 ---------------------------------------------------------------------------------------
 --  UI/Options/Tabs/TabSupportMode.lua — OPTIONS TAB — Support Mode
 ---------------------------------------------------------------------------------------
---  What it does: Support Mode keybind (a toggle), Prioritize Crosshair Target, support bar page,
+--  What it does: Support Mode keybind (a toggle), Self-Cast keybind (a hold), Prioritize
+--  Crosshair Target, support bar page,
 --  Cycle NPCs and Pets, Vignette tint toggle and the nameplates dropdown. An unbound Support Mode key disables it.
 --  (The Support crosshair color and texture are on the Crosshair tab: Reaction Colors and
 --  Appearance.)
@@ -29,6 +30,7 @@ local tonumber = _G.tonumber
 local UI = CM.UI
 
 local BIND_NAME = "Combat Mode - Support Mode"
+local SELF_BIND_NAME = "Combat Mode - Support Mode Self Cast"
 
 -- char.supportModeNameplateMode (applied by CM.SyncSupportModeNameplates in CVarManager).
 local NAMEPLATE_VALUES = {
@@ -88,6 +90,21 @@ UI.Options.AddTab({
       set = function(key)
         CM.TryApplyBindingChange(L["support mode keybinding"], function()
           CM.AssignNamedKeybind(BIND_NAME, key)
+          Apply()
+        end)
+      end,
+      disabled = ReticleTargetingOff,
+      watermarkWhenDisabled = ReticleTargetingNotice,
+    })
+    ctx:Keybind({
+      label = L["Self-Cast Keybind"],
+      desc = L["Hold while in Support Mode to cast the helpful spells on your click-cast buttons on yourself. Your target and Target Lock stay as they are."],
+      get = function()
+        return (GetBindingKey(SELF_BIND_NAME))
+      end,
+      set = function(key)
+        CM.TryApplyBindingChange(L["support mode self-cast keybinding"], function()
+          CM.AssignNamedKeybind(SELF_BIND_NAME, key)
           Apply()
         end)
       end,
