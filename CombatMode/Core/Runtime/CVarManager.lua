@@ -1262,7 +1262,8 @@ local supportPlatesWanted = {}
 --- a unit the Cycle Lock keys skip was reported as confusing. With that option on they keep the
 --- player's own values (never forced on: friendly NPC nameplates everywhere is the player's
 --- call). Mode off, "keep", or `forceRestore` (Uninstall): put the remembered values back.
---- Returns false when the CVars are protected right now (combat); call again after combat.
+--- Returns false when a CVar it had to write is protected right now (combat): the others are
+--- written, that one keeps its old value; call again after combat.
 function CM.SyncSupportModeNameplates(forceRestore)
   local globalDB = CM.DB and CM.DB.global
   local char = CM.DB and CM.DB.char
@@ -1308,30 +1309,27 @@ function CM.SyncSupportModeNameplates(forceRestore)
       end
     end
   end
-  -- Everything this call may write: what the mode wants, and saved values it no longer wants.
-  for name in pairs(wanted) do
-    if IsCVarLockedNow(name) then
-      return false
-    end
-  end
-  if saved then
-    for name in pairs(saved) do
-      if wanted[name] == nil and IsCVarLockedNow(name) then
-        return false
-      end
-    end
-  end
   if plates and not saved then
     saved = {}
     globalDB.supportModeSavedNameplates = saved
   end
+  -- Each CVar on its own: one that is protected right now (combat) waits for the next call and
+  -- must not hold back the others. (Checking them all first stopped the enemy / friendly swap
+  -- in combat as soon as the pet and NPC CVars joined the list.)
+  local complete = true
   -- A CVar already saved keeps its first snapshot (the mode is on and only an option changed).
   for name, value in pairs(wanted) do
-    if saved[name] == nil then
-      saved[name] = GetCVar(name)
-    end
     if GetCVar(name) ~= value then
-      SetCVar(name, value)
+      if IsCVarLockedNow(name) then
+        complete = false
+      else
+        if saved[name] == nil then
+          saved[name] = GetCVar(name)
+        end
+        SetCVar(name, value)
+      end
+    elseif saved[name] == nil then
+      saved[name] = value
     end
   end
   -- The player's own value goes back for whatever the mode stopped changing (all of it once
@@ -1339,15 +1337,21 @@ function CM.SyncSupportModeNameplates(forceRestore)
   if saved then
     for name, value in pairs(saved) do
       if wanted[name] == nil then
-        SetCVar(name, value)
-        saved[name] = nil
+        if GetCVar(name) == value then
+          saved[name] = nil
+        elseif IsCVarLockedNow(name) then
+          complete = false
+        else
+          SetCVar(name, value)
+          saved[name] = nil
+        end
       end
     end
-    if not plates then
+    if not plates and next(saved) == nil then
       globalDB.supportModeSavedNameplates = nil
     end
   end
-  return true
+  return complete
 end
 
 --- Restore the player's pre-Combat Mode CVars (snapshot preferred; Blizzard tables fallback).
