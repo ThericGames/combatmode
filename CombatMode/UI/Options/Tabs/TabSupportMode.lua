@@ -112,6 +112,22 @@ UI.Options.AddTab({
       watermarkWhenDisabled = ReticleTargetingNotice,
     })
     ctx:Toggle({
+      label = L["Disable Target Lock"],
+      desc = L["Disable manual and automatic Target Lock in Support Mode. Entering Support Mode clears your lock."],
+      charSpecific = true,
+      get = function()
+        return CM.DbBool(CM.DB.char.supportModeDisableTargetLock, false)
+      end,
+      set = function(value)
+        CM.DB.char.supportModeDisableTargetLock = value and true or false
+        Apply()
+        CM.ApplyToggleFocusTargetBinding()
+        CM.ApplyCycleFocusBindings()
+      end,
+      disabled = ReticleTargetingOff,
+      watermarkWhenDisabled = ReticleTargetingNotice,
+    })
+    ctx:Toggle({
       label = L["Prioritize Crosshair Target"],
       desc = L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."],
       charSpecific = true,

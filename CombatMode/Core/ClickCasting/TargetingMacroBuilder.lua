@@ -944,8 +944,15 @@ local function SupportAllyOrder()
   return SUPPORT_ALLY_ORDER
 end
 
+local function SupportLockUnit(dead)
+  if not CM.IsSupportTargetLockEnabled() then
+    return ""
+  end
+  return dead and SUPPORT_DEAD_LOCK or SUPPORT_LOCKED_ALLY
+end
+
 local function SupportCastUnits()
-  return SUPPORT_LOCKED_ALLY .. SupportAllyOrder()
+  return SupportLockUnit() .. SupportAllyOrder()
 end
 
 local SUPPORT_SELF_KEY = "[mod:SELFCAST,@player]"
@@ -1020,7 +1027,7 @@ local function SupportCrosshairTargetLine(text)
   if #full + #text <= SECURE_MACROTEXT_MAX then
     return full
   end
-  local short = "/tar " .. SUPPORT_LOCKED_ALLY .. "[@mouseover,help]\n"
+  local short = "/tar " .. SupportLockUnit() .. "[@mouseover,help]\n"
   if #short + #text <= SECURE_MACROTEXT_MAX then
     return short
   end
@@ -1093,7 +1100,7 @@ local function SupportCastLine(spellId)
   local units = SUPPORT_SELF_KEY .. SupportCastUnits()
   local selfCast = AutoSelfCastOn() and "[@player]" or ""
   local text
-  if CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false) then
+  if CM.IsSupportTargetLockEnabled() and CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false) then
     local combined = SupportAutoLockTargetText(selfCast, name)
     if combined then
       return combined, selfText
@@ -1101,7 +1108,15 @@ local function SupportCastLine(spellId)
     text = SupportAutoLockText(units, selfCast, name)
   end
   text = text
-    or ("/cast " .. units .. SUPPORT_DEAD_TARGET .. SUPPORT_DEAD_LOCK .. selfCast .. " " .. name)
+    or (
+      "/cast "
+      .. units
+      .. SUPPORT_DEAD_TARGET
+      .. SupportLockUnit(true)
+      .. selfCast
+      .. " "
+      .. name
+    )
   return SupportCrosshairTargetLine(text) .. text, selfText
 end
 

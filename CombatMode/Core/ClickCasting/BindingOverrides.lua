@@ -209,12 +209,16 @@ local function EnsureFocusCycleMacroText()
   CM.SetModeMacroText(
     CycleFocusEnemyNextButton,
     macros_const.CM_CycleFocusEnemyNext,
-    withNPCs and macros_const.CM_CycleFocusFriendAllNext or macros_const.CM_CycleFocusFriendNext
+    CM.IsSupportTargetLockEnabled()
+        and (withNPCs and macros_const.CM_CycleFocusFriendAllNext or macros_const.CM_CycleFocusFriendNext)
+      or "/clearfocus"
   )
   CM.SetModeMacroText(
     CycleFocusEnemyPrevButton,
     macros_const.CM_CycleFocusEnemyPrev,
-    withNPCs and macros_const.CM_CycleFocusFriendAllPrev or macros_const.CM_CycleFocusFriendPrev
+    CM.IsSupportTargetLockEnabled()
+        and (withNPCs and macros_const.CM_CycleFocusFriendAllPrev or macros_const.CM_CycleFocusFriendPrev)
+      or "/clearfocus"
   )
 end
 
@@ -267,6 +271,9 @@ end
 --- Support Mode text of the Target Lock key / Toggle Focus actions: friendly units only, same
 --- Target Lock Behavior (Toggle / Switch Target).
 local function SupportFocusMacroText()
+  if not CM.IsSupportTargetLockEnabled() then
+    return "/clearfocus"
+  end
   local macros_const = CM.Constants.Macros
   if CM.DB.char.targetLockBehavior == "switch" then
     return macros_const.CM_SwitchFocusSupport

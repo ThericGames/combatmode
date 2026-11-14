@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Support Mode: Disable Target Lock** disables manual and automatic ally locking and clears your lock when entering Support Mode. Off by default; normal-mode locking is unchanged.
+
 - **Support Mode** has a new **Self-Cast Keybind**. Hold it and the helpful spells on your click-cast buttons land on you, without changing your target or **Target Lock**.
 
 ### Fixed

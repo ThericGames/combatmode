@@ -162,6 +162,11 @@ function CM.IsSupportModeEnabled()
   return GetBindingKey(BIND_NAME) ~= nil
 end
 
+--- Read at macro-build time so the secure mode swap also works during combat.
+function CM.IsSupportTargetLockEnabled()
+  return not CM.DbBool(CM.DB and CM.DB.char and CM.DB.char.supportModeDisableTargetLock, false)
+end
+
 function CM.IsSupportModeActive()
   return Handler ~= nil and Handler:GetAttribute("sm") == 1
 end
@@ -309,7 +314,8 @@ local function ApplyImpl()
   -- mode can't use: a hostile one entering, a friendly one leaving. The page swap is optional.
   Handler:SetAttribute(
     "smenter",
-    DROP_HOSTILE_LOCK .. (page and ("\n/changeactionbar " .. page) or "")
+    (CM.IsSupportTargetLockEnabled() and DROP_HOSTILE_LOCK or "/clearfocus")
+      .. (page and ("\n/changeactionbar " .. page) or "")
   )
   Handler:SetAttribute(
     "smexit",
