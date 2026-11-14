@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Lock and Attack with Action Button 1** lets one left-click lock an enemy and start **Auto Attack** when Left Click uses Action Button 1 and Auto Attack is in that slot. Repeated clicks keep attacking; aim at another enemy to switch the lock and attack it.
 - **Support Mode** has a new **Self-Cast Keybind**. Hold it and the helpful spells on your click-cast buttons land on you, without changing your target or **Target Lock**.
 
 ### Fixed

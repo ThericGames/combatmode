@@ -207,6 +207,9 @@ L["Lock onto a target to prevent accidental switching, and cycle between units t
 L["Warning: Target Lock uses your Focus Target. Anything else that sets your focus will interfere with it."] =
   "경고: 대상 고정은 주시 대상을 사용합니다. 주시 대상을 바꾸는 다른 기능은 이를 방해합니다."
 L["Target Lock Keybind"] = "대상 고정 단축키"
+L["Lock and Attack with Action Button 1"] = "행동 단축 버튼 1로 대상 고정 및 공격"
+L["Lock an enemy and use Action Button 1 with the same press. Set Left Click to Action Button 1 in Click Casting and put Auto Attack in slot 1. Repeated clicks keep attacking. Helpful spells, macros and excluded spells keep their normal behavior."] =
+  "한 번 눌러 적을 고정하고 행동 단축 버튼 1을 사용합니다. 클릭 시전에서 왼쪽 클릭을 행동 단축 버튼 1로 지정하고 1번 칸에 자동 공격을 배치하세요. 반복해서 클릭해도 공격이 계속됩니다. 이로운 주문, 매크로 및 제외된 주문은 기존대로 작동합니다."
 L["Lock the reticle to a target, preventing it from swapping."] =
   "조준점을 대상에 고정하여 바뀌지 않게 합니다."
 L["Cycle Lock - Next"] = "고정 순환 - 다음"

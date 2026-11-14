@@ -13,6 +13,8 @@
 --      global.targetingMacroPreline*Override keys.
 --      char.autoTargetLockOnAttack selects the auto-lock variant (not in Support Mode). Focus is gated
 --      on harm so a friendly Target Lock does not hijack hostile casts.
+--    • targetLockActionButton1 locks the aimed-at enemy before slot 1 attacks; repeated
+--      presses keep swinging. Helpful spells, macros and targeting exclusions keep their routing.
 --    • Auto-lock prelines and helpful-spell routing: see .claude/rules/domain-click-casting.md (TargetingMacroBuilder.lua notes).
 --    • The /click line omits /click's default args (LeftButton, key-up) and only adds
 --      "LeftButton 1" for addon bars with key-down on. CM.TargetingMacroPrelineMaxLen =
@@ -32,11 +34,9 @@
 --      with the Run MACRO composer (ComposedMacros.lua).
 --  Does not: Own SecureActionButton frames or SetOverrideBinding (BindingOverrides).
 --  Related: Core/ClickCasting/BindingOverrides.lua,
---  Core/AllyCycle/{AllyCycle,Cycle}.lua,
---  Core/ClickCasting/ComposedMacros.lua, UI/Editors/TargetingMacroPrelinesEditor.lua,
+--  Core/AllyCycle/{AllyCycle,Cycle}.lua, Core/ClickCasting/ComposedMacros.lua,
 --  UI/Options/Tabs/TabReticleTargeting.lua, UI/Options/SpellMultiSelect.lua,
---  Constants/DatabaseDefaults.lua, Constants/Gameplay.lua,
---  Core/ClickCasting/{AddonActionBarResolver,SupportMode}.lua
+--  Constants/{DatabaseDefaults,Gameplay}.lua, Core/ClickCasting/{AddonActionBarResolver,SupportMode}.lua
 ---------------------------------------------------------------------------------------
 local _, CM = ...
 local _G = _G
@@ -666,6 +666,13 @@ local CLICKCAST_PRE_LINE_AUTO_LOCK_ENEMY = "/clearfocus [@focus,dead]\n"
   .. "/tar [@focus,harm,nodead][@mouseover,harm,nodead][@anyenemy]\n"
   .. "/focus [nodead,harm]"
 
+-- Explicit lock-and-attack: prefer the enemy under the crosshair, then keep the current
+-- enemy. Do not toggle the lock off on another attack or let an ally replace it.
+local CLICKCAST_PRE_LINE_LOCK_AND_ATTACK = "/clearfocus [@focus,dead]\n"
+  .. "/cleartarget [dead,harm]\n"
+  .. "/focus [@mouseover,harm,nodead][harm,nodead]\n"
+  .. "/tar [@focus,harm,nodead]"
+
 -- Export defaults so the prelines editor can show a starting point even when no override exists.
 CM.TargetingMacroPrelinesDefaults = {
   enemy = CLICKCAST_PRE_LINE_ENEMY,
@@ -1252,17 +1259,28 @@ function CM.BuildClickCastMacroText(bindingValue, opts)
     return castLine
   end
 
+  local routeOverride = isAssistedButton and "harm" or nil
+  local lockAndAttack = bindingValue == "ACTIONBUTTON1"
+    and CM.DbBool(CM.DB.char.targetLockActionButton1, false)
+    and (routeOverride or GetAllyCycleSpellRoute(spellIdForPreline)) == "harm"
+
   -- /click Attack after /tar toggles relative to "already swinging," so a swap
   -- turns the ability off. /startattack and /cast ! only start (or keep) the swing.
   if IsAutoSwingSpell(spellIdForPreline) then
     local kind = AutoSwingKind(spellIdForPreline) or "attack"
-    local pre = GetClickCastPreLine(spellIdForPreline, nil, opts)
+    local pre = lockAndAttack and CLICKCAST_PRE_LINE_LOCK_AND_ATTACK
+      or GetClickCastPreLine(spellIdForPreline, nil, opts)
     local swapCmd = AutoSwingSwapCommand(kind, spellIdForPreline)
+    if lockAndAttack and kind == "attack" then
+      swapCmd = swapCmd .. " [harm,nodead]"
+    end
     return pre and (pre .. "\n" .. swapCmd) or swapCmd
   end
 
-  local routeOverride = isAssistedButton and "harm" or nil
   local pre, supportPreline = GetClickCastPreLine(spellIdForPreline, routeOverride, opts)
+  if lockAndAttack then
+    pre, supportPreline = CLICKCAST_PRE_LINE_LOCK_AND_ATTACK, false
+  end
   if supportPreline then
     local supportLine, selfText = SupportCastLine(spellIdForPreline)
     if supportLine then
@@ -1270,6 +1288,9 @@ function CM.BuildClickCastMacroText(bindingValue, opts)
     end
   end
   local post = GetClickCastPostLine(spellIdForPreline, routeOverride, opts)
+  if lockAndAttack then
+    post = nil -- Keep the enemy just locked instead of restoring a previous ally target.
+  end
   -- Do not prefix pre-line with [nooverridebar]; that can be misinterpreted in combat and echo to chat.
   local function Assemble(preLine)
     local text = castLine

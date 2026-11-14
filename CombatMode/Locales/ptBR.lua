@@ -207,6 +207,9 @@ L["Lock onto a target to prevent accidental switching, and cycle between units t
 L["Warning: Target Lock uses your Focus Target. Anything else that sets your focus will interfere with it."] =
   "Aviso: Travar alvo usa o seu alvo de foco. Qualquer outra coisa que defina o foco interferirá."
 L["Target Lock Keybind"] = "Tecla de travar alvo"
+L["Lock and Attack with Action Button 1"] = "Travar e atacar com o botão de ação 1"
+L["Lock an enemy and use Action Button 1 with the same press. Set Left Click to Action Button 1 in Click Casting and put Auto Attack in slot 1. Repeated clicks keep attacking. Helpful spells, macros and excluded spells keep their normal behavior."] =
+  "Trava um inimigo e usa o botão de ação 1 ao pressionar uma única vez. Atribua o clique esquerdo ao botão de ação 1 em Lançamento por clique e coloque Ataque Automático no espaço 1. Cliques repetidos mantêm o ataque. Feitiços benéficos, macros e feitiços excluídos mantêm o comportamento normal."
 L["Lock the reticle to a target, preventing it from swapping."] =
   "Trava a mira em um alvo, impedindo que ele troque."
 L["Cycle Lock - Next"] = "Alternar trava – Próximo"

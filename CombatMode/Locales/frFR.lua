@@ -206,6 +206,9 @@ L["Lock onto a target to prevent accidental switching, and cycle between units t
 L["Warning: Target Lock uses your Focus Target. Anything else that sets your focus will interfere with it."] =
   "Attention : le Verrouillage de cible utilise votre cible focalisée. Tout ce qui modifie votre focus le perturbera."
 L["Target Lock Keybind"] = "Touche de verrouillage de cible"
+L["Lock and Attack with Action Button 1"] = "Verrouiller et attaquer avec le bouton d’action 1"
+L["Lock an enemy and use Action Button 1 with the same press. Set Left Click to Action Button 1 in Click Casting and put Auto Attack in slot 1. Repeated clicks keep attacking. Helpful spells, macros and excluded spells keep their normal behavior."] =
+  "Verrouille un ennemi et utilise le bouton d’action 1 en une seule pression. Affectez le clic gauche au bouton d’action 1 dans Incantation au clic et placez Attaque automatique dans l’emplacement 1. Les clics répétés maintiennent l’attaque. Les sorts bénéfiques, les macros et les sorts exclus conservent leur comportement habituel."
 L["Lock the reticle to a target, preventing it from swapping."] =
   "Verrouille le réticule sur une cible pour l'empêcher de changer."
 L["Cycle Lock - Next"] = "Cycler le verrouillage – Suivant"

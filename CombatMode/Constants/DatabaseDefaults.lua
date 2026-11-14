@@ -208,6 +208,7 @@ return false
     -- Target Lock key: "toggle" = lock / tap again to unlock; "switch" = lock the unit under the
     -- crosshair (replacing any lock), tap with nothing under the crosshair to unlock.
     targetLockBehavior = "toggle",
+    targetLockActionButton1 = false,
     macroInjectionClickCastOnly = false,
     excludeFromTargetingSpells = "",
     castAtCursorSpells = "",
