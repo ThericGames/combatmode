@@ -45,6 +45,16 @@ UI.Options.AddTab({
         CM.DB.global.frameWatching = value
       end,
     })
+    ctx:Toggle({
+      label = L["Unlock While Chatting"],
+      desc = L["Release the cursor while typing in chat and resume Mouse Look when chat closes."],
+      get = function()
+        return CM.DB.global.unlockWhileChatting
+      end,
+      set = function(value)
+        CM.DB.global.unlockWhileChatting = value
+      end,
+    })
     ctx:MountMultiSelect({
       label = L["Unlock Mounts"],
       desc = L["Mounts that force a cursor unlock while mounted."],

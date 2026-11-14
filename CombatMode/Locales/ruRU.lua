@@ -880,3 +880,8 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "Макрос «%s» больше не помещается с текущей предстрокой; измените его в разделе макросов наведения по прицелу."
 L["Click to print URL to chat"] = "Нажмите, чтобы вывести ссылку в чат"
+
+-- Auto Unlock: chat input.
+L["Unlock While Chatting"] = "Разблокировать при вводе в чат"
+L["Release the cursor while typing in chat and resume Mouse Look when chat closes."] =
+  "Освобождает курсор при вводе в чат и возвращает обзор мышью после закрытия чата."

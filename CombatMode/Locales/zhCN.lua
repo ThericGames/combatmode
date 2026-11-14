@@ -815,3 +815,8 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "宏“%s”与当前前置行合并后已超出长度限制；请在准星瞄准宏中编辑。"
 L["Click to print URL to chat"] = "点击将 URL 输出到聊天"
+
+-- Auto Unlock: chat input.
+L["Unlock While Chatting"] = "聊天时解锁"
+L["Release the cursor while typing in chat and resume Mouse Look when chat closes."] =
+  "输入聊天消息时释放鼠标指针，关闭聊天输入后恢复鼠标视角。"

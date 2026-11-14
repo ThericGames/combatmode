@@ -730,3 +730,7 @@ L["Macro is %d characters over the %d limit."] = true
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   true
 L["Click to print URL to chat"] = true
+
+-- Auto Unlock: chat input.
+L["Unlock While Chatting"] = true
+L["Release the cursor while typing in chat and resume Mouse Look when chat closes."] = true
