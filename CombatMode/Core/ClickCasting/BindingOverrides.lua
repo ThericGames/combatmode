@@ -5,8 +5,8 @@
 --  keyboard override bindings for click-cast slots, ground @cursor casts, the
 --  toggle-focus bind, and configurable Target Lock cycle keybinds.
 --  Architecture / how it works:
---    • Honors char.reticleTargeting, macroInjectionClickCastOnly (skip keyboard overrides
---      when true), and GetBindingsLocation() for which bindings table to read.
+--    • Honors char.reticleTargeting, macroInjectionClickCastOnly (except explicit slot 1
+--      lock-and-attack), and GetBindingsLocation() for which bindings table to read.
 --    • SetNewBinding / OverrideDefaultButtons / ResetBindingOverride — per-slot secure
 --      attributes + SetMouselookOverrideBinding / SetOverrideBindingClick. STARTATTACK
 --      / PETATTACK are reticle /tar + /startattack or /petattack (not raw Blizzard binds).
@@ -404,8 +404,9 @@ function CM.ApplyGroundCastKeyOverrides()
   if not CM.DB.char.reticleTargeting then
     return
   end
-  -- When macroInjectionClickCastOnly is on, only click-cast bindings get injection; skip keyboard overrides.
-  if CM.DB.char.macroInjectionClickCastOnly then
+  local clickCastOnly = CM.DB.char.macroInjectionClickCastOnly
+  local lockActionButton1 = CM.DbBool(CM.DB.char.targetLockActionButton1, false)
+  if clickCastOnly and not lockActionButton1 then
     return
   end
   -- When House Editor (housing) is active, do not override action bar keys so housing bindings (e.g. R to return item to box) work.
@@ -420,7 +421,11 @@ function CM.ApplyGroundCastKeyOverrides()
 
     for _, key in ipairs(keys) do
       -- Never override mouse-button bindings here; click-cast already owns mouse buttons.
-      if key and not IsMouseBindingKey(key) then
+      if
+        key
+        and not IsMouseBindingKey(key)
+        and (not clickCastOnly or (lockActionButton1 and bindingName == "ACTIONBUTTON1"))
+      then
         local realFrame = CM.GetEffectiveBarButtonFrameName(bindingName)
         if realFrame and IsSlotMacro(bindingName) then
           -- Slot is a macro: do not inject (nested macro /click is a no-op).

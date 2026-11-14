@@ -207,6 +207,9 @@ L["Lock onto a target to prevent accidental switching, and cycle between units t
 L["Warning: Target Lock uses your Focus Target. Anything else that sets your focus will interfere with it."] =
   "Attenzione: il Blocco bersaglio usa il tuo bersaglio focus. Qualsiasi altra cosa che imposta il focus interferirà."
 L["Target Lock Keybind"] = "Tasto blocco bersaglio"
+L["Lock and Attack with Action Button 1"] = "Blocca e attacca con il pulsante azione 1"
+L["Lock an enemy and use Action Button 1 with the same press. Set Left Click to Action Button 1 in Click Casting and put Auto Attack in slot 1. Repeated clicks keep attacking. Helpful spells, macros and excluded spells keep their normal behavior."] =
+  "Blocca un nemico e usa il pulsante azione 1 con una sola pressione. Assegna il clic sinistro al pulsante azione 1 in Lancio con clic e metti Attacco automatico nello scomparto 1. I clic ripetuti mantengono l’attacco. Le magie benefiche, le macro e le magie escluse mantengono il comportamento normale."
 L["Lock the reticle to a target, preventing it from swapping."] =
   "Blocca il mirino su un bersaglio impedendo che cambi."
 L["Cycle Lock - Next"] = "Cicla blocco - Successivo"

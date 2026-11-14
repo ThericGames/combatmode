@@ -199,6 +199,9 @@ L["Lock onto a target to prevent accidental switching, and cycle between units t
 L["Warning: Target Lock uses your Focus Target. Anything else that sets your focus will interfere with it."] =
   "警告：目標鎖定會使用你的專注目標。其他任何設定專注目標的功能都會與之衝突。"
 L["Target Lock Keybind"] = "目標鎖定按鍵"
+L["Lock and Attack with Action Button 1"] = "動作按鈕1：鎖定並攻擊"
+L["Lock an enemy and use Action Button 1 with the same press. Set Left Click to Action Button 1 in Click Casting and put Auto Attack in slot 1. Repeated clicks keep attacking. Helpful spells, macros and excluded spells keep their normal behavior."] =
+  "按一次即可鎖定敵人並使用動作按鈕1。在點擊施法中將滑鼠左鍵設為動作按鈕1，並將自動攻擊放入第1個欄位。重複點擊會持續攻擊。增益法術、巨集和已排除的法術維持原有行為。"
 L["Lock the reticle to a target, preventing it from swapping."] =
   "將準星鎖定在目標上，防止其切換。"
 L["Cycle Lock - Next"] = "循環鎖定 - 下一個"

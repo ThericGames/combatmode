@@ -216,6 +216,10 @@ L["Lock onto a target to prevent accidental switching, and cycle between units t
 L["Warning: Target Lock uses your Focus Target. Anything else that sets your focus will interfere with it."] =
   "Внимание: захват цели использует вашу цель фокуса. Всё, что меняет фокус, будет ему мешать."
 L["Target Lock Keybind"] = "Клавиша захвата цели"
+L["Lock and Attack with Action Button 1"] =
+  "Фиксация и атака кнопкой действия 1"
+L["Lock an enemy and use Action Button 1 with the same press. Set Left Click to Action Button 1 in Click Casting and put Auto Attack in slot 1. Repeated clicks keep attacking. Helpful spells, macros and excluded spells keep their normal behavior."] =
+  "Фиксирует врага и использует кнопку действия 1 одним нажатием. В настройках применения по щелчку назначьте левой кнопке мыши кнопку действия 1 и поместите автоатаку в ячейку 1. Повторные щелчки продолжают атаку. Полезные заклинания, макросы и исключённые заклинания работают как обычно."
 L["Lock the reticle to a target, preventing it from swapping."] =
   "Фиксирует прицел на цели, не позволяя ему переключаться."
 L["Cycle Lock - Next"] = "Смена захвата — следующая"

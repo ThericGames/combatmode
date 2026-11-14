@@ -8,7 +8,7 @@ package.path = root .. "/tests/?.lua;" .. package.path
 local Stub = require("wowstub")
 
 local ADDON = "CombatMode"
-local SPECS = { "spec_safe", "spec_locale", "spec_user_condition", "spec_db" }
+local SPECS = { "spec_safe", "spec_locale", "spec_user_condition", "spec_db", "spec_lock_attack" }
 local CLIENTS = {
   { name = "retail", pattern = "## Interface:%s*(%d+)" },
   { name = "forever", pattern = "## Interface%-Forever:%s*(%d+)" },
@@ -73,7 +73,7 @@ local function RunSpecs(client, CM, env)
       end
     end
     local ok, specError = xpcall(function()
-      spec(Check, CM, env)
+      spec(Check, CM, env, root)
     end, debug.traceback)
     if not ok then
       Fail(("%s (%s)"):format(name, client), specError)

@@ -207,6 +207,9 @@ L["Lock onto a target to prevent accidental switching, and cycle between units t
 L["Warning: Target Lock uses your Focus Target. Anything else that sets your focus will interfere with it."] =
   "Warnung: Die Zielsperre nutzt dein Fokusziel. Alles andere, was deinen Fokus setzt, stört sie."
 L["Target Lock Keybind"] = "Taste für Zielsperre"
+L["Lock and Attack with Action Button 1"] = "Zielbindung und Angriff mit Aktionstaste 1"
+L["Lock an enemy and use Action Button 1 with the same press. Set Left Click to Action Button 1 in Click Casting and put Auto Attack in slot 1. Repeated clicks keep attacking. Helpful spells, macros and excluded spells keep their normal behavior."] =
+  "Bindet einen Gegner als Ziel und verwendet Aktionstaste 1 mit demselben Tastendruck. Weise beim Klickwirken Linksklick der Aktionstaste 1 zu und lege Automatischer Angriff in Platz 1. Weitere Klicks setzen den Angriff fort. Hilfreiche Zauber, Makros und ausgeschlossene Zauber behalten ihr normales Verhalten."
 L["Lock the reticle to a target, preventing it from swapping."] =
   "Sperrt das Fadenkreuz auf ein Ziel, sodass es nicht wechselt."
 L["Cycle Lock - Next"] = "Sperre wechseln – Nächstes"

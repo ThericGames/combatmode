@@ -9,6 +9,7 @@
 --  Architecture / how it works:
 --    • DB.char: reticleTargeting, autoTargetLockOnAttack,
 --      targetLockBehavior (Target Lock Behavior dropdown: toggle / switch),
+--      targetLockActionButton1 (lock and use slot 1 on the same press),
 --      macroInjectionClickCastOnly, stickyCrosshair, excludeFromTargetingSpells,
 --      castAtCursorSpells.
 --    • DB.global: showTargetLockMarker, autofocusLockedTarget, reticleOutline (Target Outline:
@@ -256,6 +257,7 @@ end
 UI.Options.AddTab({
   id = "reticle",
   label = L["Reticle Targeting"],
+  newFeatureFlag = true,
   build = function(ctx)
     ctx:Header(L["RETICLE TARGETING"])
     ctx:Description(
@@ -391,6 +393,24 @@ UI.Options.AddTab({
       set = function(key)
         CM.TryApplyBindingChange(L["target lock keybinding"], function()
           CM.AssignNamedKeybind("Combat Mode - Toggle Focus Target", key)
+        end)
+      end,
+      disabled = function()
+        return not CM.DB.char.reticleTargeting
+      end,
+    })
+    ctx:Toggle({
+      label = L["Lock and Attack with Action Button 1"],
+      desc = L["Lock an enemy and use Action Button 1 with the same press. Set Left Click to Action Button 1 in Click Casting and put Auto Attack in slot 1. Repeated clicks keep attacking. Helpful spells, macros and excluded spells keep their normal behavior."],
+      newFeatureFlag = true,
+      charSpecific = true,
+      get = function()
+        return CM.DbBool(CM.DB.char.targetLockActionButton1, false)
+      end,
+      set = function(value)
+        CM.TryApplyBindingChange(L["target lock keybinding"], function()
+          CM.DB.char.targetLockActionButton1 = value
+          CM.RefreshClickCastMacros()
         end)
       end,
       disabled = function()
