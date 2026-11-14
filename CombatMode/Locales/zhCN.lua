@@ -815,3 +815,8 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "宏“%s”与当前前置行合并后已超出长度限制；请在准星瞄准宏中编辑。"
 L["Click to print URL to chat"] = "点击将 URL 输出到聊天"
+
+-- Support Mode target locking
+L["Disable Target Lock"] = "禁用目标锁定"
+L["Disable manual and automatic Target Lock in Support Mode. Entering Support Mode clears your lock."] =
+  "在支援模式中禁用手动和自动目标锁定。进入支援模式时清除目标锁定。"
