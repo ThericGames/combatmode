@@ -27,7 +27,8 @@
 --      (CM.SyncSupportModeNameplates in CVarManager; only if a client protects those CVars in
 --      combat do they wait for PLAYER_REGEN_ENABLED), the crosshair
 --      (Support texture + idle tint) and the Vignette tint (CM.RefreshVignetteTint).
---      CM.IsSupportModeActive reads the attribute.
+--      CM.IsSupportModeActive reads the attribute. Pet / minion nameplates are not swapped:
+--      CM.RefreshSupportModePetNameplates sets them once per option / key change and on load.
 --    • The mode never survives a reload: CM.InitializeSupportMode turns a leftover support
 --      page back to page 1 and CVarManager restores leftover nameplate CVars.
 --  Does not: Build macro text (TargetingMacroBuilder), own the proxy buttons or their
@@ -72,6 +73,7 @@ local OverrideOwner = CreateFrame("Frame", nil, UIParent)
 local proxyCount = 0
 local pendingApply = false
 local pendingNameplates = false
+local pendingPetPlates = false
 local pendingProxies = {} -- proxies created during lockdown, registered after combat
 -- Reused by CM.GetSupportModeBuildContext (one refresh asks for it once per binding).
 local buildContext = {}
@@ -182,10 +184,14 @@ end
 -- Proxy registration (called by the modules that own the proxy buttons)
 ---------------------------------------------------------------------------------------
 --- Lets the Support Mode key swap this secure button's macro text. A call in combat is kept for
---- PLAYER_REGEN_ENABLED (CM.FlushSupportMode).
-function CM.SupportModeRegisterProxy(frame)
+--- PLAYER_REGEN_ENABLED (CM.FlushSupportMode). `wantsState`: the frame also gets a frame ref to
+--- the handler ("smhandler"), so its own snippets can read the mode (attribute sm = 1 / 0).
+function CM.SupportModeRegisterProxy(frame, wantsState)
   if not Handler or not frame or frame.cmSupportModeProxy then
     return
+  end
+  if wantsState then
+    frame.cmSupportModeWantsState = true
   end
   if InCombatLockdown() then
     pendingProxies[#pendingProxies + 1] = frame
@@ -195,6 +201,9 @@ function CM.SupportModeRegisterProxy(frame)
   proxyCount = proxyCount + 1
   SecureHandlerSetFrameRef(Handler, "p" .. proxyCount, frame)
   Handler:SetAttribute("smcount", proxyCount)
+  if frame.cmSupportModeWantsState then
+    SecureHandlerSetFrameRef(frame, "smhandler", Handler)
+  end
 end
 
 --- Stores a proxy's macro texts: normal, Support Mode (`supportText`, nil = same as normal) and
@@ -224,6 +233,15 @@ local function SyncNameplates()
   local applied = not CM.SyncSupportModeNameplates or CM.SyncSupportModeNameplates()
   pendingNameplates = applied == false
   return applied
+end
+
+--- Pet and minion nameplates follow Cycle NPCs and Pets as a standing game setting, not the
+--- mode swap (CM.ApplySupportModePetNameplates in CVarManager). Runs when the key, the option or
+--- the Nameplate Behavior dropdown changes and on load; a write that combat blocks is retried on
+--- PLAYER_REGEN_ENABLED.
+function CM.RefreshSupportModePetNameplates()
+  local applied = not CM.ApplySupportModePetNameplates or CM.ApplySupportModePetNameplates()
+  pendingPetPlates = applied == false
 end
 
 -- Runs from the secure snippet (CallMethod), in or out of combat: nothing protected in here.
@@ -322,6 +340,8 @@ local function ApplyImpl()
   if #selfKeys == 0 then
     SecureHandlerExecute(Handler, RESET_SELF)
   end
+  -- Whether the mode is in use (key bound, Reticle Targeting on) decides the pet nameplates.
+  CM.RefreshSupportModePetNameplates()
   if not CM.IsSupportModeEnabled() then
     ForceOff()
     return
@@ -381,6 +401,9 @@ function CM.FlushSupportMode()
   end
   if pendingNameplates then
     SyncNameplates()
+  end
+  if pendingPetPlates then
+    CM.RefreshSupportModePetNameplates()
   end
 end
 

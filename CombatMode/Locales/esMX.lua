@@ -444,8 +444,8 @@ L["Hold while in Support Mode to cast the helpful spells on your click-cast butt
   "Mantenla presionada en el Modo de apoyo para lanzarte a ti los hechizos beneficiosos de tus botones de clic. Tu objetivo y Fijar objetivo no cambian."
 L["Prioritize Crosshair Target"] = "Priorizar el objetivo de la mira"
 L["Cycle NPCs and Pets"] = "Alternar entre PNJ y mascotas"
-L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. While this is off, Support Mode also hides the nameplates of NPCs and pets."] =
-  "Alternar fijación normalmente solo cambia entre jugadores cercanos en el modo de apoyo. Actívalo para incluir también PNJ y mascotas cercanos. Mientras esté desactivado, el modo de apoyo también oculta las placas de nombre de PNJ y mascotas."
+L["In Support Mode, Cycle Lock moves through your group in order, or between nearby players when you are not in a group. Turn this on to cycle between nearby players, NPCs and pets instead. Turning this off also hides friendly pet and minion nameplates, in and out of Support Mode (only with a Support Mode key bound, and not when Nameplate Behavior is Don't Change)."] =
+  "En el modo de apoyo, Alternar fijación recorre tu grupo en orden, o cambia entre jugadores cercanos cuando no estás en un grupo. Actívalo para alternar entre jugadores, PNJ y mascotas cercanos. Al desactivarlo también se ocultan las placas de nombre de mascotas y esbirros amistosos, dentro y fuera del modo de apoyo (solo con una tecla del modo de apoyo asignada, y no cuando Comportamiento de las placas de nombre está en No cambiar)."
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   "El aliado bajo tu mira recibe el hechizo aunque tengas seleccionado otro objetivo amistoso, como una selección del Ciclo de aliados. Desactívalo para lanzar primero sobre tu objetivo seleccionado."
 L["Tap to toggle Support Mode on or off."] = "Pulsa para activar o desactivar el Modo de apoyo."

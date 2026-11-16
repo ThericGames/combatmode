@@ -18,6 +18,12 @@
 --    • CM.Profile keys: AllyCycle:GetIndex / ApplyBindings / RefreshRoster.
 --    • Away members: offline or in another zone / instance are skipped (away-<unit> attributes
 --      mirrored by CM.RefreshAllyCycleAvailability out of combat; distance alone never skips).
+--    • The Support Mode Cycle Lock keys /click this button too while in a group
+--      (CM_CycleFocusFriend{Next,Prev} in Constants/Gameplay.lua), with or without the Ally
+--      Cycle keys bound: the headers, skipPlayer / extra-unit attributes and away flags are
+--      kept up to date either way. Keep the button's name and LeftButton / RightButton meaning.
+--      With nobody locked they click it with "first" / "last": the first / last stop in the
+--      order, ignoring the bookmark.
 --  Does not: Own HUD chrome or click-cast prelines.
 --  Related: Core/AllyCycle/{Target,HealthBar,Motion,HUD,AllyCycle}.lua, Core/ClickCasting/BindingOverrides.lua,
 --  Core/Runtime/BindingQueue.lua, UI/Options/Tabs/TabAllyCycle.lua, Bindings.xml
@@ -77,7 +83,13 @@ CycleButton:SetAttribute("checkselfcast", false)
 CycleButton:SetAttribute("checkfocuscast", false)
 CycleButton:SetAttribute("checkmouseovercast", false)
 CycleButton:SetAttribute("type", "target")
-CycleButton:Hide()
+-- Shown but invisible (as the PlayerMenu buttons): the Support Mode Cycle Lock macros /click it,
+-- and a hidden secure button has been seen to ignore a click.
+CycleButton:SetSize(1, 1)
+CycleButton:SetAlpha(0)
+CycleButton:EnableMouse(false)
+CycleButton:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0)
+CycleButton:Show()
 
 local function CreateGroupHeader(name, sortDir)
   local header = CreateFrame("Frame", name, UIParent, "SecureGroupHeaderTemplate")
@@ -294,9 +306,15 @@ if SecureHandlerWrapScript then
       local selfMember = selfHeader and selfHeader:GetChildren()
       local selfUnit = selfMember and selfMember:GetAttribute("unit")
 
-      local goDown = button == "RightButton"
+      -- "first" / "last": the Support Mode Cycle Lock keys with nobody locked. They start over
+      -- from the first / last stop instead of the bookmark (no restore, no takeNext).
+      local fresh = button == "first" or button == "last"
+      local goDown = button == "RightButton" or button == "last"
       local header = goDown and self:GetFrameRef("groupDesc") or self:GetFrameRef("groupAsc")
-      local lastUnit = self:GetAttribute("lastUnit")
+      local lastUnit = nil
+      if not fresh then
+        lastUnit = self:GetAttribute("lastUnit")
+      end
 
       local signature = mode .. "|" .. (selfUnit or "")
       local asc = self:GetFrameRef("groupAsc")
@@ -410,7 +428,10 @@ if SecureHandlerWrapScript then
           self:CallMethod("NotifyCycle", goDown and "down" or "up")
         end
       else
-        self:SetAttribute("unit", nil)
+        -- A fresh start that found nobody clears the target ("none", SECURE_ACTIONS.target), so
+        -- the Cycle Lock macro's /focus line has no ally to lock. Without it that line would
+        -- lock whatever friendly unit was targeted already (yourself, an NPC).
+        self:SetAttribute("unit", fresh and "none" or nil)
         self:SetAttribute("lastUnit", nil)
       end
     ]]
@@ -680,6 +701,9 @@ local function ApplyAllyCycleBindingsImpl()
   CycleButton:SetAttribute("extraPlayerPet", playerPet)
   CycleButton:SetAttribute("extraPartyPets", partyPets)
   ClearOverrideBindings(OverrideOwner)
+  -- Before the gate: the Support Mode Cycle Lock keys click this button with the Ally Cycle keys
+  -- unbound too, and Skip Self needs the self header's name list (set here).
+  CM.RefreshAllyCycleRoster()
   if not CM.IsAllyCycleEnabled() then
     CM.DebugPrint("Ally Cycle bindings cleared (unbound)")
     if CM.RefreshAllyCycleHUD then
@@ -687,7 +711,6 @@ local function ApplyAllyCycleBindingsImpl()
     end
     return
   end
-  CM.RefreshAllyCycleRoster()
   local upKey = GetBindingKey(BIND_UP)
   if upKey then
     SetOverrideBindingClick(OverrideOwner, false, upKey, CycleButton:GetName(), "LeftButton")

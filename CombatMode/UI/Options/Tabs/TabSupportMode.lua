@@ -127,21 +127,18 @@ UI.Options.AddTab({
     })
     ctx:Toggle({
       label = L["Cycle NPCs and Pets"],
-      desc = L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. While this is off, Support Mode also hides the nameplates of NPCs and pets."],
+      desc = L["In Support Mode, Cycle Lock moves through your group in order, or between nearby players when you are not in a group. Turn this on to cycle between nearby players, NPCs and pets instead. Turning this off also hides friendly pet and minion nameplates, in and out of Support Mode (only with a Support Mode key bound, and not when Nameplate Behavior is Don't Change)."],
       charSpecific = true,
       get = function()
         return CM.DbBool(CM.DB.char.supportModeCycleNPCs, false)
       end,
       set = function(value)
         CM.DB.char.supportModeCycleNPCs = value and true or false
+        -- Apply also sets the pet and minion nameplates (CM.RefreshSupportModePetNameplates).
         Apply()
         -- The cycle buttons' Support Mode text is stored by this, not by the macro refresh.
         if CM.ApplyCycleFocusBindings then
           CM.ApplyCycleFocusBindings()
-        end
-        -- Pet, minion and NPC nameplates follow this option while the mode is on.
-        if CM.SyncSupportModeNameplates then
-          CM.SyncSupportModeNameplates()
         end
       end,
       disabled = ReticleTargetingOff,
@@ -194,6 +191,10 @@ UI.Options.AddTab({
         CM.DB.char.supportModeNameplateMode = value
         if CM.SyncSupportModeNameplates then
           CM.SyncSupportModeNameplates()
+        end
+        -- "Don't Change" also leaves the pet and minion nameplates alone.
+        if CM.RefreshSupportModePetNameplates then
+          CM.RefreshSupportModePetNameplates()
         end
       end,
       disabled = ReticleTargetingOff,

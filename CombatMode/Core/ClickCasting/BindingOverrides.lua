@@ -148,7 +148,7 @@ CM.SupportModeRegisterProxy(ToggleFocusTargetButton)
 -- Configurable Target Lock cycle (nearest / previous enemy → focus).
 -- Dedicated Bindings.xml keys + SetOverrideBindingClick (same model as Target Lock).
 -- Duplicate keys are resolved by the engine when the user assigns binds in options.
--- Secure PreClick: UnitExists("focus") → cycle macro; else no-op.
+-- Secure PreClick: UnitExists("focus") → cycle macro; else no-op (CYCLE_FOCUS_PRECLICK).
 local CycleFocusOverrideOwner = CreateFrame("Frame", nil, UIParent)
 
 local CycleFocusEnemyNextButton = CreateFrame(
@@ -168,33 +168,42 @@ local CycleFocusEnemyPrevButton = CreateFrame(
 )
 CycleFocusEnemyPrevButton:SetAttribute("type", "macro")
 CycleFocusEnemyPrevButton:RegisterForClicks("AnyUp", "AnyDown")
-CM.SupportModeRegisterProxy(CycleFocusEnemyNextButton)
-CM.SupportModeRegisterProxy(CycleFocusEnemyPrevButton)
+-- `true`: these two also get a frame ref to the Support Mode handler ("smhandler"), so their
+-- PreClick can read whether the mode is on.
+CM.SupportModeRegisterProxy(CycleFocusEnemyNextButton, true)
+CM.SupportModeRegisterProxy(CycleFocusEnemyPrevButton, true)
+
+-- The keys need a lock to move. One exception: in Support Mode (the handler's `sm` attribute), in
+-- a party or raid, with the roster cycle text (`smnolock`, set with the texts below), a press
+-- with nobody locked starts the cycle (the macro then clicks Ally Cycle's button with "first" /
+-- "last").
+local CYCLE_FOCUS_PRECLICK = [[
+  local run = UnitExists("focus")
+  if not run and self:GetAttribute("smnolock") then
+    local handler = self:GetFrameRef("smhandler")
+    if handler and handler:GetAttribute("sm") == 1 then
+      run = SecureCmdOptionParse("[group] 1") == "1"
+    end
+  end
+  if run then
+    self:SetAttribute("type", "macro")
+  else
+    self:SetAttribute("type", nil)
+  end
+]]
 
 if SecureHandlerWrapScript then
   SecureHandlerWrapScript(
     CycleFocusEnemyNextButton,
     "PreClick",
     CycleFocusEnemyNextButton,
-    [[
-      if UnitExists("focus") then
-        self:SetAttribute("type", "macro")
-      else
-        self:SetAttribute("type", nil)
-      end
-    ]]
+    CYCLE_FOCUS_PRECLICK
   )
   SecureHandlerWrapScript(
     CycleFocusEnemyPrevButton,
     "PreClick",
     CycleFocusEnemyPrevButton,
-    [[
-      if UnitExists("focus") then
-        self:SetAttribute("type", "macro")
-      else
-        self:SetAttribute("type", nil)
-      end
-    ]]
+    CYCLE_FOCUS_PRECLICK
   )
 end
 
@@ -203,9 +212,13 @@ local function EnsureFocusCycleMacroText()
   if not macros_const or InCombatLockdown() then
     return
   end
-  -- Second text: Support Mode cycles friendly units instead (the secure key swaps them in combat).
-  -- Players only, unless the Cycle NPCs and Pets option is on.
+  -- Second text: Support Mode cycles friendly units instead (the secure key swaps them in combat):
+  -- the group in roster order (Ally Cycle's button), or nearby players when not in a group. With
+  -- the Cycle NPCs and Pets option on: nearby players, NPCs and pets, in or out of a group.
   local withNPCs = CM.DbBool(CM.DB.char.supportModeCycleNPCs, false)
+  -- Only the roster text can start a cycle with nobody locked (see CYCLE_FOCUS_PRECLICK).
+  CycleFocusEnemyNextButton:SetAttribute("smnolock", not withNPCs)
+  CycleFocusEnemyPrevButton:SetAttribute("smnolock", not withNPCs)
   CM.SetModeMacroText(
     CycleFocusEnemyNextButton,
     macros_const.CM_CycleFocusEnemyNext,

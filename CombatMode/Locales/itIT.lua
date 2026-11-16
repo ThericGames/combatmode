@@ -444,8 +444,8 @@ L["Hold while in Support Mode to cast the helpful spells on your click-cast butt
   "Tienilo premuto in Modalità supporto per lanciare su di te gli incantesimi benefici dei tuoi pulsanti di clic. Il tuo bersaglio e il Blocco bersaglio restano invariati."
 L["Prioritize Crosshair Target"] = "Dai priorità al bersaglio del mirino"
 L["Cycle NPCs and Pets"] = "Alterna tra PNG e famigli"
-L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. While this is off, Support Mode also hides the nameplates of NPCs and pets."] =
-  "Cicla blocco in modalità supporto passa normalmente solo tra i giocatori vicini. Attiva questa opzione per includere anche PNG e famigli vicini. Finché è disattivata, la modalità supporto nasconde anche le targhette di PNG e famigli."
+L["In Support Mode, Cycle Lock moves through your group in order, or between nearby players when you are not in a group. Turn this on to cycle between nearby players, NPCs and pets instead. Turning this off also hides friendly pet and minion nameplates, in and out of Support Mode (only with a Support Mode key bound, and not when Nameplate Behavior is Don't Change)."] =
+  "In modalità supporto, Cicla blocco scorre il tuo gruppo in ordine, oppure passa tra i giocatori vicini quando non sei in un gruppo. Attiva questa opzione per passare invece tra giocatori, PNG e famigli vicini. Disattivandola vengono nascoste anche le targhette di famigli e servitori amici, dentro e fuori dalla modalità supporto (solo con un tasto della modalità supporto assegnato, e non quando Comportamento delle targhette è impostato su Non modificare)."
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   "L'alleato sotto il mirino riceve l'incantesimo anche se hai selezionato un altro bersaglio amico, come una scelta del Ciclo alleati. Disattiva per lanciare prima sul bersaglio selezionato."
 L["Tap to toggle Support Mode on or off."] =

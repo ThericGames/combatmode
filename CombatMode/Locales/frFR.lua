@@ -444,8 +444,8 @@ L["Hold while in Support Mode to cast the helpful spells on your click-cast butt
   "Maintenez-le en Mode soutien pour lancer sur vous-même les sorts bénéfiques de vos boutons de clic. Votre cible et le Verrouillage de cible ne changent pas."
 L["Prioritize Crosshair Target"] = "Prioriser la cible du réticule"
 L["Cycle NPCs and Pets"] = "Alterner entre PNJ et familiers"
-L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. While this is off, Support Mode also hides the nameplates of NPCs and pets."] =
-  "Cycler le verrouillage ne passe normalement que d'un joueur proche à l'autre en mode soutien. Activez cette option pour inclure aussi les PNJ et les familiers proches. Tant qu'elle est désactivée, le mode soutien masque aussi les barres de nom des PNJ et des familiers."
+L["In Support Mode, Cycle Lock moves through your group in order, or between nearby players when you are not in a group. Turn this on to cycle between nearby players, NPCs and pets instead. Turning this off also hides friendly pet and minion nameplates, in and out of Support Mode (only with a Support Mode key bound, and not when Nameplate Behavior is Don't Change)."] =
+  "En mode soutien, Cycler le verrouillage parcourt votre groupe dans l'ordre, ou passe d'un joueur proche à l'autre quand vous n'êtes pas en groupe. Activez cette option pour passer à la place entre les joueurs, PNJ et familiers proches. La désactiver masque aussi les barres de nom des familiers et serviteurs alliés, en mode soutien comme en dehors (uniquement avec un raccourci du mode soutien défini, et pas quand Comportement des barres de nom est réglé sur Ne pas modifier)."
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   "L'allié sous votre réticule reçoit le sort même si une autre cible amicale est sélectionnée, comme un choix du Cycle d'alliés. Désactivez pour lancer d'abord sur votre cible sélectionnée."
 L["Tap to toggle Support Mode on or off."] = "Appuyez pour activer ou désactiver le Mode soutien."

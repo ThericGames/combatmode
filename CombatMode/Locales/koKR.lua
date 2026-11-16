@@ -446,8 +446,8 @@ L["Hold while in Support Mode to cast the helpful spells on your click-cast butt
   "지원 모드에서 누르고 있으면 클릭 시전 버튼의 이로운 주문을 자신에게 시전합니다. 대상과 대상 고정은 그대로 유지됩니다."
 L["Prioritize Crosshair Target"] = "조준점 대상 우선"
 L["Cycle NPCs and Pets"] = "NPC 및 소환수 순환"
-L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. While this is off, Support Mode also hides the nameplates of NPCs and pets."] =
-  "지원 모드에서 고정 순환은 기본적으로 주변 플레이어 사이에서만 이동합니다. 주변 NPC와 소환수도 포함하려면 이 옵션을 켜세요. 이 옵션이 꺼져 있는 동안에는 지원 모드가 NPC와 소환수의 이름표도 숨깁니다."
+L["In Support Mode, Cycle Lock moves through your group in order, or between nearby players when you are not in a group. Turn this on to cycle between nearby players, NPCs and pets instead. Turning this off also hides friendly pet and minion nameplates, in and out of Support Mode (only with a Support Mode key bound, and not when Nameplate Behavior is Don't Change)."] =
+  "지원 모드에서 고정 순환은 파티 또는 공격대원을 순서대로 이동하며, 파티에 속해 있지 않을 때는 주변 플레이어 사이를 이동합니다. 대신 주변 플레이어, NPC, 소환수 사이를 순환하려면 이 옵션을 켜세요. 이 옵션을 끄면 지원 모드 안팎에서 우호적인 소환수와 하수인의 이름표도 숨겨집니다(지원 모드 단축키가 지정되어 있고 이름표 동작이 변경 안 함이 아닐 때만)."
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   "다른 우호적 대상(아군 순환으로 고른 대상 등)을 선택해 두었더라도 조준점 아래의 아군에게 주문이 시전됩니다. 끄면 선택한 대상에게 먼저 시전합니다."
 L["Tap to toggle Support Mode on or off."] = "눌러서 지원 모드를 켜거나 끕니다."
