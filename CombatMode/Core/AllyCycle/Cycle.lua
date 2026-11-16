@@ -18,8 +18,8 @@
 --    • CM.Profile keys: AllyCycle:GetIndex / ApplyBindings / RefreshRoster.
 --    • Away members: offline or in another zone / instance are skipped (away-<unit> attributes
 --      mirrored by CM.RefreshAllyCycleAvailability out of combat; distance alone never skips).
---    • The Support Mode Cycle Lock keys /click this button too while in a group
---      (CM_CycleFocusFriend{Next,Prev} in Constants/Gameplay.lua), with or without the Ally
+--    • With Cycle in Group Order on, the Support Mode Cycle Lock keys /click this button too
+--      while in a group (CM_CycleFocusRoster* in Constants/Gameplay.lua), with or without the Ally
 --      Cycle keys bound: the headers, skipPlayer / extra-unit attributes and away flags are
 --      kept up to date either way. Keep the button's name and LeftButton / RightButton meaning.
 --      With nobody locked they click it with "first" / "last": the first / last stop in the

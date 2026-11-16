@@ -174,7 +174,7 @@ CM.SupportModeRegisterProxy(CycleFocusEnemyNextButton, true)
 CM.SupportModeRegisterProxy(CycleFocusEnemyPrevButton, true)
 
 -- The keys need a lock to move. One exception: in Support Mode (the handler's `sm` attribute), in
--- a party or raid, with the roster cycle text (`smnolock`, set with the texts below), a press
+-- a party or raid, with a roster cycle text (`smnolock`: Cycle in Group Order on), a press
 -- with nobody locked starts the cycle (the macro then clicks Ally Cycle's button with "first" /
 -- "last").
 local CYCLE_FOCUS_PRECLICK = [[
@@ -212,23 +212,26 @@ local function EnsureFocusCycleMacroText()
   if not macros_const or InCombatLockdown() then
     return
   end
-  -- Second text: Support Mode cycles friendly units instead (the secure key swaps them in combat):
-  -- the group in roster order (Ally Cycle's button), or nearby players when not in a group. With
-  -- the Cycle NPCs and Pets option on: nearby players, NPCs and pets, in or out of a group.
+  -- Second text: Support Mode cycles friendly units instead (the secure key swaps them in combat).
+  -- Default: the nearest friendly player. Cycle NPCs and Pets adds NPCs and pets to that. Cycle
+  -- in Group Order (default off) walks the party / raid in roster order (Ally Cycle's button)
+  -- while in a group.
   local withNPCs = CM.DbBool(CM.DB.char.supportModeCycleNPCs, false)
-  -- Only the roster text can start a cycle with nobody locked (see CYCLE_FOCUS_PRECLICK).
-  CycleFocusEnemyNextButton:SetAttribute("smnolock", not withNPCs)
-  CycleFocusEnemyPrevButton:SetAttribute("smnolock", not withNPCs)
-  CM.SetModeMacroText(
-    CycleFocusEnemyNextButton,
-    macros_const.CM_CycleFocusEnemyNext,
-    withNPCs and macros_const.CM_CycleFocusFriendAllNext or macros_const.CM_CycleFocusFriendNext
-  )
-  CM.SetModeMacroText(
-    CycleFocusEnemyPrevButton,
-    macros_const.CM_CycleFocusEnemyPrev,
-    withNPCs and macros_const.CM_CycleFocusFriendAllPrev or macros_const.CM_CycleFocusFriendPrev
-  )
+  local groupOrder = CM.DbBool(CM.DB.char.supportModeCycleGroupOrder, false)
+  local m = macros_const
+  local nextText, prevText
+  if groupOrder then
+    nextText = withNPCs and m.CM_CycleFocusRosterAllNext or m.CM_CycleFocusRosterNext
+    prevText = withNPCs and m.CM_CycleFocusRosterAllPrev or m.CM_CycleFocusRosterPrev
+  else
+    nextText = withNPCs and m.CM_CycleFocusFriendAllNext or m.CM_CycleFocusFriendNext
+    prevText = withNPCs and m.CM_CycleFocusFriendAllPrev or m.CM_CycleFocusFriendPrev
+  end
+  -- Only the roster texts can start a cycle with nobody locked (see CYCLE_FOCUS_PRECLICK).
+  CycleFocusEnemyNextButton:SetAttribute("smnolock", groupOrder)
+  CycleFocusEnemyPrevButton:SetAttribute("smnolock", groupOrder)
+  CM.SetModeMacroText(CycleFocusEnemyNextButton, m.CM_CycleFocusEnemyNext, nextText)
+  CM.SetModeMacroText(CycleFocusEnemyPrevButton, m.CM_CycleFocusEnemyPrev, prevText)
 end
 
 --- Target Lock (focus toggle, wheel cycle, marker, sounds) requires Reticle Targeting.

@@ -3,7 +3,7 @@
 ---------------------------------------------------------------------------------------
 --  What it does: Support Mode keybind (a toggle), Self-Cast keybind (a hold), Prioritize
 --  Crosshair Target, support bar page,
---  Cycle NPCs and Pets, Vignette tint toggle and the nameplates dropdown. An unbound Support Mode key disables it.
+--  Cycle NPCs and Pets, Cycle in Group Order, Vignette tint toggle and the nameplates dropdown. An unbound Support Mode key disables it.
 --  (The Support crosshair color and texture are on the Crosshair tab: Reaction Colors and
 --  Appearance.)
 --  Architecture / how it works:
@@ -127,7 +127,7 @@ UI.Options.AddTab({
     })
     ctx:Toggle({
       label = L["Cycle NPCs and Pets"],
-      desc = L["In Support Mode, Cycle Lock moves through your group in order, or between nearby players when you are not in a group. Turn this on to cycle between nearby players, NPCs and pets instead. Turning this off also hides friendly pet and minion nameplates, in and out of Support Mode (only with a Support Mode key bound, and not when Nameplate Behavior is Don't Change)."],
+      desc = L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. Turning this off also hides friendly pet and minion nameplates, in and out of Support Mode (only with a Support Mode key bound, and not when Nameplate Behavior is Don't Change)."],
       charSpecific = true,
       get = function()
         return CM.DbBool(CM.DB.char.supportModeCycleNPCs, false)
@@ -137,6 +137,23 @@ UI.Options.AddTab({
         -- Apply also sets the pet and minion nameplates (CM.RefreshSupportModePetNameplates).
         Apply()
         -- The cycle buttons' Support Mode text is stored by this, not by the macro refresh.
+        if CM.ApplyCycleFocusBindings then
+          CM.ApplyCycleFocusBindings()
+        end
+      end,
+      disabled = ReticleTargetingOff,
+      watermarkWhenDisabled = ReticleTargetingNotice,
+    })
+    ctx:Toggle({
+      label = L["Cycle in Group Order"],
+      desc = L["In a party or raid, the Cycle Lock keys move through your group in order while in Support Mode, instead of jumping to the nearest friendly unit. With nobody locked, Next locks the first member and Previous the last."],
+      charSpecific = true,
+      get = function()
+        return CM.DbBool(CM.DB.char.supportModeCycleGroupOrder, false)
+      end,
+      set = function(value)
+        CM.DB.char.supportModeCycleGroupOrder = value and true or false
+        -- Stores the cycle buttons' Support Mode text (queued while in combat).
         if CM.ApplyCycleFocusBindings then
           CM.ApplyCycleFocusBindings()
         end

@@ -10,7 +10,7 @@
 --      (Toggle: target-first-then-mouseover on lock, clear focus + target on unlock; Switch: the unit
 --      under the crosshair becomes the lock, an empty crosshair unlocks),
 --      CM_CycleFocusEnemy{Next,Prev}, their Support Mode twins that only take friendly units
---      (CM_ToggleFocusSupport / CM_SwitchFocusSupport / CM_CycleFocusFriend{Next,Prev}),
+--      (CM_ToggleFocusSupport / CM_SwitchFocusSupport / CM_CycleFocus{Friend,Roster}[All]{Next,Prev}),
 --      CM_StartAttack / CM_PetAttack (hostile /tar
 --      then /startattack or /petattack; hides raw Blizzard STARTATTACK / PETATTACK)
 --    • BLIZZARD_EVENTS groups: UNLOCK/LOCK/FREELOOK_RECONCILE/REMATCH, FRIENDLY_TARGETING,
@@ -65,23 +65,28 @@ CM.Constants.Macros = {
   CM_ToggleFocusSupport = "/cleartarget [@focus,exists]\n/focus [@focus,exists] none; [@target,help]; [@mouseover,help][@softfriend,help]\n/tar [@focus,exists]",
   CM_SwitchFocusSupport = "/cleartarget [@focus,exists]\n/focus [@mouseover,help]; [@mouseover,noexists] none\n/tar [@focus,exists]",
   -- Cycle keys in Support Mode: target the next / previous ally, then lock it. `help` keeps the
-  -- lock where it is when the hard target is not an ally.
-  --  • In a party or raid: click Ally Cycle's secure button (CombatModeAllyCycle in
-  --    Core/AllyCycle/Cycle.lua: LeftButton = next, RightButton = previous), which hard-targets
-  --    the next member in group order. Asked for after testing: the nearest-player command
-  --    below picks by position, so it skipped members and had no fixed order.
+  -- lock where it is when the hard target is not an ally. Four pairs, picked by two options
+  -- (EnsureFocusCycleMacroText in BindingOverrides.lua).
+  --  • Default: nearest / previous friendly player (Blizzard's /targetfriendplayer, the
+  --    player-only twin of /targetfriend, so NPCs and pets are skipped). Needs a lock.
+  CM_CycleFocusFriendNext = "/targetfriendplayer [@focus,exists]\n/focus [@target,help]",
+  CM_CycleFocusFriendPrev = "/targetfriendplayer [@focus,exists] 1\n/focus [@target,help]",
+  --  • `char.supportModeCycleNPCs` on: /targetfriend also walks NPCs and pets.
+  CM_CycleFocusFriendAllNext = "/targetfriend [@focus,exists]\n/focus [@target,help]",
+  CM_CycleFocusFriendAllPrev = "/targetfriend [@focus,exists] 1\n/focus [@target,help]",
+  --  • `char.supportModeCycleGroupOrder` on (default off): in a party or raid, click Ally
+  --    Cycle's secure button (CombatModeAllyCycle in Core/AllyCycle/Cycle.lua: LeftButton =
+  --    next, RightButton = previous), which hard-targets the next member in group order (the
+  --    nearest-player command picks by position, so it skips members and has no fixed order).
   --    With nobody locked the click is "first" / "last" instead: Next locks the first member in
   --    group order, Previous the last (the buttons' PreClick in BindingOverrides.lua lets that
   --    press through; in combat the cycle can't start from a lock picked by an aimed heal, so
-  --    this is the way to start it in order).
-  --  • Not in a group: nearest / previous friendly player (Blizzard's /targetfriendplayer, the
-  --    player-only twin of /targetfriend, so NPCs and pets are skipped). Needs a lock.
-  CM_CycleFocusFriendNext = "/click [@focus,exists,group] CombatModeAllyCycle LeftButton; [group] CombatModeAllyCycle first\n/targetfriendplayer [@focus,exists,nogroup]\n/focus [@target,help]",
-  CM_CycleFocusFriendPrev = "/click [@focus,exists,group] CombatModeAllyCycle RightButton; [group] CombatModeAllyCycle last\n/targetfriendplayer [@focus,exists,nogroup] 1\n/focus [@target,help]",
-  -- With `char.supportModeCycleNPCs` on, in or out of a group: /targetfriend also walks NPCs and
-  -- pets (they are not in the group roster, so there is no fixed order).
-  CM_CycleFocusFriendAllNext = "/targetfriend [@focus,exists]\n/focus [@target,help]",
-  CM_CycleFocusFriendAllPrev = "/targetfriend [@focus,exists] 1\n/focus [@target,help]",
+  --    this is the way to start it in order). Not in a group: the nearest command, as above.
+  CM_CycleFocusRosterNext = "/click [@focus,exists,group] CombatModeAllyCycle LeftButton; [group] CombatModeAllyCycle first\n/targetfriendplayer [@focus,exists,nogroup]\n/focus [@target,help]",
+  CM_CycleFocusRosterPrev = "/click [@focus,exists,group] CombatModeAllyCycle RightButton; [group] CombatModeAllyCycle last\n/targetfriendplayer [@focus,exists,nogroup] 1\n/focus [@target,help]",
+  --  • Both on: group order in a group (NPCs are not in the roster), /targetfriend outside one.
+  CM_CycleFocusRosterAllNext = "/click [@focus,exists,group] CombatModeAllyCycle LeftButton; [group] CombatModeAllyCycle first\n/targetfriend [@focus,exists,nogroup]\n/focus [@target,help]",
+  CM_CycleFocusRosterAllPrev = "/click [@focus,exists,group] CombatModeAllyCycle RightButton; [group] CombatModeAllyCycle last\n/targetfriend [@focus,exists,nogroup] 1\n/focus [@target,help]",
   -- Click-cast Start Attack / Pet Attack: hostile under the reticle, then swing.
   CM_StartAttack = "/tar [@focus,harm];[nomounted,@mouseover,harm,nodead][nomounted,@anyenemy]\n/startattack",
   CM_PetAttack = "/tar [@focus,harm];[nomounted,@mouseover,harm,nodead][nomounted,@anyenemy]\n/petattack",

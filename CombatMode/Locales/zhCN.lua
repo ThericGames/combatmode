@@ -429,8 +429,11 @@ L["Hold while in Support Mode to cast the helpful spells on your click-cast butt
   "在辅助模式中按住此键，可将点击施法按键上的有益法术施放给自己。你的目标和目标锁定保持不变。"
 L["Prioritize Crosshair Target"] = "优先准星目标"
 L["Cycle NPCs and Pets"] = "轮换 NPC 和宠物"
-L["In Support Mode, Cycle Lock moves through your group in order, or between nearby players when you are not in a group. Turn this on to cycle between nearby players, NPCs and pets instead. Turning this off also hides friendly pet and minion nameplates, in and out of Support Mode (only with a Support Mode key bound, and not when Nameplate Behavior is Don't Change)."] =
-  "在辅助模式下,循环锁定会按顺序在队伍成员之间切换;不在队伍中时,则在附近的玩家之间切换。开启后改为在附近的玩家、NPC 和宠物之间切换。关闭后还会隐藏友方宠物和仆从的姓名板,无论是否处于辅助模式(仅在已绑定辅助模式按键且姓名板行为未设为不更改时)。"
+L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. Turning this off also hides friendly pet and minion nameplates, in and out of Support Mode (only with a Support Mode key bound, and not when Nameplate Behavior is Don't Change)."] =
+  "在辅助模式下,循环锁定通常只会在附近的玩家之间切换。开启后也会包括附近的 NPC 和宠物。关闭后还会隐藏友方宠物和仆从的姓名板,无论是否处于辅助模式(仅在已绑定辅助模式按键且姓名板行为未设为不更改时)。"
+L["Cycle in Group Order"] = "按队伍顺序轮换"
+L["In a party or raid, the Cycle Lock keys move through your group in order while in Support Mode, instead of jumping to the nearest friendly unit. With nobody locked, Next locks the first member and Previous the last."] =
+  "在小队或团队中,辅助模式下的循环锁定按键会按顺序在队伍成员之间切换,而不是跳到最近的友方单位。没有锁定任何人时,下一个会锁定第一名成员,上一个会锁定最后一名成员。"
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   "即使已选中其他友方目标（例如通过友方循环选中），准星下的盟友也会优先获得法术。关闭后将优先施放给已选中的目标。"
 L["Tap to toggle Support Mode on or off."] = "点按以开启或关闭辅助模式。"
