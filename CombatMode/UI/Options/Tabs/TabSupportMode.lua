@@ -127,7 +127,7 @@ UI.Options.AddTab({
     })
     ctx:Toggle({
       label = L["Cycle NPCs and Pets"],
-      desc = L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. Turning this off also hides friendly pet and minion nameplates, in and out of Support Mode (only with a Support Mode key bound, and not when Nameplate Behavior is Don't Change)."],
+      desc = L["In Support Mode, Cycle Lock also moves to nearby NPCs and pets. While off, friendly pet nameplates are hidden, also outside Support Mode."],
       charSpecific = true,
       get = function()
         return CM.DbBool(CM.DB.char.supportModeCycleNPCs, false)
@@ -140,13 +140,17 @@ UI.Options.AddTab({
         if CM.ApplyCycleFocusBindings then
           CM.ApplyCycleFocusBindings()
         end
+        -- Group order: whether Cycle Lock presses stop on pets (Ally Cycle's lockPets attribute).
+        if CM.ApplyAllyCycleBindings then
+          CM.ApplyAllyCycleBindings()
+        end
       end,
       disabled = ReticleTargetingOff,
       watermarkWhenDisabled = ReticleTargetingNotice,
     })
     ctx:Toggle({
       label = L["Cycle in Group Order"],
-      desc = L["In a party or raid, the Cycle Lock keys move through your group in order while in Support Mode, instead of jumping to the nearest friendly unit. With nobody locked, Next locks the first member and Previous the last."],
+      desc = L["In Support Mode, Cycle Lock moves through your party or raid in group order instead of to the nearest ally. With nobody locked, Next locks the first member and Previous the last."],
       charSpecific = true,
       get = function()
         return CM.DbBool(CM.DB.char.supportModeCycleGroupOrder, false)

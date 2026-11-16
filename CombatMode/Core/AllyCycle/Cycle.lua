@@ -21,9 +21,9 @@
 --    • With Cycle in Group Order on, the Support Mode Cycle Lock keys /click this button too
 --      while in a group (CM_CycleFocusRoster* in Constants/Gameplay.lua), with or without the Ally
 --      Cycle keys bound: the headers, skipPlayer / extra-unit attributes and away flags are
---      kept up to date either way. Keep the button's name and LeftButton / RightButton meaning.
---      With nobody locked they click it with "first" / "last": the first / last stop in the
---      order, ignoring the bookmark.
+--      kept up to date either way. They click it as "next" / "prev", or with nobody locked as
+--      "first" / "last" (the first / last stop, ignoring the bookmark); those presses leave
+--      pets out unless Cycle NPCs and Pets is on (lockPets). Keep the button's name.
 --  Does not: Own HUD chrome or click-cast prelines.
 --  Related: Core/AllyCycle/{Target,HealthBar,Motion,HUD,AllyCycle}.lua, Core/ClickCasting/BindingOverrides.lua,
 --  Core/Runtime/BindingQueue.lua, UI/Options/Tabs/TabAllyCycle.lua, Bindings.xml
@@ -147,7 +147,11 @@ local function EnsureSelfHeaderNameList()
   if realmName and realmName ~= "" then
     nameList = nameList .. "," .. playerName .. "-" .. realmName
   end
-  SelfHeader:SetAttribute("nameList", nameList)
+  -- Only when it changed: setting an attribute makes the header rebuild, and this now runs on
+  -- every bindings refresh (also for players who use neither Ally Cycle nor Cycle Lock).
+  if SelfHeader:GetAttribute("nameList") ~= nameList then
+    SelfHeader:SetAttribute("nameList", nameList)
+  end
   SelfHeader:Show()
 end
 
@@ -306,10 +310,12 @@ if SecureHandlerWrapScript then
       local selfMember = selfHeader and selfHeader:GetChildren()
       local selfUnit = selfMember and selfMember:GetAttribute("unit")
 
-      -- "first" / "last": the Support Mode Cycle Lock keys with nobody locked. They start over
-      -- from the first / last stop instead of the bookmark (no restore, no takeNext).
+      -- The Support Mode Cycle Lock keys click with their own names: "next" / "prev", and with
+      -- nobody locked "first" / "last", which start over from the first / last stop instead of
+      -- the bookmark (no restore, no takeNext).
       local fresh = button == "first" or button == "last"
-      local goDown = button == "RightButton" or button == "last"
+      local fromLock = fresh or button == "next" or button == "prev"
+      local goDown = button == "RightButton" or button == "prev" or button == "last"
       local header = goDown and self:GetFrameRef("groupDesc") or self:GetFrameRef("groupAsc")
       local lastUnit = nil
       if not fresh then
@@ -348,6 +354,17 @@ if SecureHandlerWrapScript then
       end
       self:SetAttribute("mode", mode)
       self:SetAttribute("rosterSignature", signature)
+
+      -- Cycle Lock presses leave the pets out unless Support Mode's Cycle NPCs and Pets is on
+      -- (lockPets, mirrored out of combat). After the signature, so both kinds of press share
+      -- one bookmark; a pet bookmark is not carried into a pet-less walk.
+      if fromLock and not self:GetAttribute("lockPets") then
+        playerPet = nil
+        partyPets = nil
+        if lastUnit and strfind(lastUnit, "pet", 1, true) then
+          lastUnit = nil
+        end
+      end
 
       local firstUnit = nil
       local chosen = nil
@@ -428,10 +445,12 @@ if SecureHandlerWrapScript then
           self:CallMethod("NotifyCycle", goDown and "down" or "up")
         end
       else
-        -- A fresh start that found nobody clears the target ("none", SECURE_ACTIONS.target), so
-        -- the Cycle Lock macro's /focus line has no ally to lock. Without it that line would
-        -- lock whatever friendly unit was targeted already (yourself, an NPC).
-        self:SetAttribute("unit", fresh and "none" or nil)
+        -- A fresh start that found nobody clears a friendly target ("none",
+        -- SECURE_ACTIONS.target), so the Cycle Lock macro's /focus line has no ally to lock.
+        -- Without it that line would lock whatever friendly unit was targeted already
+        -- (yourself, an NPC). A hostile target can't be locked by that line and is kept.
+        local clear = fresh and UnitExists("target") and PlayerCanAssist("target")
+        self:SetAttribute("unit", clear and "none" or nil)
         self:SetAttribute("lastUnit", nil)
       end
     ]]
@@ -700,6 +719,9 @@ local function ApplyAllyCycleBindingsImpl()
   local playerPet, partyPets = CM.GetAllyCycleExtraUnits()
   CycleButton:SetAttribute("extraPlayerPet", playerPet)
   CycleButton:SetAttribute("extraPartyPets", partyPets)
+  -- Cycle Lock presses in group order only stop on these pets with Cycle NPCs and Pets on.
+  local char = CM.DB and CM.DB.char
+  CycleButton:SetAttribute("lockPets", CM.DbBool(char and char.supportModeCycleNPCs, false))
   ClearOverrideBindings(OverrideOwner)
   -- Before the gate: the Support Mode Cycle Lock keys click this button with the Ally Cycle keys
   -- unbound too, and Skip Self needs the self header's name list (set here).

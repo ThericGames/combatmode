@@ -444,11 +444,11 @@ L["Hold while in Support Mode to cast the helpful spells on your click-cast butt
   "Maintenez-le en Mode soutien pour lancer sur vous-même les sorts bénéfiques de vos boutons de clic. Votre cible et le Verrouillage de cible ne changent pas."
 L["Prioritize Crosshair Target"] = "Prioriser la cible du réticule"
 L["Cycle NPCs and Pets"] = "Alterner entre PNJ et familiers"
-L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. Turning this off also hides friendly pet and minion nameplates, in and out of Support Mode (only with a Support Mode key bound, and not when Nameplate Behavior is Don't Change)."] =
-  "Cycler le verrouillage ne passe normalement que d'un joueur proche à l'autre en mode soutien. Activez cette option pour inclure aussi les PNJ et les familiers proches. La désactiver masque aussi les barres de nom des familiers et serviteurs alliés, en mode soutien comme en dehors (uniquement avec un raccourci du mode soutien défini, et pas quand Comportement des barres de nom est réglé sur Ne pas modifier)."
+L["In Support Mode, Cycle Lock also moves to nearby NPCs and pets. While off, friendly pet nameplates are hidden, also outside Support Mode."] =
+  "En mode soutien, Cycler le verrouillage passe aussi aux PNJ et familiers proches. Tant que l'option est désactivée, les barres de nom des familiers alliés sont masquées, y compris hors du mode soutien."
 L["Cycle in Group Order"] = "Alterner dans l'ordre du groupe"
-L["In a party or raid, the Cycle Lock keys move through your group in order while in Support Mode, instead of jumping to the nearest friendly unit. With nobody locked, Next locks the first member and Previous the last."] =
-  "En groupe ou en raid, les touches Cycler le verrouillage parcourent votre groupe dans l'ordre en mode soutien, au lieu de passer à l'unité alliée la plus proche. Si personne n'est verrouillé, Suivant verrouille le premier membre et Précédent le dernier."
+L["In Support Mode, Cycle Lock moves through your party or raid in group order instead of to the nearest ally. With nobody locked, Next locks the first member and Previous the last."] =
+  "En mode soutien, Cycler le verrouillage parcourt votre groupe ou raid dans l'ordre, au lieu de passer à l'allié le plus proche. Si personne n'est verrouillé, Suivant verrouille le premier membre et Précédent le dernier."
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   "L'allié sous votre réticule reçoit le sort même si une autre cible amicale est sélectionnée, comme un choix du Cycle d'alliés. Désactivez pour lancer d'abord sur votre cible sélectionnée."
 L["Tap to toggle Support Mode on or off."] = "Appuyez pour activer ou désactiver le Mode soutien."

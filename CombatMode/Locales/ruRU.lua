@@ -469,11 +469,11 @@ L["Hold while in Support Mode to cast the helpful spells on your click-cast butt
   "Удерживайте в режиме поддержки, чтобы применять полезные заклинания кнопок щелчка к себе. Ваша цель и захват цели не меняются."
 L["Prioritize Crosshair Target"] = "Приоритет цели под прицелом"
 L["Cycle NPCs and Pets"] = "Перебор NPC и питомцев"
-L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. Turning this off also hides friendly pet and minion nameplates, in and out of Support Mode (only with a Support Mode key bound, and not when Nameplate Behavior is Don't Change)."] =
-  "В режиме поддержки смена захвата обычно переключается только между ближайшими игроками. Включите, чтобы также учитывать ближайших NPC и питомцев. При выключении также скрываются индикаторы здоровья дружественных питомцев и прислужников, как в режиме поддержки, так и вне его (только если назначена клавиша режима поддержки и Поведение индикаторов здоровья не установлено на Не менять)."
+L["In Support Mode, Cycle Lock also moves to nearby NPCs and pets. While off, friendly pet nameplates are hidden, also outside Support Mode."] =
+  "В режиме поддержки смена захвата также переключается на ближайших NPC и питомцев. Пока опция выключена, индикаторы здоровья дружественных питомцев скрыты, в том числе вне режима поддержки."
 L["Cycle in Group Order"] = "Перебор в порядке группы"
-L["In a party or raid, the Cycle Lock keys move through your group in order while in Support Mode, instead of jumping to the nearest friendly unit. With nobody locked, Next locks the first member and Previous the last."] =
-  "В группе или рейде клавиши смены захвата в режиме поддержки перебирают участников по порядку, а не переключаются на ближайшую дружественную цель. Если никто не захвачен, «следующая» захватывает первого участника, а «предыдущая» — последнего."
+L["In Support Mode, Cycle Lock moves through your party or raid in group order instead of to the nearest ally. With nobody locked, Next locks the first member and Previous the last."] =
+  "В режиме поддержки смена захвата перебирает участников группы или рейда по порядку, а не переключается на ближайшего союзника. Если никто не захвачен, «следующая» захватывает первого участника, а «предыдущая» — последнего."
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   "Союзник под прицелом получает заклинание, даже если выбрана другая дружественная цель, например через смену союзника. Отключите, чтобы сначала применять заклинание на выбранную цель."
 L["Tap to toggle Support Mode on or off."] =

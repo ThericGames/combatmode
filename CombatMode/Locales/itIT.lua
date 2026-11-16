@@ -444,11 +444,11 @@ L["Hold while in Support Mode to cast the helpful spells on your click-cast butt
   "Tienilo premuto in Modalità supporto per lanciare su di te gli incantesimi benefici dei tuoi pulsanti di clic. Il tuo bersaglio e il Blocco bersaglio restano invariati."
 L["Prioritize Crosshair Target"] = "Dai priorità al bersaglio del mirino"
 L["Cycle NPCs and Pets"] = "Alterna tra PNG e famigli"
-L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too. Turning this off also hides friendly pet and minion nameplates, in and out of Support Mode (only with a Support Mode key bound, and not when Nameplate Behavior is Don't Change)."] =
-  "Cicla blocco in modalità supporto passa normalmente solo tra i giocatori vicini. Attiva questa opzione per includere anche PNG e famigli vicini. Disattivandola vengono nascoste anche le targhette di famigli e servitori amici, dentro e fuori dalla modalità supporto (solo con un tasto della modalità supporto assegnato, e non quando Comportamento delle targhette è impostato su Non modificare)."
+L["In Support Mode, Cycle Lock also moves to nearby NPCs and pets. While off, friendly pet nameplates are hidden, also outside Support Mode."] =
+  "In modalità supporto, Cicla blocco passa anche a PNG e famigli vicini. Finché è disattivata, le targhette dei famigli amici sono nascoste, anche fuori dalla modalità supporto."
 L["Cycle in Group Order"] = "Alterna in ordine di gruppo"
-L["In a party or raid, the Cycle Lock keys move through your group in order while in Support Mode, instead of jumping to the nearest friendly unit. With nobody locked, Next locks the first member and Previous the last."] =
-  "In un gruppo o in un'incursione, i tasti Cicla blocco scorrono il tuo gruppo in ordine in modalità supporto, invece di passare all'unità amica più vicina. Se nessuno è bloccato, Successivo blocca il primo membro e Precedente l'ultimo."
+L["In Support Mode, Cycle Lock moves through your party or raid in group order instead of to the nearest ally. With nobody locked, Next locks the first member and Previous the last."] =
+  "In modalità supporto, Cicla blocco scorre il tuo gruppo o la tua incursione in ordine, invece di passare all'alleato più vicino. Se nessuno è bloccato, Successivo blocca il primo membro e Precedente l'ultimo."
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   "L'alleato sotto il mirino riceve l'incantesimo anche se hai selezionato un altro bersaglio amico, come una scelta del Ciclo alleati. Disattiva per lanciare prima sul bersaglio selezionato."
 L["Tap to toggle Support Mode on or off."] =

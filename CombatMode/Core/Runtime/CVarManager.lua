@@ -1209,18 +1209,14 @@ local SUPPORT_ENEMY_PLATES = "nameplateShowEnemies"
 -- nameplateShowFriendlyPlayers on Mainline and Forever, nameplateShowFriends on older Classic.
 local SUPPORT_FRIENDLY_PLATES = { "nameplateShowFriendlyPlayers", "nameplateShowFriends" }
 
--- Pets, guardians, totems and other minions of friendly players ("Minions" under Friendly
--- Players in the game's options). Blizzard's own settings and Commentator code use these names
--- on every current client branch; a CVar a client doesn't have is skipped. They are a standing
--- setting (CM.ApplySupportModePetNameplates), not part of the mode swap: at least one of them is
--- protected in combat, and they only show while friendly nameplates do anyway. Friendly NPC
--- nameplates (nameplateShowFriendlyNpcs, a separate checkbox) are left to the player.
-local SUPPORT_PET_PLATES = {
-  "nameplateShowFriendlyPlayerPets",
-  "nameplateShowFriendlyPlayerGuardians",
-  "nameplateShowFriendlyPlayerTotems",
-  "nameplateShowFriendlyPlayerMinions",
-}
+-- Pet, guardian, totem and other minion nameplates of friendly players: the "Minions" checkbox
+-- under Friendly Players in the game's options. It is a standing setting
+-- (CM.ApplySupportModePetNameplates), not part of the mode swap: it is protected in combat, and
+-- minion nameplates only show while friendly nameplates do anyway. Only this CVar is written:
+-- the per-type ones (nameplateShowFriendlyPlayerPets / Guardians / Totems) have no checkbox, so
+-- a player could not turn them back on. Friendly NPC nameplates (nameplateShowFriendlyNpcs, a
+-- separate checkbox) are left to the player.
+local SUPPORT_PET_PLATE = "nameplateShowFriendlyPlayerMinions"
 
 local function FriendlyNameplateCVar()
   for _, name in ipairs(SUPPORT_FRIENDLY_PLATES) do
@@ -1364,7 +1360,42 @@ local function IsCVarPerCharacter(name)
   return cached
 end
 
---- Pet / guardian / totem / minion nameplates as a standing game setting (the maintainer's
+--- Puts a remembered CVar value back and forgets it. Still "0" = still our write; anything else
+--- was set since and stays. False when combat blocks the write (the value stays remembered).
+local function RestoreRememberedCVar(saved, name)
+  local remembered = saved[name]
+  if GetCVar(name) == "0" and remembered ~= "0" then
+    if IsCVarLockedNow(name) then
+      return false
+    end
+    SetCVar(name, remembered)
+  end
+  saved[name] = nil
+  return true
+end
+
+--- Restores everything `owner.supportModeSavedPetNameplates` remembers except `keepName`, then
+--- drops the table once it is empty. Also puts back CVars an earlier build hid (the per-type
+--- ones). False when combat blocked a write.
+local function RestorePetNameplates(owner, keepName)
+  local saved = owner.supportModeSavedPetNameplates
+  if type(saved) ~= "table" then
+    owner.supportModeSavedPetNameplates = nil
+    return true
+  end
+  local complete = true
+  for name in pairs(saved) do
+    if name ~= keepName and not RestoreRememberedCVar(saved, name) then
+      complete = false
+    end
+  end
+  if next(saved) == nil then
+    owner.supportModeSavedPetNameplates = nil
+  end
+  return complete
+end
+
+--- Friendly minion nameplates (SUPPORT_PET_PLATE) as a standing game setting (the maintainer's
 --- design: set it when the option changes and on load, never on the mode swap, so nothing has
 --- to wait for combat to end). Hidden ("0") while Support Mode is in use on this character
 --- (CM.IsSupportModeEnabled), the Nameplate Behavior dropdown is not "keep" and Cycle NPCs and
@@ -1391,46 +1422,32 @@ function CM.ApplySupportModePetNameplates(forceRestore)
     and CM.IsSupportModeEnabled()
     and SUPPORT_NAMEPLATE_MODES[char.supportModeNameplateMode] ~= nil
     and not CM.DbBool(char.supportModeCycleNPCs, false)
-  local complete = true
-  for _, name in ipairs(SUPPORT_PET_PLATES) do
-    local current = GetCVar(name)
-    if current ~= nil then
-      local owner = IsCVarPerCharacter(name) and char or globalDB
-      local saved = owner.supportModeSavedPetNameplates
-      if type(saved) ~= "table" then
-        saved = nil
-      end
-      local remembered = saved and saved[name]
-      if hide then
-        if remembered == nil then
-          if current ~= "0" and IsCVarLockedNow(name) then
-            complete = false
-          else
-            if not saved then
-              saved = {}
-              owner.supportModeSavedPetNameplates = saved
-            end
-            saved[name] = current
-            if current ~= "0" then
-              SetCVar(name, "0")
-            end
-          end
-        end
-      elseif remembered ~= nil then
-        -- Still "0" = still our write. Anything else was set since and stays.
-        if current ~= "0" or remembered == "0" then
-          saved[name] = nil
-        elseif IsCVarLockedNow(name) then
-          complete = false
-        else
-          SetCVar(name, remembered)
-          saved[name] = nil
-        end
-        if next(saved) == nil then
-          owner.supportModeSavedPetNameplates = nil
-        end
-      end
-    end
+  local name = SUPPORT_PET_PLATE
+  local perCharacter = IsCVarPerCharacter(name)
+  local owner = perCharacter and char or globalDB
+  -- The other table only holds something an earlier build left there.
+  local complete = RestorePetNameplates(perCharacter and globalDB or char, nil)
+  if not RestorePetNameplates(owner, hide and name or nil) then
+    complete = false
+  end
+  if not hide then
+    return complete
+  end
+  local current = GetCVar(name)
+  local saved = owner.supportModeSavedPetNameplates
+  if current == nil or (saved and saved[name] ~= nil) then
+    return complete
+  end
+  if current ~= "0" and IsCVarLockedNow(name) then
+    return false
+  end
+  if not saved then
+    saved = {}
+    owner.supportModeSavedPetNameplates = saved
+  end
+  saved[name] = current
+  if current ~= "0" then
+    SetCVar(name, "0")
   end
   return complete
 end
