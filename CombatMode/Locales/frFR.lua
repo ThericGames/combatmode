@@ -841,3 +841,7 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "La macro « %s » ne tient plus avec la préligne actuelle ; modifiez-la depuis les macros de ciblage par réticule."
 L["Click to print URL to chat"] = "Cliquez pour afficher l'URL dans le chat"
+
+L["Self-cast outside Support Mode"] = "Lancer sur soi hors du mode Soutien"
+L["Cast helpful Reticle Targeting spells on yourself automatically outside Support Mode. In Support Mode, hold the Self-Cast Keybind for occasional self-heals."] =
+  "Lancez automatiquement sur vous les sorts bénéfiques du ciblage au réticule hors du mode Soutien. En mode Soutien, maintenez le raccourci de lancement sur soi pour vous soigner ponctuellement."

@@ -733,3 +733,7 @@ L["Macro is %d characters over the %d limit."] = true
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   true
 L["Click to print URL to chat"] = true
+
+L["Self-cast outside Support Mode"] = true
+L["Cast helpful Reticle Targeting spells on yourself automatically outside Support Mode. In Support Mode, hold the Self-Cast Keybind for occasional self-heals."] =
+  true

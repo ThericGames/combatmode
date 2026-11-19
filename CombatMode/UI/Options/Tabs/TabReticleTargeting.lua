@@ -7,7 +7,7 @@
 --  Also hosts the Reticle Targeting Macros shelf (option below the spell lists).
 --  The CVar and macro-preline editors live on Advanced.
 --  Architecture / how it works:
---    • DB.char: reticleTargeting, autoTargetLockOnAttack,
+--    • DB.char: reticleTargeting, autoTargetLockOnAttack, supportModeSelfCast,
 --      targetLockBehavior (Target Lock Behavior dropdown: toggle / switch),
 --      macroInjectionClickCastOnly, stickyCrosshair, excludeFromTargetingSpells,
 --      castAtCursorSpells.
@@ -300,6 +300,21 @@ UI.Options.AddTab({
       end,
     })
     ctx:Gap()
+    ctx:Toggle({
+      label = L["Self-cast outside Support Mode"],
+      desc = L["Cast helpful Reticle Targeting spells on yourself automatically outside Support Mode. In Support Mode, hold the Self-Cast Keybind for occasional self-heals."],
+      charSpecific = true,
+      get = function()
+        return CM.DbBool(CM.DB.char.supportModeSelfCast, false)
+      end,
+      set = function(value)
+        CM.DB.char.supportModeSelfCast = value
+        CM.RefreshClickCastMacros()
+      end,
+      disabled = function()
+        return not CM.DB.char.reticleTargeting
+      end,
+    })
     ctx:SpellMultiSelect({
       label = L["Excluded Spells"],
       desc = L["Spells to skip the reticle targeting logic."],

@@ -39,6 +39,8 @@ paths:
 
 ## TargetingMacroBuilder.lua notes
 
+- **Self-cast outside Support Mode** is an opt-in Reticle Targeting setting for helpful spells on keyboard and Click Casting proxies. They reuse the second return from `SupportCastLine`, also used by the Support Mode self-cast hold key. While Support Mode is active, keyboard proxies keep ordinary targeting, and Click Casting uses its ally targeting. Player macros and bars outside Reticle Targeting follow their regular routing.
+
 - Auto-lock prelines: clear dead focus + dead hard target, /tar (soft ,nodead on focus/mouseover branches — harm alone matches corpses), then /focus resync ([nodead] any / [nodead,harm] enemy) so sticky empty-focus cannot leave a dead lock. Cleartarget prevents corpse re-lock on hard target.
 - Helpful spells (Reticle Targeting): no /tar (keep friendly hard target); a hostile under the reticle does not steal it. Not gated on Ally Cycle keybinds (Forever / unbound users). Unclassified + cycle keys bound → treated as help. Harmful + cycle keys → ENEMY / AUTO_LOCK_ENEMY (including solo). Auto-swing uses /startattack or /cast ! or /petattack after /tar. Restore `/targetlasttarget [harm]` is in-group only when cycle keys are bound (not Auto Lock). Its preline also clears a dead focus, falling back to a variant without that line when the whole macro would not fit in 255 (SLIMMER_PRELINE: ElvUI / Bartender with key-down).
 

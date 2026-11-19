@@ -836,3 +836,7 @@ L["Macro is %d characters over the %d limit."] = "A macro excede em %d caractere
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "A macro “%s” não cabe mais com a pré-linha atual; edite-a em Macros de Mira de Alvo."
 L["Click to print URL to chat"] = "Clique para exibir a URL no chat"
+
+L["Self-cast outside Support Mode"] = "Autoconjuração fora do Modo de Suporte"
+L["Cast helpful Reticle Targeting spells on yourself automatically outside Support Mode. In Support Mode, hold the Self-Cast Keybind for occasional self-heals."] =
+  "Lance automaticamente em si mesmo os feitiços benéficos de Mira Direcionada fora do Modo de Suporte. No Modo de Suporte, segure a tecla de autoconjuração quando precisar se curar."

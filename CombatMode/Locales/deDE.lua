@@ -838,3 +838,7 @@ L["Macro is %d characters over the %d limit."] = "Das Makro ist %d Zeichen über
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "Das Makro „%s“ passt mit der aktuellen Vorzeile nicht mehr; bearbeite es unter Fadenkreuz-Zielerfassungs-Makros."
 L["Click to print URL to chat"] = "Klicken, um die URL im Chat auszugeben"
+
+L["Self-cast outside Support Mode"] = "Selbstzauber außerhalb des Unterstützungsmodus"
+L["Cast helpful Reticle Targeting spells on yourself automatically outside Support Mode. In Support Mode, hold the Self-Cast Keybind for occasional self-heals."] =
+  "Wirke hilfreiche Zauber der Fadenkreuz-Zielerfassung außerhalb des Unterstützungsmodus automatisch auf dich selbst. Halte im Unterstützungsmodus für gelegentliche Selbstheilung die Selbstzaubertaste."

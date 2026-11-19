@@ -841,3 +841,7 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "매크로 「%s」이(가) 현재 사전 줄과 함께 들어가지 않습니다. 조준선 대상 지정 매크로에서 편집하세요."
 L["Click to print URL to chat"] = "클릭하여 URL을 대화창에 출력"
+
+L["Self-cast outside Support Mode"] = "지원 모드 밖에서 자신에게 시전"
+L["Cast helpful Reticle Targeting spells on yourself automatically outside Support Mode. In Support Mode, hold the Self-Cast Keybind for occasional self-heals."] =
+  "지원 모드가 꺼져 있으면 조준점 대상 지정으로 사용하는 유익한 주문을 자동으로 자신에게 시전합니다. 지원 모드에서 자신을 치유하려면 자신에게 시전 단축키를 누르고 계세요."

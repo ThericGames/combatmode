@@ -318,8 +318,8 @@ end
 -- text; only a helpful spell on a click-cast mouse button has the third).
 --  • `strict` (click-cast mouse buttons): helpful spells become a cast on your living friendly
 --    hard target (an Ally Cycle pick), else on the ally under the crosshair or soft-targeted
---    (it never changes your target). Keyboard keys keep the normal routing, classified for the
---    support page.
+--    (it never changes your target). Keyboard keys use the support page with ordinary targeting,
+--    without the optional normal-mode self-cast.
 --  • While the mode is on the support page is the one showing, so the normal text is classified
 --    from the page the mode returns to (page 1) instead of the displayed slot.
 local function BuildModeMacroTexts(bindingValue, strict)
@@ -329,13 +329,18 @@ local function BuildModeMacroTexts(bindingValue, strict)
   end
   local page, active = ctx.page, ctx.active
   local isMainBar = bindingValue:match("^ACTIONBUTTON%d+$") ~= nil
-  if not strict and not (page and isMainBar) then
+  if
+    not strict
+    and not (page and isMainBar)
+    and not CM.DbBool(CM.DB.char.supportModeSelfCast, false)
+  then
     return (CM.BuildClickCastMacroText(bindingValue)), nil
   end
   local normalText =
-    CM.BuildClickCastMacroText(bindingValue, active and page and { page = 1 } or nil)
+    CM.BuildClickCastMacroText(bindingValue, { page = active and page and 1 or nil })
   if not strict then
-    return normalText, (CM.BuildClickCastMacroText(bindingValue, { page = page }))
+    return normalText,
+      (CM.BuildClickCastMacroText(bindingValue, { page = page, inSupportMode = true }))
   end
   local supportText, _, selfText =
     CM.BuildClickCastMacroText(bindingValue, { page = page, support = true })
@@ -350,8 +355,8 @@ local function IsSlotMacro(bindingValue)
 end
 
 --- Spell id on the currently displayed action for this binding, or nil if not a spell.
-local function GetSpellIdForActionBarBinding(bindingName)
-  local atype, id = CM.GetDisplayedActionSlotInfo(bindingName)
+local function GetSpellIdForActionBarBinding(bindingName, page)
+  local atype, id = CM.GetDisplayedActionSlotInfo(bindingName, page)
   if atype ~= "spell" or not id or type(id) ~= "number" or id <= 0 then
     return nil
   end
@@ -429,6 +434,8 @@ function CM.ApplyGroundCastKeyOverrides()
     return
   end
 
+  local context = CM.GetSupportModeBuildContext()
+  local normalPage = context and context.active and context.page and 1 or nil
   for bindingIndex, bindingName in ipairs(OrderedBindingNames) do
     local key1 = GetBindingKey(bindingName)
     local key2 = select(2, GetBindingKey(bindingName))
@@ -473,6 +480,9 @@ function CM.ApplyGroundCastKeyOverrides()
             and spellId
             and CM.IsExcludedFromTargetingSpell(spellId)
             and not CM.IsCastAtCursorSpell(spellId)
+            and not CM.ShouldSelfCastOutsideSupport(
+              GetSpellIdForActionBarBinding(bindingName, normalPage)
+            )
           then
             SetOverrideBinding(
               GroundCastKeyOverrideOwner,
@@ -484,6 +494,9 @@ function CM.ApplyGroundCastKeyOverrides()
             local frame = SlotFramesByBindingName[bindingName]
             local macroText, supportText = BuildModeMacroTexts(bindingName, false)
             if frame and macroText then
+              if supportText then
+                CM.SupportModeRegisterProxy(frame)
+              end
               SetClickCastFrameMacro(frame, macroText, supportText)
               -- Party Wheel spell on this key: the wheel's key button runs the same macro on a tap.
               local wheelButton, wheelArg
