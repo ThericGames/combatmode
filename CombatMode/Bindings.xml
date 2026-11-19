@@ -24,6 +24,9 @@
 	<Binding name="Combat Mode - Support Mode" description="Switch your click casts to supporting the ally under the crosshair (press to turn on, press again to turn off)" header="Support Mode" category="|A:::|a|TInterface\Addons\CombatMode\Assets\branding\cmtitle:26:55|t" runOnUp="true">
 		-- Handled by a secure override click (Core/ClickCasting/SupportMode.lua), which wins over this body.
 	</Binding>
+	<Binding name="Combat Mode - Support Mode Self Cast" description="Hold to cast your Support Mode click casts on yourself" category="|A:::|a|TInterface\Addons\CombatMode\Assets\branding\cmtitle:26:55|t" runOnUp="true">
+		-- Handled by a secure override click (Core/ClickCasting/SupportMode.lua), which wins over this body.
+	</Binding>
 	<Binding name="Combat Mode - Radial Menu" description="Hold to open your radial menu, flick toward a slice and release to use it" header="Radial Menu" category="|A:::|a|TInterface\Addons\CombatMode\Assets\branding\cmtitle:26:55|t" runOnUp="true">
 		-- Handled by a secure override click (Core/RadialMenu/Secure.lua), which wins over this body.
 	</Binding>

@@ -47,12 +47,14 @@ local M = CM.METADATA
 
 local CONTENT_W = 348
 local EDITOR_W = CONTENT_W + 32
-local EDITOR_H = 620 -- room for the three slot rows of the main target above the grid
 local SLOT_H = 64
-local PRESET_COLS = 5
+local PRESET_COLS = 3
+local PRESET_ROWS = 2 -- six presets: Arrows, Default, Diamond, Dot, Ornated, Triangle
 local PRESET_GAP = 6
 local PRESET_W = floor((CONTENT_W - (PRESET_COLS - 1) * PRESET_GAP) / PRESET_COLS)
 local PRESET_H = 40
+-- Room for the three slot rows of the main target and the preset rows above the grid.
+local EDITOR_H = 620 + (PRESET_ROWS - 1) * (PRESET_H + PRESET_GAP)
 local CELL = 38
 local CELL_GAP = 4
 local SCROLL_W = 338
@@ -194,17 +196,32 @@ local function ToggleSlotHidden(slot)
   SetSlot(slot, rememberedId[slot] or fallback)
 end
 
---- Mounted and Disabled go back to the Dot and Support to its three chevrons (every preset and
---- Reset to Default pair with them).
-local function ResetIdleSlots()
+--- Support texture a preset comes with: Default has its own chevrons, every other preset uses
+--- the generic Support texture.
+local function PresetSupportId(preset)
+  if preset.Name == "Default" then
+    return CM.Constants.CrosshairSupportDefaultId
+  end
+  return CM.Constants.CrosshairSupportGenericId
+end
+
+--- Mounted and Disabled go back to the Dot and Support to the preset's Support texture (every
+--- preset and Reset to Default pair with them; no preset = Default's).
+local function ResetIdleSlots(preset)
   for slot, key in pairs(IDLE_KEYS) do
     CM.DB.global[key] = IDLE_DEFAULTS[slot]
   end
+  CM.DB.global[IDLE_KEYS.support] =
+    PresetSupportId(preset or CM.Constants.CrosshairTextureObj.Default)
 end
 
-local function IdleSlotsAtDefault()
+local function IdleSlotsAtDefault(preset)
   for slot in pairs(IDLE_KEYS) do
-    if GetIdleId(slot) ~= IDLE_DEFAULTS[slot] then
+    local expected = IDLE_DEFAULTS[slot]
+    if slot == "support" then
+      expected = PresetSupportId(preset)
+    end
+    if GetIdleId(slot) ~= expected then
       return false
     end
   end
@@ -275,11 +292,23 @@ Refresh = function()
   for _, entry in ipairs(presetButtons) do
     Tint(entry.inactive, "base")
     Tint(entry.active, "hostile")
+    -- Each button also shows the preset's Support Mode texture (main target only).
+    Tint(entry.support, "support")
+    entry.support:SetShown(mainTarget)
+    entry.inactive:ClearAllPoints()
+    entry.active:ClearAllPoints()
+    if mainTarget then
+      entry.inactive:SetPoint("CENTER", entry.button, "CENTER", -30, 0)
+      entry.active:SetPoint("CENTER", entry.button, "CENTER", 0, 0)
+    else
+      entry.inactive:SetPoint("RIGHT", entry.button, "CENTER", -1, 0)
+      entry.active:SetPoint("LEFT", entry.button, "CENTER", 1, 0)
+    end
     -- A preset is a full set: Inactive/Active pair plus the default Mounted, Disabled and
     -- Support textures (main).
     local selected = entry.preset.BaseId == baseId
       and entry.preset.ActiveId == activeId
-      and (not mainTarget or IdleSlotsAtDefault())
+      and (not mainTarget or IdleSlotsAtDefault(entry.preset))
     if selected then
       entry.button:cmSetBorderGradient(C.accentTop, C.accentBottom)
     else
@@ -389,7 +418,15 @@ end
 local function MakePresetButton(parent, preset, index)
   local button = CreateFrame("Button", nil, parent)
   button:SetSize(PRESET_W, PRESET_H)
-  button:SetPoint("TOPLEFT", parent, "TOPLEFT", (index - 1) * (PRESET_W + PRESET_GAP), 0)
+  local col = (index - 1) % PRESET_COLS
+  local row = floor((index - 1) / PRESET_COLS)
+  button:SetPoint(
+    "TOPLEFT",
+    parent,
+    "TOPLEFT",
+    col * (PRESET_W + PRESET_GAP),
+    -row * (PRESET_H + PRESET_GAP)
+  )
   UI.StyleControl(button)
 
   local byId = CM.Constants.CrosshairTextureById
@@ -403,6 +440,12 @@ local function MakePresetButton(parent, preset, index)
   active:SetPoint("LEFT", button, "CENTER", 1, 0)
   active:SetTexture(byId[preset.ActiveId].path)
   Tint(active, "hostile")
+  -- Applying a preset also sets the Support card to the preset's Support texture, shown third.
+  local support = button:CreateTexture(nil, "ARTWORK")
+  support:SetSize(26, 26)
+  support:SetPoint("CENTER", button, "CENTER", 30, 0)
+  support:SetTexture(byId[PresetSupportId(preset)].path)
+  Tint(support, "support")
 
   button:SetScript("OnEnter", function(self)
     self:cmControlHover(true)
@@ -413,13 +456,13 @@ local function MakePresetButton(parent, preset, index)
   UI.AttachTooltip(button, preset.Name)
   button:SetScript("OnClick", function()
     if target == "main" then
-      ResetIdleSlots()
+      ResetIdleSlots(preset)
     end
     SetPair(preset.BaseId, preset.ActiveId)
   end)
 
   presetButtons[#presetButtons + 1] =
-    { button = button, preset = preset, inactive = inactive, active = active }
+    { button = button, preset = preset, inactive = inactive, active = active, support = support }
 end
 
 local function MakeCell(parent, entry, index, cols)
@@ -506,7 +549,8 @@ local function Build()
     return a.Name < b.Name
   end)
   local presetHost = CreateFrame("Frame", nil, content)
-  presetHost:SetSize(CONTENT_W, PRESET_H)
+  local presetRows = floor((#presets - 1) / PRESET_COLS) + 1
+  presetHost:SetSize(CONTENT_W, presetRows * (PRESET_H + PRESET_GAP) - PRESET_GAP)
   presetHost:SetPoint("TOPLEFT", presetLabel, "BOTTOMLEFT", 0, -6)
   for i, preset in ipairs(presets) do
     MakePresetButton(presetHost, preset, i)

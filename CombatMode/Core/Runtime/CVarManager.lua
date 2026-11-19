@@ -23,6 +23,8 @@
 --    • SetCursorFreelookCenteringCVar + SetCursorCenteredYPos — FreeLook bounce + Y sync.
 --    • SyncSupportModeNameplates — Support Mode's enemy → friendly nameplate swap; the player's
 --      values wait in global.supportModeSavedNameplates until the mode ends (or Uninstall).
+--      ApplySupportModePetNameplates — pet / minion nameplates hidden as a standing setting
+--      while Cycle NPCs and Pets is off (supportModeSavedPetNameplates, in char or global).
 --  Does not: Own SoftTarget UI widgets or freelook state machine.
 --  Related: Constants/CVars.lua, Constants/DatabaseDefaults.lua,
 --  Core/FreeLook/FreeLookController.lua, Core/Crosshair/Crosshair.lua,
@@ -62,6 +64,7 @@ local pcall = _G.pcall
 local tonumber = _G.tonumber
 local type = _G.type
 local tostring = _G.tostring
+local wipe = _G.wipe
 
 -- Suppress snapshot capture while restoring (avoid treating restored values as "prior").
 local restoringCVars = false
@@ -162,6 +165,7 @@ function CM.RestorePriorCVars()
   cameraSpeedDipPending = false
   -- Nameplates Support Mode swapped are not in the snapshot; put the player's own back.
   CM.SyncSupportModeNameplates(true)
+  CM.ApplySupportModePetNameplates(true)
 
   if SnapshotIsPopulated(snap) then
     for name, value in pairs(snap) do
@@ -1205,6 +1209,15 @@ local SUPPORT_ENEMY_PLATES = "nameplateShowEnemies"
 -- nameplateShowFriendlyPlayers on Mainline and Forever, nameplateShowFriends on older Classic.
 local SUPPORT_FRIENDLY_PLATES = { "nameplateShowFriendlyPlayers", "nameplateShowFriends" }
 
+-- Pet, guardian, totem and other minion nameplates of friendly players: the "Minions" checkbox
+-- under Friendly Players in the game's options. It is a standing setting
+-- (CM.ApplySupportModePetNameplates), not part of the mode swap: it is protected in combat, and
+-- minion nameplates only show while friendly nameplates do anyway. Only this CVar is written:
+-- the per-type ones (nameplateShowFriendlyPlayerPets / Guardians / Totems) have no checkbox, so
+-- a player could not turn them back on. Friendly NPC nameplates (nameplateShowFriendlyNpcs, a
+-- separate checkbox) are left to the player.
+local SUPPORT_PET_PLATE = "nameplateShowFriendlyPlayerMinions"
+
 local function FriendlyNameplateCVar()
   for _, name in ipairs(SUPPORT_FRIENDLY_PLATES) do
     if GetCVar(name) ~= nil then
@@ -1237,11 +1250,16 @@ local SUPPORT_NAMEPLATE_MODES = {
   none = { enemy = "0", friendly = "0" },
 }
 
+-- Reused by CM.SyncSupportModeNameplates: CVar name -> the value Support Mode wants right now.
+local supportPlatesWanted = {}
+
 --- Brings the nameplate CVars in line with Support Mode (Core/ClickCasting/SupportMode.lua).
 --- Mode on and char.supportModeNameplateMode is "friendly" / "all" / "none": remember the
---- player's values (once), then show that set of nameplates. Mode off, "keep", or
---- `forceRestore` (Uninstall): put the remembered values back. Returns false when the CVars are
---- protected right now (combat); call again after combat.
+--- player's values (once per CVar), then show that set of nameplates. Pet and minion nameplates
+--- are not part of this (CM.ApplySupportModePetNameplates): they follow the friendly ones.
+--- Mode off, "keep", or `forceRestore` (Uninstall): put the remembered values back.
+--- Returns false when a CVar it had to write is protected right now (combat): the others are
+--- written, that one keeps its old value; call again after combat.
 function CM.SyncSupportModeNameplates(forceRestore)
   local globalDB = CM.DB and CM.DB.global
   local char = CM.DB and CM.DB.char
@@ -1271,31 +1289,167 @@ function CM.SyncSupportModeNameplates(forceRestore)
     return true
   end
   local friendly = FriendlyNameplateCVar()
-  if IsCVarLockedNow(SUPPORT_ENEMY_PLATES) or (friendly and IsCVarLockedNow(friendly)) then
+  local wanted = supportPlatesWanted
+  wipe(wanted)
+  if plates then
+    wanted[SUPPORT_ENEMY_PLATES] = plates.enemy
+    if friendly then
+      wanted[friendly] = plates.friendly
+    end
+  end
+  if plates and not saved then
+    saved = {}
+    globalDB.supportModeSavedNameplates = saved
+  end
+  -- Each CVar on its own: one that is protected right now (combat) waits for the next call and
+  -- must not hold back the others. (Checking them all first stopped the enemy / friendly swap
+  -- in combat while the pet and NPC CVars were on this list.)
+  local complete = true
+  -- A CVar already saved keeps its first snapshot (the mode is on and only an option changed).
+  for name, value in pairs(wanted) do
+    if GetCVar(name) ~= value then
+      if IsCVarLockedNow(name) then
+        complete = false
+      else
+        if saved[name] == nil then
+          saved[name] = GetCVar(name)
+        end
+        SetCVar(name, value)
+      end
+    elseif saved[name] == nil then
+      saved[name] = value
+    end
+  end
+  -- The player's own value goes back for whatever the mode stopped changing (all of it once
+  -- the mode is off).
+  if saved then
+    for name, value in pairs(saved) do
+      if wanted[name] == nil then
+        if GetCVar(name) == value then
+          saved[name] = nil
+        elseif IsCVarLockedNow(name) then
+          complete = false
+        else
+          SetCVar(name, value)
+          saved[name] = nil
+        end
+      end
+    end
+    if not plates and next(saved) == nil then
+      globalDB.supportModeSavedNameplates = nil
+    end
+  end
+  return complete
+end
+
+-- CVar name -> true when the game stores it per character (4th return of GetCVarInfo); anything
+-- else, or unknown, counts as shared by the account. The scope never changes: looked up once.
+local cvarPerCharacter = {}
+
+local function IsCVarPerCharacter(name)
+  local cached = cvarPerCharacter[name]
+  if cached == nil then
+    cached = false
+    local GetCVarInfo = _G.C_CVar.GetCVarInfo
+    if GetCVarInfo then
+      local ok, _, _, _, perCharacter = pcall(GetCVarInfo, name)
+      cached = ok and perCharacter == true
+    end
+    cvarPerCharacter[name] = cached
+  end
+  return cached
+end
+
+--- Puts a remembered CVar value back and forgets it. Still "0" = still our write; anything else
+--- was set since and stays. False when combat blocks the write (the value stays remembered).
+local function RestoreRememberedCVar(saved, name)
+  local remembered = saved[name]
+  if GetCVar(name) == "0" and remembered ~= "0" then
+    if IsCVarLockedNow(name) then
+      return false
+    end
+    SetCVar(name, remembered)
+  end
+  saved[name] = nil
+  return true
+end
+
+--- Restores everything `owner.supportModeSavedPetNameplates` remembers except `keepName`, then
+--- drops the table once it is empty. Also puts back CVars an earlier build hid (the per-type
+--- ones). False when combat blocked a write.
+local function RestorePetNameplates(owner, keepName)
+  local saved = owner.supportModeSavedPetNameplates
+  if type(saved) ~= "table" then
+    owner.supportModeSavedPetNameplates = nil
+    return true
+  end
+  local complete = true
+  for name in pairs(saved) do
+    if name ~= keepName and not RestoreRememberedCVar(saved, name) then
+      complete = false
+    end
+  end
+  if next(saved) == nil then
+    owner.supportModeSavedPetNameplates = nil
+  end
+  return complete
+end
+
+--- Friendly minion nameplates (SUPPORT_PET_PLATE) as a standing game setting (the maintainer's
+--- design: set it when the option changes and on load, never on the mode swap, so nothing has
+--- to wait for combat to end). Hidden ("0") while Support Mode is in use on this character
+--- (CM.IsSupportModeEnabled), the Nameplate Behavior dropdown is not "keep" and Cycle NPCs and
+--- Pets (char.supportModeCycleNPCs) is off: the Cycle Lock keys skip those units, and a
+--- nameplate on them was reported as confusing. That holds outside the mode too.
+---  • Hidden once: the value found is remembered in supportModeSavedPetNameplates (also "0",
+---    as the mark that this ran), and a remembered CVar is not written again. A nameplate the
+---    player (or another addon) turns back on in the game's options therefore stays on until
+---    the option is switched.
+---  • The remembered value goes back as soon as one of the three no longer holds, or on
+---    `forceRestore` (Uninstall), unless the CVar was changed since. Never forced on.
+---  • It is remembered where the game keeps the CVar: in `char` for a per-character CVar, in
+---    `global` otherwise. The option and the key are per character, so one account-wide table
+---    would hand a per-character value to another character.
+--- Returns false when a CVar is protected right now (combat): call again after combat.
+function CM.ApplySupportModePetNameplates(forceRestore)
+  local globalDB = CM.DB and CM.DB.global
+  local char = CM.DB and CM.DB.char
+  if not globalDB or not char then
+    return true
+  end
+  local hide = not forceRestore
+    and CM.IsSupportModeEnabled ~= nil
+    and CM.IsSupportModeEnabled()
+    and SUPPORT_NAMEPLATE_MODES[char.supportModeNameplateMode] ~= nil
+    and not CM.DbBool(char.supportModeCycleNPCs, false)
+  local name = SUPPORT_PET_PLATE
+  local perCharacter = IsCVarPerCharacter(name)
+  local owner = perCharacter and char or globalDB
+  -- The other table only holds something an earlier build left there.
+  local complete = RestorePetNameplates(perCharacter and globalDB or char, nil)
+  if not RestorePetNameplates(owner, hide and name or nil) then
+    complete = false
+  end
+  if not hide then
+    return complete
+  end
+  local current = GetCVar(name)
+  local saved = owner.supportModeSavedPetNameplates
+  if current == nil or (saved and saved[name] ~= nil) then
+    return complete
+  end
+  if current ~= "0" and IsCVarLockedNow(name) then
     return false
   end
-  if plates then
-    -- Already saved = the mode is on and only the dropdown changed: keep the first snapshot.
-    if not saved then
-      saved = { [SUPPORT_ENEMY_PLATES] = GetCVar(SUPPORT_ENEMY_PLATES) }
-      if friendly then
-        saved[friendly] = GetCVar(friendly)
-      end
-      globalDB.supportModeSavedNameplates = saved
-    end
-    if GetCVar(SUPPORT_ENEMY_PLATES) ~= plates.enemy then
-      SetCVar(SUPPORT_ENEMY_PLATES, plates.enemy)
-    end
-    if friendly and GetCVar(friendly) ~= plates.friendly then
-      SetCVar(friendly, plates.friendly)
-    end
-  elseif saved then
-    for name, value in pairs(saved) do
-      SetCVar(name, value)
-    end
-    globalDB.supportModeSavedNameplates = nil
+  if not saved then
+    saved = {}
+    owner.supportModeSavedPetNameplates = saved
   end
-  return true
+  saved[name] = current
+  if current ~= "0" then
+    SetCVar(name, "0")
+  end
+  return complete
 end
 
 --- Restore the player's pre-Combat Mode CVars (snapshot preferred; Blizzard tables fallback).

@@ -1,6 +1,7 @@
 minimum_pre_commit_version: "3.0.0"
 
-# Same gate locally (`pre-commit install`, scripts/lint-changed.ps1) and in CI (.github/workflows/ci.yml).
+# Same gate locally (`pre-commit install --hook-type pre-commit --hook-type pre-push`, scripts/lint-changed.ps1)
+# and in CI (.github/workflows/ci.yml). CI only runs on PRs, so the repo-wide checks also run on pre-push.
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
@@ -30,15 +31,18 @@ repos:
         language: system
         always_run: true
         pass_filenames: false
+        stages: [pre-commit, pre-push]
       - id: check-globals
         name: check-globals (WoW API names)
         entry: pwsh -NoProfile -File scripts/check-globals.ps1
         language: system
         always_run: true
         pass_filenames: false
+        stages: [pre-commit, pre-push]
       - id: test
         name: load test and specs
         entry: pwsh -NoProfile -File scripts/test.ps1 -SkipIfMissing
         language: system
         always_run: true
         pass_filenames: false
+        stages: [pre-commit, pre-push]

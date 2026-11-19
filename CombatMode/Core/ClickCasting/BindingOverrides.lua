@@ -148,7 +148,7 @@ CM.SupportModeRegisterProxy(ToggleFocusTargetButton)
 -- Configurable Target Lock cycle (nearest / previous enemy → focus).
 -- Dedicated Bindings.xml keys + SetOverrideBindingClick (same model as Target Lock).
 -- Duplicate keys are resolved by the engine when the user assigns binds in options.
--- Secure PreClick: UnitExists("focus") → cycle macro; else no-op.
+-- Secure PreClick: UnitExists("focus") → cycle macro; else no-op (CYCLE_FOCUS_PRECLICK).
 local CycleFocusOverrideOwner = CreateFrame("Frame", nil, UIParent)
 
 local CycleFocusEnemyNextButton = CreateFrame(
@@ -168,33 +168,42 @@ local CycleFocusEnemyPrevButton = CreateFrame(
 )
 CycleFocusEnemyPrevButton:SetAttribute("type", "macro")
 CycleFocusEnemyPrevButton:RegisterForClicks("AnyUp", "AnyDown")
-CM.SupportModeRegisterProxy(CycleFocusEnemyNextButton)
-CM.SupportModeRegisterProxy(CycleFocusEnemyPrevButton)
+-- `true`: these two also get a frame ref to the Support Mode handler ("smhandler"), so their
+-- PreClick can read whether the mode is on.
+CM.SupportModeRegisterProxy(CycleFocusEnemyNextButton, true)
+CM.SupportModeRegisterProxy(CycleFocusEnemyPrevButton, true)
+
+-- The keys need a lock to move. One exception: in Support Mode (the handler's `sm` attribute), in
+-- a party or raid, with a roster cycle text (`smnolock`: Cycle in Group Order on), a press
+-- with nobody locked starts the cycle (the macro then clicks Ally Cycle's button with "first" /
+-- "last").
+local CYCLE_FOCUS_PRECLICK = [[
+  local run = UnitExists("focus")
+  if not run and self:GetAttribute("smnolock") then
+    local handler = self:GetFrameRef("smhandler")
+    if handler and handler:GetAttribute("sm") == 1 then
+      run = SecureCmdOptionParse("[group] 1") == "1"
+    end
+  end
+  if run then
+    self:SetAttribute("type", "macro")
+  else
+    self:SetAttribute("type", nil)
+  end
+]]
 
 if SecureHandlerWrapScript then
   SecureHandlerWrapScript(
     CycleFocusEnemyNextButton,
     "PreClick",
     CycleFocusEnemyNextButton,
-    [[
-      if UnitExists("focus") then
-        self:SetAttribute("type", "macro")
-      else
-        self:SetAttribute("type", nil)
-      end
-    ]]
+    CYCLE_FOCUS_PRECLICK
   )
   SecureHandlerWrapScript(
     CycleFocusEnemyPrevButton,
     "PreClick",
     CycleFocusEnemyPrevButton,
-    [[
-      if UnitExists("focus") then
-        self:SetAttribute("type", "macro")
-      else
-        self:SetAttribute("type", nil)
-      end
-    ]]
+    CYCLE_FOCUS_PRECLICK
   )
 end
 
@@ -204,18 +213,25 @@ local function EnsureFocusCycleMacroText()
     return
   end
   -- Second text: Support Mode cycles friendly units instead (the secure key swaps them in combat).
-  -- Players only, unless the Cycle NPCs and Pets option is on.
+  -- Default: the nearest friendly player. Cycle NPCs and Pets adds NPCs and pets to that. Cycle
+  -- in Group Order (default off) walks the party / raid in roster order (Ally Cycle's button)
+  -- while in a group.
   local withNPCs = CM.DbBool(CM.DB.char.supportModeCycleNPCs, false)
-  CM.SetModeMacroText(
-    CycleFocusEnemyNextButton,
-    macros_const.CM_CycleFocusEnemyNext,
-    withNPCs and macros_const.CM_CycleFocusFriendAllNext or macros_const.CM_CycleFocusFriendNext
-  )
-  CM.SetModeMacroText(
-    CycleFocusEnemyPrevButton,
-    macros_const.CM_CycleFocusEnemyPrev,
-    withNPCs and macros_const.CM_CycleFocusFriendAllPrev or macros_const.CM_CycleFocusFriendPrev
-  )
+  local groupOrder = CM.DbBool(CM.DB.char.supportModeCycleGroupOrder, false)
+  local m = macros_const
+  local nextText, prevText
+  if groupOrder then
+    nextText = withNPCs and m.CM_CycleFocusRosterAllNext or m.CM_CycleFocusRosterNext
+    prevText = withNPCs and m.CM_CycleFocusRosterAllPrev or m.CM_CycleFocusRosterPrev
+  else
+    nextText = withNPCs and m.CM_CycleFocusFriendAllNext or m.CM_CycleFocusFriendNext
+    prevText = withNPCs and m.CM_CycleFocusFriendAllPrev or m.CM_CycleFocusFriendPrev
+  end
+  -- Only the roster texts can start a cycle with nobody locked (see CYCLE_FOCUS_PRECLICK).
+  CycleFocusEnemyNextButton:SetAttribute("smnolock", groupOrder)
+  CycleFocusEnemyPrevButton:SetAttribute("smnolock", groupOrder)
+  CM.SetModeMacroText(CycleFocusEnemyNextButton, m.CM_CycleFocusEnemyNext, nextText)
+  CM.SetModeMacroText(CycleFocusEnemyPrevButton, m.CM_CycleFocusEnemyPrev, prevText)
 end
 
 --- Target Lock (focus toggle, wheel cycle, marker, sounds) requires Reticle Targeting.
@@ -291,13 +307,15 @@ end
 
 -- BuildClickCastMacroText moved to TargetingMacroBuilder.lua
 
--- `supportText` (optional) is what the proxy runs while Support Mode is on; the secure key swaps
--- the two in combat (CM.SetModeMacroText).
-local function SetClickCastFrameMacro(frame, macroText, supportText)
-  CM.SetModeMacroText(frame, macroText, supportText)
+-- `supportText` (optional) is what the proxy runs while Support Mode is on, `selfText`
+-- (optional) while its self-cast key is held as well; the secure keys swap them in combat
+-- (CM.SetModeMacroText).
+local function SetClickCastFrameMacro(frame, macroText, supportText, selfText)
+  CM.SetModeMacroText(frame, macroText, supportText, selfText)
 end
 
--- Normal and Support Mode macro texts for a bar binding (nil = no extra text).
+-- Normal, Support Mode and Support Mode self-cast macro texts for a bar binding (nil = no extra
+-- text; only a helpful spell on a click-cast mouse button has the third).
 --  • `strict` (click-cast mouse buttons): helpful spells become a cast on your living friendly
 --    hard target (an Ally Cycle pick), else on the ally under the crosshair or soft-targeted
 --    (it never changes your target). Keyboard keys keep the normal routing, classified for the
@@ -319,8 +337,9 @@ local function BuildModeMacroTexts(bindingValue, strict)
   if not strict then
     return normalText, (CM.BuildClickCastMacroText(bindingValue, { page = page }))
   end
-  local supportText = CM.BuildClickCastMacroText(bindingValue, { page = page, support = true })
-  return normalText, supportText
+  local supportText, _, selfText =
+    CM.BuildClickCastMacroText(bindingValue, { page = page, support = true })
+  return normalText, supportText, selfText
 end
 
 -- Returns true if the given action bar binding currently has a macro in the
@@ -419,7 +438,14 @@ function CM.ApplyGroundCastKeyOverrides()
       -- Never override mouse-button bindings here; click-cast already owns mouse buttons.
       if key and not IsMouseBindingKey(key) then
         local realFrame = CM.GetEffectiveBarButtonFrameName(bindingName)
-        if realFrame and IsSlotMacro(bindingName) then
+        local mixedWithMacro = realFrame
+          and not IsSlotMacro(bindingName)
+          and CM.ActionButtonHasMacroOnOtherBarState(bindingName)
+        if mixedWithMacro then
+          -- A macro sits on another stance / stealth / form bar for this key: the proxy's
+          -- /click would do nothing there, and a swap in combat can't rebuild it. Native bind.
+          SetOverrideBinding(GroundCastKeyOverrideOwner, GROUND_CAST_KEY_PRIORITY, key, bindingName)
+        elseif realFrame and IsSlotMacro(bindingName) then
           -- Slot is a macro: do not inject (nested macro /click is a no-op).
           -- Normal ActionButton/MultiBar: native bind name (same path as page-1 macros).
           -- Bonus/Override/TempShapeshift: click the live frame so Classic-style overlay
@@ -492,14 +518,18 @@ function CM.RefreshClickCastMacros()
     end
     pendingClickCastRefresh = false
     CM.ClearAddonButtonCaches()
+    -- Keep macros built via the Macro Composer in step with the active preline. First: a proxy
+    -- may run a bar macro's text (the other Support Mode page), read while the keys are rebuilt.
+    if CM.RebuildComposedMacros then
+      CM.RebuildComposedMacros()
+    end
+    if CM.ResetInlinedMacroTexts then
+      CM.ResetInlinedMacroTexts()
+    end
     -- Re-apply all bindings so macro slots get "click real button" and spell slots get our frame.
     -- This refreshes both keyboard bindings (via ApplyGroundCastKeyOverrides) and mouse button bindings (via OverrideDefaultButtons)
     CM.OverrideDefaultButtons()
     CM.ApplyGroundCastKeyOverrides()
-    -- Keep Run MACRO macros built via the Macro Composer in step with the active preline.
-    if CM.RebuildComposedMacros then
-      CM.RebuildComposedMacros()
-    end
   end)
 end
 
@@ -574,14 +604,18 @@ function CM.SetNewBinding(buttonSettings)
       valueToUse = value
     else
       local realFrame = CM.GetEffectiveBarButtonFrameName(value)
-      if realFrame and IsSlotMacro(value) then
+      if realFrame and not IsSlotMacro(value) and CM.ActionButtonHasMacroOnOtherBarState(value) then
+        -- Macro on another stance / stealth / form bar for this slot: native binding follows
+        -- every swap (the proxy's /click is a no-op on a macro and can't be rebuilt in combat).
+        valueToUse = value
+      elseif realFrame and IsSlotMacro(value) then
         -- Slot is a macro: bind key to click the real action bar button so the macro runs as written.
         valueToUse = "CLICK " .. realFrame .. ":" .. ClickCastMouseButton(key)
       else
         local frame = ClickCastFramesByKey[key]
-        local macroText, supportText = BuildModeMacroTexts(value, true)
+        local macroText, supportText, selfText = BuildModeMacroTexts(value, true)
         if frame and macroText then
-          SetClickCastFrameMacro(frame, macroText, supportText)
+          SetClickCastFrameMacro(frame, macroText, supportText, selfText)
           valueToUse = "CLICK " .. frame:GetName() .. ":" .. ClickCastMouseButton(key)
         else
           valueToUse = value

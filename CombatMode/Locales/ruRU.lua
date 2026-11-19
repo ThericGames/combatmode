@@ -456,15 +456,24 @@ L["Distance between the Ally HUD and the crosshair."] =
 
 -- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
 L["Support Mode"] = "Режим поддержки"
+L["Support Mode Self-Cast"] = "Режим поддержки: применение к себе"
 L["support mode keybinding"] = "привязка режима поддержки"
+L["support mode self-cast keybinding"] =
+  "привязка применения к себе в режиме поддержки"
 L["SUPPORT MODE"] = "РЕЖИМ ПОДДЕРЖКИ"
 L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
   "Режим поддержки: при включении переключает основную панель команд на отдельную страницу поддержки и позволяет полезным заклинаниям выбирать целью дружественного юнита под прицелом."
 L["Support Mode Keybind"] = "Клавиша режима поддержки"
+L["Self-Cast Keybind"] = "Клавиша применения к себе"
+L["Hold to cast your click-cast helpful spells on yourself. Your target and Target Lock don't change."] =
+  "Удерживайте, чтобы применять полезные заклинания кнопок щелчка к себе. Ваша цель и захват цели не меняются."
 L["Prioritize Crosshair Target"] = "Приоритет цели под прицелом"
 L["Cycle NPCs and Pets"] = "Перебор NPC и питомцев"
-L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too."] =
-  "В режиме поддержки смена захвата обычно переключается только между ближайшими игроками. Включите, чтобы также учитывать ближайших NPC и питомцев."
+L["Cycle Lock also includes nearby NPCs and pets. While off, friendly pet nameplates are hidden."] =
+  "Смена захвата также включает ближайших NPC и питомцев. Пока опция выключена, индикаторы здоровья дружественных питомцев скрыты."
+L["Cycle in Group Order"] = "Перебор в порядке группы"
+L["Cycle Lock follows your party or raid order instead of the nearest ally. The first press locks the first member (Next) or the last (Previous)."] =
+  "Смена захвата идёт по порядку вашей группы или рейда, а не по ближайшему союзнику. Первое нажатие захватывает первого участника («следующая») или последнего («предыдущая»)."
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   "Союзник под прицелом получает заклинание, даже если выбрана другая дружественная цель, например через смену союзника. Отключите, чтобы сначала применять заклинание на выбранную цель."
 L["Tap to toggle Support Mode on or off."] =

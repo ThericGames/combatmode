@@ -21,6 +21,7 @@ Action-combat controls for World of Warcraft: Mouse Look + a reticle replace tab
 ## Commands
 
 - `pwsh ./scripts/lint-changed.ps1` — StyLua + Selene on changed Lua, and `check-repo`, `check-globals` and the load test whenever anything changed. **Run it twice** (the first run reformats). `scripts/dev-check.ps1` checks the toolchain against the versions CI pins.
+- **Before any push to `develop`**, `lint-changed.ps1` must pass (twice). CI only runs on PRs (the release PR), so this and the git hooks (`pre-commit install --hook-type pre-commit --hook-type pre-push`: `check-repo`, `check-globals` and the load test also run on pre-push) are the only gate. Never push with `--no-verify`.
 - `pwsh ./scripts/check-repo.ps1 [-Release]` — changelog sync, TOC vs changelog version, `Embeds.xml` load order, LICENSE copies, TGA compression, Lua headers (format, sections, 40-line cap), 180 top-level locals, no local copies of the `CM.Safe` readers (`-Release`: version newer than the last tag, dated section, compare link).
 - `pwsh ./scripts/test.ps1` — loads every addon file against a stubbed client, once per client in the TOC, then runs `tests/spec_*.lua`. Needs LuaJIT. A pass doesn't replace an in-game check.
 - `pwsh ./scripts/check-globals.ps1 [-Update]` — fails on a `_G.Name` or `C_X.Y` that Blizzard's source doesn't have. Fix a typo in the code. For a real name, run `-Update`, or add it to `scripts/data/wow-globals-manual.txt` with the reason. A name passes if any client has it, so client-specific calls still need their guards.

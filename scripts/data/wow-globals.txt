@@ -6,6 +6,7 @@ C_ActionBar
 C_ActionBar.FindAssistedCombatActionButtons
 C_ActionBar.FindSpellActionButtons
 C_ActionBar.GetActionBarPage
+C_ActionBar.GetActionText
 C_ActionBar.GetBonusBarOffset
 C_ActionBar.HasAssistedCombatActionButtons
 C_ActionBar.HasBonusActionBar

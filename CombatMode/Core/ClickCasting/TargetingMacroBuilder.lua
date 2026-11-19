@@ -48,7 +48,12 @@ local C_CVar = _G.C_CVar
 local C_Spell = _G.C_Spell
 local C_SpellBook = _G.C_SpellBook
 local GetActionInfo = _G.GetActionInfo
+local GetMacroBody = _G.GetMacroBody
+local GetMacroInfo = _G.GetMacroInfo
+local GetNumMacros = _G.GetNumMacros
 local IsInGroup = _G.IsInGroup
+-- The label of an action slot (a macro's name): C_ActionBar on current clients, a global before.
+local GetActionText = (C_ActionBar and C_ActionBar.GetActionText) or _G.GetActionText
 
 -- Lua stdlib
 local ipairs = _G.ipairs
@@ -427,6 +432,37 @@ local function ComputeActionButtonSlotOnPage(buttonNum, page)
   return id + ((page - 1) * buttons)
 end
 
+-- Highest bonus bar offset scanned (druid forms, rogue stealth, warrior stances, shadowform...).
+local MAX_BONUS_BAR_OFFSET = 5
+
+--- True when an ACTIONBUTTON binding can show a macro in another bar state of the main bar:
+--- page 1 or any bonus bar (stance, form, stealth). A key on the reticle proxy runs `/click` on
+--- the bar button, a silent no-op on a macro, and a swap in combat cannot rebuild the key, so
+--- such a key must press the real button (the native binding follows every swap). Reported on
+--- rogues (stealth) and warriors (stances): macros stopped working until combat ended.
+function CM.ActionButtonHasMacroOnOtherBarState(bindingValue)
+  local buttonNum = bindingValue and bindingValue:match("^ACTIONBUTTON(%d+)$")
+  local id = tonumber(buttonNum)
+  local buttons = tonumber(_G.NUM_ACTIONBAR_BUTTONS) or 12
+  if not id or id < 1 or id > buttons then
+    return false
+  end
+  local pages = tonumber(_G.NUM_ACTIONBAR_PAGES) or 6
+  local function IsMacroSlot(slot)
+    local ok, atype = pcall(GetActionInfo, slot)
+    return ok and atype == "macro"
+  end
+  if IsMacroSlot(id) then
+    return true
+  end
+  for offset = 1, MAX_BONUS_BAR_OFFSET do
+    if IsMacroSlot(id + ((pages + offset - 1) * buttons)) then
+      return true
+    end
+  end
+  return false
+end
+
 local function ReadFrameActionId(frameName)
   if not frameName then
     return nil
@@ -549,6 +585,89 @@ local CLICKCAST_WORST_CAST_LINE_LEN = #(
 )
 -- Max editable preline so pre + newline + worst cast stays within SECURE_MACROTEXT_MAX.
 CM.TargetingMacroPrelineMaxLen = SECURE_MACROTEXT_MAX - CLICKCAST_WORST_CAST_LINE_LEN - 1
+
+-- A proxy cannot "/click" a bar button that holds a macro (see above: a silent no-op), so for a
+-- macro slot the proxy runs the macro's own text instead. This only matters for the page that is
+-- not showing when a key's texts are built (Support Mode builds one text per page): the shown
+-- slot, when it is a macro, is bound straight to the real button. Reported by players: after a
+-- Support Mode swap in combat, or one whose refresh was missed, click-cast keys on a slot holding
+-- a macro (a Reticle Targeting Macro on the main bar, say) did nothing until a reload.
+-- The text is the one the macro has when the texts are built; `inlinedMacroTexts` remembers it
+-- so a later macro edit can ask for a rebuild (CM.InlinedMacroTextChanged, UPDATE_MACROS).
+-- The slot's label is the macro's name on every client; GetActionInfo's id is not a macro index
+-- on current ones (Blizzard's ActionButton.lua treats it as a spell id). A name can be shared by
+-- a general and a character macro, and then it does not say which one the slot holds: such a
+-- slot keeps the /click (MacroNameIsUnique).
+local inlinedMacroTexts = {}
+local macroNameCounts -- name -> macros carrying it; built on first use, dropped on each rebuild
+
+local function MacroNameIsUnique(name)
+  if not (GetNumMacros and GetMacroInfo) then
+    return true
+  end
+  if not macroNameCounts then
+    macroNameCounts = {}
+    local globalCount, charCount = GetNumMacros()
+    local accountMax = _G.MAX_ACCOUNT_MACROS or 120
+    local ranges = { 1, globalCount or 0, accountMax + 1, accountMax + (charCount or 0) }
+    for r = 1, #ranges, 2 do
+      for index = ranges[r], ranges[r + 1] do
+        local macroName = GetMacroInfo(index)
+        if macroName then
+          macroNameCounts[macroName] = (macroNameCounts[macroName] or 0) + 1
+        end
+      end
+    end
+  end
+  return (macroNameCounts[name] or 0) <= 1
+end
+
+local function ReadMacroSlotText(slot)
+  local name = GetActionText(slot)
+  if type(name) ~= "string" or name == "" or not MacroNameIsUnique(name) then
+    return nil
+  end
+  local body = GetMacroBody(name)
+  if type(body) ~= "string" or body == "" or #body > SECURE_MACROTEXT_MAX then
+    return nil
+  end
+  return body, name
+end
+
+-- nil = no text to run (unnamed slot, macro gone, an API missing): the caller keeps its /click.
+local function MacroSlotText(slot)
+  if not slot or not GetActionText or not GetMacroBody then
+    return nil
+  end
+  local ok, body, name = pcall(ReadMacroSlotText, slot)
+  if not ok or not body then
+    return nil
+  end
+  inlinedMacroTexts[name] = body
+  return body
+end
+
+--- Forgets the remembered macro texts; BindingOverrides calls it before it rebuilds every key.
+function CM.ResetInlinedMacroTexts()
+  for name in pairs(inlinedMacroTexts) do
+    inlinedMacroTexts[name] = nil
+  end
+  macroNameCounts = nil
+end
+
+--- True when a macro whose text a proxy runs no longer has that text (edited, renamed, deleted).
+function CM.InlinedMacroTextChanged()
+  if not GetMacroBody then
+    return false
+  end
+  for name, body in pairs(inlinedMacroTexts) do
+    local ok, current = pcall(GetMacroBody, name)
+    if not ok or current ~= body then
+      return true
+    end
+  end
+  return false
+end
 
 -- Regular (Auto Target Lock OFF):
 -- Clear dead focus + dead hostile hard target. Focus branch gated on harm so a friendly
@@ -703,9 +822,35 @@ local function AutoLockEnemies(support)
   return not support and CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false)
 end
 
+-- Saved prelines editor text (global.targetingMacroPreline*Override), or nil when unset, blank or
+-- too long to leave room for the trailing /click.
+local function GetPrelineOverride(key)
+  local v = CM.DB and CM.DB.global and CM.DB.global[key]
+  if type(v) ~= "string" then
+    return nil
+  end
+  v = strtrim(v)
+  if v == "" then
+    return nil
+  end
+  -- Oversized saved overrides would truncate the trailing /click; ignore them.
+  local maxLen = CM.TargetingMacroPrelineMaxLen
+  if maxLen and #v > maxLen then
+    return nil
+  end
+  return v
+end
+
+-- Harmful spells with Ally Cycle keys bound. A saved editor override wins over every variant
+-- (plain, restore-after-harm, auto-lock); the restore post-line is still added after the cast.
 local function GetAllyCycleHarmPreLine(support)
   if AutoLockEnemies(support) then
-    return CLICKCAST_PRE_LINE_AUTO_LOCK_ENEMY
+    return GetPrelineOverride("targetingMacroPrelineAutoLockEnemyOverride")
+      or CLICKCAST_PRE_LINE_AUTO_LOCK_ENEMY
+  end
+  local override = GetPrelineOverride("targetingMacroPrelineEnemyOverride")
+  if override then
+    return override
   end
   if AllyCycleRestoreAfterHarm() then
     return CLICKCAST_PRE_LINE_ALLY_HARM_RESTORE
@@ -782,28 +927,11 @@ end
 -- Settings-only preline (Auto Target Lock, honoring editor overrides).
 -- No per-spell ally-cycle routing; shared with the macro composer.
 function CM.GetActiveTargetingPreline(support)
-  local function GetOverride(key)
-    local v = CM.DB and CM.DB.global and CM.DB.global[key]
-    if type(v) ~= "string" then
-      return nil
-    end
-    v = strtrim(v)
-    if v == "" then
-      return nil
-    end
-    -- Oversized saved overrides would truncate the trailing /click; ignore them.
-    local maxLen = CM.TargetingMacroPrelineMaxLen
-    if maxLen and #v > maxLen then
-      return nil
-    end
-    return v
-  end
-
   if AutoLockEnemies(support) then
-    return GetOverride("targetingMacroPrelineAutoLockEnemyOverride")
+    return GetPrelineOverride("targetingMacroPrelineAutoLockEnemyOverride")
       or CLICKCAST_PRE_LINE_AUTO_LOCK_ENEMY
   end
-  return GetOverride("targetingMacroPrelineEnemyOverride") or CLICKCAST_PRE_LINE_ENEMY
+  return GetPrelineOverride("targetingMacroPrelineEnemyOverride") or CLICKCAST_PRE_LINE_ENEMY
 end
 
 -- Support Mode (Core/ClickCasting/SupportMode.lua): a helpful spell on a click-cast button only
@@ -817,8 +945,9 @@ end
 --    on you ([@player] last). Off: nothing is cast.
 --  • Self Cast key: [mod:SELFCAST,@player] first, evaluated live (never true when the key is
 --    "None"). Like the game, it also fires on a click bind that includes that key.
--- The addon has no self-cast option of its own: a hold key and a Shift / Ctrl / Alt modifier
--- were built and removed before release.
+-- The addon's own way is the Support Mode self-cast key (a hold; SupportMode.lua), which runs
+-- a separate text (SupportCastLine's second return). A Shift / Ctrl / Alt modifier option was
+-- built and removed before release.
 -- The aimed-at ally: the unit whose model is under the crosshair, else the friendly soft target.
 -- A nameplate is not a mouseover unit in Mouse Look (reported in game: aiming at a friendly
 -- nameplate cast nothing), so Support Mode turns friendly soft targeting on (SoftTargetFriend,
@@ -981,6 +1110,9 @@ end
 -- With Auto Target Lock on, two more lines lock the ally who took the heal (SupportAutoLockText,
 -- or SupportAutoLockTargetText when Prioritize Crosshair Target is on as well).
 -- nil = no name yet: the caller keeps SupportPreLine + /click (which never auto-locks).
+-- Second return: the text for the Support Mode self-cast key (SupportMode.lua swaps it in while
+-- that key is held): the spell on you and nothing else, so the target, the lock and the
+-- Shoulder Offset camera stay as they are (/tar player + /click re-centres that camera).
 local function SupportCastLine(spellId)
   if not spellId or not (C_Spell and C_Spell.GetSpellInfo) then
     return nil
@@ -997,19 +1129,20 @@ local function SupportCastLine(spellId)
       name = name .. "(" .. subtext .. ")"
     end
   end
+  local selfText = "/cast [@player] " .. name
   local units = SUPPORT_SELF_KEY .. SupportCastUnits()
   local selfCast = AutoSelfCastOn() and "[@player]" or ""
   local text
   if CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false) then
     local combined = SupportAutoLockTargetText(selfCast, name)
     if combined then
-      return combined
+      return combined, selfText
     end
     text = SupportAutoLockText(units, selfCast, name)
   end
   text = text
     or ("/cast " .. units .. SUPPORT_DEAD_TARGET .. SUPPORT_DEAD_LOCK .. selfCast .. " " .. name)
-  return SupportCrosshairTargetLine(text) .. text
+  return SupportCrosshairTargetLine(text) .. text, selfText
 end
 
 -- Second return: true when the Support Mode preline was used.
@@ -1059,7 +1192,8 @@ end
 --- `opts` (optional, Support Mode): `page` classifies an ACTIONBUTTON by that bar page instead of
 --- the shown one; `support = true` gives helpful spells the Support Mode cast (your living
 --- friendly hard target, else the ally under the crosshair or soft-targeted, else you if the
---- game's Self Cast setting says so). Second return: true when that cast was used.
+--- game's Self Cast setting says so). Second return: true when that cast was used; third, with
+--- it: the text to run while the Support Mode self-cast key is held.
 function CM.BuildClickCastMacroText(bindingValue, opts)
   -- When reticle targeting is off, no macro wrapping (no pre-line, no castAtCursor, no excludeFromTargeting).
   if not CM.DB.char.reticleTargeting then
@@ -1112,7 +1246,8 @@ function CM.BuildClickCastMacroText(bindingValue, opts)
   -- suggestion is a non-combat or placeholder spell, e.g. right after loading).
   local isAssistedButton = false
   if atype == "macro" then
-    return castLine
+    -- A proxy only gets here for a page that is not showing: run the macro's text (MacroSlotText).
+    return MacroSlotText(slot) or castLine
   end
   if atype then
     local idNum = tonumber(id)
@@ -1169,19 +1304,19 @@ function CM.BuildClickCastMacroText(bindingValue, opts)
   local routeOverride = isAssistedButton and "harm" or nil
   local pre, supportPreline = GetClickCastPreLine(spellIdForPreline, routeOverride, opts)
   if supportPreline then
-    local supportLine = SupportCastLine(spellIdForPreline)
+    local supportLine, selfText = SupportCastLine(spellIdForPreline)
     if supportLine then
-      return supportLine, true
+      return supportLine, true, selfText
     end
   end
   local post = GetClickCastPostLine(spellIdForPreline, routeOverride, opts)
   -- Do not prefix pre-line with [nooverridebar]; that can be misinterpreted in combat and echo to chat.
-  local function Assemble(preLine)
+  local function Assemble(preLine, withPost)
     local text = castLine
     if preLine then
       text = preLine .. "\n" .. text
     end
-    if post then
+    if post and withPost ~= false then
       text = text .. "\n" .. post
     end
     return text
@@ -1190,7 +1325,13 @@ function CM.BuildClickCastMacroText(bindingValue, opts)
   -- A preline with a slimmer stand-in gives way when the whole macro would not fit in 255.
   local slimmer = pre and SLIMMER_PRELINE[pre]
   if slimmer and #text > SECURE_MACROTEXT_MAX then
-    text = Assemble(slimmer)
+    pre = slimmer
+    text = Assemble(pre)
+  end
+  -- A long editor override can still pass 255 with the restore post-line, which would cut the
+  -- post-line mid-command. Drop it instead (the /click must stay whole).
+  if post and #text > SECURE_MACROTEXT_MAX then
+    text = Assemble(pre, false)
   end
   return text, supportPreline or false
 end

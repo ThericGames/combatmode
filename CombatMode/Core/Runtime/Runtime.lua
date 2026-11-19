@@ -376,13 +376,6 @@ function CM.InitDatabase()
       savedSituational
     ) or CM.Constants.CrosshairSituationalHidden
   end
-  -- The Diamond preset became the Dot: the Mounted / Disabled / Support slots saved with its ids move over.
-  for _, key in ipairs({ "crosshairMountedId", "crosshairTargetLockId", "crosshairSupportId" }) do
-    local moved = CM.Constants.CrosshairLegacyIds[sv.global[key]]
-    if moved then
-      sv.global[key] = moved
-    end
-  end
 
   if type(sv.char) ~= "table" then
     sv.char = {}

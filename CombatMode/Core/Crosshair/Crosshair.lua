@@ -437,7 +437,7 @@ local DebugCrosshairFrame = CreateFrame("Frame", "CombatModeDebugCrosshairFrame"
 DebugCrosshairFrame:SetFrameStrata("DIALOG")
 DebugCrosshairFrame:SetFrameLevel(0)
 local DebugCrosshairTexture = DebugCrosshairFrame:CreateTexture(nil, "OVERLAY")
-DebugCrosshairTexture:SetTexture(CM.Constants.CrosshairTextureObj.Dot.Base)
+DebugCrosshairTexture:SetTexture(CM.Constants.CrosshairTextureObj.Diamond.Base)
 DebugCrosshairTexture:SetAllPoints(DebugCrosshairFrame)
 DebugCrosshairTexture:SetBlendMode("BLEND")
 DebugCrosshairTexture:SetVertexColor(0, 1, 0, 1)

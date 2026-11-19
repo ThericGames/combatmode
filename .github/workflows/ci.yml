@@ -1,9 +1,11 @@
 name: CI
 
+# Solo workflow: develop is checked locally (scripts/lint-changed.ps1), so CI runs only on PRs, i.e.
+# the develop -> master release PR (ci + release-gate). Pushes to develop and master don't run it;
+# use Actions > CI > Run workflow to run it by hand.
 on:
   pull_request:
-  push:
-    branches: [master, develop]
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.event.pull_request.number || github.ref }}
@@ -21,6 +23,7 @@ jobs:
   ci:
     name: ci
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
 
@@ -40,7 +43,7 @@ jobs:
           pip install pre-commit
 
       - name: Install LuaJIT
-        run: sudo apt-get update && sudo apt-get install -y luajit
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends luajit
 
       - uses: actions/cache@v5
         with:

@@ -169,6 +169,7 @@ local slots = {}
 local offs = {}
 local lastAim = -1
 local lastLeftCentre -- Party Wheel: CM.PartyWheelLeftCentre() as last painted
+local radialLeftCentre = false -- Radial Menu: a slice has been aimed since this open (the close X waits for it)
 local lastCount = 0
 
 -- What the view draws: the Radial Menu, or the Party Wheel (PartyWheel.lua). Both share this one
@@ -376,7 +377,8 @@ local function Build()
   centerName:SetPoint("CENTER", view, "CENTER", 0, 22)
   centerAim = view:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
   centerAim:SetPoint("CENTER", view, "CENTER", 0, 0)
-  -- Cancel marker: shown while the cursor rests in the dead zone, where releasing closes the wheel.
+  -- Cancel marker: shown while the cursor rests in the dead zone, where releasing closes the wheel
+  -- (Radial Menu: only after a slice has been aimed once, so it isn't there the moment it opens).
   closeIcon = CreateFrame("Frame", nil, view)
   closeIcon:SetSize(CLOSE_SIZE, CLOSE_SIZE)
   closeIcon:SetPoint("CENTER")
@@ -1232,13 +1234,18 @@ local function Highlight(aim, n)
   local party = source == SOURCES.party
   -- Party Wheel: the centre is "you" only after the cursor left it (CM.PartyWheelLeftCentre); until
   -- then a centre release casts on your friendly target, so the spell icon stays.
-  local center = aim < 1 and (not party or source.LeftCentre())
+  -- Radial Menu: the close X waits until the cursor has left the centre once and come back.
+  if aim >= 1 then
+    radialLeftCentre = true
+  end
+  local center = aim < 1 and ((party and source.LeftCentre()) or (not party and radialLeftCentre))
   centerGoal = center and 1 or 0
   if first then
     ApplyCenter(centerGoal)
   end
   -- Party Wheel: no centre texts, the centre slot shows the spell or (centre aimed) you.
-  centerName:SetShown(aim >= 1 and not party)
+  -- Radial Menu: the wheel name shows everywhere but over the close X (so on open too).
+  centerName:SetShown(not party and not center)
   centerAim:SetShown(not party)
   SetCenterAim(center, first)
   if aim >= 1 and aim <= n then
@@ -1426,6 +1433,7 @@ function CM.RadialViewShown(kind)
   end
   centerFxSpell = nil -- replay the centre FlipBook on every open
   lastAim = -1
+  radialLeftCentre = false
   centerShownAim = nil
   selAngle = nil
   lastPage = nil

@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/2.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.5.2] - 2026-11-19
+
+### Added
+
+- **Support Mode** has a new **Self-Cast Keybind**. Hold it and the helpful spells on your click-cast buttons land on you, without changing your target or **Target Lock**.
+- **Support Mode** has a new **Cycle in Group Order** option. Turn it on and the **Cycle Lock** keys move through your party or raid in group order, instead of jumping to the nearest player. With nobody locked, **Next** locks the first member of your group and **Previous** the last.
+
+### Changed
+
+- The **Radial Menu** now opens with its wheel name in the centre. The close X appears only after you aim a slice and return to the centre.
+
+### Fixed
+
+- Your edits in the **Prelines Editor** now apply to harmful spells on click-cast buttons and bar keys while the **Ally Cycle** keys are bound. Before, the built-in preline was used instead. A long preline that would push the macro past the 255-character limit now drops the restore-after-harm retarget line instead of cutting it in half.
+- Friendly pet and minion nameplates, which the **Cycle Lock** keys skip, are now hidden when **Cycle NPCs and Pets** is off, in and out of **Support Mode**. Turning the option on restores your own setting.
+- Keys and click-cast buttons on a bar slot that holds a macro on another stance, form or stealth bar no longer stop working after you swap bars in combat (a rogue leaving stealth with an opener, a warrior changing stance). Before, the slot did nothing until combat ended. Such a slot now uses the game's own binding, so its spell skips **Reticle Targeting**.
+- Click-cast buttons no longer stop working after you switch **Support Mode** on or off when the action bar slot holds a macro (such as a **Reticle Targeting Macro**) on one page and a spell on the other. Before, the button did nothing until you reloaded.
+
 ## [5.5.1] - 2026-11-13
 
 ### Added
@@ -15,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The **"i" buttons** explain each feature in more detail, and their tooltip now reads "Learn more about this feature".
 - The **Extra Frames** window picker has a new magnifying-glass button.
-- The **Diamond** crosshair preset is now the **Dot**. A Diamond you picked becomes the Dot.
+- The **Appearance** presets include a new **Dot**.
 - **Minimum Zoom** and the crosshair's **Vertical Position** are now saved per character. Your current values carry over to each of your characters.
 - The **Target Lock** marker now sends out a soft pulse every few seconds.
 
@@ -950,7 +968,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rapidly toggling OPie rings could leave the cursor stuck and visible while Mouse Look was active.
 - Reloading could leave the cursor visible while still in the Mouse Look state after the loading screen.
 
-[Unreleased]: https://github.com/ThericGames/combatmode/compare/5.5.1...HEAD
+[Unreleased]: https://github.com/ThericGames/combatmode/compare/5.5.2...HEAD
+[5.5.2]: https://github.com/ThericGames/combatmode/compare/5.5.1...5.5.2
 [5.5.1]: https://github.com/ThericGames/combatmode/compare/5.5.0...5.5.1
 [5.5.0]: https://github.com/ThericGames/combatmode/compare/5.4.7...5.5.0
 [5.4.7]: https://github.com/ThericGames/combatmode/compare/5.4.6...5.4.7

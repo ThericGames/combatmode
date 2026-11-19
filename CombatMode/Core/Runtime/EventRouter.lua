@@ -11,8 +11,8 @@
 --      check the tick runs, so ground-spell placement frees / re-locks the cursor immediately.
 --    • REFRESH_BINDINGS_EVENTS coalesced via C_Timer so one RefreshClickCastMacros runs
 --      after bursts (also Toggle Focus + Ally Cycle side effects). Self-echo events
---      during apply are suppressed; Assisted Combat suggestion slots and unchanged
---      ACTIONBAR_SLOT_CHANGED are skipped.
+--      (UPDATE_BINDINGS / ACTIONBAR_SLOT_CHANGED only) during apply are suppressed; Assisted
+--      Combat suggestion slots and unchanged ACTIONBAR_SLOT_CHANGED are skipped.
 --    • CAST_FEEDBACK_EVENTS → OnCrosshairCastFeedbackEvent; player casts also
 --      OnAssistedHighlightCastProgress (dark swipe) and SUCCEEDED →
 --      OnAssistedHighlightSpellCast(spellID).
@@ -56,6 +56,14 @@ local clickCastRefreshReason = "bar" -- "cvar" | event name
 local clickCastRefreshSlot = nil -- ACTIONBAR_SLOT_CHANGED payload when present
 local selfBindingEventSuppressUntil = 0
 local lastActionBarFingerprint = nil
+-- The only refresh events our own writes can echo (override bindings, proxy attributes, composed
+-- macro edits), so the only ones the suppression window may drop. It used to drop every refresh
+-- event for 0.5 s after a refresh: a bar page swap (Support Mode key), form change or vehicle
+-- change landing in that window was never processed, and a click-cast key stayed bound for the
+-- other page. Which frame a key clicks depends on whether the shown slot is a macro, so a slot
+-- holding a macro on one page only did nothing until the next refresh or a reload (reported by
+-- players after Support Mode made page swaps common).
+local SELF_ECHO_EVENTS = { UPDATE_BINDINGS = true, ACTIONBAR_SLOT_CHANGED = true }
 
 local function SuppressSelfBindingEvents(seconds)
   local now = GetTime and GetTime() or 0
@@ -231,8 +239,17 @@ local function HandleEventByCategory(category, event, ...)
       end
 
       -- Our own override / attribute writes echo as UPDATE_BINDINGS or ACTIONBAR_SLOT_CHANGED.
-      if IsSelfBindingEventSuppressed() then
+      -- Only those two are dropped: every other event here is a real change.
+      if SELF_ECHO_EVENTS[event] and IsSelfBindingEventSuppressed() then
         return
+      end
+
+      -- A macro edit only matters when a proxy runs that macro's own text (the other Support
+      -- Mode page of a key; TargetingMacroBuilder remembers which).
+      if event == "UPDATE_MACROS" then
+        if not (CM.InlinedMacroTextChanged and CM.InlinedMacroTextChanged()) then
+          return
+        end
       end
 
       -- Assisted Combat suggestion buttons rewrite their slot spell often; that must not

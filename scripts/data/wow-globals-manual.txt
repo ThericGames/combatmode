@@ -27,6 +27,7 @@ SLASH_COMBATMODE2
 SteadyCamAPI
 
 # Engine functions no Blizzard Lua happens to call; confirmed with the wow-api MCP.
+GetActionText
 GetCameraZoom
 GetMacroBody
 GetMacroIndexByName

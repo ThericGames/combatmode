@@ -361,14 +361,22 @@ L["Distance between the Ally HUD and the crosshair."] = true
 
 -- Support Mode: keybind label, notices and options tab (SupportMode.lua, TabSupportMode.lua)
 L["Support Mode"] = true
+L["Support Mode Self-Cast"] = true
 L["support mode keybinding"] = true
+L["support mode self-cast keybinding"] = true
 L["SUPPORT MODE"] = true
 L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
   true
 L["Support Mode Keybind"] = true
+L["Self-Cast Keybind"] = true
+L["Hold to cast your click-cast helpful spells on yourself. Your target and Target Lock don't change."] =
+  true
 L["Prioritize Crosshair Target"] = true
 L["Cycle NPCs and Pets"] = true
-L["Cycle Lock normally moves only between nearby players in Support Mode. Turn this on to include nearby NPCs and pets too."] =
+L["Cycle Lock also includes nearby NPCs and pets. While off, friendly pet nameplates are hidden."] =
+  true
+L["Cycle in Group Order"] = true
+L["Cycle Lock follows your party or raid order instead of the nearest ally. The first press locks the first member (Next) or the last (Previous)."] =
   true
 L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."] =
   true
