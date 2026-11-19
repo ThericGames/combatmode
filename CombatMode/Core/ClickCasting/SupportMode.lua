@@ -31,6 +31,7 @@
 --      CM.RefreshSupportModePetNameplates sets them once per option / key change and on load.
 --    • The mode never survives a reload: CM.InitializeSupportMode turns a leftover support
 --      page back to page 1 and CVarManager restores leftover nameplate CVars.
+--    • With Disable Target Lock on, entering Support Mode clears focus.
 --  Does not: Build macro text (TargetingMacroBuilder), own the proxy buttons or their
 --  bindings (BindingOverrides), or write CVars (CVarManager).
 --  Related: Core/ClickCasting/{TargetingMacroBuilder,BindingOverrides}.lua,
@@ -162,6 +163,11 @@ function CM.IsSupportModeEnabled()
     return false
   end
   return GetBindingKey(BIND_NAME) ~= nil
+end
+
+--- Read at macro-build time so the secure mode swap also works during combat.
+function CM.IsSupportTargetLockEnabled()
+  return not CM.DbBool(CM.DB and CM.DB.char and CM.DB.char.supportModeDisableTargetLock, false)
 end
 
 function CM.IsSupportModeActive()
@@ -327,7 +333,8 @@ local function ApplyImpl()
   -- mode can't use: a hostile one entering, a friendly one leaving. The page swap is optional.
   Handler:SetAttribute(
     "smenter",
-    DROP_HOSTILE_LOCK .. (page and ("\n/changeactionbar " .. page) or "")
+    (CM.IsSupportTargetLockEnabled() and DROP_HOSTILE_LOCK or "/clearfocus")
+      .. (page and ("\n/changeactionbar " .. page) or "")
   )
   Handler:SetAttribute(
     "smexit",

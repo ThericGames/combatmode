@@ -217,10 +217,13 @@ local function EnsureFocusCycleMacroText()
   -- in Group Order (default off) walks the party / raid in roster order (Ally Cycle's button)
   -- while in a group.
   local withNPCs = CM.DbBool(CM.DB.char.supportModeCycleNPCs, false)
-  local groupOrder = CM.DbBool(CM.DB.char.supportModeCycleGroupOrder, false)
+  local lockEnabled = CM.IsSupportTargetLockEnabled()
+  local groupOrder = lockEnabled and CM.DbBool(CM.DB.char.supportModeCycleGroupOrder, false)
   local m = macros_const
   local nextText, prevText
-  if groupOrder then
+  if not lockEnabled then
+    nextText, prevText = "/stopmacro", "/stopmacro"
+  elseif groupOrder then
     nextText = withNPCs and m.CM_CycleFocusRosterAllNext or m.CM_CycleFocusRosterNext
     prevText = withNPCs and m.CM_CycleFocusRosterAllPrev or m.CM_CycleFocusRosterPrev
   else
@@ -283,6 +286,9 @@ end
 --- Support Mode text of the Target Lock key / Toggle Focus actions: friendly units only, same
 --- Target Lock Behavior (Toggle / Switch Target).
 local function SupportFocusMacroText()
+  if not CM.IsSupportTargetLockEnabled() then
+    return "/stopmacro"
+  end
   local macros_const = CM.Constants.Macros
   if CM.DB.char.targetLockBehavior == "switch" then
     return macros_const.CM_SwitchFocusSupport

@@ -841,3 +841,8 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "매크로 「%s」이(가) 현재 사전 줄과 함께 들어가지 않습니다. 조준선 대상 지정 매크로에서 편집하세요."
 L["Click to print URL to chat"] = "클릭하여 URL을 대화창에 출력"
+
+-- Support Mode target locking
+L["Disable Target Lock"] = "대상 고정 비활성화"
+L["Disable manual and automatic Target Lock in Support Mode. Entering Support Mode clears your lock. If you are already in Support Mode, leave and re-enter to clear it."] =
+  "지원 모드에서 수동 및 자동 대상 고정을 비활성화합니다. 지원 모드에 진입하면 대상 고정이 해제됩니다. 이미 지원 모드라면 모드를 종료한 후 다시 켜서 고정을 해제하세요."

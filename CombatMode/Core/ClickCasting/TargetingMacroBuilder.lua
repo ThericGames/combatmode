@@ -13,7 +13,6 @@
 --      global.targetingMacroPreline*Override keys.
 --      char.autoTargetLockOnAttack selects the auto-lock variant (not in Support Mode). Focus is gated
 --      on harm so a friendly Target Lock does not hijack hostile casts.
---    • Auto-lock prelines and helpful-spell routing: see .claude/rules/domain-click-casting.md (TargetingMacroBuilder.lua notes).
 --    • The /click line omits /click's default args (LeftButton, key-up) and only adds
 --      "LeftButton 1" for addon bars with key-down on. CM.TargetingMacroPrelineMaxLen =
 --      255 − worst /click cast − newline (140); editor enforces.
@@ -30,6 +29,7 @@
 --    • Click frame map from CM.Constants.ClickCastBars (ACTIONBUTTON + MultiBar 1–7).
 --    • CM.GetActiveTargetingPreline() — settings-only preline (no per-spell routing), shared
 --      with the Run MACRO composer (ComposedMacros.lua).
+--    • Disable Target Lock in Support Mode skips focus routing and auto-lock on heals.
 --  Does not: Own SecureActionButton frames or SetOverrideBinding (BindingOverrides).
 --  Related: Core/ClickCasting/BindingOverrides.lua,
 --  Core/AllyCycle/{AllyCycle,Cycle}.lua,
@@ -984,8 +984,15 @@ local function SupportAllyOrder()
   return SUPPORT_ALLY_ORDER
 end
 
+local function SupportLockUnit(dead)
+  if not CM.IsSupportTargetLockEnabled() then
+    return ""
+  end
+  return dead and SUPPORT_DEAD_LOCK or SUPPORT_LOCKED_ALLY
+end
+
 local function SupportCastUnits()
-  return SUPPORT_LOCKED_ALLY .. SupportAllyOrder()
+  return SupportLockUnit() .. SupportAllyOrder()
 end
 
 local SUPPORT_SELF_KEY = "[mod:SELFCAST,@player]"
@@ -1060,7 +1067,7 @@ local function SupportCrosshairTargetLine(text)
   if #full + #text <= SECURE_MACROTEXT_MAX then
     return full
   end
-  local short = "/tar " .. SUPPORT_LOCKED_ALLY .. "[@mouseover,help]\n"
+  local short = "/tar " .. SupportLockUnit() .. "[@mouseover,help]\n"
   if #short + #text <= SECURE_MACROTEXT_MAX then
     return short
   end
@@ -1133,7 +1140,7 @@ local function SupportCastLine(spellId)
   local units = SUPPORT_SELF_KEY .. SupportCastUnits()
   local selfCast = AutoSelfCastOn() and "[@player]" or ""
   local text
-  if CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false) then
+  if CM.IsSupportTargetLockEnabled() and CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false) then
     local combined = SupportAutoLockTargetText(selfCast, name)
     if combined then
       return combined, selfText
@@ -1141,7 +1148,15 @@ local function SupportCastLine(spellId)
     text = SupportAutoLockText(units, selfCast, name)
   end
   text = text
-    or ("/cast " .. units .. SUPPORT_DEAD_TARGET .. SUPPORT_DEAD_LOCK .. selfCast .. " " .. name)
+    or (
+      "/cast "
+      .. units
+      .. SUPPORT_DEAD_TARGET
+      .. SupportLockUnit(true)
+      .. selfCast
+      .. " "
+      .. name
+    )
   return SupportCrosshairTargetLine(text) .. text, selfText
 end
 

@@ -841,3 +841,8 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "La macro « %s » ne tient plus avec la préligne actuelle ; modifiez-la depuis les macros de ciblage par réticule."
 L["Click to print URL to chat"] = "Cliquez pour afficher l'URL dans le chat"
+
+-- Support Mode target locking
+L["Disable Target Lock"] = "Désactiver le verrouillage de cible"
+L["Disable manual and automatic Target Lock in Support Mode. Entering Support Mode clears your lock. If you are already in Support Mode, leave and re-enter to clear it."] =
+  "Désactive le verrouillage manuel et automatique en mode soutien. Entrer en mode soutien supprime le verrouillage. Si le mode soutien est déjà actif, quittez-le puis réactivez-le pour effacer le verrouillage."

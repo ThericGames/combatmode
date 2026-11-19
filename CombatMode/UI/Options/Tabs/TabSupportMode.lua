@@ -12,6 +12,7 @@
 --      (CM.RefreshClickCastMacros); both queue themselves in combat.
 --    • Rows are disabled with a notice while Reticle Targeting is off (the mode needs its
 --      click-cast proxies).
+--    • Disable Target Lock leaves click-cast ally targeting available without a focus lock.
 --  Does not: Own the secure state, build macro text or write CVars.
 --  Related: Core/ClickCasting/{SupportMode,BindingOverrides,TargetingMacroBuilder}.lua,
 --  Core/Runtime/CVarManager.lua, Constants/DatabaseDefaults.lua, UI/Options/OptionsPanel.lua
@@ -107,6 +108,22 @@ UI.Options.AddTab({
           CM.AssignNamedKeybind(SELF_BIND_NAME, key)
           Apply()
         end)
+      end,
+      disabled = ReticleTargetingOff,
+      watermarkWhenDisabled = ReticleTargetingNotice,
+    })
+    ctx:Toggle({
+      label = L["Disable Target Lock"],
+      desc = L["Disable manual and automatic Target Lock in Support Mode. Entering Support Mode clears your lock. If you are already in Support Mode, leave and re-enter to clear it."],
+      charSpecific = true,
+      get = function()
+        return CM.DbBool(CM.DB.char.supportModeDisableTargetLock, false)
+      end,
+      set = function(value)
+        CM.DB.char.supportModeDisableTargetLock = value and true or false
+        Apply()
+        CM.ApplyToggleFocusTargetBinding()
+        CM.ApplyCycleFocusBindings()
       end,
       disabled = ReticleTargetingOff,
       watermarkWhenDisabled = ReticleTargetingNotice,
