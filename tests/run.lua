@@ -8,7 +8,7 @@ package.path = root .. "/tests/?.lua;" .. package.path
 local Stub = require("wowstub")
 
 local ADDON = "CombatMode"
-local SPECS = { "spec_safe", "spec_locale", "spec_user_condition", "spec_db" }
+local SPECS = { "spec_safe", "spec_locale", "spec_user_condition", "spec_db", "spec_ping_cursor" }
 local CLIENTS = {
   { name = "retail", pattern = "## Interface:%s*(%d+)" },
   { name = "forever", pattern = "## Interface%-Forever:%s*(%d+)" },

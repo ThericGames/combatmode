@@ -836,3 +836,8 @@ L["Macro is %d characters over the %d limit."] = "A macro excede em %d caractere
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "A macro “%s” não cabe mais com a pré-linha atual; edite-a em Macros de Mira de Alvo."
 L["Click to print URL to chat"] = "Clique para exibir a URL no chat"
+
+-- Auto Unlock: optional cursor aiming for native Ping.
+L["Unlock Cursor for Ping"] = "Liberar cursor para sinais"
+L["Hold a Blizzard Ping binding to aim with the cursor. Release it to resume Mouse Look. Off by default."] =
+  "Segure uma tecla de sinal da Blizzard para mirar com o cursor. Solte para retomar a visão pelo mouse. Desativado por padrão."

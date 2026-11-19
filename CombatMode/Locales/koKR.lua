@@ -841,3 +841,8 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "매크로 「%s」이(가) 현재 사전 줄과 함께 들어가지 않습니다. 조준선 대상 지정 매크로에서 편집하세요."
 L["Click to print URL to chat"] = "클릭하여 URL을 대화창에 출력"
+
+-- Auto Unlock: optional cursor aiming for native Ping.
+L["Unlock Cursor for Ping"] = "핑 사용 시 커서 잠금 해제"
+L["Hold a Blizzard Ping binding to aim with the cursor. Release it to resume Mouse Look. Off by default."] =
+  "블리자드 핑 키를 누르고 있으면 커서로 조준합니다. 놓으면 마우스 시점 제어로 돌아갑니다. 기본값은 꺼짐입니다."

@@ -818,3 +818,8 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "宏“%s”与当前前置行合并后已超出长度限制；请在准星瞄准宏中编辑。"
 L["Click to print URL to chat"] = "点击将 URL 输出到聊天"
+
+-- Auto Unlock: optional cursor aiming for native Ping.
+L["Unlock Cursor for Ping"] = "发送信号时解锁光标"
+L["Hold a Blizzard Ping binding to aim with the cursor. Release it to resume Mouse Look. Off by default."] =
+  "按住暴雪的信号快捷键用光标瞄准。松开后恢复鼠标视角控制。默认关闭。"
