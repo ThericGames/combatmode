@@ -837,3 +837,8 @@ L["Macro is %d characters over the %d limit."] = "La macro supera di %d caratter
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "La macro «%s» non rientra più con la preriga attuale; modificala dalle macro di puntamento a mirino."
 L["Click to print URL to chat"] = "Clicca per stampare l'URL in chat"
+
+-- Target Lock: optional Blizzard focus frame hiding.
+L["Hide Focus Frame"] = "Nascondi riquadro del focus"
+L["Hide Blizzard's focus frame without clearing your focus or Target Lock. Changes made in combat apply after combat ends."] =
+  "Nasconde il riquadro Blizzard e mantiene il focus e il blocco del bersaglio. Le modifiche si applicano a fine combattimento."

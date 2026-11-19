@@ -841,3 +841,8 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "매크로 「%s」이(가) 현재 사전 줄과 함께 들어가지 않습니다. 조준선 대상 지정 매크로에서 편집하세요."
 L["Click to print URL to chat"] = "클릭하여 URL을 대화창에 출력"
+
+-- Target Lock: optional Blizzard focus frame hiding.
+L["Hide Focus Frame"] = "주시 대상 창 숨기기"
+L["Hide Blizzard's focus frame without clearing your focus or Target Lock. Changes made in combat apply after combat ends."] =
+  "주시 대상과 대상 고정을 유지하면서 블리자드의 주시 대상 창을 숨깁니다. 변경 사항은 전투가 끝난 후 적용됩니다."

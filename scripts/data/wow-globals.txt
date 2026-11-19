@@ -121,6 +121,7 @@ DynamicResizeButton_Resize
 EditMacro
 Enum
 EnumerateFrames
+EventRegistry
 FlipCameraYaw
 GameEvent
 GameFontHighlight

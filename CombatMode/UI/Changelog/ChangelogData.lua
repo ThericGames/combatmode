@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The **Radial Menu** now opens with its wheel name in the centre. The close X appears only after you aim a slice and return to the centre.
 
+### Added
+
+- **Hide Focus Frame** in the **Target Lock** section, off by default and saved per character. Hides Blizzard's focus frame while keeping your focus and Target Lock intact. Turning it off restores the frame; changes during combat apply after combat ends.
+
 ### Fixed
 
 - Your edits in the **Prelines Editor** now apply to harmful spells on click-cast buttons and bar keys while the **Ally Cycle** keys are bound. Before, the built-in preline was used instead. A long preline that would push the macro past the 255-character limit now drops the restore-after-harm retarget line instead of cutting it in half.

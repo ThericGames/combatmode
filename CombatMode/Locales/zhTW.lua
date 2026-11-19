@@ -818,3 +818,8 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "巨集「%s」與目前前置行合併後已超出長度限制；請在準星瞄準巨集中編輯。"
 L["Click to print URL to chat"] = "點擊將 URL 輸出到聊天"
+
+-- Target Lock: optional Blizzard focus frame hiding.
+L["Hide Focus Frame"] = "隱藏專注目標框架"
+L["Hide Blizzard's focus frame without clearing your focus or Target Lock. Changes made in combat apply after combat ends."] =
+  "隱藏暴雪的專注目標框架，同時保留專注目標和目標鎖定。變更在戰鬥結束後生效。"

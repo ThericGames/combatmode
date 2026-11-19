@@ -56,6 +56,7 @@
     <Script file="Core\Crosshair\AssistedHighlight\Feedback.lua"/>
     <Script file="Core\Crosshair\AssistedHighlight\Assist.lua"/>
     <Script file="Core\Crosshair\FocusNameplateMarker.lua"/>
+    <Script file="Core\Crosshair\FocusFrameVisibility.lua"/>
     <!-- ALLY CYCLE chrome before Crosshair (InitAllyCycleHUD); Cycle secure button first. -->
     <Script file="Core\AllyCycle\Cycle.lua"/>
     <Script file="Core\AllyCycle\Target.lua"/>

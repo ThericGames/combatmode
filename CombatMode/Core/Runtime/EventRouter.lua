@@ -204,6 +204,7 @@ local function HandleEventByCategory(category, event, ...)
     end,
     FRIENDLY_TARGETING_EVENTS = function()
       if event == "PLAYER_REGEN_ENABLED" then
+        CM.ApplyFocusFrameVisibility()
         if CM.OnAllyCycleCombatEnd then
           CM.OnAllyCycleCombatEnd()
         end
