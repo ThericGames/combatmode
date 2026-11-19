@@ -19,7 +19,7 @@
 --      Action Camera profile keys once after merge.
 --    • global.composedMacros maps macro name -> the body the Macro Composer wrote after the
 --      preline (ComposedMacros.lua auto-rebuilds those macros when the preline changes).
---    • DefaultBindings seeds button1/2 + shift/ctrl/alt mouse slots and Mouse Look toggle.
+--    • DefaultBindings seeds primary mouse slots with modifiers, optional side buttons, and Mouse Look toggle.
 --  Does not: Migrate saved data or apply CVars/bindings at runtime (CVarManager does).
 --  Related: Core/Runtime/Runtime.lua, Core/Runtime/CVarManager.lua,
 --  Core/ClickCasting/TargetingMacroBuilder.lua, UI/Options/Tabs/TabCrosshair.lua,
@@ -75,6 +75,18 @@ local DefaultBindings = {
     enabled = true,
     key = "ALT-BUTTON2",
     value = "CLEARTARGET",
+    macroName = "",
+  },
+  button4 = {
+    enabled = false,
+    key = "BUTTON4",
+    value = "",
+    macroName = "",
+  },
+  button5 = {
+    enabled = false,
+    key = "BUTTON5",
+    value = "",
     macroName = "",
   },
   toggle = { key = "Combat Mode - Mouse Look", value = "BUTTON3" },

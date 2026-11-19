@@ -13,6 +13,7 @@
 --      (CM_ToggleFocusSupport / CM_SwitchFocusSupport / CM_CycleFocus{Friend,Roster}[All]{Next,Prev}),
 --      CM_StartAttack / CM_PetAttack (hostile /tar
 --      then /startattack or /petattack; hides raw Blizzard STARTATTACK / PETATTACK)
+--      CM_LockAndAttack (locks the enemy under the crosshair and starts Auto Attack).
 --    • BLIZZARD_EVENTS groups: UNLOCK/LOCK/FREELOOK_RECONCILE/REMATCH, FRIENDLY_TARGETING,
 --      SELECTION_CIRCLE,
 --      UNCATEGORIZED, REFRESH_BINDINGS (bars/vehicles/CVAR_UPDATE), FOCUS_LOCK,
@@ -27,7 +28,7 @@
 --    • ActionsToProcess = ClickCastBars slots + other bindable Blizzard actions
 --      (pings, arena target/focus, vehicles, party pets, sit/sheath/run, pitch, …);
 --      OverrideActions labels CM-specific clear/toggle/macro choices;
---      ButtonsToOverride lists the 8 mouse slots.
+--      ButtonsToOverride lists the primary mouse slots with modifiers and the side buttons.
 --  Does not: Register events, create macros, or SetOverrideBinding (Bootstrap /
 --  EventRouter / BindingOverrides do).
 --  Related: Core/Runtime/EventRouter.lua, Core/ClickCasting/BindingOverrides.lua,
@@ -92,6 +93,9 @@ CM.Constants.Macros = {
   CM_CycleFocusRosterAllPrev = "/click [@focus,exists,group] CombatModeAllyCycle prev; [group] CombatModeAllyCycle last\n/targetfriend [@focus,exists,nogroup] 1\n/focus [@target,help]",
   -- Click-cast Start Attack / Pet Attack: hostile under the reticle, then swing.
   CM_StartAttack = "/tar [@focus,harm];[nomounted,@mouseover,harm,nodead][nomounted,@anyenemy]\n/startattack",
+  CM_LockAndAttack = "/clearfocus [@focus,dead]\n"
+    .. "/tar [@mouseover,harm,nodead][@focus,harm,nodead]\n"
+    .. "/focus [harm,nodead]\n/startattack [harm,nodead]",
   CM_PetAttack = "/tar [@focus,harm];[nomounted,@mouseover,harm,nodead][nomounted,@anyenemy]\n/petattack",
 }
 
@@ -403,6 +407,7 @@ CM.Constants.OverrideActions = {
   CLEARTARGET = "|cff69ccf0Clear Target|r",
   CLEARFOCUS = "|cff69ccf0Clear Focus|r",
   STARTATTACK = "|cff69ccf0Start Attack|r",
+  LOCKANDATTACK = "|cff69ccf0Lock and Attack|r",
   PETATTACK = "|cff69ccf0Pet Attack|r",
   TOGGLEFOCUSENEMY = "|cff69ccf0Toggle Focus Enemy|r",
   MACRO = "|cff69ccf0Run MACRO|r",
@@ -417,4 +422,6 @@ CM.Constants.ButtonsToOverride = {
   "ctrlbutton2",
   "altbutton1",
   "altbutton2",
+  "button4",
+  "button5",
 }
