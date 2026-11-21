@@ -314,32 +314,33 @@ local function SetClickCastFrameMacro(frame, macroText, supportText, selfText)
   CM.SetModeMacroText(frame, macroText, supportText, selfText)
 end
 
--- Normal, Support Mode and Support Mode self-cast macro texts for a bar binding (nil = no extra
--- text; only a helpful spell on a click-cast mouse button has the third).
---  • `strict` (click-cast mouse buttons): helpful spells become a cast on your living friendly
---    hard target (an Ally Cycle pick), else on the ally under the crosshair or soft-targeted
---    (it never changes your target). Keyboard keys keep the normal routing, classified for the
---    support page.
---  • While the mode is on the support page is the one showing, so the normal text is classified
---    from the page the mode returns to (page 1) instead of the displayed slot.
+-- In either mode, keyboard casts use ordinary targeting with the spell on
+-- the displayed page. Click Casting adds the Support Mode ally and self-cast routes.
 local function BuildModeMacroTexts(bindingValue, strict)
   local ctx = CM.GetSupportModeBuildContext()
   if not ctx then
     return (CM.BuildClickCastMacroText(bindingValue)), nil
   end
-  local page, active = ctx.page, ctx.active
-  local isMainBar = bindingValue:match("^ACTIONBUTTON%d+$") ~= nil
-  if not strict and not (page and isMainBar) then
+
+  local supportPage, normalPage
+  if bindingValue:match("^ACTIONBUTTON%d+$") then
+    supportPage = ctx.page
+    normalPage = ctx.page and (ctx.returnPage or 1)
+  elseif ctx.partner and bindingValue:match("^" .. ctx.partner .. "%d+$") then
+    supportPage, normalPage = ctx.normalPage, ctx.page
+  end
+  if not strict and not supportPage then
     return (CM.BuildClickCastMacroText(bindingValue)), nil
   end
-  local normalText =
-    CM.BuildClickCastMacroText(bindingValue, active and page and { page = 1 } or nil)
-  if not strict then
-    return normalText, (CM.BuildClickCastMacroText(bindingValue, { page = page }))
-  end
-  local supportText, _, selfText =
-    CM.BuildClickCastMacroText(bindingValue, { page = page, support = true })
-  return normalText, supportText, selfText
+  local normalOpts = ctx.active
+    and normalPage
+    and { page = normalPage, fixedPage = ctx.normalPage ~= nil }
+  local normalText = CM.BuildClickCastMacroText(bindingValue, normalOpts or nil)
+  local supportText, _, selfText = CM.BuildClickCastMacroText(
+    bindingValue,
+    { page = supportPage, fixedPage = true, support = strict }
+  )
+  return normalText, supportText, strict and selfText or nil
 end
 
 -- Returns true if the given action bar binding currently has a macro in the

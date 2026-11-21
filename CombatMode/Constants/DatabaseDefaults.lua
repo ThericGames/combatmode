@@ -215,7 +215,7 @@ return false
     useGlobalBindings = true,
     bindings = DefaultBindings,
     -- Support Mode (enable = keybind bound; Core/ClickCasting/SupportMode.lua)
-    supportModePage = 2, -- bar page shown while the mode is on (2-6); 0 = no page swap
+    supportModePage = 2, -- one-way main bar page (2-6); 0 keeps the current page
     -- Nameplates while the mode is on: "keep" (untouched) | "friendly" | "all" | "none"
     supportModeNameplateMode = "friendly",
     -- The unit under the crosshair beats a hard target / Ally Cycle pick (false: the target first)

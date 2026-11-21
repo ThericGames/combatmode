@@ -838,3 +838,8 @@ L["Macro is %d characters over the %d limit."] = "Das Makro ist %d Zeichen über
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "Das Makro „%s“ passt mit der aktuellen Vorzeile nicht mehr; bearbeite es unter Fadenkreuz-Zielerfassungs-Makros."
 L["Click to print URL to chat"] = "Klicken, um die URL im Chat auszugeben"
+L["Swap Bars"] = "Leisten wechseln"
+L["Choose Bar"] = "Leiste wählen"
+L["Action Bar %d"] = "Aktionsleiste %d"
+L["Choose the action bar to exchange with the main bar. Exiting Support Mode restores both bars."] =
+  "Wähle die Aktionsleiste, die mit der Hauptleiste getauscht wird. Beim Verlassen des Unterstützungsmodus werden beide Leisten wiederhergestellt."

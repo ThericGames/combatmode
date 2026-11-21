@@ -733,3 +733,8 @@ L["Macro is %d characters over the %d limit."] = true
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   true
 L["Click to print URL to chat"] = true
+L["Swap Bars"] = true
+L["Choose Bar"] = true
+L["Action Bar %d"] = true
+L["Choose the action bar to exchange with the main bar. Exiting Support Mode restores both bars."] =
+  true

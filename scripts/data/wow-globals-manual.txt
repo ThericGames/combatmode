@@ -26,6 +26,9 @@ SLASH_COMBATMODE2
 # Another addon's API, read only when that addon is loaded.
 SteadyCamAPI
 
+# Blizzard_ActionBar declares this frame in XML. Its actionpage is the native page beneath a temporary swap.
+MainActionBar
+
 # Engine functions no Blizzard Lua happens to call; confirmed with the wow-api MCP.
 GetActionText
 GetCameraZoom

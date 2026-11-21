@@ -2,7 +2,7 @@
 --  UI/Options/Tabs/TabSupportMode.lua — OPTIONS TAB — Support Mode
 ---------------------------------------------------------------------------------------
 --  What it does: Support Mode keybind (a toggle), Self-Cast keybind (a hold), Prioritize
---  Crosshair Target, support bar page,
+--  Crosshair Target, support bar page, the optional two-way bar swap,
 --  Cycle NPCs and Pets, Cycle in Group Order, Vignette tint toggle and the nameplates dropdown. An unbound Support Mode key disables it.
 --  (The Support crosshair color and texture are on the Crosshair tab: Reaction Colors and
 --  Appearance.)
@@ -48,6 +48,16 @@ for page = 2, tonumber(_G.NUM_ACTIONBAR_PAGES) or 6 do
   local id = "p" .. page
   PAGE_VALUES[id] = string.format(L["Page %d"], page)
   PAGE_ORDER[#PAGE_ORDER + 1] = id
+end
+
+local function GetBarPickerOptions()
+  local values, order = {}, {}
+  for _, choice in ipairs(CM.GetSupportModeBarChoices()) do
+    local id = "p" .. choice.page
+    values[id] = string.format(L["Action Bar %d"], choice.label)
+    order[#order + 1] = id
+  end
+  return values, order
 end
 
 local function ReticleTargetingOff()
@@ -179,7 +189,42 @@ UI.Options.AddTab({
         CM.DB.char.supportModePage = tonumber(string.sub(value, 2)) or 0
         Apply()
       end,
-      disabled = ReticleTargetingOff,
+      disabled = function()
+        return ReticleTargetingOff() or CM.IsSupportModeBarSwapEnabled()
+      end,
+      watermarkWhenDisabled = ReticleTargetingNotice,
+    })
+    ctx:Toggle({
+      label = L["Swap Bars"],
+      charSpecific = true,
+      get = CM.IsSupportModeBarSwapEnabled,
+      set = function(value)
+        CM.DB.char.supportModeSwapBars = value
+        Apply()
+      end,
+      disabled = function()
+        return ReticleTargetingOff() or CM.ThirdPartyActionBarsActive
+      end,
+      watermarkWhenDisabled = ReticleTargetingNotice,
+    })
+    local barValues, barOrder = GetBarPickerOptions()
+    ctx:Dropdown({
+      label = L["Choose Bar"],
+      desc = L["Choose the action bar to exchange with the main bar. Exiting Support Mode restores both bars."],
+      charSpecific = true,
+      values = barValues,
+      order = barOrder,
+      get = function()
+        local page = CM.GetSupportModeBarChoice()
+        return page and barValues["p" .. page] and ("p" .. page) or nil
+      end,
+      set = function(value)
+        CM.DB.char.supportModeSwapPage = tonumber(string.sub(value, 2))
+        Apply()
+      end,
+      disabled = function()
+        return ReticleTargetingOff() or not CM.IsSupportModeBarSwapEnabled()
+      end,
       watermarkWhenDisabled = ReticleTargetingNotice,
     })
     ctx:Toggle({

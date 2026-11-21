@@ -836,3 +836,8 @@ L["Macro is %d characters over the %d limit."] = "A macro excede em %d caractere
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "A macro “%s” não cabe mais com a pré-linha atual; edite-a em Macros de Mira de Alvo."
 L["Click to print URL to chat"] = "Clique para exibir a URL no chat"
+L["Swap Bars"] = "Trocar barras"
+L["Choose Bar"] = "Escolher barra"
+L["Action Bar %d"] = "Barra de ação %d"
+L["Choose the action bar to exchange with the main bar. Exiting Support Mode restores both bars."] =
+  "Escolha a barra de ação que trocará de conteúdo com a barra principal. Sair do Modo de Suporte restaura ambas as barras."

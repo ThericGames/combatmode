@@ -883,3 +883,8 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "Макрос «%s» больше не помещается с текущей предстрокой; измените его в разделе макросов наведения по прицелу."
 L["Click to print URL to chat"] = "Нажмите, чтобы вывести ссылку в чат"
+L["Swap Bars"] = "Переключать панели"
+L["Choose Bar"] = "Выбрать панель"
+L["Action Bar %d"] = "Панель команд %d"
+L["Choose the action bar to exchange with the main bar. Exiting Support Mode restores both bars."] =
+  "Выберите панель команд для обмена с основной. При выходе из режима поддержки обе панели восстанавливаются."

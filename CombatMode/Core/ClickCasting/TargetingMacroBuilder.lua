@@ -416,13 +416,13 @@ end
 -- ACTIONBUTTON index → action slot on a given bar page, whichever page is showing now (Support
 -- Mode builds macros for the page it will swap to). Blizzard only shows the bonus bar (forms,
 -- stealth) on page 1 (ActionBarController_UpdateAll).
-local function ComputeActionButtonSlotOnPage(buttonNum, page)
+local function ComputeActionButtonSlotOnPage(buttonNum, page, fixedPage)
   local id = tonumber(buttonNum)
   local buttons = tonumber(_G.NUM_ACTIONBAR_BUTTONS) or 12
   if not id or id < 1 or id > buttons then
     return nil
   end
-  if page == 1 then
+  if page == 1 and not fixedPage then
     local bonusOffset = GetBonusBarOffsetSafe()
     if HasBonusActionBarSafe() and bonusOffset ~= 0 then
       local pages = tonumber(_G.NUM_ACTIONBAR_PAGES) or 6
@@ -488,16 +488,18 @@ end
 --- Currently displayed action for ACTIONBUTTON / MULTIACTIONBAR* bindings.
 --- Prefers the live button action attribute; rejects stale override slots (121–132)
 --- after dismount; falls back to page/bonus math or ResolveClickCastBindingToActionSlot.
---- `page` (optional, ACTIONBUTTON only): the action on that bar page instead of the shown one.
-function CM.GetDisplayedActionSlotInfo(bindingValue, page)
+--- `page` (optional): a specified bar page instead of the one currently showing.
+--- `fixedPage` skips the main bar's stance or bonus-page substitution.
+function CM.GetDisplayedActionSlotInfo(bindingValue, page, fixedPage)
   if not bindingValue or bindingValue == "" then
     return nil
   end
 
   local buttonNum = bindingValue:match("^ACTIONBUTTON(%d+)$")
   local action
-  if page and buttonNum then
-    action = ComputeActionButtonSlotOnPage(buttonNum, page)
+  local pageButton = page and (buttonNum or bindingValue:match("^MULTIACTIONBAR%d+BUTTON(%d+)$"))
+  if pageButton then
+    action = ComputeActionButtonSlotOnPage(pageButton, page, fixedPage or not buttonNum)
   else
     action = ReadFrameActionId(CM.GetEffectiveBarButtonFrameName(bindingValue))
   end
@@ -1238,7 +1240,8 @@ function CM.BuildClickCastMacroText(bindingValue, opts)
 
   -- Classify from the currently displayed slot (paged / bonus / override-aware).
   -- Macros: no pre-line so the macro runs as written (e.g. [mod:shift], [@cursor]).
-  local atype, id, slot = CM.GetDisplayedActionSlotInfo(bindingValue, opts and opts.page)
+  local atype, id, slot =
+    CM.GetDisplayedActionSlotInfo(bindingValue, opts and opts.page, opts and opts.fixedPage)
   local spellIdForPreline
   -- Single-Button Assistant: its slot spell is whatever is suggested right now, so it is never
   -- classified by spell. It gets the harmful targeting route and skips the spell-based exclude /

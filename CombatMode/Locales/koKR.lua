@@ -841,3 +841,8 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "매크로 「%s」이(가) 현재 사전 줄과 함께 들어가지 않습니다. 조준선 대상 지정 매크로에서 편집하세요."
 L["Click to print URL to chat"] = "클릭하여 URL을 대화창에 출력"
+L["Swap Bars"] = "행동 단축바 전환"
+L["Choose Bar"] = "행동 단축바 선택"
+L["Action Bar %d"] = "행동 단축바 %d"
+L["Choose the action bar to exchange with the main bar. Exiting Support Mode restores both bars."] =
+  "주 행동 단축바와 바꿀 단축바를 선택하세요. 지원 모드를 종료하면 두 단축바가 복원됩니다."

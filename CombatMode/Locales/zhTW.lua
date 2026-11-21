@@ -818,3 +818,8 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "巨集「%s」與目前前置行合併後已超出長度限制；請在準星瞄準巨集中編輯。"
 L["Click to print URL to chat"] = "點擊將 URL 輸出到聊天"
+L["Swap Bars"] = "切換快捷列"
+L["Choose Bar"] = "選擇快捷列"
+L["Action Bar %d"] = "快捷列 %d"
+L["Choose the action bar to exchange with the main bar. Exiting Support Mode restores both bars."] =
+  "選擇要與主要快捷列互換的快捷列。離開輔助模式後，兩條快捷列都會復原。"
