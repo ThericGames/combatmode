@@ -840,3 +840,19 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "La macro «%s» ya no cabe con la prelínea actual; edítala desde las macros de selección por retícula."
 L["Click to print URL to chat"] = "Haz clic para mostrar la URL en el chat"
+
+-- Ping preset and optional direct bindings.
+L["Assist"] = "Ayuda"
+L["Attack"] = "Atacar"
+L["On My Way"] = "En camino"
+L["Warning"] = "Advertencia"
+L["Ping"] = "Señal"
+L["Separate Ping Wheel"] = "Rueda de señales independiente"
+L["Separate Ping Wheel (Secondary)"] = "Rueda de señales independiente (secundaria)"
+L["Tap to ping under the crosshair. Hold and release toward a slice to choose a ping."] =
+  "Pulsa para señalar bajo la mira. Mantén pulsado y suelta hacia un segmento para elegir una señal."
+
+-- Auto Unlock: optional cursor aiming for native Ping.
+L["Unlock Cursor for Ping"] = "Liberar cursor para señales"
+L["Hold a Blizzard Ping binding to aim with the cursor. Release it to resume Mouse Look. Off by default."] =
+  "Mantén pulsada una tecla de señal de Blizzard para apuntar con el cursor. Suéltala para volver a la vista con ratón. Desactivado por defecto."

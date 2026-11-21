@@ -73,6 +73,7 @@ local APPLY = [[
       t = owner:GetAttribute("rt" .. cur .. "_" .. i)
       v = owner:GetAttribute("rv" .. cur .. "_" .. i)
     end
+    b:SetAttribute("locationping", i <= n and owner:GetAttribute("rp" .. cur .. "_" .. i) or nil)
     b:SetAttribute("spell", t == "spell" and v or nil)
     b:SetAttribute("item", t == "item" and v or nil)
     b:SetAttribute("macro", t == "macro" and v or nil)
@@ -123,6 +124,8 @@ local KEY_PRE = [[
       return false
     end
     -- One wheel at a time: not while the Party Wheel is open (frame ref set by PartyWheel.lua).
+    local ping = owner:GetFrameRef("ping")
+    if ping and ping:IsShown() then return false end
     local party = owner:GetFrameRef("party")
     if party and party:IsShown() then
       return false
@@ -223,6 +226,8 @@ if SecureHandlerWrapScript then
     slice:SetAttribute("checkfocuscast", false)
     slice:SetAttribute("checkmouseovercast", false)
     slice:EnableMouse(false)
+    slice:SetAttribute("pingwheel", true)
+    CM.HookReticlePingButton(slice)
     -- Pre: leave the click alone and hand "true" to the post body, which closes the wheel.
     SecureHandlerWrapScript(slice, "OnClick", Wheel, "return nil, true", HIDE)
     SecureHandlerSetFrameRef(Wheel, "slice" .. i, slice)
@@ -241,6 +246,9 @@ end
 --- view treat both the same.
 function CM.IsRadialMenuOpen()
   if Wheel ~= nil and Wheel:IsShown() then
+    return true
+  end
+  if CM.IsPingMenuOpen and CM.IsPingMenuOpen() then
     return true
   end
   return CM.IsPartyWheelOpen ~= nil and CM.IsPartyWheelOpen()
@@ -349,6 +357,9 @@ local function StoreImpl()
       end
       Wheel:SetAttribute("rt" .. k .. "_" .. i, kind and (isText and "macrotext" or kind) or nil)
       Wheel:SetAttribute("rv" .. k .. "_" .. i, kind and value or nil)
+      local entry = list and list.entries[i]
+      local action = entry and entry.kind == "action" and CM.RadialActions.byId[entry.id]
+      Wheel:SetAttribute("rp" .. k .. "_" .. i, action and action.locationPing or nil)
     end
   end
   Wheel:SetAttribute("rtotal", #lists)
@@ -377,6 +388,9 @@ end
 local function ApplyAll()
   StoreImpl()
   ApplyBindingImpl()
+  if CM.RefreshPingMenu then
+    CM.RefreshPingMenu()
+  end
 end
 
 --- Re-store the wheels and rebind the key (queued while in combat).

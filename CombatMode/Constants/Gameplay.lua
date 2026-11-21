@@ -100,16 +100,36 @@ CM.Constants.Macros = {
 -- crosshair (@mouseover); the markers prefer the hard target and only use the unit under the
 -- crosshair when there is none.
 --  • Ping System: /ping types are the locale-independent numbers 1 Attack, 2 Warning, 3 On My Way,
---    4 Assist; no type is the contextual ping (Blizzard's "Ping"). Unit pings only: /ping @cursor
---    would use the real cursor position, which stays where the cursor was before Mouse Look.
+--    4 Assist; no type is the contextual ping (Blizzard's "Ping"). The click proxy
+--    centers the real cursor at the reticle before the ground fallback can run.
 --  • Raid target markers: /tm <1-8, 0 clears>.
-CM.Constants.BlizzardActionMacros = {
-  TOGGLEPINGLISTENER = "/ping [@mouseover,exists]",
-  PINGATTACK = "/ping [@mouseover,exists] 1",
-  PINGWARNING = "/ping [@mouseover,exists] 2",
-  PINGONMYWAY = "/ping [@mouseover,exists] 3",
-  PINGASSIST = "/ping [@mouseover,exists] 4",
+-- Target Lock can pin the soft target to a unit away from the reticle.
+-- Use the current mouseover or let Blizzard hit-test the centered cursor for
+-- an NPC or ground point. Neither path changes target or focus.
+local RETICLE_PING_MOUSEOVER = "[@mouseover,exists]"
+function CM.BuildReticlePingMacro(pingType)
+  local suffix = pingType and (" " .. pingType) or ""
+  return "/ping "
+    .. RETICLE_PING_MOUSEOVER
+    .. suffix
+    .. "\n/stopmacro "
+    .. RETICLE_PING_MOUSEOVER
+    .. "\n/ping"
+    .. suffix
+end
+
+CM.Constants.ClickCastPingMacros = {
+  TOGGLEPINGLISTENER = CM.BuildReticlePingMacro(),
+  PINGATTACK = CM.BuildReticlePingMacro(1),
+  PINGWARNING = CM.BuildReticlePingMacro(2),
+  PINGONMYWAY = CM.BuildReticlePingMacro(3),
+  PINGASSIST = CM.BuildReticlePingMacro(4),
 }
+
+CM.Constants.BlizzardActionMacros = {}
+for action, macroText in pairs(CM.Constants.ClickCastPingMacros) do
+  CM.Constants.BlizzardActionMacros[action] = macroText
+end
 CM.Constants.BlizzardActionOrder = {
   "TOGGLEPINGLISTENER",
   "PINGATTACK",

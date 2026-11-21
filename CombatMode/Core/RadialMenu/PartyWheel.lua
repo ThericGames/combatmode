@@ -173,7 +173,8 @@ local KEY_PRE = [[
     local spell = nil
     local radial = owner:GetFrameRef("radial")
     -- One wheel at a time: with the Radial Menu open the key casts as usual.
-    if (owner:GetAttribute("ptotal") or 0) > 0 and not (radial and radial:IsShown()) then
+    local ping = owner:GetFrameRef("ping")
+    if (owner:GetAttribute("ptotal") or 0) > 0 and not (radial and radial:IsShown()) and not (ping and ping:IsShown()) then
       ]] .. LIVE_SLOT .. [[
       if actionSlot then
         local kind, sid = GetActionInfo(actionSlot)

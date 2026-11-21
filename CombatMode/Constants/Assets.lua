@@ -47,6 +47,8 @@ CM.Constants.PopupMsg = L["Welcome to Action Combat Mode!"]
 -- client stores players' key assignments under (and the code looks up by that exact string), so
 -- they stay as they are; these globals only change the text shown for them.
 local BINDING_DISPLAY_NAMES = {
+  { id = "Ping Menu", text = L["Separate Ping Wheel"] },
+  { id = "Ping Menu Secondary", text = L["Separate Ping Wheel (Secondary)"] },
   { id = "Mouse Look", text = L["Mouse Look"] },
   { id = "Flip Camera", text = L["Flip Camera"] },
   { id = "Swap Shoulder", text = L["Swap Shoulder"] },

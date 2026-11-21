@@ -818,3 +818,19 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "巨集「%s」與目前前置行合併後已超出長度限制；請在準星瞄準巨集中編輯。"
 L["Click to print URL to chat"] = "點擊將 URL 輸出到聊天"
+
+-- Ping preset and optional direct bindings.
+L["Assist"] = "協助"
+L["Attack"] = "攻擊"
+L["On My Way"] = "正在路上"
+L["Warning"] = "警告"
+L["Ping"] = "信號"
+L["Separate Ping Wheel"] = "獨立信號轉盤"
+L["Separate Ping Wheel (Secondary)"] = "獨立信號轉盤（第二組）"
+L["Tap to ping under the crosshair. Hold and release toward a slice to choose a ping."] =
+  "輕按可在準星下傳送信號。按住並朝目標扇區放開可選擇信號。"
+
+-- Auto Unlock: optional cursor aiming for native Ping.
+L["Unlock Cursor for Ping"] = "發送信號時解鎖游標"
+L["Hold a Blizzard Ping binding to aim with the cursor. Release it to resume Mouse Look. Off by default."] =
+  "按住暴雪的信號快捷鍵以游標瞄準。放開後恢復滑鼠視角控制。預設關閉。"

@@ -157,6 +157,12 @@ local function AvailableIds(ids, limit)
   return out
 end
 
+function CM.RadialBuildPingWheel()
+  local wheel = PresetWheel(L["Ping"], { "pingattack", "pingwarning", "pingonmyway", "pingassist" })
+  wheel.locked = true
+  return wheel
+end
+
 local PRESETS = {
   {
     key = "interface",
@@ -233,6 +239,12 @@ local PRESETS = {
       )
     end,
   },
+  {
+    key = "ping",
+    label = L["Ping"],
+    build = CM.RadialBuildPingWheel,
+    optIn = true,
+  },
 }
 
 --- { { key, label }, ... } of the preset wheels, in menu order.
@@ -242,8 +254,10 @@ end
 
 local function PresetWheels()
   local wheels = {}
-  for i, preset in ipairs(PRESETS) do
-    wheels[i] = preset.build()
+  for _, preset in ipairs(PRESETS) do
+    if not preset.optIn then
+      wheels[#wheels + 1] = preset.build()
+    end
   end
   return wheels
 end
@@ -364,7 +378,7 @@ end
 function CM.RadialAddSlice(index)
   local wheel = CM.RadialGetWheels()[index]
   local count = CM.RadialSliceCount(wheel)
-  if not wheel or count >= LAYOUT.MAX_SLICES then
+  if not wheel or wheel.locked or count >= LAYOUT.MAX_SLICES then
     return false
   end
   wheel.count = count + 1
@@ -376,7 +390,7 @@ end
 function CM.RadialRemoveSlice(index, slot)
   local wheel = CM.RadialGetWheels()[index]
   local count = CM.RadialSliceCount(wheel)
-  if not wheel or count <= 1 or slot < 1 or slot > count then
+  if not wheel or wheel.locked or count <= 1 or slot < 1 or slot > count then
     return false
   end
   wheel.slots = wheel.slots or {}
@@ -466,7 +480,13 @@ end
 --- entry = nil empties the slot.
 function CM.RadialSetSlot(index, slot, entry)
   local wheel = CM.RadialGetWheels()[index]
-  if not wheel or type(slot) ~= "number" or slot < 1 or slot > LAYOUT.MAX_SLICES then
+  if
+    not wheel
+    or wheel.locked
+    or type(slot) ~= "number"
+    or slot < 1
+    or slot > LAYOUT.MAX_SLICES
+  then
     return
   end
   if entry ~= nil and not ValidEntry(entry) then
@@ -481,7 +501,7 @@ end
 --- permutation of 1..count; slots may have holes).
 function CM.RadialReorderSlots(index, order)
   local wheel = CM.RadialGetWheels()[index]
-  if not wheel or not wheel.slots then
+  if not wheel or wheel.locked or not wheel.slots then
     return
   end
   local count = CM.RadialSliceCount(wheel)

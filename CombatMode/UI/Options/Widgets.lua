@@ -2513,7 +2513,7 @@ end
 --                                   KEYBIND                                         --
 ---------------------------------------------------------------------------------------
 -- Mirrors the AceGUI Keybinding widget capture model:
---   • Left/Right click enters (or cancels) listening — never binds BUTTON1/BUTTON2.
+--   • Left/Right click toggles listening by default. Opt-in rows can capture both while listening.
 --   • Middle / Button4 / Button5 bind via OnMouseDown as BUTTON3/BUTTON4/BUTTON5.
 --   • Mouse wheel and gamepad buttons are also capturable while listening.
 --   • ESC clears the binding; lone modifier keys are ignored.
@@ -2522,8 +2522,6 @@ end
 --   • SetPropagateKeyboardInput must be called inside OnKeyDown per key (Mainline).
 --   • EditBox focus / UISpecialFrames otherwise steal ESC intermittently.
 local IGNORE_KEYS = {
-  BUTTON1 = true,
-  BUTTON2 = true,
   UNKNOWN = true,
   LSHIFT = true,
   RSHIFT = true,
@@ -2534,6 +2532,8 @@ local IGNORE_KEYS = {
 }
 
 local MOUSE_BUTTON_KEYS = {
+  LeftButton = "BUTTON1",
+  RightButton = "BUTTON2",
   MiddleButton = "BUTTON3",
   Button4 = "BUTTON4",
   Button5 = "BUTTON5",
@@ -2711,8 +2711,8 @@ function UI.MakeKeybind(parent, opts)
         keybindCaptureFrame:Hide()
       end
     end
-    -- Defense in depth: never persist LMB/RMB (would unbind camera / turn actions).
-    if IsPrimaryMouseButtonKey(key) then
+    -- Only rows that preserve the normal camera and turn actions opt in.
+    if not opts.allowPrimaryMouse and IsPrimaryMouseButtonKey(key) then
       Options.Sync()
       return
     end
@@ -2730,7 +2730,7 @@ function UI.MakeKeybind(parent, opts)
       applyKey("")
       return
     end
-    if IGNORE_KEYS[key] or IsPrimaryMouseButtonKey(key) then
+    if IGNORE_KEYS[key] or (not opts.allowPrimaryMouse and IsPrimaryMouseButtonKey(key)) then
       return
     end
     local keyPressed = key
@@ -2742,9 +2742,6 @@ function UI.MakeKeybind(parent, opts)
     end
     if _G.IsAltKeyDown() then
       keyPressed = "ALT-" .. keyPressed
-    end
-    if IsPrimaryMouseButtonKey(keyPressed) then
-      return
     end
     applyKey(keyPressed)
   end
@@ -2777,7 +2774,11 @@ function UI.MakeKeybind(parent, opts)
       return
     end
     if listening then
-      stopListening()
+      if opts.allowPrimaryMouse then
+        captureKey(MOUSE_BUTTON_KEYS[mouseButton])
+      else
+        stopListening()
+      end
       return
     end
     startListening()
@@ -2787,7 +2788,9 @@ function UI.MakeKeybind(parent, opts)
     if mouseButton == "LeftButton" or mouseButton == "RightButton" then
       return
     end
-    local key = MOUSE_BUTTON_KEYS[mouseButton] or mouseButton
+    local key = MOUSE_BUTTON_KEYS[mouseButton]
+      or (mouseButton:match("^Button%d+$") and mouseButton:upper())
+      or mouseButton
     captureKey(key)
   end)
 

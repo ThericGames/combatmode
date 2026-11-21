@@ -122,11 +122,26 @@ local CLICKCAST_KEYS = {
   "ALT-BUTTON2",
 }
 local ClickCastFramesByKey = {}
+-- Shared by the Click Casting proxies and the Ping wheel's quick-release proxy.
+function CM.HookReticlePingButton(frame)
+  frame:HookScript("PreClick", function(button, _, down)
+    if not down and button:GetAttribute("locationping") then
+      CM.PrepareLocationPingAtReticle(button:GetAttribute("pingwheel") and button:GetParent())
+    end
+  end)
+  frame:HookScript("PostClick", function(button, _, down)
+    if not down and button:GetAttribute("locationping") then
+      CM.FinishLocationPing()
+    end
+  end)
+end
+
 for i, key in ipairs(CLICKCAST_KEYS) do
   local f =
     CreateFrame("Button", "CombatModeClickCast" .. i, UIParent, "SecureActionButtonTemplate")
   f:SetAttribute("type", "macro")
   f:RegisterForClicks("AnyUp", "AnyDown")
+  CM.HookReticlePingButton(f)
   ClickCastFramesByKey[key] = f
   CM.SupportModeRegisterProxy(f)
 end
@@ -581,18 +596,34 @@ for value, text in pairs(CM.Constants.BlizzardActionMacros) do
 end
 
 function CM.SetNewBinding(buttonSettings)
+  local key = buttonSettings.key
+  local pingAction = CM.GetPingMouseLookAction and CM.GetPingMouseLookAction(key)
+  if pingAction then
+    SetMouselookOverrideBinding(key, pingAction)
+    return
+  end
   if not buttonSettings.enabled then
     return
   end
 
-  local key, value = buttonSettings.key, buttonSettings.value
+  local value = buttonSettings.value
+  local frame = ClickCastFramesByKey[key]
+  if frame and not InCombatLockdown() then
+    local ping = CM.Constants.ClickCastPingMacros[value] ~= nil
+    frame:SetAttribute("locationping", ping or nil)
+    -- The ping and its cursor hook run together on release.
+    if ping then
+      frame:SetAttribute("useOnKeyDown", false)
+    else
+      frame:SetAttribute("useOnKeyDown", nil)
+    end
+  end
   local valueToUse
   if value == "MACRO" then
     valueToUse = "MACRO " .. buttonSettings.macroName
   elseif ActionMacroText(value) then
     -- Combat Mode's own click-cast actions: their macro text goes on this key's proxy button and
     -- the key clicks it, so nothing has to exist in the player's macro list.
-    local frame = ClickCastFramesByKey[key]
     local macroText, supportText = ActionMacroText(value)
     if frame and macroText then
       SetClickCastFrameMacro(frame, macroText, supportText)
@@ -612,7 +643,6 @@ function CM.SetNewBinding(buttonSettings)
         -- Slot is a macro: bind key to click the real action bar button so the macro runs as written.
         valueToUse = "CLICK " .. realFrame .. ":" .. ClickCastMouseButton(key)
       else
-        local frame = ClickCastFramesByKey[key]
         local macroText, supportText, selfText = BuildModeMacroTexts(value, true)
         if frame and macroText then
           SetClickCastFrameMacro(frame, macroText, supportText, selfText)
@@ -633,7 +663,8 @@ function CM.OverrideDefaultButtons()
 end
 
 function CM.ResetBindingOverride(buttonSettings)
-  SetMouselookOverrideBinding(buttonSettings.key, nil)
+  local key = buttonSettings.key
+  SetMouselookOverrideBinding(key, CM.GetPingMouseLookAction and CM.GetPingMouseLookAction(key))
   CM.DebugPrint(buttonSettings.key .. "'s override binding is now cleared")
 end
 

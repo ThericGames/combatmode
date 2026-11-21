@@ -621,6 +621,7 @@ if _G.WOW_PROJECT_ID ~= _G.WOW_PROJECT_MAINLINE then
     talents = { "ToggleTalentFrame" },
     groupfinder = { "PVEFrame_ToggleFrame" },
   }
+
   for _, def in ipairs(DEFINITIONS) do
     local toggle = CLASSIC_TOGGLES[def.id]
     -- Forever has the Retail-style micro buttons, and the addon-run toggle taints its panels (secret
@@ -694,6 +695,30 @@ local function AddOnUsable(name)
   end
   local ok, loadable = pcall(addons.IsAddOnLoadable, name)
   return not ok or loadable == true
+end
+
+for _, ping in ipairs({
+  { "pingattack", L["Attack"], "Ability_Warrior_Charge", 1 },
+  { "pingwarning", L["Warning"], "Spell_Shadow_SoulLeech_3", 2 },
+  { "pingonmyway", L["On My Way"], "Ability_Rogue_Sprint", 3 },
+  { "pingassist", L["Assist"], "Spell_Holy_BlessingOfProtection", 4 },
+}) do
+  Command(ping[1], ping[2], "command", Icon(ping[3]), CM.BuildReticlePingMacro(ping[4]))
+  local def = DEFINITIONS[#DEFINITIONS]
+  def.locationPing = true
+  -- Read the same type/texture-kit mapping that Blizzard uses for its ping wheel.
+  local subject = _G.Enum and _G.Enum.PingSubjectType
+  local subjectNames = { "Attack", "Warning", "OnMyWay", "Assist" }
+  local pingType = subject and subject[subjectNames[ping[4]]]
+  local api = _G.C_Ping
+  if pingType and api and api.GetDefaultPingOptions then
+    for _, option in ipairs(api.GetDefaultPingOptions()) do
+      if option.type == pingType and option.uiTextureKitID then
+        def.icon = "atlas:Ping_Wheel_Icon_" .. option.uiTextureKitID
+        break
+      end
+    end
+  end
 end
 
 local registry = { list = {}, byId = {} }

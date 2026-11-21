@@ -175,6 +175,18 @@ local lastCount = 0
 -- What the view draws: the Radial Menu, or the Party Wheel (PartyWheel.lua). Both share this one
 -- view; it is re-parented to whichever wheel opened. Current() = k, total, entries, title.
 local SOURCES = {
+  ping = {
+    Frame = function()
+      return CM.PingMenuGetFrame()
+    end,
+    Current = function()
+      return CM.PingMenuCurrent()
+    end,
+    Aim = function()
+      return CM.PingMenuAimSlot()
+    end,
+    centreCloses = false,
+  },
   radial = {
     Frame = function()
       return CM.RadialGetWheelFrame and CM.RadialGetWheelFrame()

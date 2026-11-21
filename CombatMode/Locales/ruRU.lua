@@ -883,3 +883,20 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "Макрос «%s» больше не помещается с текущей предстрокой; измените его в разделе макросов наведения по прицелу."
 L["Click to print URL to chat"] = "Нажмите, чтобы вывести ссылку в чат"
+
+-- Ping preset and optional direct bindings.
+L["Assist"] = "Помощь"
+L["Attack"] = "Атака"
+L["On My Way"] = "В пути"
+L["Warning"] = "Предупреждение"
+L["Ping"] = "Сигнал"
+L["Separate Ping Wheel"] = "Отдельное колесо сигналов"
+L["Separate Ping Wheel (Secondary)"] =
+  "Отдельное колесо сигналов (второе)"
+L["Tap to ping under the crosshair. Hold and release toward a slice to choose a ping."] =
+  "Нажмите, чтобы подать сигнал под прицелом. Удерживайте кнопку и отпустите её над сектором, чтобы выбрать сигнал."
+
+-- Auto Unlock: optional cursor aiming for native Ping.
+L["Unlock Cursor for Ping"] = "Освобождать курсор для сигналов"
+L["Hold a Blizzard Ping binding to aim with the cursor. Release it to resume Mouse Look. Off by default."] =
+  "Удерживайте клавишу сигнала Blizzard для прицеливания курсором. Отпустите её для возврата к управлению камерой мышью. По умолчанию выключено."

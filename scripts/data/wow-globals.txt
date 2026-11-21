@@ -63,6 +63,7 @@ C_NamePlate.GetNamePlates
 C_PartyInfo
 C_PetBattles
 C_PetBattles.IsInBattle
+C_Ping
 C_PlayerInteractionManager
 C_SpecializationInfo
 C_SpecializationInfo.GetSpecialization

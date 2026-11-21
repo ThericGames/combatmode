@@ -105,7 +105,11 @@ for _, section in ipairs({
 }) do
   menuOrder[#menuOrder + 1] = section[1]
   for _, action in ipairs(CM.RadialActions.list) do
-    if action.group == section[2] and CM.RadialActions.IsAvailable(action) then
+    if
+      not action.locationPing
+      and action.group == section[2]
+      and CM.RadialActions.IsAvailable(action)
+    then
       menuValues[action.id] = action.label
       menuOrder[#menuOrder + 1] = action.id
     end
@@ -780,12 +784,18 @@ local function BuildWheelRow(ctx)
     end
   end)
   hit:SetScript("OnClick", function(_, mouseButton)
+    if CurrentWheel() and CurrentWheel().locked then
+      return
+    end
     local target = HoverTarget(hovered)
     if target and target:GetScript("OnClick") then
       target:GetScript("OnClick")(target, mouseButton)
     end
   end)
   hit:SetScript("OnReceiveDrag", function()
+    if CurrentWheel() and CurrentWheel().locked then
+      return
+    end
     local target = HoverTarget(hovered)
     if target and target ~= addSlice then
       ApplyDrop(target.slot)
@@ -801,7 +811,12 @@ local function BuildWheelRow(ctx)
   hit:SetScript("OnDragStart", function()
     local slot = SliceAtCursor()
     local wheel = CurrentWheel()
-    local entry = slot and slot <= liveCount and wheel and wheel.slots and wheel.slots[slot]
+    local entry = slot
+      and slot <= liveCount
+      and wheel
+      and not wheel.locked
+      and wheel.slots
+      and wheel.slots[slot]
     if not entry then
       return
     end
@@ -973,7 +988,7 @@ local function BuildWheelRow(ctx)
 
     -- One extra position while there is room: the Add Slice slice.
     local n = CM.RadialSliceCount(wheel)
-    local canAdd = n < LAYOUT.MAX_SLICES
+    local canAdd = not wheel.locked and n < LAYOUT.MAX_SLICES
     local shown = canAdd and (n + 1) or n
     shownCount = shown
     liveCount = n
@@ -1136,6 +1151,23 @@ UI.Options.AddTab({
           group = ctx.search.group,
           section = ctx.section,
         },
+      })
+    end
+
+    ctx:Gap()
+    for index, command in ipairs(CM.PingMenuBindingCommands) do
+      ctx:Keybind({
+        label = index == 1 and L["Separate Ping Wheel"] or L["Separate Ping Wheel (Secondary)"],
+        allowPrimaryMouse = true,
+        desc = L["Tap to ping under the crosshair. Hold and release toward a slice to choose a ping."],
+        get = function()
+          return CM.GetSeparatePingBinding(command)
+        end,
+        set = function(binding)
+          CM.TryApplyBindingChange(L["Separate Ping Wheel"], function()
+            CM.SetSeparatePingBinding(command, binding)
+          end)
+        end,
       })
     end
   end,

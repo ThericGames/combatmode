@@ -1,4 +1,10 @@
 <Bindings>
+  <Binding name="Combat Mode - Ping Menu" description="Tap to ping the reticle or hold and choose a ping" header="Ping" category="|A:::|a|TInterface\Addons\CombatMode\Assets\branding\cmtitle:26:55|t" runOnUp="true">
+    -- Core/Ping/Ping.lua supplies the secure click binding.
+  </Binding>
+  <Binding name="Combat Mode - Ping Menu Secondary" description="Secondary key for the Ping menu" category="|A:::|a|TInterface\Addons\CombatMode\Assets\branding\cmtitle:26:55|t" runOnUp="true">
+    -- Core/Ping/Ping.lua supplies the secure click binding.
+  </Binding>
 	<Binding name="Combat Mode - Mouse Look" description="Tap to toggle, hold to temporarily switch" header="Action Combat Mode - Mouse Look" category="|A:::|a|TInterface\Addons\CombatMode\Assets\branding\cmtitle:26:55|t" runOnUp="true">
 		if keystate == "down" or keystate == "up" then
 			CombatMode_CursorModeKey(keystate)
