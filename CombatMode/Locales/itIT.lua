@@ -19,6 +19,15 @@ end
 -- selene: allow(unused_variable)
 local L = CM.L
 
+-- Free Look camera orbit
+L["Free Look"] = "Visuale libera"
+L["Use a keyboard binding to peek during Mouse Look. Each peek replaces saved camera view 5."] =
+  "Usa un tasto per guardarti intorno mentre la visuale con il mouse è attiva. Ogni utilizzo sostituisce la visuale salvata 5."
+L["Free Look Keybind"] = "Tasto visuale libera"
+L["Hold this key and move the mouse to look around without turning your character. Release to resume aiming."] =
+  "Tieni premuto questo tasto e muovi il mouse per guardarti intorno senza girare il personaggio. Rilascialo per riprendere a mirare."
+L["free look keybinding"] = "tasto visuale libera"
+
 -- Constants/Assets.lua: welcome popup and Key Bindings labels
 L["Welcome to Action Combat Mode!"] = "Benvenuto in Action Combat Mode!"
 L["The configuration panel will open after you close this message."] =

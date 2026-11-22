@@ -43,6 +43,7 @@
     <Script file="Core\ClickCasting\PlayerMenu.lua"/>
     <!-- FREE LOOK -->
     <Script file="Core\FreeLook\FreeLookController.lua"/>
+    <Script file="Core\FreeLook\CameraOrbit.lua"/>
     <Script file="Core\FreeLook\FlipCamera.lua"/>
     <Script file="Core\FreeLook\AutoCursorUnlock.lua"/>
     <!-- VIGNETTE: screen edge darkening; fades with Mouse Look -->

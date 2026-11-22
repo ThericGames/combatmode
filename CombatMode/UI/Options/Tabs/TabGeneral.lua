@@ -198,6 +198,35 @@ UI.Options.AddTab({
         end)
       end,
     })
+    if CM.CanOrbitCamera() then
+      ctx:Toggle({
+        label = L["Free Look"],
+        desc = L["Use a keyboard binding to peek during Mouse Look. Each peek replaces saved camera view 5."],
+        get = function()
+          return CM.DbBool(CM.DB.global.cameraOrbitEnabled, false)
+        end,
+        set = function(value)
+          CM.DB.global.cameraOrbitEnabled = value
+          CM.RefreshCameraOrbitBinding()
+        end,
+      })
+      ctx:Keybind({
+        label = L["Free Look Keybind"],
+        desc = L["Hold this key and move the mouse to look around without turning your character. Release to resume aiming."],
+        get = function()
+          return (GetBindingKey("Combat Mode - Free Look"))
+        end,
+        set = function(key)
+          if key and key ~= "" and not CM.IsCameraOrbitKeyboardBind(key) then
+            return
+          end
+          CM.TryApplyBindingChange(L["free look keybinding"], function()
+            CM.AssignNamedKeybind("Combat Mode - Free Look", key)
+            CM.RefreshCameraOrbitBinding()
+          end)
+        end,
+      })
+    end
     ctx:Keybind({
       label = L["Interact Keybind"],
       desc = L["Tap to interact with the unit chosen below. Hold on a player to open their context menu."],

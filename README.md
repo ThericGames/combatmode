@@ -69,6 +69,8 @@ After installing the AddOn, you'll be greeted by this message. Click Okay to pro
   <img src="media/welcome_msg.png">
 </p>
 
+In the **Mouse Look** tab, enable **Free Look** and assign a keyboard bind to peek around without turning your character. Release the key to return to your starting view. Each peek replaces saved camera view 5.
+
 <br />
 
 ## <img width="20" height="20" src="media/cmlogo.svg"> SUPPORT
@@ -90,7 +92,7 @@ Action Combat Mode is organized by **domain**. Runtime lives under `CombatMode/C
 | Domain | Owns |
 |--------|------|
 | **Runtime** | AddOn shell, events, CVars, binding queue, bootstrap (`Core/Runtime/`) |
-| **FreeLook** | Mouse Look state, auto cursor unlock, flip camera, vignette |
+| **FreeLook** | Mouse Look state, camera peek, auto cursor unlock, flip camera, vignette |
 | **Crosshair** | Reticle, Assist HUD (next-cast suggestion and interactable indicator), Target Lock marker, cast animations |
 | **ClickCasting** | Mouse/key override bindings, Reticle Targeting macros, composed macros |
 | **AllyCycle** | Party/raid ally cycling + Ally HUD (secure Next/Previous, help/harm macros) |

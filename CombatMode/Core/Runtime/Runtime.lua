@@ -653,6 +653,9 @@ local TIME_SINCE_LAST_UPDATE = 0
 --- placing or cancelling it re-locks) without waiting for the next throttled tick.
 --- Returns true when the caller may go on to the crosshair updates.
 function CM.ReconcileFreeLook()
+  if CM.IsCameraOrbitActive() then
+    return false
+  end
   if CM.IsDefaultMouseActionBeingUsed() then
     return false
   end
@@ -660,6 +663,7 @@ function CM.ReconcileFreeLook()
   local isMouselooking = IsMouselooking()
 
   if CM.ShouldFreeLookBeOff() then
+    CM.SetCameraOrbitAvailable(false)
     CM.UnlockFreeLook()
     return false
   end
@@ -671,6 +675,7 @@ function CM.ReconcileFreeLook()
       CM.LockFreeLook()
     end
   end
+  CM.SetCameraOrbitAvailable(CM.IsMouselooking())
   return true
 end
 
@@ -775,6 +780,8 @@ function CM:OnDisable(skipCVarRestore)
     return
   end
   enabled = false
+  CM.CancelCameraOrbit()
+  CM.SetCameraOrbitAvailable(false)
   CM.HideCrosshairFrame()
   if not skipCVarRestore and CM.RestorePriorCVars then
     CM.RestorePriorCVars()

@@ -156,6 +156,7 @@ return false
     customLockConditionOnce = false,
     -- mouse look camera
     mouseLookSpeed = 100,
+    cameraOrbitEnabled = false,
     dynamicPitch = true,
     -- Vignette shows when these are true: CSV of mouselook | combat | interaction ("" = off).
     -- A string, not a table: MergeDefaults would graft default keys onto a saved table.

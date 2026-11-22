@@ -49,6 +49,7 @@ CM.Constants.PopupMsg = L["Welcome to Action Combat Mode!"]
 local BINDING_DISPLAY_NAMES = {
   { id = "Mouse Look", text = L["Mouse Look"] },
   { id = "Flip Camera", text = L["Flip Camera"] },
+  { id = "Free Look", text = L["Free Look"] },
   { id = "Swap Shoulder", text = L["Swap Shoulder"] },
   { id = "Reset Mouse Look", text = L["Reset Mouse Look"] },
   { id = "Ally Cycle Next", text = L["Ally Cycle Next"] },

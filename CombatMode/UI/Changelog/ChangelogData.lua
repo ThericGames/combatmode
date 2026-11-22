@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Free Look** in the **Mouse Look** tab lets you hold a keyboard bind to look around while keeping the reticle visible and your character facing the same way. Release the key to return to your starting view. The option is off by default and uses saved camera view 5.
+
 - **Support Mode** has a new **Self-Cast Keybind**. Hold it and the helpful spells on your click-cast buttons land on you, without changing your target or **Target Lock**.
 - **Support Mode** has a new **Cycle in Group Order** option. Turn it on and the **Cycle Lock** keys move through your party or raid in group order, instead of jumping to the nearest player. With nobody locked, **Next** locks the first member of your group and **Previous** the last.
 

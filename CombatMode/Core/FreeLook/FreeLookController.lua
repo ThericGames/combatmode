@@ -808,7 +808,7 @@ end
 --   • External addon starts mouselook: cmMouselookActive=false, IsMouselooking=true → false
 --   • External addon stops CM's mouselook: cmMouselookActive=true, IsMouselooking=false → false
 function CM.IsMouselooking()
-  return cmMouselookActive and IsMouselooking()
+  return CM.IsCameraOrbitActive() or (cmMouselookActive and IsMouselooking())
 end
 
 --- Shoulder + vignette stay active through temp (hold) unlock; false after permanent unlock.

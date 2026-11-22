@@ -4,6 +4,9 @@
 			CombatMode_CursorModeKey(keystate)
 		end
 	</Binding>
+	<Binding name="Combat Mode - Free Look" description="Hold a keyboard key to look around, release to restore your view" category="|A:::|a|TInterface\Addons\CombatMode\Assets\branding\cmtitle:26:55|t">
+		-- Core/FreeLook/CameraOrbit.lua supplies the native camera binding.
+	</Binding>
 	<Binding name="Combat Mode - Flip Camera" description="Tap to flip the camera around your character, hold to flip it only while held" category="|A:::|a|TInterface\Addons\CombatMode\Assets\branding\cmtitle:26:55|t" runOnUp="true">
 		if keystate == "down" or keystate == "up" then
 			CombatMode_FlipCameraKey(keystate)
