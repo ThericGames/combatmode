@@ -17,6 +17,7 @@ return function(check, CM, env)
     IsCustomLockConditionTrue = No,
     IsCustomConditionTrue = No,
     IsFeignDeathActive = No,
+    IsChatInputActive = No,
     IsInPetBattle = No,
     IsRadialMenuOpen = No,
     IsUnlockFrameVisible = function()

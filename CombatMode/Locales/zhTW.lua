@@ -828,3 +828,8 @@ L["Hold a Blizzard Ping binding to aim with the cursor. Release it to resume Mou
 L["Hide Focus Frame"] = "隱藏專注目標框架"
 L["Hide Blizzard's focus frame without clearing your focus or Target Lock. Changes made in combat apply after combat ends."] =
   "隱藏暴雪的專注目標框架，同時保留專注目標和目標鎖定。變更在戰鬥結束後生效。"
+
+-- Auto Unlock: chat input.
+L["Unlock While Chatting"] = "聊天時解鎖"
+L["Release the cursor while typing in chat and resume Mouse Look when chat closes."] =
+  "輸入聊天訊息時釋放滑鼠游標，關閉聊天輸入後恢復滑鼠視角。"

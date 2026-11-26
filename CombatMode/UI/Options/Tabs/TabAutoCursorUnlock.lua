@@ -11,6 +11,7 @@
 --    • Vendor Mounts now uses the mount multi-select instead of a toggle. The default
 --      list is seeded with known vendor mounts; users can add any mount they own.
 --    • Extra Frames disabled when frameWatching is off.
+--    • unlockWhileChatting controls cursor release while the chat input has focus.
 --  Does not: Evaluate visibility or call MouselookStop.
 --  Related: Core/FreeLook/AutoCursorUnlock.lua, Constants/FrameWatch.lua,
 --  Constants/DatabaseDefaults.lua, Core/FreeLook/FreeLookController.lua,
@@ -53,6 +54,16 @@ UI.Options.AddTab({
       end,
       set = function(value)
         CM.DB.global.unlockCursorForPing = value
+      end,
+    })
+    ctx:Toggle({
+      label = L["Unlock While Chatting"],
+      desc = L["Release the cursor while typing in chat and resume Mouse Look when chat closes."],
+      get = function()
+        return CM.DB.global.unlockWhileChatting
+      end,
+      set = function(value)
+        CM.DB.global.unlockWhileChatting = value
       end,
     })
     ctx:MountMultiSelect({

@@ -848,3 +848,8 @@ L["Hold a Blizzard Ping binding to aim with the cursor. Release it to resume Mou
 L["Hide Focus Frame"] = "Fokusfenster ausblenden"
 L["Hide Blizzard's focus frame without clearing your focus or Target Lock. Changes made in combat apply after combat ends."] =
   "Blendet Blizzards Fokusfenster aus und behält Fokus und Zielsperre bei. Änderungen gelten nach Kampfende."
+
+-- Auto Unlock: chat input.
+L["Unlock While Chatting"] = "Beim Chatten entsperren"
+L["Release the cursor while typing in chat and resume Mouse Look when chat closes."] =
+  "Gibt den Mauszeiger beim Schreiben im Chat frei und aktiviert den Mausblick wieder, wenn der Chat geschlossen wird."

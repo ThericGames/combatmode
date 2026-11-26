@@ -15,6 +15,7 @@ local SPECS = {
   "spec_db",
   "spec_ping_cursor",
   "spec_focus_frame",
+  "spec_chat_unlock",
 }
 local CLIENTS = {
   { name = "retail", pattern = "## Interface:%s*(%d+)" },

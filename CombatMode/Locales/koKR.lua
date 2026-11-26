@@ -851,3 +851,8 @@ L["Hold a Blizzard Ping binding to aim with the cursor. Release it to resume Mou
 L["Hide Focus Frame"] = "주시 대상 창 숨기기"
 L["Hide Blizzard's focus frame without clearing your focus or Target Lock. Changes made in combat apply after combat ends."] =
   "주시 대상과 대상 고정을 유지하면서 블리자드의 주시 대상 창을 숨깁니다. 변경 사항은 전투가 끝난 후 적용됩니다."
+
+-- Auto Unlock: chat input.
+L["Unlock While Chatting"] = "채팅 중 잠금 해제"
+L["Release the cursor while typing in chat and resume Mouse Look when chat closes."] =
+  "채팅을 입력하는 동안 커서를 해제하고 채팅을 닫으면 마우스 시점을 다시 활성화합니다."

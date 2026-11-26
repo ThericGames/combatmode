@@ -18,17 +18,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Auto Unlock** now releases the cursor while you type in chat by default. Turn off **Unlock While Chatting** to keep Mouse Look while typing.
 - **Support Mode** has a new **Self-Cast Keybind**. Hold it and the helpful spells on your click-cast buttons land on you, without changing your target or **Target Lock**.
 - **Support Mode** has a new **Cycle in Group Order** option. Turn it on and the **Cycle Lock** keys move through your party or raid in group order, instead of jumping to the nearest player. With nobody locked, **Next** locks the first member of your group and **Previous** the last.
+- **Unlock Cursor for Ping** in **Auto Unlock**, off by default. Hold a Blizzard **Ping** binding to aim with a free cursor and release to resume Mouse Look and its usual cursor centering. Existing reticle ping behavior is unchanged when the option is off.
+- **Hide Focus Frame** in the **Target Lock** section, off by default and saved per character. Hides Blizzard's focus frame while keeping your focus and Target Lock intact. Turning it off restores the frame; changes during combat apply after combat ends.
 
 ### Changed
 
 - The **Radial Menu** now opens with its wheel name in the centre. The close X appears only after you aim a slice and return to the centre.
-
-### Added
-
-- **Unlock Cursor for Ping** in **Auto Unlock**, off by default. Hold a Blizzard **Ping** binding to aim with a free cursor and release to resume Mouse Look and its usual cursor centering. Existing reticle ping behavior is unchanged when the option is off.
-- **Hide Focus Frame** in the **Target Lock** section, off by default and saved per character. Hides Blizzard's focus frame while keeping your focus and Target Lock intact. Turning it off restores the frame; changes during combat apply after combat ends.
 
 ### Fixed
 
