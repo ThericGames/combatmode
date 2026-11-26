@@ -735,15 +735,13 @@ L["Macro “%s” no longer fits with the current preline; edit it from Reticle 
 L["Click to print URL to chat"] = true
 
 -- Auto Unlock: optional cursor aiming for native Ping.
-L["Unlock Cursor for Ping"] = true
-L["Hold a Blizzard Ping binding to aim with the cursor. Release it to resume Mouse Look. Off by default."] =
-  true
+L["Unlock for Ping"] = true
+L["Release the cursor to aim while a Ping key is held."] = true
 
 -- Target Lock: optional Blizzard focus frame hiding.
 L["Hide Focus Frame"] = true
-L["Hide Blizzard's focus frame without clearing your focus or Target Lock. Changes made in combat apply after combat ends."] =
-  true
+L["Hide Blizzard's focus frame. Your focus and Target Lock are kept."] = true
 
 -- Auto Unlock: chat input.
-L["Unlock While Chatting"] = true
-L["Release the cursor while typing in chat and resume Mouse Look when chat closes."] = true
+L["Unlock for Chat"] = true
+L["Release the cursor while typing in chat."] = true

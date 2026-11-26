@@ -59,7 +59,7 @@ return function(check, CM, env)
   setfenv(chunk, testEnv)
   chunk("CombatMode", testCM)
 
-  check("missing setting preserves reticle ping", testCM.ShouldFreeLookBeOff(), false)
+  check("missing setting unlocks by default", testCM.ShouldFreeLookBeOff(), true)
   testCM.DB.global.unlockCursorForPing = false
   check("disabled preserves reticle ping", testCM.ShouldFreeLookBeOff(), false)
   testCM.DB.global.unlockCursorForPing = true

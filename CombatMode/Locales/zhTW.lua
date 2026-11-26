@@ -820,16 +820,15 @@ L["Macro “%s” no longer fits with the current preline; edit it from Reticle 
 L["Click to print URL to chat"] = "點擊將 URL 輸出到聊天"
 
 -- Auto Unlock: optional cursor aiming for native Ping.
-L["Unlock Cursor for Ping"] = "發送信號時解鎖游標"
-L["Hold a Blizzard Ping binding to aim with the cursor. Release it to resume Mouse Look. Off by default."] =
-  "按住暴雪的信號快捷鍵以游標瞄準。放開後恢復滑鼠視角控制。預設關閉。"
+L["Unlock for Ping"] = "發送信號時解鎖"
+L["Release the cursor to aim while a Ping key is held."] =
+  "按住信號按鍵時解鎖游標以便瞄準。"
 
 -- Target Lock: optional Blizzard focus frame hiding.
 L["Hide Focus Frame"] = "隱藏專注目標框架"
-L["Hide Blizzard's focus frame without clearing your focus or Target Lock. Changes made in combat apply after combat ends."] =
-  "隱藏暴雪的專注目標框架，同時保留專注目標和目標鎖定。變更在戰鬥結束後生效。"
+L["Hide Blizzard's focus frame. Your focus and Target Lock are kept."] =
+  "隱藏暴雪的專注目標框架。專注目標與目標鎖定會保留。"
 
 -- Auto Unlock: chat input.
-L["Unlock While Chatting"] = "聊天時解鎖"
-L["Release the cursor while typing in chat and resume Mouse Look when chat closes."] =
-  "輸入聊天訊息時釋放滑鼠游標，關閉聊天輸入後恢復滑鼠視角。"
+L["Unlock for Chat"] = "聊天時解鎖"
+L["Release the cursor while typing in chat."] = "在聊天框中輸入時解鎖游標。"

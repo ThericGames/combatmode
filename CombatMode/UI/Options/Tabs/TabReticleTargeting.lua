@@ -10,8 +10,9 @@
 --    • DB.char: reticleTargeting, autoTargetLockOnAttack,
 --      targetLockBehavior (Target Lock Behavior dropdown: toggle / switch),
 --      macroInjectionClickCastOnly, stickyCrosshair, excludeFromTargetingSpells,
---      castAtCursorSpells, hideFocusFrame (FocusFrameVisibility).
---    • DB.global: showTargetLockMarker, autofocusLockedTarget, reticleOutline (Target Outline:
+--      castAtCursorSpells.
+--    • DB.global: hideFocusFrame (FocusFrameVisibility), showTargetLockMarker,
+--      autofocusLockedTarget, reticleOutline (Target Outline:
 --      Outline CVars via CM.ApplyReticleOutlineCVars), selectionCircleMode (Selection Circle
 --      dropdown: circle / name CVars via CM.ApplyReticleSelectionCircleCVars).
 --    • macroInjectionClickCastOnly disabled/forced when ThirdPartyActionBarsActive.
@@ -256,6 +257,7 @@ end
 UI.Options.AddTab({
   id = "reticle",
   label = L["Reticle Targeting"],
+  newFeatureFlag = true,
   build = function(ctx)
     ctx:Header(L["RETICLE TARGETING"])
     ctx:Description(
@@ -480,14 +482,13 @@ UI.Options.AddTab({
     })
     ctx:Toggle({
       label = L["Hide Focus Frame"],
-      desc = L["Hide Blizzard's focus frame without clearing your focus or Target Lock. Changes made in combat apply after combat ends."],
-      charSpecific = true,
+      desc = L["Hide Blizzard's focus frame. Your focus and Target Lock are kept."],
       newFeatureFlag = true,
       get = function()
-        return CM.DbBool(CM.DB.char.hideFocusFrame, false)
+        return CM.DbBool(CM.DB.global.hideFocusFrame, false)
       end,
       set = function(value)
-        CM.DB.char.hideFocusFrame = value
+        CM.DB.global.hideFocusFrame = value
         CM.ApplyFocusFrameVisibility()
       end,
     })

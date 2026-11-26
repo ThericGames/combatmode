@@ -14,7 +14,7 @@ return function(check, CM, env)
       writes = writes + 1
     end,
   }
-  local testCM = { DB = { char = {} }, DbBool = CM.DbBool }
+  local testCM = { DB = { global = {} }, DbBool = CM.DbBool }
   local testEnv = setmetatable({
     FocusFrame = frame,
     EditModeManagerFrame = {
@@ -41,7 +41,7 @@ return function(check, CM, env)
   local apply = testCM.ApplyFocusFrameVisibility
   apply()
   check("default leaves frame alone", writes, 0)
-  testCM.DB.char.hideFocusFrame = true
+  testCM.DB.global.hideFocusFrame = true
   combat = true
   apply()
   check("enable defers in combat", writes, 0)
@@ -50,14 +50,14 @@ return function(check, CM, env)
   check("hidden parent", parent.hidden, true)
   apply()
   check("repeated apply is idempotent", writes, 1)
-  testCM.DB.char.hideFocusFrame = false
+  testCM.DB.global.hideFocusFrame = false
   combat = true
   apply()
   check("disable defers in combat", writes, 1)
   combat = false
   apply()
   check("restores original parent", parent, original)
-  testCM.DB.char.hideFocusFrame = true
+  testCM.DB.global.hideFocusFrame = true
   apply()
   editing = true
   apply()
@@ -67,13 +67,13 @@ return function(check, CM, env)
   check("leaving Edit Mode hides frame again", parent.hidden, true)
   local otherAddonParent = {}
   parent = otherAddonParent
-  testCM.DB.char.hideFocusFrame = false
+  testCM.DB.global.hideFocusFrame = false
   apply()
   check("does not undo another addon parent", parent, otherAddonParent)
-  testCM.DB.char.hideFocusFrame = true
+  testCM.DB.global.hideFocusFrame = true
   apply()
   check("re-enable preserves third-party ownership", parent, otherAddonParent)
-  testCM.DB.char.hideFocusFrame = 0
+  testCM.DB.global.hideFocusFrame = 0
   apply()
   check("numeric false leaves frame alone", parent, otherAddonParent)
 end

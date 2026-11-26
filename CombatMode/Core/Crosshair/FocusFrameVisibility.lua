@@ -3,7 +3,7 @@
 ---------------------------------------------------------------------------------------
 --  What it does: Hides Blizzard's focus frame without clearing the focus unit.
 --  Architecture / how it works:
---    • char.hideFocusFrame, default false; applied by bootstrap and the options toggle.
+--    • global.hideFocusFrame, default false; applied by bootstrap and the options toggle.
 --    • Reparents to a hidden holder out of combat, preserving native unit visibility logic.
 --    • PLAYER_REGEN_ENABLED retries the current preference after combat.
 --    • Disabling or entering Edit Mode restores the original parent if still owned.
@@ -23,10 +23,10 @@ local originalParent
 local knownFrame
 
 function CM.ApplyFocusFrameVisibility()
-  if InCombatLockdown() or not (CM.DB and CM.DB.char) then
+  if InCombatLockdown() or not (CM.DB and CM.DB.global) then
     return
   end
-  local hide = CM.DbBool(CM.DB.char.hideFocusFrame, false)
+  local hide = CM.DbBool(CM.DB.global.hideFocusFrame, false)
   local editMode = _G.EditModeManagerFrame
   local editing = editMode and editMode.IsEditModeActive and editMode:IsEditModeActive()
   if not hide or editing then

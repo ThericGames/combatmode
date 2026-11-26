@@ -93,7 +93,6 @@ end
 UI.Options.AddTab({
   id = "allycycle",
   label = L["Ally Cycle"],
-  newFeatureFlag = true,
   onSelect = function()
     if CM.SetAllyCycleOptionsPreview then
       CM.SetAllyCycleOptionsPreview(true)
@@ -164,7 +163,6 @@ UI.Options.AddTab({
       label = L["Also Cycle Through"],
       desc = L["Adds pets after the group members: your own pet, and the pets of everyone else in your party or raid."],
       multi = true,
-      newFeatureFlag = true,
       values = EXTRA_UNIT_VALUES,
       order = EXTRA_UNIT_ORDER,
       isOn = ExtraUnitOn,

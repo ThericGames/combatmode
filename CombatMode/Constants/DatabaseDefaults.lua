@@ -141,8 +141,10 @@ return false
     bindings = DefaultBindings,
     -- auto unlock
     frameWatching = true,
-    unlockCursorForPing = false,
+    unlockCursorForPing = true,
     unlockWhileChatting = true,
+    -- target lock
+    hideFocusFrame = false,
     -- Icons of the Extra Frames chips, remembered because their frames may not exist yet after a reload.
     frameIcons = {},
     -- Prefilled with the known vendor mounts on Mainline only; every other client starts empty.
@@ -210,7 +212,6 @@ return false
     -- Target Lock key: "toggle" = lock / tap again to unlock; "switch" = lock the unit under the
     -- crosshair (replacing any lock), tap with nothing under the crosshair to unlock.
     targetLockBehavior = "toggle",
-    hideFocusFrame = false,
     macroInjectionClickCastOnly = false,
     excludeFromTargetingSpells = "",
     castAtCursorSpells = "",

@@ -74,9 +74,8 @@ end
 UI.Options.AddTab({
   id = "supportmode",
   label = L["Support Mode"],
-  newFeatureFlag = true,
   build = function(ctx)
-    ctx:Header({ text = L["SUPPORT MODE"], newFeatureFlag = true })
+    ctx:Header(L["SUPPORT MODE"])
     ctx:Description({
       text = L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."],
     })

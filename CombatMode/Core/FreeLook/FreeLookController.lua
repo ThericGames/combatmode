@@ -236,7 +236,7 @@ end
 
 -- Read both live binding slots and honor click-casting overrides.
 local function IsNativePingHeld()
-  if not (CM.DB and CM.DB.global and CM.DbBool(CM.DB.global.unlockCursorForPing, false)) then
+  if not (CM.DB and CM.DB.global and CM.DbBool(CM.DB.global.unlockCursorForPing, true)) then
     return false
   end
   if not (GetBindingKey and GetBindingAction) then

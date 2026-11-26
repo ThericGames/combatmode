@@ -9,9 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Auto Unlock** now releases the cursor while you type in chat by default. Turn off **Unlock While Chatting** to keep Mouse Look while typing.
-- **Unlock Cursor for Ping** in **Auto Unlock**, off by default. Hold a Blizzard **Ping** binding to aim with a free cursor and release to resume Mouse Look and its usual cursor centering. Existing reticle ping behavior is unchanged when the option is off.
-- **Hide Focus Frame** in the **Target Lock** section, off by default and saved per character. Hides Blizzard's focus frame while keeping your focus and Target Lock intact. Turning it off restores the frame; changes during combat apply after combat ends.
+- **Unlock for Ping** in **Auto Unlock**, on by default. Hold a **Ping** key to aim with a free cursor, and release it to return to **Mouse Look**. Turn it off to keep pinging with the crosshair.
+- **Unlock for Chat** in **Auto Unlock**, on by default. The cursor is released while you type in chat, and **Mouse Look** returns when you're done.
+- **Hide Focus Frame** in the **Target Lock** section, off by default and shared by all your characters. Hides Blizzard's focus frame while keeping your focus and **Target Lock**.
 
 ## [5.5.2] - 2026-11-19
 

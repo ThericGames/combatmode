@@ -31,6 +31,7 @@ local UI = CM.UI
 UI.Options.AddTab({
   id = "autocursorunlock",
   label = L["Auto Unlock"],
+  newFeatureFlag = true,
   build = function(ctx)
     ctx:Header(L["AUTO UNLOCK"])
     ctx:Description(
@@ -47,20 +48,22 @@ UI.Options.AddTab({
       end,
     })
     ctx:Toggle({
-      label = L["Unlock Cursor for Ping"],
-      desc = L["Hold a Blizzard Ping binding to aim with the cursor. Release it to resume Mouse Look. Off by default."],
+      label = L["Unlock for Ping"],
+      desc = L["Release the cursor to aim while a Ping key is held."],
+      newFeatureFlag = true,
       get = function()
-        return CM.DbBool(CM.DB.global.unlockCursorForPing, false)
+        return CM.DbBool(CM.DB.global.unlockCursorForPing, true)
       end,
       set = function(value)
         CM.DB.global.unlockCursorForPing = value
       end,
     })
     ctx:Toggle({
-      label = L["Unlock While Chatting"],
-      desc = L["Release the cursor while typing in chat and resume Mouse Look when chat closes."],
+      label = L["Unlock for Chat"],
+      desc = L["Release the cursor while typing in chat."],
+      newFeatureFlag = true,
       get = function()
-        return CM.DB.global.unlockWhileChatting
+        return CM.DbBool(CM.DB.global.unlockWhileChatting, true)
       end,
       set = function(value)
         CM.DB.global.unlockWhileChatting = value

@@ -885,16 +885,16 @@ L["Macro “%s” no longer fits with the current preline; edit it from Reticle 
 L["Click to print URL to chat"] = "Нажмите, чтобы вывести ссылку в чат"
 
 -- Auto Unlock: optional cursor aiming for native Ping.
-L["Unlock Cursor for Ping"] = "Освобождать курсор для сигналов"
-L["Hold a Blizzard Ping binding to aim with the cursor. Release it to resume Mouse Look. Off by default."] =
-  "Удерживайте клавишу сигнала Blizzard для прицеливания курсором. Отпустите её для возврата к управлению камерой мышью. По умолчанию выключено."
+L["Unlock for Ping"] = "Разблокировать для сигналов"
+L["Release the cursor to aim while a Ping key is held."] =
+  "Освобождает курсор для наведения, пока удерживается клавиша сигнала."
 
 -- Target Lock: optional Blizzard focus frame hiding.
 L["Hide Focus Frame"] = "Скрыть рамку фокуса"
-L["Hide Blizzard's focus frame without clearing your focus or Target Lock. Changes made in combat apply after combat ends."] =
-  "Скрывает рамку Blizzard, сохраняя фокус и фиксацию цели. Изменения применяются после окончания боя."
+L["Hide Blizzard's focus frame. Your focus and Target Lock are kept."] =
+  "Скрывает рамку фокуса Blizzard. Фокус и захват цели сохраняются."
 
 -- Auto Unlock: chat input.
-L["Unlock While Chatting"] = "Разблокировать при вводе в чат"
-L["Release the cursor while typing in chat and resume Mouse Look when chat closes."] =
-  "Освобождает курсор при вводе в чат и возвращает обзор мышью после закрытия чата."
+L["Unlock for Chat"] = "Разблокировать для чата"
+L["Release the cursor while typing in chat."] =
+  "Освобождает курсор, пока вы пишете в чат."
