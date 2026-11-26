@@ -421,13 +421,16 @@ L["Support Mode Self-Cast"] = "辅助模式自我施法"
 L["support mode keybinding"] = "辅助模式按键绑定"
 L["support mode self-cast keybinding"] = "辅助模式自我施法按键绑定"
 L["SUPPORT MODE"] = "辅助模式"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
-  "一种以支援为核心的模式：启用后会将主动作条切换到专用的支援页，并允许增益法术以准星下的友方单位为目标。"
+L["A support-focused mode that, when active, switches your main action bar to the selected Support Bar Page. With Click Casting, the helpful spells on that page can target the friendly unit under your crosshair."] =
+  "一种以支援为核心的模式：启用后会将主动作条切换到所选的辅助动作条页。通过点击施法，该页上的增益法术可以以准星下的友方单位为目标。"
 L["Support Mode Keybind"] = "辅助模式按键"
 L["Self-Cast Keybind"] = "自我施法按键"
 L["Hold to cast your click-cast helpful spells on yourself. Your target and Target Lock don't change."] =
   "按住此键，可将点击施法按键上的有益法术施放给自己。你的目标和目标锁定不会改变。"
 L["Prioritize Crosshair Target"] = "优先准星目标"
+L["Auto Lock Allies"] = "自动锁定友方"
+L["Let Auto Target Lock lock the allies you heal. Manual Target Lock works either way."] =
+  "让自动目标锁定也锁定你治疗的友方。无论是否开启，手动目标锁定都可使用。"
 L["Cycle NPCs and Pets"] = "轮换 NPC 和宠物"
 L["Cycle Lock also includes nearby NPCs and pets. While off, friendly pet nameplates are hidden."] =
   "循环锁定也会包含附近的 NPC 和宠物。关闭时，友方宠物的姓名板会被隐藏。"
@@ -534,8 +537,8 @@ L["Set a Radial Menu key"] = "设置轮盘菜单按键"
 L["Set an Ally Cycle - Next key"] = "设置“友方循环 - 下一个”按键"
 L["Set an Ally Cycle - Previous key"] = "设置“友方循环 - 上一个”按键"
 L["Set a Support Mode key"] = "设置支援模式按键"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
-  "一种以支援为核心的模式：启用后会将主动作条切换到专用的{支援页}，并允许{增益法术}以准星下的友方单位为目标。\n\n请设置你的按键。"
+L["A support-focused mode that, when active, switches your main action bar to the selected {Support Bar Page}. With {Click Casting}, the {helpful spells} on that page can target the friendly unit under your crosshair.\n\nSet your key."] =
+  "一种以支援为核心的模式：启用后会将主动作条切换到所选的{辅助动作条页}。通过{点击施法}，该页上的{增益法术}可以以准星下的友方单位为目标。\n\n请设置你的按键。"
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "开启或关闭准星瞄准会重新加载界面。"
 L["Needs Reticle Targeting."] = "需要准星瞄准。"

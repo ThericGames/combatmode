@@ -436,13 +436,16 @@ L["support mode keybinding"] = "assegnazione della modalità supporto"
 L["support mode self-cast keybinding"] =
   "assegnazione del lancio su di sé della modalità supporto"
 L["SUPPORT MODE"] = "MODALITÀ SUPPORTO"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
-  "Una modalità orientata al supporto che, quando è attiva, porta la barra delle azioni principale su una pagina di supporto dedicata e permette agli incantesimi benefici di bersagliare l'unità amica sotto il mirino."
+L["A support-focused mode that, when active, switches your main action bar to the selected Support Bar Page. With Click Casting, the helpful spells on that page can target the friendly unit under your crosshair."] =
+  "Una modalità orientata al supporto che, quando è attiva, porta la barra delle azioni principale sulla pagina scelta in Pagina della barra di supporto. Con Lancio con clic, gli incantesimi benefici di quella pagina possono bersagliare l'unità amica sotto il mirino."
 L["Support Mode Keybind"] = "Tasto della modalità supporto"
 L["Self-Cast Keybind"] = "Tasto di lancio su di sé"
 L["Hold to cast your click-cast helpful spells on yourself. Your target and Target Lock don't change."] =
   "Tienilo premuto per lanciare su di te gli incantesimi benefici dei tuoi pulsanti di clic. Il tuo bersaglio e il Blocco bersaglio non cambiano."
 L["Prioritize Crosshair Target"] = "Dai priorità al bersaglio del mirino"
+L["Auto Lock Allies"] = "Blocco automatico alleati"
+L["Let Auto Target Lock lock the allies you heal. Manual Target Lock works either way."] =
+  "Consente al blocco bersaglio automatico di bloccare gli alleati che curi. Il blocco manuale funziona in entrambi i casi."
 L["Cycle NPCs and Pets"] = "Alterna tra PNG e famigli"
 L["Cycle Lock also includes nearby NPCs and pets. While off, friendly pet nameplates are hidden."] =
   "Cicla blocco include anche PNG e famigli vicini. Finché è disattivata, le targhette dei famigli amici sono nascoste."
@@ -552,8 +555,8 @@ L["Set a Radial Menu key"] = "Imposta un tasto per il menu radiale"
 L["Set an Ally Cycle - Next key"] = "Imposta un tasto Ciclo alleati – Successivo"
 L["Set an Ally Cycle - Previous key"] = "Imposta un tasto Ciclo alleati – Precedente"
 L["Set a Support Mode key"] = "Imposta un tasto Modalità supporto"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
-  "Una modalità orientata al supporto che, quando è attiva, porta la barra delle azioni principale su una {pagina di supporto} dedicata e permette agli {incantesimi benefici} di bersagliare l'unità amica sotto il mirino.\n\nImposta il tuo tasto."
+L["A support-focused mode that, when active, switches your main action bar to the selected {Support Bar Page}. With {Click Casting}, the {helpful spells} on that page can target the friendly unit under your crosshair.\n\nSet your key."] =
+  "Una modalità orientata al supporto che, quando è attiva, porta la barra delle azioni principale sulla pagina scelta in {Pagina della barra di supporto}. Con {Lancio con clic}, gli {incantesimi benefici} di quella pagina possono bersagliare l'unità amica sotto il mirino.\n\nImposta il tuo tasto."
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "Attivare o disattivare il puntamento a mirino ricarica l'interfaccia."
 L["Needs Reticle Targeting."] = "Richiede il puntamento a mirino."

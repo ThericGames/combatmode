@@ -436,13 +436,16 @@ L["Support Mode Self-Cast"] = "Modo de Suporte: autolançamento"
 L["support mode keybinding"] = "atalho do modo de suporte"
 L["support mode self-cast keybinding"] = "atalho de autolançamento do modo de suporte"
 L["SUPPORT MODE"] = "MODO DE SUPORTE"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
-  "Um modo focado em apoio que, quando ativo, muda sua barra de ação principal para uma página de apoio dedicada e permite que magias benéficas mirem a unidade amigável sob a mira."
+L["A support-focused mode that, when active, switches your main action bar to the selected Support Bar Page. With Click Casting, the helpful spells on that page can target the friendly unit under your crosshair."] =
+  "Um modo focado em apoio que, quando ativo, muda sua barra de ação principal para a página escolhida em Página da barra de suporte. Com o Lançamento por clique, as magias benéficas dessa página podem mirar a unidade amigável sob a mira."
 L["Support Mode Keybind"] = "Atalho do Modo de Suporte"
 L["Self-Cast Keybind"] = "Atalho de autolançamento"
 L["Hold to cast your click-cast helpful spells on yourself. Your target and Target Lock don't change."] =
   "Segure para lançar em você os feitiços benéficos dos seus botões de clique. Seu alvo e o Travar alvo não mudam."
 L["Prioritize Crosshair Target"] = "Priorizar o alvo da mira"
+L["Auto Lock Allies"] = "Travar aliados automaticamente"
+L["Let Auto Target Lock lock the allies you heal. Manual Target Lock works either way."] =
+  "Permite que a trava de alvo automática trave os aliados que você cura. A trava manual funciona em ambos os casos."
 L["Cycle NPCs and Pets"] = "Alternar entre NPCs e ajudantes"
 L["Cycle Lock also includes nearby NPCs and pets. While off, friendly pet nameplates are hidden."] =
   "Alternar trava também inclui NPCs e ajudantes próximos. Enquanto estiver desativado, as placas de identificação de ajudantes aliados ficam ocultas."
@@ -551,8 +554,8 @@ L["Set a Radial Menu key"] = "Defina uma tecla do menu radial"
 L["Set an Ally Cycle - Next key"] = "Defina uma tecla de Ciclo de aliados – Próximo"
 L["Set an Ally Cycle - Previous key"] = "Defina uma tecla de Ciclo de aliados – Anterior"
 L["Set a Support Mode key"] = "Defina uma tecla de Modo de apoio"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
-  "Um modo focado em apoio que, quando ativo, muda sua barra de ação principal para uma {página de apoio} dedicada e permite que as {magias benéficas} mirem a unidade amigável sob a mira.\n\nDefina sua tecla."
+L["A support-focused mode that, when active, switches your main action bar to the selected {Support Bar Page}. With {Click Casting}, the {helpful spells} on that page can target the friendly unit under your crosshair.\n\nSet your key."] =
+  "Um modo focado em apoio que, quando ativo, muda sua barra de ação principal para a página escolhida em {Página da barra de suporte}. Com o {Lançamento por clique}, as {magias benéficas} dessa página podem mirar a unidade amigável sob a mira.\n\nDefina sua tecla."
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "Ativar ou desativar a Mira de Alvo recarrega a interface."
 L["Needs Reticle Targeting."] = "Requer a Mira de Alvo."

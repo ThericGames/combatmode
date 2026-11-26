@@ -436,13 +436,16 @@ L["Support Mode Self-Cast"] = "Mode soutien : lancer sur soi"
 L["support mode keybinding"] = "raccourci du mode soutien"
 L["support mode self-cast keybinding"] = "raccourci de lancer sur soi du mode soutien"
 L["SUPPORT MODE"] = "MODE SOUTIEN"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
-  "Un mode axé sur le soutien qui, une fois actif, fait passer votre barre d'action principale sur une page de soutien dédiée et permet aux sorts bénéfiques de cibler l'unité amicale sous votre réticule."
+L["A support-focused mode that, when active, switches your main action bar to the selected Support Bar Page. With Click Casting, the helpful spells on that page can target the friendly unit under your crosshair."] =
+  "Un mode axé sur le soutien qui, une fois actif, fait passer votre barre d'action principale sur la page choisie dans Page de la barre de soutien. Avec Lancer par clic, les sorts bénéfiques de cette page peuvent cibler l'unité amicale sous votre réticule."
 L["Support Mode Keybind"] = "Raccourci du mode soutien"
 L["Self-Cast Keybind"] = "Raccourci de lancer sur soi"
 L["Hold to cast your click-cast helpful spells on yourself. Your target and Target Lock don't change."] =
   "Maintenez-le pour lancer sur vous-même les sorts bénéfiques de vos boutons de clic. Votre cible et le Verrouillage de cible ne changent pas."
 L["Prioritize Crosshair Target"] = "Prioriser la cible du réticule"
+L["Auto Lock Allies"] = "Verrouillage auto des alliés"
+L["Let Auto Target Lock lock the allies you heal. Manual Target Lock works either way."] =
+  "Permet au verrouillage de cible automatique de verrouiller les alliés que vous soignez. Le verrouillage manuel fonctionne dans les deux cas."
 L["Cycle NPCs and Pets"] = "Alterner entre PNJ et familiers"
 L["Cycle Lock also includes nearby NPCs and pets. While off, friendly pet nameplates are hidden."] =
   "Cycler le verrouillage inclut aussi les PNJ et familiers proches. Tant que l'option est désactivée, les barres de nom des familiers alliés sont masquées."
@@ -552,8 +555,8 @@ L["Set a Radial Menu key"] = "Définissez une touche du menu radial"
 L["Set an Ally Cycle - Next key"] = "Définissez une touche Cycle d'alliés – Suivant"
 L["Set an Ally Cycle - Previous key"] = "Définissez une touche Cycle d'alliés – Précédent"
 L["Set a Support Mode key"] = "Définissez une touche de Mode soutien"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
-  "Un mode axé sur le soutien qui, une fois actif, fait passer votre barre d'action principale sur une {page de soutien} dédiée et permet aux {sorts bénéfiques} de cibler l'unité amicale sous votre réticule.\n\nDéfinissez votre touche."
+L["A support-focused mode that, when active, switches your main action bar to the selected {Support Bar Page}. With {Click Casting}, the {helpful spells} on that page can target the friendly unit under your crosshair.\n\nSet your key."] =
+  "Un mode axé sur le soutien qui, une fois actif, fait passer votre barre d'action principale sur la page choisie dans {Page de la barre de soutien}. Avec {Lancer par clic}, les {sorts bénéfiques} de cette page peuvent cibler l'unité amicale sous votre réticule.\n\nDéfinissez votre touche."
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "Activer ou désactiver le ciblage par réticule recharge l'interface."
 L["Needs Reticle Targeting."] = "Nécessite le ciblage par réticule."

@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Unlock for Ping** in **Auto Unlock**, on by default. Hold a **Ping** key to aim with a free cursor, and release it to return to **Mouse Look**. Turn it off to keep pinging with the crosshair.
 - **Unlock for Chat** in **Auto Unlock**, on by default. The cursor is released while you type in chat, and **Mouse Look** returns when you're done.
 - **Hide Focus Frame** in the **Target Lock** section, off by default and shared by all your characters. Hides Blizzard's focus frame while keeping your focus and **Target Lock**.
+- **Support Mode** has a new **Auto Lock Allies** option, on by default. Turn it off to keep **Auto Target Lock** for enemies without it locking the allies you heal. Manual **Target Lock** works either way.
 
 ## [5.5.2] - 2026-11-19
 

@@ -461,13 +461,16 @@ L["support mode keybinding"] = "привязка режима поддержки
 L["support mode self-cast keybinding"] =
   "привязка применения к себе в режиме поддержки"
 L["SUPPORT MODE"] = "РЕЖИМ ПОДДЕРЖКИ"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
-  "Режим поддержки: при включении переключает основную панель команд на отдельную страницу поддержки и позволяет полезным заклинаниям выбирать целью дружественного юнита под прицелом."
+L["A support-focused mode that, when active, switches your main action bar to the selected Support Bar Page. With Click Casting, the helpful spells on that page can target the friendly unit under your crosshair."] =
+  "Режим поддержки: при включении переключает основную панель команд на выбранную страницу панели поддержки. При применении по щелчку полезные заклинания с этой страницы могут выбирать целью дружественного юнита под прицелом."
 L["Support Mode Keybind"] = "Клавиша режима поддержки"
 L["Self-Cast Keybind"] = "Клавиша применения к себе"
 L["Hold to cast your click-cast helpful spells on yourself. Your target and Target Lock don't change."] =
   "Удерживайте, чтобы применять полезные заклинания кнопок щелчка к себе. Ваша цель и захват цели не меняются."
 L["Prioritize Crosshair Target"] = "Приоритет цели под прицелом"
+L["Auto Lock Allies"] = "Автозахват союзников"
+L["Let Auto Target Lock lock the allies you heal. Manual Target Lock works either way."] =
+  "Позволяет автозахвату цели захватывать союзников, которых вы лечите. Ручной захват цели работает в любом случае."
 L["Cycle NPCs and Pets"] = "Перебор NPC и питомцев"
 L["Cycle Lock also includes nearby NPCs and pets. While off, friendly pet nameplates are hidden."] =
   "Смена захвата также включает ближайших NPC и питомцев. Пока опция выключена, индикаторы здоровья дружественных питомцев скрыты."
@@ -582,8 +585,8 @@ L["Set an Ally Cycle - Next key"] =
 L["Set an Ally Cycle - Previous key"] =
   "Назначьте клавишу «Смена союзника – Предыдущий»"
 L["Set a Support Mode key"] = "Назначьте клавишу режима поддержки"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
-  "Режим поддержки: при включении переключает основную панель команд на отдельную {страницу поддержки} и позволяет {полезным заклинаниям} выбирать целью дружественного юнита под прицелом.\n\nНазначьте клавишу."
+L["A support-focused mode that, when active, switches your main action bar to the selected {Support Bar Page}. With {Click Casting}, the {helpful spells} on that page can target the friendly unit under your crosshair.\n\nSet your key."] =
+  "Режим поддержки: при включении переключает основную панель команд на выбранную {страницу панели поддержки}. При {применении по щелчку} {полезные заклинания} с этой страницы могут выбирать целью дружественного юнита под прицелом.\n\nНазначьте клавишу."
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "Включение или выключение наведения по прицелу перезагружает интерфейс."
 L["Needs Reticle Targeting."] = "Требуется наведение по прицелу."

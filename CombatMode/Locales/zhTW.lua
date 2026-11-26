@@ -421,13 +421,16 @@ L["Support Mode Self-Cast"] = "輔助模式自我施法"
 L["support mode keybinding"] = "輔助模式按鍵綁定"
 L["support mode self-cast keybinding"] = "輔助模式自我施法按鍵綁定"
 L["SUPPORT MODE"] = "輔助模式"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
-  "一種以支援為核心的模式：啟用後會將主動作列切換到專用的支援頁，並允許增益法術以準星下的友方單位為目標。"
+L["A support-focused mode that, when active, switches your main action bar to the selected Support Bar Page. With Click Casting, the helpful spells on that page can target the friendly unit under your crosshair."] =
+  "一種以支援為核心的模式：啟用後會將主動作列切換到所選的輔助快捷列頁。透過點擊施法，該頁上的增益法術可以以準星下的友方單位為目標。"
 L["Support Mode Keybind"] = "輔助模式按鍵"
 L["Self-Cast Keybind"] = "自我施法按鍵"
 L["Hold to cast your click-cast helpful spells on yourself. Your target and Target Lock don't change."] =
   "按住此鍵，可將點擊施法按鍵上的有益法術施放給自己。你的目標和目標鎖定不會改變。"
 L["Prioritize Crosshair Target"] = "優先準星目標"
+L["Auto Lock Allies"] = "自動鎖定友方"
+L["Let Auto Target Lock lock the allies you heal. Manual Target Lock works either way."] =
+  "讓自動目標鎖定也鎖定你治療的友方。無論是否開啟，手動目標鎖定都可使用。"
 L["Cycle NPCs and Pets"] = "輪替 NPC 和寵物"
 L["Cycle Lock also includes nearby NPCs and pets. While off, friendly pet nameplates are hidden."] =
   "循環鎖定也會包含附近的 NPC 和寵物。關閉時，友方寵物的名條會被隱藏。"
@@ -534,8 +537,8 @@ L["Set a Radial Menu key"] = "設定輪盤選單按鍵"
 L["Set an Ally Cycle - Next key"] = "設定「友方循環 - 下一個」按鍵"
 L["Set an Ally Cycle - Previous key"] = "設定「友方循環 - 上一個」按鍵"
 L["Set a Support Mode key"] = "設定支援模式按鍵"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
-  "一種以支援為核心的模式：啟用後會將主動作列切換到專用的{支援頁}，並允許{增益法術}以準星下的友方單位為目標。\n\n請設定你的按鍵。"
+L["A support-focused mode that, when active, switches your main action bar to the selected {Support Bar Page}. With {Click Casting}, the {helpful spells} on that page can target the friendly unit under your crosshair.\n\nSet your key."] =
+  "一種以支援為核心的模式：啟用後會將主動作列切換到所選的{輔助快捷列頁}。透過{點擊施法}，該頁上的{增益法術}可以以準星下的友方單位為目標。\n\n請設定你的按鍵。"
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "開啟或關閉準星瞄準會重新載入介面。"
 L["Needs Reticle Targeting."] = "需要準星瞄準。"

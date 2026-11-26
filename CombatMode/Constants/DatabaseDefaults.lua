@@ -224,6 +224,8 @@ return false
     supportModeNameplateMode = "friendly",
     -- The unit under the crosshair beats a hard target / Ally Cycle pick (false: the target first)
     supportModeCrosshairFirst = false,
+    -- Auto Target Lock also locks the allies you heal in the mode
+    supportModeAutoTargetLock = true,
     -- Cycle Lock in the mode also walks NPCs and pets (false: nearby players only)
     supportModeCycleNPCs = false,
     -- Cycle Lock in the mode walks the party / raid in group order (false: the nearest ally)

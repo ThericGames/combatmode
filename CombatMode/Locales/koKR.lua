@@ -438,13 +438,16 @@ L["Support Mode Self-Cast"] = "지원 모드 자신에게 시전"
 L["support mode keybinding"] = "지원 모드 단축키"
 L["support mode self-cast keybinding"] = "지원 모드 자신에게 시전 단축키"
 L["SUPPORT MODE"] = "지원 모드"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
-  "활성화하면 주 행동 단축바를 전용 지원 페이지로 전환하고, 이로운 주문이 조준점 아래의 우호적 대상을 지정할 수 있게 하는 지원 중심 모드입니다."
+L["A support-focused mode that, when active, switches your main action bar to the selected Support Bar Page. With Click Casting, the helpful spells on that page can target the friendly unit under your crosshair."] =
+  "활성화하면 주 행동 단축바를 선택한 지원 단축바 페이지로 전환하는 지원 중심 모드입니다. 클릭 시전을 사용하면 해당 페이지의 이로운 주문이 조준점 아래의 우호적 대상을 지정할 수 있습니다."
 L["Support Mode Keybind"] = "지원 모드 단축키"
 L["Self-Cast Keybind"] = "자신에게 시전 단축키"
 L["Hold to cast your click-cast helpful spells on yourself. Your target and Target Lock don't change."] =
   "누르고 있으면 클릭 시전 버튼의 이로운 주문을 자신에게 시전합니다. 대상과 대상 고정은 바뀌지 않습니다."
 L["Prioritize Crosshair Target"] = "조준점 대상 우선"
+L["Auto Lock Allies"] = "아군 자동 고정"
+L["Let Auto Target Lock lock the allies you heal. Manual Target Lock works either way."] =
+  "자동 대상 고정이 치유하는 아군을 고정하도록 합니다. 수동 대상 고정은 어느 쪽이든 작동합니다."
 L["Cycle NPCs and Pets"] = "NPC 및 소환수 순환"
 L["Cycle Lock also includes nearby NPCs and pets. While off, friendly pet nameplates are hidden."] =
   "고정 순환에 주변 NPC와 소환수도 포함됩니다. 꺼져 있는 동안에는 우호적인 소환수의 이름표가 숨겨집니다."
@@ -552,8 +555,8 @@ L["Set a Radial Menu key"] = "방사형 메뉴 단축키 지정"
 L["Set an Ally Cycle - Next key"] = "아군 순환 - 다음 단축키 지정"
 L["Set an Ally Cycle - Previous key"] = "아군 순환 - 이전 단축키 지정"
 L["Set a Support Mode key"] = "지원 모드 단축키 지정"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
-  "활성화하면 주 행동 단축바를 전용 {지원 페이지}로 전환하고, {이로운 주문}이 조준점 아래의 우호적 대상을 지정할 수 있게 하는 지원 중심 모드입니다.\n\n단축키를 지정하세요."
+L["A support-focused mode that, when active, switches your main action bar to the selected {Support Bar Page}. With {Click Casting}, the {helpful spells} on that page can target the friendly unit under your crosshair.\n\nSet your key."] =
+  "활성화하면 주 행동 단축바를 선택한 {지원 단축바 페이지}로 전환하는 지원 중심 모드입니다. {클릭 시전}을 사용하면 해당 페이지의 {이로운 주문}이 조준점 아래의 우호적 대상을 지정할 수 있습니다.\n\n단축키를 지정하세요."
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "조준선 대상 지정을 켜거나 끄면 UI가 다시 불러와집니다."
 L["Needs Reticle Targeting."] = "조준선 대상 지정이 필요합니다."

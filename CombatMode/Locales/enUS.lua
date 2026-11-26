@@ -365,13 +365,15 @@ L["Support Mode Self-Cast"] = true
 L["support mode keybinding"] = true
 L["support mode self-cast keybinding"] = true
 L["SUPPORT MODE"] = true
-L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
+L["A support-focused mode that, when active, switches your main action bar to the selected Support Bar Page. With Click Casting, the helpful spells on that page can target the friendly unit under your crosshair."] =
   true
 L["Support Mode Keybind"] = true
 L["Self-Cast Keybind"] = true
 L["Hold to cast your click-cast helpful spells on yourself. Your target and Target Lock don't change."] =
   true
 L["Prioritize Crosshair Target"] = true
+L["Auto Lock Allies"] = true
+L["Let Auto Target Lock lock the allies you heal. Manual Target Lock works either way."] = true
 L["Cycle NPCs and Pets"] = true
 L["Cycle Lock also includes nearby NPCs and pets. While off, friendly pet nameplates are hidden."] =
   true
@@ -467,7 +469,7 @@ L["Set a Radial Menu key"] = true
 L["Set an Ally Cycle - Next key"] = true
 L["Set an Ally Cycle - Previous key"] = true
 L["Set a Support Mode key"] = true
-L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
+L["A support-focused mode that, when active, switches your main action bar to the selected {Support Bar Page}. With {Click Casting}, the {helpful spells} on that page can target the friendly unit under your crosshair.\n\nSet your key."] =
   true
 L["Turning Reticle Targeting on or off reloads the UI."] = true
 L["Needs Reticle Targeting."] = true

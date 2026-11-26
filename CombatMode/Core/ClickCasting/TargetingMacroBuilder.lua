@@ -1009,7 +1009,8 @@ local function SupportPreLine()
 end
 
 -- Auto Target Lock (char.autoTargetLockOnAttack) for allies, the user's call: the option locks
--- what you attack, so in Support Mode it also locks who you heal. The cast line is followed by
+-- what you attack, so in Support Mode it also locks who you heal, unless Auto Lock Allies
+-- (char.supportModeAutoTargetLock, default on) is off. The cast line is followed by
 --   /stopmacro [mod:SELFCAST][@focus,help,nodead]
 --   /focus <the allies in cast order, without the lock>
 -- A living locked ally already took the heal, so the macro stops and the lock stays. Otherwise
@@ -1133,7 +1134,10 @@ local function SupportCastLine(spellId)
   local units = SUPPORT_SELF_KEY .. SupportCastUnits()
   local selfCast = AutoSelfCastOn() and "[@player]" or ""
   local text
-  if CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false) then
+  if
+    CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false)
+    and CM.DbBool(CM.DB.char.supportModeAutoTargetLock, true)
+  then
     local combined = SupportAutoLockTargetText(selfCast, name)
     if combined then
       return combined, selfText
