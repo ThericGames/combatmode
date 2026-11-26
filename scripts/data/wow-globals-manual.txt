@@ -43,3 +43,6 @@ DEFAULT_ACTION_BUTTON_NAMES
 NUM_MOUSE_BUTTONS
 FocusFrame # Blizzard unit frame declared in XML.
 EditModeManagerFrame # Blizzard Edit Mode manager frame declared in XML.
+
+# C API (wow-api MCP: Mainline, Vanilla, Mists), absent from Blizzard Lua source. Guarded with a nil check.
+UnitIsFeignDeath

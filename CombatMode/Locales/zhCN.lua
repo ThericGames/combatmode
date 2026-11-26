@@ -152,6 +152,11 @@ L["Auto Sheath"] = "自动收起武器"
 L["Close Windows With Mouse Look"] = "随鼠标视角关闭窗口"
 L["Automatically close all open windows when toggling Mouse Look on."] =
   "开启鼠标视角时自动关闭所有已打开的窗口"
+L["Remember Last State"] = "记住上次状态"
+L["On"] = "开启"
+L["Initial Mouse Look State"] = "鼠标视角初始状态"
+L["The initial state Mouse Look starts in after a loading screen."] =
+  "载入画面结束后鼠标视角的初始状态。"
 L["Sheath weapons automatically with Mouse Look."] = "随鼠标视角自动收起武器。"
 L["Vignette Shows When"] = "暗角显示条件"
 L["Darkens the edges of the screen while the checked situations are true."] =

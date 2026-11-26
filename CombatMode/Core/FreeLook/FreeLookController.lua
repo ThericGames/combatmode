@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------------------------
 --  Core/FreeLook/FreeLookController.lua — FREELOOK — mouselook state machine
 ---------------------------------------------------------------------------------------
---  What it does: Owns Mouse Look lock/unlock, cursor-mode keybind behavior,
+--  What it does: Owns Mouse Look lock/unlock and its state after loading, cursor-mode keybind,
 --  ShouldFreeLookBeOff aggregation, cursor centering without the 10.2 jolt (centering 1 +
 --  speed dip → Start → Stop → centering 0 → Start), tooltip hide while locked
 --  (Show Tooltips With key peeks it beside the crosshair), optional sheath-with-mouselook (intentional toggle only), and the OPie rematch
@@ -99,6 +99,14 @@ local MOUSE_BINDING_BUTTON = {
   BUTTON4 = "Button4",
   BUTTON5 = "Button5",
 }
+
+-- The one writer of FreeLookOverride: also saved so Remember Last State survives a reload.
+local function SetFreeLookOverride(value)
+  FreeLookOverride = value
+  if CM.DB and CM.DB.char then
+    CM.DB.char.mouseLookFreed = value
+  end
+end
 
 local function CancelPendingSheath()
   pendingSheathToken = pendingSheathToken + 1
@@ -541,7 +549,7 @@ function CM.ShouldFreeLookBeOff()
     if forceLock and FreeLookOverride then
       -- Force lock consumed the manual unlock: drop the stale override and its tap poll so
       -- chrome / sheath state cannot be changed by a tap that force lock already undid.
-      FreeLookOverride = false
+      SetFreeLookOverride(false)
       CancelPendingTapSheath()
     end
     if not forceLock and FreeLookOverride then
@@ -721,6 +729,45 @@ function CM.UnlockFreeLook()
   CM.DebugPrint("Free Look Disabled")
 end
 
+--- PLAYER_ENTERING_WORLD, before Rematch: applies global.mouseLookStartState. "off" is the same
+--- state as a Mouse Look key tap, so the key turns it back on and Force Lock still wins.
+--- "keep" needs nothing across a loading screen (the Lua state survives); a reload restores the
+--- saved value, and a new login starts with Mouse Look on.
+function CM.ApplyMouseLookStartState(isInitialLogin, isReloadingUi)
+  local startState = CM.DB.global.mouseLookStartState
+  CancelPendingTapSheath()
+  if startState == "off" then
+    SetFreeLookOverride(true)
+  elseif startState ~= "on" and isReloadingUi then
+    SetFreeLookOverride(CM.DbBool(CM.DB.char.mouseLookFreed, false))
+  elseif startState == "on" or isInitialLogin then
+    SetFreeLookOverride(false)
+  end
+end
+
+function CM.IsMouseLookFreedByUser()
+  return FreeLookOverride
+end
+
+-- Next frame, so it runs after the deferred UI of a lock made before Rematch.
+local function RunSettleFreedUI()
+  if IsMouselooking() then
+    return
+  end
+  CM.SetCursorFreelookCentering(false)
+  HandleFreeLookUIState(false)
+  ClearMouseLookCameraChrome()
+end
+
+--- Rematch with the cursor freed: leave Mouse Look off with no unlock sound, pulse or sheath.
+function CM.SettleFreedMouseLook()
+  if IsMouselooking() then
+    MouselookStop()
+  end
+  cmMouselookActive = false
+  C_Timer.After(0, RunSettleFreedUI)
+end
+
 -- Called from AutoCursorUnlock while an OPie ring frame is visible.
 function CM.NotifyOpieUnlockFrameVisible()
   opieUnlockSeen = true
@@ -771,7 +818,7 @@ function _G.CombatMode_CursorModeKey(keystate)
         -- Close Windows: the windows were what kept the cursor free. Reconcile re-locks now
         -- (and the next tick does if a frame lingers), still honouring force-unlock etc.
         CancelPendingTapSheath()
-        FreeLookOverride = false
+        SetFreeLookOverride(false)
         CursorModeShowTime = 0
         CM.ReconcileFreeLook()
         return
@@ -781,7 +828,7 @@ function _G.CombatMode_CursorModeKey(keystate)
         -- so the key can lock and stay locked while that snippet remains true.
         CancelPendingTapSheath()
         CM.LockFreeLook()
-        FreeLookOverride = false
+        SetFreeLookOverride(false)
         CursorModeShowTime = 0 -- No spurious filter needed for lock
         ApplyWeaponsSheathed(false)
       end
@@ -798,7 +845,7 @@ function _G.CombatMode_CursorModeKey(keystate)
         customLockOnceConsumed = true
       end
       CursorModeShowTime = GetTime()
-      FreeLookOverride = true
+      SetFreeLookOverride(true)
       CM.UnlockFreeLook()
       ScheduleTapSheathPoll()
     end
@@ -818,7 +865,7 @@ function _G.CombatMode_CursorModeKey(keystate)
     -- Hold release: re-lock mouselook; do not sheath
     CancelPendingTapSheath()
     CM.LockFreeLook()
-    FreeLookOverride = false
+    SetFreeLookOverride(false)
   end
 end
 

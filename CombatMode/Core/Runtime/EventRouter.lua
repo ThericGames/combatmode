@@ -187,7 +187,15 @@ local function HandleEventByCategory(category, event, ...)
         CM.ReconcileFreeLook()
       end
     end,
-    REMATCH_EVENTS = function()
+    FEIGN_DEATH_EVENTS = function(...)
+      if CM.OnPlayerSpellSucceeded then
+        CM.OnPlayerSpellSucceeded(...)
+      end
+    end,
+    REMATCH_EVENTS = function(...)
+      if CM.ApplyMouseLookStartState then
+        CM.ApplyMouseLookStartState(...) -- isInitialLogin, isReloadingUi
+      end
       if CM.RuntimeRematch then
         CM.RuntimeRematch()
       end

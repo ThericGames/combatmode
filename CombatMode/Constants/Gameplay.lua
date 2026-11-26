@@ -144,6 +144,8 @@ CM.Constants.BLIZZARD_EVENTS = {
   FREELOOK_RECONCILE_EVENTS = {
     "CURRENT_SPELL_CAST_CHANGED", -- Ground spell (green circle) started / placed / cancelled
   },
+  -- Player spell cast landed: Feign Death frees the cursor before its aura shows up
+  FEIGN_DEATH_EVENTS = { "UNIT_SPELLCAST_SUCCEEDED" },
   -- Events that fire Rematch()
   REMATCH_EVENTS = {
     "PLAYER_ENTERING_WORLD", -- Loading Cvars on every reload

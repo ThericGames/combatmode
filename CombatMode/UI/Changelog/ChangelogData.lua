@@ -14,6 +14,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/2.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.5.4] - 2026-11-26
+
+### Added
+
+- **Initial Mouse Look State** in the **Mouse Look** tab sets whether **Mouse Look** is on or off after a loading screen. The default, **Remember Last State**, keeps it as you left it through loading screens and reloads, so a cursor you freed now stays free after a reload. Logging in still starts with it on.
+
+### Changed
+
+- The **Party Wheel** health rings have a new status bar look and now fill and drain smoothly as health changes. The swipe animation on the centre spell is a little larger too.
+
+### Fixed
+
+- **Feign Death** now frees your cursor right away in combat, so moving your mouse no longer makes you stand back up.
+
 ## [5.5.3] - 2026-11-26
 
 ### Added
@@ -992,7 +1006,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rapidly toggling OPie rings could leave the cursor stuck and visible while Mouse Look was active.
 - Reloading could leave the cursor visible while still in the Mouse Look state after the loading screen.
 
-[Unreleased]: https://github.com/ThericGames/combatmode/compare/5.5.3...HEAD
+[Unreleased]: https://github.com/ThericGames/combatmode/compare/5.5.4...HEAD
+[5.5.4]: https://github.com/ThericGames/combatmode/compare/5.5.3...5.5.4
 [5.5.3]: https://github.com/ThericGames/combatmode/compare/5.5.2...5.5.3
 [5.5.2]: https://github.com/ThericGames/combatmode/compare/5.5.1...5.5.2
 [5.5.1]: https://github.com/ThericGames/combatmode/compare/5.5.0...5.5.1
