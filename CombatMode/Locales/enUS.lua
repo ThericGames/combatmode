@@ -555,6 +555,7 @@ L["No matching options"] = true
 L["Section"] = true
 L["Tab"] = true
 L["Color"] = true
+L["All Ranks"] = true
 L["Type spell name or ID…"] = true
 L["Type mount name or spell ID…"] = true
 L["Type a frame name…"] = true

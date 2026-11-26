@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Unlock for Chat** in **Auto Unlock**, on by default. The cursor is released while you type in chat, and **Mouse Look** returns when you're done.
 - **Hide Focus Frame** in the **Target Lock** section, off by default and shared by all your characters. Hides Blizzard's focus frame while keeping your focus and **Target Lock**.
 - **Support Mode** has a new **Auto Lock Allies** option, on by default. Turn it off to keep **Auto Target Lock** for enemies without it locking the allies you heal. Manual **Target Lock** works either way.
+- On Forever and Classic, **Party Wheel Spells**, **Excluded Spells** and **Cast at Crosshair** have a new **All Ranks** pick. One entry covers every rank of a spell, including ones you train later.
+
+### Fixed
+
+- The **Party Wheel** now casts the spell rank that's on the key you hold.
 
 ## [5.5.2] - 2026-11-19
 

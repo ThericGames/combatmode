@@ -9,7 +9,7 @@ When you move or rename modules, update this file, `Embeds.xml`, the matching `.
 
 ## Load order (scripts)
 
-1. **CombatMode/Core/Runtime/Runtime.lua** — receives the AddOn namespace (`local addonName, CM = ...`), optional `_G.CM` alias, registers `ADDON_LOADED` / `PLAYER_LOGIN` lifecycle, native `CombatModeDB` merge, and slash commands (`/acm`, `/actioncombatmode`). **Safe.lua** follows at once (`CM.Safe`, the secret-value readers every module aliases).
+1. **CombatMode/Core/Runtime/Runtime.lua** — receives the AddOn namespace (`local addonName, CM = ...`), optional `_G.CM` alias, registers `ADDON_LOADED` / `PLAYER_LOGIN` lifecycle, native `CombatModeDB` merge, and slash commands (`/acm`, `/actioncombatmode`). **Safe.lua** follows at once (`CM.Safe`, the secret-value readers every module aliases), then **SpellRanks.lua** (`CM.SpellRanks`: rank text, ranked cast names and the spell list CSV reader).
 2. **CombatMode/Constants/** — constants/data modules initialize `CM.Constants` and must load before feature consumers (`Namespace.lua` first).
    - **CombatMode/Locales/** loads right after `Constants/Namespace.lua`: **Locale.lua** (`CM.L`, English text is the key, missing entries fall back to it), **enUS.lua** (canonical key list), then one file per other client locale (deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW; each returns early unless `GetLocale()` matches). See `.claude/rules/localization.md`.
 3. **CombatMode/Core/Dev/** — developer tools with no production impact when idle:

@@ -429,6 +429,11 @@ function CM.ApplyGroundCastKeyOverrides()
     return
   end
 
+  -- Which ranks All Ranks covers depends on what is on the bars right now.
+  if CM.PartyWheelStoreSpells then
+    CM.PartyWheelStoreSpells()
+  end
+
   for bindingIndex, bindingName in ipairs(OrderedBindingNames) do
     local key1 = GetBindingKey(bindingName)
     local key2 = select(2, GetBindingKey(bindingName))

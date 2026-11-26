@@ -677,6 +677,7 @@ L["No matching options"] = "Подходящих настроек нет"
 L["Section"] = "Раздел"
 L["Tab"] = "Вкладка"
 L["Color"] = "Цвет"
+L["All Ranks"] = "Все уровни"
 L["Type spell name or ID…"] = "Введите название или ID заклинания…"
 L["Type mount name or spell ID…"] =
   "Введите название транспорта или ID заклинания…"

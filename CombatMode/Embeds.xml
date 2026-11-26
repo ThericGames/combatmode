@@ -4,6 +4,7 @@
          and feature modules load. -->
     <Script file="Core\Runtime\Runtime.lua"/>
     <Script file="Core\Runtime\Safe.lua"/>
+    <Script file="Core\Runtime\SpellRanks.lua"/>
     <!-- CONSTANTS (must load before feature consumers) -->
     <Script file="Constants\Namespace.lua"/>
     <!-- LOCALES: CM.L must exist before any consumer (Constants/Assets.lua builds strings at load).
