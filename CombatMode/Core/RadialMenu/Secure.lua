@@ -357,7 +357,10 @@ local function StoreImpl()
     Wheel:SetAttribute("rcur", 1)
   end
   Wheel:SetAttribute("rdead", CM.RadialStyle().dead)
-  Wheel:SetAttribute("ryoff", CrosshairYOffset())
+  -- SetPoint offsets are in the wheel's own scale: divide so it stays on the crosshair.
+  local scale = CM.RadialScale()
+  Wheel:SetScale(scale)
+  Wheel:SetAttribute("ryoff", CrosshairYOffset() / scale)
   Wheel:Execute([[ local owner = self ]] .. APPLY)
   if CM.RadialViewRefresh then
     CM.RadialViewRefresh()

@@ -409,6 +409,9 @@ L["Hold to open the radial menu, aim at a slice, then release to activate it. Sc
 L["Radial Menu Style"] = "Стиль радиального меню"
 L["Choose the appearance of the Radial Menu wheels."] =
   "Выберите внешний вид колес радиального меню."
+L["Radial Menu Scale"] = "Масштаб радиального меню"
+L["Scales the size of the Radial Menu and Party Wheel."] =
+  "Изменяет размер радиального меню и колеса группы."
 L["Party Wheel Spells"] = "Заклинания колеса группы"
 L["Helpful spells that open a party targeting wheel while their key is held. Flick toward a party member and release to cast on them, or return to the center to cast on yourself. Tap to cast on your friendly target, or yourself if none is selected."] =
   "Полезные заклинания, открывающие колесо выбора цели из группы, пока удерживается их клавиша. Сдвиньте курсор к участнику группы и отпустите, чтобы применить на него, или вернитесь в центр, чтобы применить на себя. Короткое нажатие применяет на дружественную цель, а если ее нет, то на вас."
@@ -461,13 +464,16 @@ L["support mode keybinding"] = "привязка режима поддержки
 L["support mode self-cast keybinding"] =
   "привязка применения к себе в режиме поддержки"
 L["SUPPORT MODE"] = "РЕЖИМ ПОДДЕРЖКИ"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
-  "Режим поддержки: при включении переключает основную панель команд на отдельную страницу поддержки и позволяет полезным заклинаниям выбирать целью дружественного юнита под прицелом."
+L["A support-focused mode that, when active, switches your main action bar to the selected Support Bar Page. With Click Casting, the helpful spells on that page can target the friendly unit under your crosshair."] =
+  "Режим поддержки: при включении переключает основную панель команд на выбранную страницу панели поддержки. При применении по щелчку полезные заклинания с этой страницы могут выбирать целью дружественного юнита под прицелом."
 L["Support Mode Keybind"] = "Клавиша режима поддержки"
 L["Self-Cast Keybind"] = "Клавиша применения к себе"
 L["Hold to cast your click-cast helpful spells on yourself. Your target and Target Lock don't change."] =
   "Удерживайте, чтобы применять полезные заклинания кнопок щелчка к себе. Ваша цель и захват цели не меняются."
 L["Prioritize Crosshair Target"] = "Приоритет цели под прицелом"
+L["Auto Lock Allies"] = "Автозахват союзников"
+L["Let Auto Target Lock lock the allies you heal. Manual Target Lock works either way."] =
+  "Позволяет автозахвату цели захватывать союзников, которых вы лечите. Ручной захват цели работает в любом случае."
 L["Cycle NPCs and Pets"] = "Перебор NPC и питомцев"
 L["Cycle Lock also includes nearby NPCs and pets. While off, friendly pet nameplates are hidden."] =
   "Смена захвата также включает ближайших NPC и питомцев. Пока опция выключена, индикаторы здоровья дружественных питомцев скрыты."
@@ -582,8 +588,8 @@ L["Set an Ally Cycle - Next key"] =
 L["Set an Ally Cycle - Previous key"] =
   "Назначьте клавишу «Смена союзника – Предыдущий»"
 L["Set a Support Mode key"] = "Назначьте клавишу режима поддержки"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
-  "Режим поддержки: при включении переключает основную панель команд на отдельную {страницу поддержки} и позволяет {полезным заклинаниям} выбирать целью дружественного юнита под прицелом.\n\nНазначьте клавишу."
+L["A support-focused mode that, when active, switches your main action bar to the selected {Support Bar Page}. With {Click Casting}, the {helpful spells} on that page can target the friendly unit under your crosshair.\n\nSet your key."] =
+  "Режим поддержки: при включении переключает основную панель команд на выбранную {страницу панели поддержки}. При {применении по щелчку} {полезные заклинания} с этой страницы могут выбирать целью дружественного юнита под прицелом.\n\nНазначьте клавишу."
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "Включение или выключение наведения по прицелу перезагружает интерфейс."
 L["Needs Reticle Targeting."] = "Требуется наведение по прицелу."
@@ -674,6 +680,7 @@ L["No matching options"] = "Подходящих настроек нет"
 L["Section"] = "Раздел"
 L["Tab"] = "Вкладка"
 L["Color"] = "Цвет"
+L["All Ranks"] = "Все уровни"
 L["Type spell name or ID…"] = "Введите название или ID заклинания…"
 L["Type mount name or spell ID…"] =
   "Введите название транспорта или ID заклинания…"
@@ -883,3 +890,18 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "Макрос «%s» больше не помещается с текущей предстрокой; измените его в разделе макросов наведения по прицелу."
 L["Click to print URL to chat"] = "Нажмите, чтобы вывести ссылку в чат"
+
+-- Auto Unlock: optional cursor aiming for native Ping.
+L["Unlock for Ping"] = "Разблокировать для сигналов"
+L["Release the cursor to aim while a Ping key is held."] =
+  "Освобождает курсор для наведения, пока удерживается клавиша сигнала."
+
+-- Target Lock: optional Blizzard focus frame hiding.
+L["Hide Focus Frame"] = "Скрыть рамку фокуса"
+L["Hide Blizzard's focus frame. Your focus and Target Lock are kept."] =
+  "Скрывает рамку фокуса Blizzard. Фокус и захват цели сохраняются."
+
+-- Auto Unlock: chat input.
+L["Unlock for Chat"] = "Разблокировать для чата"
+L["Release the cursor while typing in chat."] =
+  "Освобождает курсор, пока вы пишете в чат."

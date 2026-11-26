@@ -3563,6 +3563,8 @@ end
 --                                  `token` (frame names) instead of a numeric `spellId`
 --    pickFrame (optional)       -> function(onPick): adds a magnifier button at the box's top
 --                                  right that calls it; onPick(token) adds the picked entry
+--  An entry with `allRanks` (spells, stored "*<id>") covers every spell of its name: picking it
+--  drops their single-rank pills, and they are not suggested while it is listed.
 --  An entry may carry `icon` (texture path / file ID) or `atlas` (atlas name) for its chip and
 --  suggestion row, and a suggestion may carry `detail`: a short dim label shown at the row's right.
 --  Public wrappers (MakeSpellMultiSelect, MakeMountMultiSelect, MakeFrameMultiSelect) pass the
@@ -3650,11 +3652,12 @@ function UI.MakePillMultiSelect(parent, opts, resolver)
   local function SelectedMaps()
     local ids, names = {}, {}
     for _, e in ipairs(entries) do
-      if e.spellId then
+      if e.spellId and not e.allRanks then
         ids[e.spellId] = true
       end
-      -- Spells are told apart by ID (ranks share a name); names only dedupe ID-less entries.
-      if not e.spellId then
+      -- Spells are told apart by ID (ranks share a name); names dedupe ID-less entries and
+      -- hide the ranks an All Ranks entry covers.
+      if e.allRanks or not e.spellId then
         if e.name then
           names[strlower(e.name)] = true
         end
@@ -3666,10 +3669,19 @@ function UI.MakePillMultiSelect(parent, opts, resolver)
     return ids, names
   end
 
+  local function SameName(a, b)
+    return a.name ~= nil and b.name ~= nil and strlower(a.name) == strlower(b.name)
+  end
+
   local function IsAlreadySelected(entry)
     local ids, names = SelectedMaps()
     if entry.spellId then
-      return ids[entry.spellId] == true
+      for _, e in ipairs(entries) do
+        if e.allRanks and SameName(e, entry) then
+          return true
+        end
+      end
+      return not entry.allRanks and ids[entry.spellId] == true
     end
     if entry.name and names[strlower(entry.name)] then
       return true
@@ -3704,9 +3716,12 @@ function UI.MakePillMultiSelect(parent, opts, resolver)
           seen[key] = true
           parts[#parts + 1] = e.token
         end
-      elseif e.spellId and e.spellId > 0 and not seen[e.spellId] then
-        seen[e.spellId] = true
-        parts[#parts + 1] = tostring(e.spellId)
+      elseif e.spellId and e.spellId > 0 then
+        local key = (e.allRanks and "*" or "") .. e.spellId
+        if not seen[key] then
+          seen[key] = true
+          parts[#parts + 1] = key
+        end
       end
     end
     return tconcat(parts, ", ")
@@ -3875,11 +3890,21 @@ function UI.MakePillMultiSelect(parent, opts, resolver)
       if not entry.spellId or entry.spellId <= 0 then
         return false
       end
+      -- All Ranks replaces the single ranks of that spell.
+      if entry.allRanks then
+        for i = #entries, 1, -1 do
+          if entries[i].spellId and SameName(entries[i], entry) then
+            tremove(entries, i)
+          end
+        end
+      end
       entries[#entries + 1] = {
-        token = tostring(entry.spellId),
+        token = entry.token or tostring(entry.spellId),
         spellId = entry.spellId,
         name = entry.name or tostring(entry.spellId),
         icon = entry.icon,
+        rank = entry.rank,
+        allRanks = entry.allRanks,
       }
     end
     edit:SetText("")

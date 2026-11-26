@@ -388,6 +388,9 @@ L["Hold to open the radial menu, aim at a slice, then release to activate it. Sc
 L["Radial Menu Style"] = "Estilo do menu radial"
 L["Choose the appearance of the Radial Menu wheels."] =
   "Escolha a aparência das rodas do menu radial."
+L["Radial Menu Scale"] = "Escala do menu radial"
+L["Scales the size of the Radial Menu and Party Wheel."] =
+  "Ajusta o tamanho do menu radial e da roda de grupo."
 L["Party Wheel Spells"] = "Magias da roda de grupo"
 L["Helpful spells that open a party targeting wheel while their key is held. Flick toward a party member and release to cast on them, or return to the center to cast on yourself. Tap to cast on your friendly target, or yourself if none is selected."] =
   "Magias benéficas que abrem uma roda de alvos do grupo enquanto a tecla é mantida. Mova para um membro do grupo e solte para lançar nele, ou volte ao centro para lançar em você. Um toque rápido lança no seu alvo amigável, ou em você se não houver nenhum."
@@ -436,13 +439,16 @@ L["Support Mode Self-Cast"] = "Modo de Suporte: autolançamento"
 L["support mode keybinding"] = "atalho do modo de suporte"
 L["support mode self-cast keybinding"] = "atalho de autolançamento do modo de suporte"
 L["SUPPORT MODE"] = "MODO DE SUPORTE"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
-  "Um modo focado em apoio que, quando ativo, muda sua barra de ação principal para uma página de apoio dedicada e permite que magias benéficas mirem a unidade amigável sob a mira."
+L["A support-focused mode that, when active, switches your main action bar to the selected Support Bar Page. With Click Casting, the helpful spells on that page can target the friendly unit under your crosshair."] =
+  "Um modo focado em apoio que, quando ativo, muda sua barra de ação principal para a página escolhida em Página da barra de suporte. Com o Lançamento por clique, as magias benéficas dessa página podem mirar a unidade amigável sob a mira."
 L["Support Mode Keybind"] = "Atalho do Modo de Suporte"
 L["Self-Cast Keybind"] = "Atalho de autolançamento"
 L["Hold to cast your click-cast helpful spells on yourself. Your target and Target Lock don't change."] =
   "Segure para lançar em você os feitiços benéficos dos seus botões de clique. Seu alvo e o Travar alvo não mudam."
 L["Prioritize Crosshair Target"] = "Priorizar o alvo da mira"
+L["Auto Lock Allies"] = "Travar aliados automaticamente"
+L["Let Auto Target Lock lock the allies you heal. Manual Target Lock works either way."] =
+  "Permite que a trava de alvo automática trave os aliados que você cura. A trava manual funciona em ambos os casos."
 L["Cycle NPCs and Pets"] = "Alternar entre NPCs e ajudantes"
 L["Cycle Lock also includes nearby NPCs and pets. While off, friendly pet nameplates are hidden."] =
   "Alternar trava também inclui NPCs e ajudantes próximos. Enquanto estiver desativado, as placas de identificação de ajudantes aliados ficam ocultas."
@@ -551,8 +557,8 @@ L["Set a Radial Menu key"] = "Defina uma tecla do menu radial"
 L["Set an Ally Cycle - Next key"] = "Defina uma tecla de Ciclo de aliados – Próximo"
 L["Set an Ally Cycle - Previous key"] = "Defina uma tecla de Ciclo de aliados – Anterior"
 L["Set a Support Mode key"] = "Defina uma tecla de Modo de apoio"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
-  "Um modo focado em apoio que, quando ativo, muda sua barra de ação principal para uma {página de apoio} dedicada e permite que as {magias benéficas} mirem a unidade amigável sob a mira.\n\nDefina sua tecla."
+L["A support-focused mode that, when active, switches your main action bar to the selected {Support Bar Page}. With {Click Casting}, the {helpful spells} on that page can target the friendly unit under your crosshair.\n\nSet your key."] =
+  "Um modo focado em apoio que, quando ativo, muda sua barra de ação principal para a página escolhida em {Página da barra de suporte}. Com o {Lançamento por clique}, as {magias benéficas} dessa página podem mirar a unidade amigável sob a mira.\n\nDefina sua tecla."
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "Ativar ou desativar a Mira de Alvo recarrega a interface."
 L["Needs Reticle Targeting."] = "Requer a Mira de Alvo."
@@ -641,6 +647,7 @@ L["No matching options"] = "Nenhuma opção correspondente"
 L["Section"] = "Seção"
 L["Tab"] = "Aba"
 L["Color"] = "Cor"
+L["All Ranks"] = "Todos os graus"
 L["Type spell name or ID…"] = "Digite o nome ou ID da magia…"
 L["Type mount name or spell ID…"] = "Digite o nome da montaria ou o ID da magia…"
 L["Type a frame name…"] = "Digite o nome de um quadro…"
@@ -836,3 +843,17 @@ L["Macro is %d characters over the %d limit."] = "A macro excede em %d caractere
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "A macro “%s” não cabe mais com a pré-linha atual; edite-a em Macros de Mira de Alvo."
 L["Click to print URL to chat"] = "Clique para exibir a URL no chat"
+
+-- Auto Unlock: optional cursor aiming for native Ping.
+L["Unlock for Ping"] = "Desbloquear para sinais"
+L["Release the cursor to aim while a Ping key is held."] =
+  "Libera o cursor para mirar enquanto uma tecla de sinal estiver pressionada."
+
+-- Target Lock: optional Blizzard focus frame hiding.
+L["Hide Focus Frame"] = "Ocultar quadro de foco"
+L["Hide Blizzard's focus frame. Your focus and Target Lock are kept."] =
+  "Oculta o quadro de foco da Blizzard. Seu foco e a trava de alvo são mantidos."
+
+-- Auto Unlock: chat input.
+L["Unlock for Chat"] = "Desbloquear para o chat"
+L["Release the cursor while typing in chat."] = "Libera o cursor enquanto você digita no chat."

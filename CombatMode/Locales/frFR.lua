@@ -388,6 +388,9 @@ L["Hold to open the radial menu, aim at a slice, then release to activate it. Sc
 L["Radial Menu Style"] = "Style du menu radial"
 L["Choose the appearance of the Radial Menu wheels."] =
   "Choisissez l'apparence des roues du menu radial."
+L["Radial Menu Scale"] = "Échelle du menu radial"
+L["Scales the size of the Radial Menu and Party Wheel."] =
+  "Redimensionne le menu radial et la roue de groupe."
 L["Party Wheel Spells"] = "Sorts de la roue de groupe"
 L["Helpful spells that open a party targeting wheel while their key is held. Flick toward a party member and release to cast on them, or return to the center to cast on yourself. Tap to cast on your friendly target, or yourself if none is selected."] =
   "Sorts bénéfiques qui ouvrent une roue de ciblage de groupe tant que leur touche est maintenue. Dirigez-vous vers un membre du groupe et relâchez pour le lancer sur lui, ou revenez au centre pour le lancer sur vous. Une simple pression le lance sur votre cible amie, ou sur vous si aucune n'est sélectionnée."
@@ -436,13 +439,16 @@ L["Support Mode Self-Cast"] = "Mode soutien : lancer sur soi"
 L["support mode keybinding"] = "raccourci du mode soutien"
 L["support mode self-cast keybinding"] = "raccourci de lancer sur soi du mode soutien"
 L["SUPPORT MODE"] = "MODE SOUTIEN"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
-  "Un mode axé sur le soutien qui, une fois actif, fait passer votre barre d'action principale sur une page de soutien dédiée et permet aux sorts bénéfiques de cibler l'unité amicale sous votre réticule."
+L["A support-focused mode that, when active, switches your main action bar to the selected Support Bar Page. With Click Casting, the helpful spells on that page can target the friendly unit under your crosshair."] =
+  "Un mode axé sur le soutien qui, une fois actif, fait passer votre barre d'action principale sur la page choisie dans Page de la barre de soutien. Avec Lancer par clic, les sorts bénéfiques de cette page peuvent cibler l'unité amicale sous votre réticule."
 L["Support Mode Keybind"] = "Raccourci du mode soutien"
 L["Self-Cast Keybind"] = "Raccourci de lancer sur soi"
 L["Hold to cast your click-cast helpful spells on yourself. Your target and Target Lock don't change."] =
   "Maintenez-le pour lancer sur vous-même les sorts bénéfiques de vos boutons de clic. Votre cible et le Verrouillage de cible ne changent pas."
 L["Prioritize Crosshair Target"] = "Prioriser la cible du réticule"
+L["Auto Lock Allies"] = "Verrouillage auto des alliés"
+L["Let Auto Target Lock lock the allies you heal. Manual Target Lock works either way."] =
+  "Permet au verrouillage de cible automatique de verrouiller les alliés que vous soignez. Le verrouillage manuel fonctionne dans les deux cas."
 L["Cycle NPCs and Pets"] = "Alterner entre PNJ et familiers"
 L["Cycle Lock also includes nearby NPCs and pets. While off, friendly pet nameplates are hidden."] =
   "Cycler le verrouillage inclut aussi les PNJ et familiers proches. Tant que l'option est désactivée, les barres de nom des familiers alliés sont masquées."
@@ -552,8 +558,8 @@ L["Set a Radial Menu key"] = "Définissez une touche du menu radial"
 L["Set an Ally Cycle - Next key"] = "Définissez une touche Cycle d'alliés – Suivant"
 L["Set an Ally Cycle - Previous key"] = "Définissez une touche Cycle d'alliés – Précédent"
 L["Set a Support Mode key"] = "Définissez une touche de Mode soutien"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
-  "Un mode axé sur le soutien qui, une fois actif, fait passer votre barre d'action principale sur une {page de soutien} dédiée et permet aux {sorts bénéfiques} de cibler l'unité amicale sous votre réticule.\n\nDéfinissez votre touche."
+L["A support-focused mode that, when active, switches your main action bar to the selected {Support Bar Page}. With {Click Casting}, the {helpful spells} on that page can target the friendly unit under your crosshair.\n\nSet your key."] =
+  "Un mode axé sur le soutien qui, une fois actif, fait passer votre barre d'action principale sur la page choisie dans {Page de la barre de soutien}. Avec {Lancer par clic}, les {sorts bénéfiques} de cette page peuvent cibler l'unité amicale sous votre réticule.\n\nDéfinissez votre touche."
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "Activer ou désactiver le ciblage par réticule recharge l'interface."
 L["Needs Reticle Targeting."] = "Nécessite le ciblage par réticule."
@@ -642,6 +648,7 @@ L["No matching options"] = "Aucune option correspondante"
 L["Section"] = "Section"
 L["Tab"] = "Onglet"
 L["Color"] = "Couleur"
+L["All Ranks"] = "Tous les rangs"
 L["Type spell name or ID…"] = "Saisissez le nom ou l'ID du sort…"
 L["Type mount name or spell ID…"] = "Saisissez le nom de la monture ou l'ID du sort…"
 L["Type a frame name…"] = "Saisissez un nom de cadre…"
@@ -841,3 +848,18 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "La macro « %s » ne tient plus avec la préligne actuelle ; modifiez-la depuis les macros de ciblage par réticule."
 L["Click to print URL to chat"] = "Cliquez pour afficher l'URL dans le chat"
+
+-- Auto Unlock: optional cursor aiming for native Ping.
+L["Unlock for Ping"] = "Déverrouiller pour les signaux"
+L["Release the cursor to aim while a Ping key is held."] =
+  "Libère le curseur pour viser tant qu'une touche de signal est maintenue."
+
+-- Target Lock: optional Blizzard focus frame hiding.
+L["Hide Focus Frame"] = "Masquer le cadre de focalisation"
+L["Hide Blizzard's focus frame. Your focus and Target Lock are kept."] =
+  "Masque le cadre de focalisation de Blizzard. Votre focalisation et le verrouillage de cible sont conservés."
+
+-- Auto Unlock: chat input.
+L["Unlock for Chat"] = "Déverrouiller pour le chat"
+L["Release the cursor while typing in chat."] =
+  "Libère le curseur pendant que vous écrivez dans le chat."

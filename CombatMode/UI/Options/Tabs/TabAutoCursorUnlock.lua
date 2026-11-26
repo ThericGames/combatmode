@@ -6,11 +6,12 @@
 --  The customCondition Lua box lives on Advanced.
 --  No direct freelook calls — predicates read these keys each update.
 --  Architecture / how it works:
---    • DB.global.frameWatching, mountsToUnlock (CSV → table), watchlist.
+--    • DB.global.frameWatching, unlockCursorForPing, mountsToUnlock (CSV → table), watchlist.
 --      customCondition is edited on TabAdvanced.
 --    • Vendor Mounts now uses the mount multi-select instead of a toggle. The default
 --      list is seeded with known vendor mounts; users can add any mount they own.
 --    • Extra Frames disabled when frameWatching is off.
+--    • unlockWhileChatting controls cursor release while the chat input has focus.
 --  Does not: Evaluate visibility or call MouselookStop.
 --  Related: Core/FreeLook/AutoCursorUnlock.lua, Constants/FrameWatch.lua,
 --  Constants/DatabaseDefaults.lua, Core/FreeLook/FreeLookController.lua,
@@ -30,6 +31,7 @@ local UI = CM.UI
 UI.Options.AddTab({
   id = "autocursorunlock",
   label = L["Auto Unlock"],
+  newFeatureFlag = true,
   build = function(ctx)
     ctx:Header(L["AUTO UNLOCK"])
     ctx:Description(
@@ -43,6 +45,28 @@ UI.Options.AddTab({
       end,
       set = function(value)
         CM.DB.global.frameWatching = value
+      end,
+    })
+    ctx:Toggle({
+      label = L["Unlock for Ping"],
+      desc = L["Release the cursor to aim while a Ping key is held."],
+      newFeatureFlag = true,
+      get = function()
+        return CM.DbBool(CM.DB.global.unlockCursorForPing, true)
+      end,
+      set = function(value)
+        CM.DB.global.unlockCursorForPing = value
+      end,
+    })
+    ctx:Toggle({
+      label = L["Unlock for Chat"],
+      desc = L["Release the cursor while typing in chat."],
+      newFeatureFlag = true,
+      get = function()
+        return CM.DbBool(CM.DB.global.unlockWhileChatting, true)
+      end,
+      set = function(value)
+        CM.DB.global.unlockWhileChatting = value
       end,
     })
     ctx:MountMultiSelect({

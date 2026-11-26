@@ -141,6 +141,10 @@ return false
     bindings = DefaultBindings,
     -- auto unlock
     frameWatching = true,
+    unlockCursorForPing = true,
+    unlockWhileChatting = true,
+    -- target lock
+    hideFocusFrame = false,
     -- Icons of the Extra Frames chips, remembered because their frames may not exist yet after a reload.
     frameIcons = {},
     -- Prefilled with the known vendor mounts on Mainline only; every other client starts empty.
@@ -185,6 +189,8 @@ return false
     seenWizard = false,
     -- Radial Menu look: "forever" (original art) | "minimal" (Blizzard radial vignette)
     radialStyle = "minimal",
+    -- size of the Radial Menu and Party Wheel (0.5-1.5)
+    radialScale = 1,
     -- dev
     silenceAlerts = true,
     debugMode = false,
@@ -220,6 +226,8 @@ return false
     supportModeNameplateMode = "friendly",
     -- The unit under the crosshair beats a hard target / Ally Cycle pick (false: the target first)
     supportModeCrosshairFirst = false,
+    -- Auto Target Lock also locks the allies you heal in the mode
+    supportModeAutoTargetLock = true,
     -- Cycle Lock in the mode also walks NPCs and pets (false: nearby players only)
     supportModeCycleNPCs = false,
     -- Cycle Lock in the mode walks the party / raid in group order (false: the nearest ally)

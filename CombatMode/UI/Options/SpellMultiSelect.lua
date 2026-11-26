@@ -12,10 +12,12 @@
 --    • Spells are told apart by ID, so every rank of a spell can be listed (Forever / Classic).
 --      Entries carry `rank` (client spell subtext, shown in the pill) and `detail` (the same
 --      text, drawn dim on the right of a suggestion row).
+--    • A ranked spell also gets an All Ranks suggestion (`allRanks`, stored as "*<id>"): one
+--      entry for every rank, learned now or later (CM.SpellRanks has the token forms).
 --    • Runtime membership tests live in TargetingMacroBuilder, not here.
 --  Does not: Build click-cast macros or write CVars.
 --  Related: UI/Options/Widgets.lua, UI/Options/Tabs/TabReticleTargeting.lua,
---  Core/ClickCasting/TargetingMacroBuilder.lua
+--  Core/ClickCasting/TargetingMacroBuilder.lua, Core/Runtime/SpellRanks.lua
 ---------------------------------------------------------------------------------------
 local _, CM = ...
 local L = CM.L
@@ -26,12 +28,9 @@ local CreateFrame = _G.CreateFrame
 local C_Spell = _G.C_Spell
 local C_SpellBook = _G.C_SpellBook
 local Enum = _G.Enum
-local issecretvalue = _G.issecretvalue
 
 -- Lua stdlib
 local ipairs = _G.ipairs
-local pcall = _G.pcall
-local type = _G.type
 local strfind = _G.string.find
 local strlower = _G.string.lower
 local strtrim = _G.string.trim
@@ -40,6 +39,7 @@ local tostring = _G.tostring
 local wipe = _G.wipe
 
 local UI = CM.UI
+local SpellRank = CM.SpellRanks.Subtext
 
 local MAX_MATCHES = 50
 
@@ -51,27 +51,6 @@ local spellById = {}
 local spellByName = {}
 local indexDirty = true
 local indexFrame
-
---- Rank text of a spell ("Rank 3") on clients that have ranks (Forever, Classic), else nil.
-local function SpellRank(spellId)
-  if not spellId then
-    return nil
-  end
-  local getSubtext = C_Spell and C_Spell.GetSpellSubtext or _G.GetSpellSubtext
-  if not getSubtext then
-    return nil
-  end
-  local ok, text = pcall(getSubtext, spellId)
-  if
-    ok
-    and type(text) == "string"
-    and text ~= ""
-    and not (issecretvalue and issecretvalue(text))
-  then
-    return text
-  end
-  return nil
-end
 
 local function AddSpellToIndex(spellId, name, icon)
   if not spellId or spellId <= 0 or not name or name == "" then
@@ -200,8 +179,25 @@ local function WithRank(entry)
   return entry
 end
 
+--- The suggestion / pill that stands for every rank of `entry`'s spell.
+local function AllRanksEntry(entry)
+  return {
+    token = "*" .. entry.spellId,
+    spellId = entry.spellId,
+    name = entry.name,
+    icon = entry.icon,
+    allRanks = true,
+    rank = L["All Ranks"],
+    detail = L["All Ranks"],
+  }
+end
+
 local function ResolveSpellToken(token)
   token = strtrim(token or "")
+  if token:sub(1, 1) == "*" then
+    local entry = ResolveSpellToken(token:sub(2))
+    return entry and entry.spellId and AllRanksEntry(entry) or entry
+  end
   if token == "" then
     return nil
   end
@@ -267,6 +263,14 @@ local function FilterSuggestions(query, selectedIds, selectedNames)
     return out
   end
 
+  local offered = {} -- names whose All Ranks row is already in `out`
+  local function OfferAllRanks(entry)
+    if not offered[entry.name] and CM.SpellRanks.IsRanked(entry.spellId) then
+      offered[entry.name] = true
+      out[#out + 1] = AllRanksEntry(entry)
+    end
+  end
+
   local idText = query:gsub("^#", "")
   local asId = tonumber(idText)
   if asId and asId > 0 and not IsPassiveSpell(asId) then
@@ -275,9 +279,12 @@ local function FilterSuggestions(query, selectedIds, selectedNames)
       entry
       and entry.spellId
       and not selectedIds[entry.spellId]
+      and not selectedNames[strlower(entry.name)]
       and not IsPassiveSpell(entry.spellId)
     then
+      -- A typed ID names one rank, so that rank stays first.
       out[#out + 1] = entry
+      OfferAllRanks(entry)
     end
   end
 
@@ -291,12 +298,14 @@ local function FilterSuggestions(query, selectedIds, selectedNames)
         -- Skip if already added via ID resolve
         local dup = false
         for _, existing in ipairs(out) do
-          if existing.spellId == sp.spellId then
+          if existing.spellId == sp.spellId and not existing.allRanks then
             dup = true
             break
           end
         end
         if not dup then
+          -- Above the spell's first rank, so Enter picks it.
+          OfferAllRanks(sp)
           out[#out + 1] = {
             token = tostring(sp.spellId),
             spellId = sp.spellId,

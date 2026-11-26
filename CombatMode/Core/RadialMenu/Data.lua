@@ -104,6 +104,12 @@ function CM.RadialStyle()
   return LAYOUT.STYLES[g and g.radialStyle or "minimal"] or LAYOUT.STYLES.minimal
 end
 
+--- Size of both live wheels (global.radialScale); the options editor ignores it.
+function CM.RadialScale()
+  local g = CM.DB and CM.DB.global
+  return g and g.radialScale or 1
+end
+
 local ART_DIR = "Interface\\AddOns\\CombatMode\\Assets\\radial\\radial_"
 local DIV_SIZE = 512 -- radial_minimal_div_<n>.tga canvas, drawn 1:1 (rotating a hairline in game blurs it)
 

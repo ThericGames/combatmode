@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/2.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.5.3] - 2026-11-26
+
+### Added
+
+- **Unlock for Ping** in **Auto Unlock**, on by default. Hold a **Ping** key to aim with a free cursor, and release it to return to **Mouse Look**. Turn it off to keep pinging with the crosshair.
+- **Unlock for Chat** in **Auto Unlock**, on by default. The cursor is released while you type in chat, and **Mouse Look** returns when you're done.
+- **Hide Focus Frame** in the **Target Lock** section, off by default and shared by all your characters. Hides Blizzard's focus frame while keeping your focus and **Target Lock**.
+- **Support Mode** has a new **Auto Lock Allies** option, on by default. Turn it off to keep **Auto Target Lock** for enemies without it locking the allies you heal. Manual **Target Lock** works either way.
+- On Forever and Classic, **Party Wheel Spells**, **Excluded Spells** and **Cast at Crosshair** have a new **All Ranks** pick. One entry covers every rank of a spell, including ones you train later.
+- **Radial Menu Scale** in the **Radial Menu** tab resizes the **Radial Menu** and **Party Wheel**.
+
+### Fixed
+
+- The **Party Wheel** now casts the spell rank that's on the key you hold.
+
 ## [5.5.2] - 2026-11-19
 
 ### Added
@@ -968,7 +983,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rapidly toggling OPie rings could leave the cursor stuck and visible while Mouse Look was active.
 - Reloading could leave the cursor visible while still in the Mouse Look state after the loading screen.
 
-[Unreleased]: https://github.com/ThericGames/combatmode/compare/5.5.2...HEAD
+[Unreleased]: https://github.com/ThericGames/combatmode/compare/5.5.3...HEAD
+[5.5.3]: https://github.com/ThericGames/combatmode/compare/5.5.2...5.5.3
 [5.5.2]: https://github.com/ThericGames/combatmode/compare/5.5.1...5.5.2
 [5.5.1]: https://github.com/ThericGames/combatmode/compare/5.5.0...5.5.1
 [5.5.0]: https://github.com/ThericGames/combatmode/compare/5.4.7...5.5.0

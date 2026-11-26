@@ -376,6 +376,9 @@ L["Hold to open the radial menu, aim at a slice, then release to activate it. Sc
   "按住以打开轮盘菜单，瞄准一个扇区后松开即可触发。滚动鼠标滚轮可切换轮盘。"
 L["Radial Menu Style"] = "轮盘菜单样式"
 L["Choose the appearance of the Radial Menu wheels."] = "选择轮盘菜单的外观。"
+L["Radial Menu Scale"] = "轮盘菜单缩放"
+L["Scales the size of the Radial Menu and Party Wheel."] =
+  "缩放轮盘菜单和队伍轮盘的大小。"
 L["Party Wheel Spells"] = "队伍轮盘法术"
 L["Helpful spells that open a party targeting wheel while their key is held. Flick toward a party member and release to cast on them, or return to the center to cast on yourself. Tap to cast on your friendly target, or yourself if none is selected."] =
   "按住按键时会打开队伍选取轮盘的增益法术。向队友方向滑动并松开即可对其施法，回到中心则对自己施法。轻按则对友方目标施法，未选择目标时对自己施法。"
@@ -421,13 +424,16 @@ L["Support Mode Self-Cast"] = "辅助模式自我施法"
 L["support mode keybinding"] = "辅助模式按键绑定"
 L["support mode self-cast keybinding"] = "辅助模式自我施法按键绑定"
 L["SUPPORT MODE"] = "辅助模式"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
-  "一种以支援为核心的模式：启用后会将主动作条切换到专用的支援页，并允许增益法术以准星下的友方单位为目标。"
+L["A support-focused mode that, when active, switches your main action bar to the selected Support Bar Page. With Click Casting, the helpful spells on that page can target the friendly unit under your crosshair."] =
+  "一种以支援为核心的模式：启用后会将主动作条切换到所选的辅助动作条页。通过点击施法，该页上的增益法术可以以准星下的友方单位为目标。"
 L["Support Mode Keybind"] = "辅助模式按键"
 L["Self-Cast Keybind"] = "自我施法按键"
 L["Hold to cast your click-cast helpful spells on yourself. Your target and Target Lock don't change."] =
   "按住此键，可将点击施法按键上的有益法术施放给自己。你的目标和目标锁定不会改变。"
 L["Prioritize Crosshair Target"] = "优先准星目标"
+L["Auto Lock Allies"] = "自动锁定友方"
+L["Let Auto Target Lock lock the allies you heal. Manual Target Lock works either way."] =
+  "让自动目标锁定也锁定你治疗的友方。无论是否开启，手动目标锁定都可使用。"
 L["Cycle NPCs and Pets"] = "轮换 NPC 和宠物"
 L["Cycle Lock also includes nearby NPCs and pets. While off, friendly pet nameplates are hidden."] =
   "循环锁定也会包含附近的 NPC 和宠物。关闭时，友方宠物的姓名板会被隐藏。"
@@ -534,8 +540,8 @@ L["Set a Radial Menu key"] = "设置轮盘菜单按键"
 L["Set an Ally Cycle - Next key"] = "设置“友方循环 - 下一个”按键"
 L["Set an Ally Cycle - Previous key"] = "设置“友方循环 - 上一个”按键"
 L["Set a Support Mode key"] = "设置支援模式按键"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
-  "一种以支援为核心的模式：启用后会将主动作条切换到专用的{支援页}，并允许{增益法术}以准星下的友方单位为目标。\n\n请设置你的按键。"
+L["A support-focused mode that, when active, switches your main action bar to the selected {Support Bar Page}. With {Click Casting}, the {helpful spells} on that page can target the friendly unit under your crosshair.\n\nSet your key."] =
+  "一种以支援为核心的模式：启用后会将主动作条切换到所选的{辅助动作条页}。通过{点击施法}，该页上的{增益法术}可以以准星下的友方单位为目标。\n\n请设置你的按键。"
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "开启或关闭准星瞄准会重新加载界面。"
 L["Needs Reticle Targeting."] = "需要准星瞄准。"
@@ -624,6 +630,7 @@ L["No matching options"] = "没有匹配的选项"
 L["Section"] = "分区"
 L["Tab"] = "标签页"
 L["Color"] = "颜色"
+L["All Ranks"] = "所有等级"
 L["Type spell name or ID…"] = "输入法术名称或 ID…"
 L["Type mount name or spell ID…"] = "输入坐骑名称或法术 ID…"
 L["Type a frame name…"] = "输入框体名称…"
@@ -818,3 +825,17 @@ L["Macro is %d characters over the %d limit."] =
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "宏“%s”与当前前置行合并后已超出长度限制；请在准星瞄准宏中编辑。"
 L["Click to print URL to chat"] = "点击将 URL 输出到聊天"
+
+-- Auto Unlock: optional cursor aiming for native Ping.
+L["Unlock for Ping"] = "发送信号时解锁"
+L["Release the cursor to aim while a Ping key is held."] =
+  "按住信号按键时解锁光标以便瞄准。"
+
+-- Target Lock: optional Blizzard focus frame hiding.
+L["Hide Focus Frame"] = "隐藏焦点框体"
+L["Hide Blizzard's focus frame. Your focus and Target Lock are kept."] =
+  "隐藏暴雪的焦点框体。焦点和目标锁定会保留。"
+
+-- Auto Unlock: chat input.
+L["Unlock for Chat"] = "聊天时解锁"
+L["Release the cursor while typing in chat."] = "在聊天框中输入时解锁光标。"

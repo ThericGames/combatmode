@@ -17,8 +17,8 @@
 --    • The /click line omits /click's default args (LeftButton, key-up) and only adds
 --      "LeftButton 1" for addon bars with key-down on. CM.TargetingMacroPrelineMaxLen =
 --      255 − worst /click cast − newline (140); editor enforces.
---    • IsCastAtCursorSpell / IsExcludedFromTargetingSpell read char CSV spell-ID lists;
---      builtin skyriding IDs from Constants.ReticleTargetingBuiltinExcludeSpellIds.
+--    • IsCastAtCursorSpell / IsExcludedFromTargetingSpell read char CSV spell lists (one rank
+--      or All Ranks); builtin skyriding IDs: Constants.ReticleTargetingBuiltinExcludeSpellIds.
 --    • GetEffectiveBarButtonFrameName uses AddonActionBarResolver for third-party bars.
 --    • GetDisplayedActionSlotInfo — currently shown action (live frame action attr,
 --      reject stale override 121–132 after dismount, else page/bonus or MultiBar slot).
@@ -36,7 +36,7 @@
 --  Core/ClickCasting/ComposedMacros.lua, UI/Editors/TargetingMacroPrelinesEditor.lua,
 --  UI/Options/Tabs/TabReticleTargeting.lua, UI/Options/SpellMultiSelect.lua,
 --  Constants/DatabaseDefaults.lua, Constants/Gameplay.lua,
---  Core/ClickCasting/{AddonActionBarResolver,SupportMode}.lua
+--  Core/ClickCasting/{AddonActionBarResolver,SupportMode}.lua, Core/Runtime/SpellRanks.lua
 ---------------------------------------------------------------------------------------
 local _, CM = ...
 local _G = _G
@@ -703,38 +703,6 @@ CM.TargetingMacroPrelinesDefaults = {
   autoLockEnemy = CLICKCAST_PRE_LINE_AUTO_LOCK_ENEMY,
 }
 
---- Builds a set of numeric spell IDs from a CSV list. Numeric tokens are used as-is;
---- legacy name tokens are resolved via C_Spell.GetSpellInfo when possible.
-local function ParseSpellListIds(list)
-  if not list or list == "" then
-    return nil
-  end
-  local ids = {}
-  local any = false
-  for entry in string.gmatch(list, "[^,]+") do
-    local token = strtrim(entry)
-    if token ~= "" then
-      local idText = token:gsub("^#", "")
-      local id = tonumber(idText)
-      if id and id > 0 then
-        ids[id] = true
-        any = true
-      elseif C_Spell and C_Spell.GetSpellInfo then
-        local si = C_Spell.GetSpellInfo(token)
-        local spellId = si and (si.spellID or si.spellId)
-        if spellId and spellId > 0 then
-          ids[spellId] = true
-          any = true
-        end
-      end
-    end
-  end
-  if not any then
-    return nil
-  end
-  return ids
-end
-
 local function RelatedSpellIds(spellId)
   local related = { [spellId] = true }
   if C_SpellBook and C_SpellBook.FindBaseSpellByID then
@@ -752,23 +720,21 @@ local function RelatedSpellIds(spellId)
   return related
 end
 
+-- True when the list (CM.SpellRanks tokens) holds the spell or its base / override spell.
 local function SpellListContains(list, spellId)
   if not spellId or spellId <= 0 then
     return false
   end
-  local ids = ParseSpellListIds(list)
-  if not ids then
-    return false
-  end
+  local parsed = CM.SpellRanks.ParseList(list)
   for id in pairs(RelatedSpellIds(spellId)) do
-    if ids[id] then
+    if CM.SpellRanks.Matches(parsed, id) then
       return true
     end
   end
   return false
 end
 
--- Returns true if spellId is in the user's cast-at-crosshair list (CSV of spell IDs).
+-- Returns true if spellId is in the user's cast-at-crosshair list.
 function CM.IsCastAtCursorSpell(spellId)
   return SpellListContains(CM.DB.char.castAtCursorSpells, spellId)
 end
@@ -786,7 +752,7 @@ local function BuiltinExcludeContains(spellId)
   return false
 end
 
--- Returns true if spellId is in the exclude-from-targeting list (CSV of spell IDs)
+-- Returns true if spellId is in the exclude-from-targeting list
 -- or the builtin skyriding set (not shown in options).
 function CM.IsExcludedFromTargetingSpell(spellId)
   return BuiltinExcludeContains(spellId)
@@ -1009,7 +975,8 @@ local function SupportPreLine()
 end
 
 -- Auto Target Lock (char.autoTargetLockOnAttack) for allies, the user's call: the option locks
--- what you attack, so in Support Mode it also locks who you heal. The cast line is followed by
+-- what you attack, so in Support Mode it also locks who you heal, unless Auto Lock Allies
+-- (char.supportModeAutoTargetLock, default on) is off. The cast line is followed by
 --   /stopmacro [mod:SELFCAST][@focus,help,nodead]
 --   /focus <the allies in cast order, without the lock>
 -- A living locked ally already took the heal, so the macro stops and the lock stays. Otherwise
@@ -1114,26 +1081,18 @@ end
 -- that key is held): the spell on you and nothing else, so the target, the lock and the
 -- Shoulder Offset camera stay as they are (/tar player + /click re-centres that camera).
 local function SupportCastLine(spellId)
-  if not spellId or not (C_Spell and C_Spell.GetSpellInfo) then
+  local name = spellId and CM.SpellRanks.RankedName(spellId)
+  if not name then
     return nil
-  end
-  local info = C_Spell.GetSpellInfo(spellId)
-  local name = info and info.name
-  if type(name) ~= "string" or name == "" then
-    return nil
-  end
-  local getSubtext = C_Spell.GetSpellSubtext or _G.GetSpellSubtext
-  if getSubtext then
-    local ok, subtext = pcall(getSubtext, spellId)
-    if ok and type(subtext) == "string" and subtext:find("%d") then
-      name = name .. "(" .. subtext .. ")"
-    end
   end
   local selfText = "/cast [@player] " .. name
   local units = SUPPORT_SELF_KEY .. SupportCastUnits()
   local selfCast = AutoSelfCastOn() and "[@player]" or ""
   local text
-  if CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false) then
+  if
+    CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false)
+    and CM.DbBool(CM.DB.char.supportModeAutoTargetLock, true)
+  then
     local combined = SupportAutoLockTargetText(selfCast, name)
     if combined then
       return combined, selfText

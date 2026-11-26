@@ -14,7 +14,9 @@
 --    • The wheel row is a custom frame (ctx:PlaceFrame) with a pool of 8 slice buttons; it
 --      redraws from the DB on every Options.Sync (registered as a control).
 --    • No master toggle: an unbound key disables the radial menu.
---    • Party Wheel Spells (under the style dropdown): char.partyWheelSpells (spell-ID CSV, SpellMultiSelect) →
+--    • Radial Menu Style + Scale (global.radialStyle / radialScale) re-store both live wheels; the
+--      editor keeps its own fixed size.
+--    • Party Wheel Spells (under the scale slider): char.partyWheelSpells (spell-ID CSV, SpellMultiSelect) →
 --      CM.PartyWheelRefresh(true) (Core/RadialMenu/PartyWheel.lua) re-routes the bar keys.
 --  Does not: Store wheels (Core/RadialMenu/Data.lua) or draw the in-game wheel (View.lua).
 --  Related: Core/RadialMenu/{Data,Actions}.lua, UI/Options/OptionsPanel.lua
@@ -72,6 +74,14 @@ local selected = 1
 
 local function Say(text)
   print(CM.Constants.BasePrintMsg .. "|cff909090: " .. text .. "|r")
+end
+
+--- Both live wheels store the look (dead zone, scale, position); each waits out combat itself.
+local function ApplyWheelLook()
+  CM.RadialRefresh()
+  if CM.PartyWheelRefresh then
+    CM.PartyWheelRefresh(false)
+  end
 end
 
 local function CurrentWheel()
@@ -1062,6 +1072,7 @@ end
 UI.Options.AddTab({
   id = "radialmenu",
   label = L["Radial Menu"],
+  newFeatureFlag = true,
   build = function(ctx)
     if #CM.RadialGetWheels() == 0 then
       CM.RadialCreateWheel()
@@ -1097,8 +1108,25 @@ UI.Options.AddTab({
       end,
       set = function(value)
         CM.DB.global.radialStyle = value
-        CM.RadialRefresh()
+        ApplyWheelLook()
         UI.Options.Sync()
+      end,
+    })
+
+    ctx:Slider({
+      label = L["Radial Menu Scale"],
+      desc = L["Scales the size of the Radial Menu and Party Wheel."],
+      newFeatureFlag = true,
+      min = 0.5,
+      max = 1.5,
+      step = 0.05,
+      default = 1,
+      get = function()
+        return CM.RadialScale()
+      end,
+      set = function(value)
+        CM.DB.global.radialScale = value
+        ApplyWheelLook()
       end,
     })
 

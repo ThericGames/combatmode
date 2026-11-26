@@ -388,6 +388,9 @@ L["Hold to open the radial menu, aim at a slice, then release to activate it. Sc
 L["Radial Menu Style"] = "Stile del menu radiale"
 L["Choose the appearance of the Radial Menu wheels."] =
   "Scegli l'aspetto delle ruote del menu radiale."
+L["Radial Menu Scale"] = "Scala del menu radiale"
+L["Scales the size of the Radial Menu and Party Wheel."] =
+  "Ridimensiona il menu radiale e la ruota del gruppo."
 L["Party Wheel Spells"] = "Incantesimi della ruota di gruppo"
 L["Helpful spells that open a party targeting wheel while their key is held. Flick toward a party member and release to cast on them, or return to the center to cast on yourself. Tap to cast on your friendly target, or yourself if none is selected."] =
   "Incantesimi benefici che aprono una ruota di bersagli del gruppo finché il tasto è premuto. Spostati verso un membro del gruppo e rilascia per lanciarlo su di lui, oppure torna al centro per lanciarlo su di te. Un tocco lo lancia sul tuo bersaglio amico, o su di te se non ne hai uno."
@@ -436,13 +439,16 @@ L["support mode keybinding"] = "assegnazione della modalità supporto"
 L["support mode self-cast keybinding"] =
   "assegnazione del lancio su di sé della modalità supporto"
 L["SUPPORT MODE"] = "MODALITÀ SUPPORTO"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
-  "Una modalità orientata al supporto che, quando è attiva, porta la barra delle azioni principale su una pagina di supporto dedicata e permette agli incantesimi benefici di bersagliare l'unità amica sotto il mirino."
+L["A support-focused mode that, when active, switches your main action bar to the selected Support Bar Page. With Click Casting, the helpful spells on that page can target the friendly unit under your crosshair."] =
+  "Una modalità orientata al supporto che, quando è attiva, porta la barra delle azioni principale sulla pagina scelta in Pagina della barra di supporto. Con Lancio con clic, gli incantesimi benefici di quella pagina possono bersagliare l'unità amica sotto il mirino."
 L["Support Mode Keybind"] = "Tasto della modalità supporto"
 L["Self-Cast Keybind"] = "Tasto di lancio su di sé"
 L["Hold to cast your click-cast helpful spells on yourself. Your target and Target Lock don't change."] =
   "Tienilo premuto per lanciare su di te gli incantesimi benefici dei tuoi pulsanti di clic. Il tuo bersaglio e il Blocco bersaglio non cambiano."
 L["Prioritize Crosshair Target"] = "Dai priorità al bersaglio del mirino"
+L["Auto Lock Allies"] = "Blocco automatico alleati"
+L["Let Auto Target Lock lock the allies you heal. Manual Target Lock works either way."] =
+  "Consente al blocco bersaglio automatico di bloccare gli alleati che curi. Il blocco manuale funziona in entrambi i casi."
 L["Cycle NPCs and Pets"] = "Alterna tra PNG e famigli"
 L["Cycle Lock also includes nearby NPCs and pets. While off, friendly pet nameplates are hidden."] =
   "Cicla blocco include anche PNG e famigli vicini. Finché è disattivata, le targhette dei famigli amici sono nascoste."
@@ -552,8 +558,8 @@ L["Set a Radial Menu key"] = "Imposta un tasto per il menu radiale"
 L["Set an Ally Cycle - Next key"] = "Imposta un tasto Ciclo alleati – Successivo"
 L["Set an Ally Cycle - Previous key"] = "Imposta un tasto Ciclo alleati – Precedente"
 L["Set a Support Mode key"] = "Imposta un tasto Modalità supporto"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
-  "Una modalità orientata al supporto che, quando è attiva, porta la barra delle azioni principale su una {pagina di supporto} dedicata e permette agli {incantesimi benefici} di bersagliare l'unità amica sotto il mirino.\n\nImposta il tuo tasto."
+L["A support-focused mode that, when active, switches your main action bar to the selected {Support Bar Page}. With {Click Casting}, the {helpful spells} on that page can target the friendly unit under your crosshair.\n\nSet your key."] =
+  "Una modalità orientata al supporto che, quando è attiva, porta la barra delle azioni principale sulla pagina scelta in {Pagina della barra di supporto}. Con {Lancio con clic}, gli {incantesimi benefici} di quella pagina possono bersagliare l'unità amica sotto il mirino.\n\nImposta il tuo tasto."
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "Attivare o disattivare il puntamento a mirino ricarica l'interfaccia."
 L["Needs Reticle Targeting."] = "Richiede il puntamento a mirino."
@@ -642,6 +648,7 @@ L["No matching options"] = "Nessuna opzione corrispondente"
 L["Section"] = "Sezione"
 L["Tab"] = "Scheda"
 L["Color"] = "Colore"
+L["All Ranks"] = "Tutti i gradi"
 L["Type spell name or ID…"] = "Digita il nome o l'ID dell'incantesimo…"
 L["Type mount name or spell ID…"] = "Digita il nome della cavalcatura o l'ID dell'incantesimo…"
 L["Type a frame name…"] = "Digita il nome di un frame…"
@@ -837,3 +844,17 @@ L["Macro is %d characters over the %d limit."] = "La macro supera di %d caratter
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "La macro «%s» non rientra più con la preriga attuale; modificala dalle macro di puntamento a mirino."
 L["Click to print URL to chat"] = "Clicca per stampare l'URL in chat"
+
+-- Auto Unlock: optional cursor aiming for native Ping.
+L["Unlock for Ping"] = "Sblocca per i ping"
+L["Release the cursor to aim while a Ping key is held."] =
+  "Libera il cursore per mirare mentre tieni premuto un tasto ping."
+
+-- Target Lock: optional Blizzard focus frame hiding.
+L["Hide Focus Frame"] = "Nascondi riquadro del focus"
+L["Hide Blizzard's focus frame. Your focus and Target Lock are kept."] =
+  "Nasconde il riquadro del focus di Blizzard. Il focus e il blocco bersaglio restano attivi."
+
+-- Auto Unlock: chat input.
+L["Unlock for Chat"] = "Sblocca per la chat"
+L["Release the cursor while typing in chat."] = "Libera il cursore mentre scrivi in chat."

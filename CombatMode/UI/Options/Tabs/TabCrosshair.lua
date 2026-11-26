@@ -48,7 +48,6 @@ end
 UI.Options.AddTab({
   id = "crosshair",
   label = L["Crosshair"],
-  newFeatureFlag = true,
   onSelect = function()
     CM.SetCrosshairOptionsPreview(true)
   end,
@@ -91,7 +90,6 @@ UI.Options.AddTab({
     ctx:Button({
       layout = "row",
       label = L["Appearance"],
-      newFeatureFlag = true,
       desc = L["Textures utilized by the crosshair for each state. Click one to pick its texture, or start from a preset."],
       tiles = {
         { slot = "base", caption = L["Inactive"], tint = "base" },

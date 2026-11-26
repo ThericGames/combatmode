@@ -41,3 +41,5 @@ SetMouselookOverrideBinding
 C_SpecializationInfo.GetSpecializationRole
 DEFAULT_ACTION_BUTTON_NAMES
 NUM_MOUSE_BUTTONS
+FocusFrame # Blizzard unit frame declared in XML.
+EditModeManagerFrame # Blizzard Edit Mode manager frame declared in XML.

@@ -26,13 +26,16 @@
 --      (here) and "party" (on CombatModeRadialWheel) let each key snippet skip while the other is open.
 --    • Harmful-only spells (C_Spell.IsSpellHarmful and not IsSpellHelpful) are never listed:
 --      CM.PartyWheelIsEligibleSpell filters the tab's picker and the stored set.
+--    • pw-<spellID> = the slot spell's cast name, "Name(Rank N)" when ranked, so each key casts
+--      its own rank. An All Ranks entry stores the ranks found on action slots 1..180.
 --    • Out-of-combat state, the hold delay and the centre target: see .claude/rules/domain-radial-menu.md (PartyWheel.lua notes).
 --    • Insecure readers for View.lua: CM.IsPartyWheelOpen, CM.PartyWheelLeftCentre,
 --      CM.PartyWheelGetFrame, CM.PartyWheelCurrent, CM.PartyWheelAimSlot.
 --  Does not: Draw (View.lua), bind keys itself (BindingOverrides.lua), or work on left / right
 --  click (Mouse Look override bindings stop with Mouse Look, so their release never reaches it).
 --  Related: Core/RadialMenu/{Secure,View,RadialMenu}.lua, Core/ClickCasting/BindingOverrides.lua,
---  Core/ClickCasting/TargetingMacroBuilder.lua, UI/Options/Tabs/TabRadialMenu.lua
+--  Core/ClickCasting/TargetingMacroBuilder.lua, UI/Options/Tabs/TabRadialMenu.lua,
+--  Core/Runtime/SpellRanks.lua
 ---------------------------------------------------------------------------------------
 local _, CM = ...
 local _G = _G
@@ -369,10 +372,10 @@ if SecureHandlerWrapScript then
 end
 
 ---------------------------------------------------------------------------------------
--- Spell list (char.partyWheelSpells: spell-ID CSV, edited by the tab's SpellMultiSelect)
+-- Spell list (char.partyWheelSpells: CM.SpellRanks tokens, edited by the tab's SpellMultiSelect)
 ---------------------------------------------------------------------------------------
-local spellSet = {}
-local spellSetSource
+local spellList
+local spellListSource
 
 --- Spell the Party Wheel can cast on a group member: helpful, or at least not harmful-only.
 --- Unknown answers (API missing / error) count as eligible.
@@ -388,30 +391,68 @@ function CM.PartyWheelIsEligibleSpell(spellID)
   return okHelp and helpful == true
 end
 
---- { [spellID] = true } parsed from the CSV (re-parsed only when the string changes); harmful-only
---- spells are dropped even if an older list still holds them.
-local function SpellTable()
+--- The parsed list (re-parsed when the string changes, and on every store: an All Ranks name can
+--- be unknown early in a session).
+local function SpellList()
   local char = CM.DB and CM.DB.char
   local csv = char and type(char.partyWheelSpells) == "string" and char.partyWheelSpells or ""
-  if csv ~= spellSetSource then
-    spellSetSource = csv
-    wipe(spellSet)
-    for id in csv:gmatch("%d+") do
-      id = tonumber(id)
-      if CM.PartyWheelIsEligibleSpell(id) then
-        spellSet[id] = true
-      end
-    end
+  if not spellList or csv ~= spellListSource then
+    spellListSource = csv
+    spellList = CM.SpellRanks.ParseList(csv)
   end
-  return spellSet
+  return spellList
 end
 
+--- Listed (that rank, or All Ranks of its name) and not harmful-only, even if an older list
+--- still holds such a spell.
 function CM.PartyWheelHasSpell(spellID)
-  return type(spellID) == "number" and SpellTable()[spellID] == true
+  return type(spellID) == "number"
+    and CM.SpellRanks.Matches(SpellList(), spellID)
+    and CM.PartyWheelIsEligibleSpell(spellID)
 end
 
 local function HasAnySpell()
-  return next(SpellTable()) ~= nil
+  for id in pairs(SpellList().ids) do
+    if CM.PartyWheelIsEligibleSpell(id) then
+      return true
+    end
+  end
+  return false
+end
+
+local function StoreSpell(spellID)
+  if not storedSpells[spellID] and CM.PartyWheelHasSpell(spellID) then
+    -- Value = the cast name with its rank: by name alone the slices would cast the highest rank.
+    Wheel:SetAttribute("pw-" .. spellID, CM.SpellRanks.RankedName(spellID) or spellID)
+    storedSpells[spellID] = true
+  end
+end
+
+--- Writes the pw-<spellID> attributes the press snippet looks up (out of combat). All Ranks
+--- entries add whichever of their ranks sit on an action slot, so this also runs before the bar
+--- keys are re-bound (BindingOverrides.ApplyGroundCastKeyOverrides).
+function CM.PartyWheelStoreSpells()
+  if not Wheel or InCombatLockdown() then
+    return
+  end
+  for id in pairs(storedSpells) do
+    Wheel:SetAttribute("pw-" .. id, nil)
+  end
+  wipe(storedSpells)
+  spellList = nil
+  local list = SpellList()
+  for id in pairs(list.ids) do
+    StoreSpell(id)
+  end
+  if next(list.names) == nil then
+    return
+  end
+  for slot = 1, MAX_PAGES * 12 do
+    local ok, kind, id = pcall(GetActionInfo, slot)
+    if ok and kind == "spell" and type(id) == "number" then
+      StoreSpell(id)
+    end
+  end
 end
 
 ---------------------------------------------------------------------------------------
@@ -545,7 +586,7 @@ function CM.PartyWheelCurrent()
     local offline = Wheel:GetAttribute("po" .. k .. "_" .. i) == true or UnitOffline(unit)
     entries[i] = { kind = "unit", unit = unit, spell = spell, offline = offline }
   end
-  -- pwspell holds the spell name (see StoreImpl), so it is the title as is.
+  -- pwspell holds the cast name (see StoreSpell), so it is the title as is.
   return k, total, entries, spell
 end
 
@@ -620,16 +661,7 @@ local function StoreImpl()
       Wheel:SetAttribute("ry" .. n .. "_" .. i, y)
     end
   end
-  for id in pairs(storedSpells) do
-    Wheel:SetAttribute("pw-" .. id, nil)
-  end
-  wipe(storedSpells)
-  -- Value = the spell name: the slices cast by name, like the Radial Menu's spell slices.
-  for id in pairs(SpellTable()) do
-    local name = C_Spell and C_Spell.GetSpellName and C_Spell.GetSpellName(id)
-    Wheel:SetAttribute("pw-" .. id, name or id)
-    storedSpells[id] = true
-  end
+  CM.PartyWheelStoreSpells()
   BuildPages()
   for k = 1, LAYOUT.MAX_WHEELS do
     local units = pages[k]
@@ -652,7 +684,10 @@ local function StoreImpl()
     centreZone:SetSize(2 * dead, 2 * dead)
   end
   local c = CM.DB and CM.DB.char
-  Wheel:SetAttribute("ryoff", (c and c.crosshairY) or 0)
+  -- SetPoint offsets are in the wheel's own scale: divide so it stays on the crosshair.
+  local scale = CM.RadialScale()
+  Wheel:SetScale(scale)
+  Wheel:SetAttribute("ryoff", ((c and c.crosshairY) or 0) / scale)
 end
 
 local pendingStore, pendingRebind = false, false

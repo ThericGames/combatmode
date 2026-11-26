@@ -389,6 +389,9 @@ L["Hold to open the radial menu, aim at a slice, then release to activate it. Sc
 L["Radial Menu Style"] = "Radialmenü-Stil"
 L["Choose the appearance of the Radial Menu wheels."] =
   "Wähle das Aussehen der Radialmenü-Räder."
+L["Radial Menu Scale"] = "Radialmenü-Skalierung"
+L["Scales the size of the Radial Menu and Party Wheel."] =
+  "Skaliert die Größe des Radialmenüs und des Gruppenrads."
 L["Party Wheel Spells"] = "Gruppenrad-Zauber"
 L["Helpful spells that open a party targeting wheel while their key is held. Flick toward a party member and release to cast on them, or return to the center to cast on yourself. Tap to cast on your friendly target, or yourself if none is selected."] =
   "Hilfreiche Zauber, die bei gehaltener Taste ein Gruppen-Zielrad öffnen. Wische zu einem Gruppenmitglied und lasse los, um ihn darauf zu wirken, oder kehre zur Mitte zurück, um dich selbst zu zielen. Kurz tippen wirkt auf dein freundliches Ziel, oder auf dich, wenn keins gewählt ist."
@@ -437,13 +440,16 @@ L["Support Mode Self-Cast"] = "Unterstützungsmodus: Selbstzauber"
 L["support mode keybinding"] = "Belegung für Unterstützungsmodus"
 L["support mode self-cast keybinding"] = "Belegung für Unterstützungsmodus-Selbstzauber"
 L["SUPPORT MODE"] = "UNTERSTÜTZUNGSMODUS"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."] =
-  "Ein unterstützungsorientierter Modus, der im aktiven Zustand deine Hauptaktionsleiste auf eine eigene Unterstützungsseite umschaltet und es hilfreichen Zaubern erlaubt, die freundliche Einheit unter deinem Fadenkreuz anzuvisieren."
+L["A support-focused mode that, when active, switches your main action bar to the selected Support Bar Page. With Click Casting, the helpful spells on that page can target the friendly unit under your crosshair."] =
+  "Ein unterstützungsorientierter Modus, der im aktiven Zustand deine Hauptaktionsleiste auf die ausgewählte Unterstützungsleistenseite umschaltet. Mit Klick-Zauberwirken können die hilfreichen Zauber auf dieser Seite die freundliche Einheit unter deinem Fadenkreuz anvisieren."
 L["Support Mode Keybind"] = "Tastenbelegung für Unterstützungsmodus"
 L["Self-Cast Keybind"] = "Tastenbelegung für Selbstzauber"
 L["Hold to cast your click-cast helpful spells on yourself. Your target and Target Lock don't change."] =
   "Gedrückt halten, um die hilfreichen Zauber deiner Klick-Zauber-Tasten auf dich selbst zu wirken. Dein Ziel und deine Zielsperre ändern sich nicht."
 L["Prioritize Crosshair Target"] = "Fadenkreuz-Ziel priorisieren"
+L["Auto Lock Allies"] = "Verbündete automatisch sperren"
+L["Let Auto Target Lock lock the allies you heal. Manual Target Lock works either way."] =
+  "Lässt die automatische Zielsperre die Verbündeten sperren, die du heilst. Die manuelle Zielsperre funktioniert in beiden Fällen."
 L["Cycle NPCs and Pets"] = "NPCs und Begleiter durchschalten"
 L["Cycle Lock also includes nearby NPCs and pets. While off, friendly pet nameplates are hidden."] =
   "Sperre wechseln umfasst auch NPCs und Begleiter in der Nähe. Solange dies aus ist, werden die Namensplaketten verbündeter Begleiter ausgeblendet."
@@ -553,8 +559,8 @@ L["Set a Radial Menu key"] = "Radialmenü-Taste festlegen"
 L["Set an Ally Cycle - Next key"] = "Taste „Verbündetenwechsel – Nächster“ festlegen"
 L["Set an Ally Cycle - Previous key"] = "Taste „Verbündetenwechsel – Vorheriger“ festlegen"
 L["Set a Support Mode key"] = "Taste für den Unterstützungsmodus festlegen"
-L["A support-focused mode that, when active, switches your main action bar to a dedicated {support page} and allows {helpful spells} to target the friendly unit under your crosshair.\n\nSet your key."] =
-  "Ein unterstützungsorientierter Modus, der im aktiven Zustand deine Hauptaktionsleiste auf eine eigene {Unterstützungsseite} umschaltet und {hilfreichen Zaubern} erlaubt, die freundliche Einheit unter deinem Fadenkreuz anzuvisieren.\n\nLege deine Taste fest."
+L["A support-focused mode that, when active, switches your main action bar to the selected {Support Bar Page}. With {Click Casting}, the {helpful spells} on that page can target the friendly unit under your crosshair.\n\nSet your key."] =
+  "Ein unterstützungsorientierter Modus, der im aktiven Zustand deine Hauptaktionsleiste auf die ausgewählte {Unterstützungsleistenseite} umschaltet. Mit {Klick-Zauberwirken} können die {hilfreichen Zauber} auf dieser Seite die freundliche Einheit unter deinem Fadenkreuz anvisieren.\n\nLege deine Taste fest."
 L["Turning Reticle Targeting on or off reloads the UI."] =
   "Das Ein- oder Ausschalten der Fadenkreuz-Zielerfassung lädt die Benutzeroberfläche neu."
 L["Needs Reticle Targeting."] = "Benötigt die Fadenkreuz-Zielerfassung."
@@ -643,6 +649,7 @@ L["No matching options"] = "Keine passenden Optionen"
 L["Section"] = "Abschnitt"
 L["Tab"] = "Reiter"
 L["Color"] = "Farbe"
+L["All Ranks"] = "Alle Ränge"
 L["Type spell name or ID…"] = "Zaubernamen oder ID eingeben …"
 L["Type mount name or spell ID…"] = "Reittiernamen oder Zauber-ID eingeben …"
 L["Type a frame name…"] = "Fensternamen eingeben …"
@@ -838,3 +845,18 @@ L["Macro is %d characters over the %d limit."] = "Das Makro ist %d Zeichen über
 L["Macro “%s” no longer fits with the current preline; edit it from Reticle Targeting Macros."] =
   "Das Makro „%s“ passt mit der aktuellen Vorzeile nicht mehr; bearbeite es unter Fadenkreuz-Zielerfassungs-Makros."
 L["Click to print URL to chat"] = "Klicken, um die URL im Chat auszugeben"
+
+-- Auto Unlock: optional cursor aiming for native Ping.
+L["Unlock for Ping"] = "Für Ping entsperren"
+L["Release the cursor to aim while a Ping key is held."] =
+  "Gibt den Cursor zum Zielen frei, solange eine Ping-Taste gedrückt ist."
+
+-- Target Lock: optional Blizzard focus frame hiding.
+L["Hide Focus Frame"] = "Fokusfenster ausblenden"
+L["Hide Blizzard's focus frame. Your focus and Target Lock are kept."] =
+  "Blendet das Fokusfenster von Blizzard aus. Dein Fokus und die Zielsperre bleiben erhalten."
+
+-- Auto Unlock: chat input.
+L["Unlock for Chat"] = "Für Chat entsperren"
+L["Release the cursor while typing in chat."] =
+  "Gibt den Cursor frei, während du im Chat schreibst."

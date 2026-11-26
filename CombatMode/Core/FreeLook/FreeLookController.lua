@@ -18,7 +18,7 @@
 --      crosshair on unlock. See the comment above StartFreeLookFresh / issue 189.
 --    • ShouldFreeLookBeOff consults AutoCursorUnlock predicates, SpellIsTargeting (+ the
 --      pet Move To noted by a CastPetAction hook until the next click or Esc, since it is not a spell cast),
---      cinematics, FreeLookOverride, default LMB/RMB held. customLockCondition
+--      optional native Ping cursor unlock, cinematics, FreeLookOverride, default LMB/RMB held. customLockCondition
 --      (IsCustomLockConditionTrue) beats tap/hold unlock and the Auto Unlock
 --      custom condition only; feign, pet battle, ground targeting, cinematics,
 --      frames, and vendor mounts still unlock. customLockConditionOnce latches
@@ -53,6 +53,7 @@ local InCombatLockdown = _G.InCombatLockdown
 local IsAltKeyDown = _G.IsAltKeyDown
 local IsControlKeyDown = _G.IsControlKeyDown
 local IsInCinematicScene = _G.IsInCinematicScene
+local GetBindingAction = _G.GetBindingAction
 local IsKeyDown = _G.IsKeyDown
 local IsMouseButtonDown = _G.IsMouseButtonDown
 local IsMouselooking = _G.IsMouselooking
@@ -212,6 +213,42 @@ if _G.hooksecurefunc and _G.CastPetAction and GetPetActionInfo and _G.CreateFram
   end)
 end
 
+local function IsPingBindingHeld(binding, modifiers)
+  if not binding or binding:sub(1, #modifiers) ~= modifiers then
+    return false
+  end
+  local key = binding:sub(#modifiers + 1)
+  if
+    key:match("^ALT%-")
+    or key:match("^CTRL%-")
+    or key:match("^SHIFT%-")
+    or GetBindingAction(binding, true) ~= "TOGGLEPINGLISTENER"
+  then
+    return false
+  end
+  local mouseNumber = key:match("^BUTTON(%d+)$")
+  local mouseButton = MOUSE_BINDING_BUTTON[key] or (mouseNumber and "Button" .. mouseNumber)
+  if mouseButton then
+    return IsMouseButtonDown(mouseButton)
+  end
+  return IsKeyDown and IsKeyDown(key)
+end
+
+-- Read both live binding slots and honor click-casting overrides.
+local function IsNativePingHeld()
+  if not (CM.DB and CM.DB.global and CM.DbBool(CM.DB.global.unlockCursorForPing, true)) then
+    return false
+  end
+  if not (GetBindingKey and GetBindingAction) then
+    return false
+  end
+  local modifiers = (IsAltKeyDown() and "ALT-" or "")
+    .. (IsControlKeyDown() and "CTRL-" or "")
+    .. (IsShiftKeyDown() and "SHIFT-" or "")
+  local first, second = GetBindingKey("TOGGLEPINGLISTENER")
+  return IsPingBindingHeld(first, modifiers) or IsPingBindingHeld(second, modifiers) or false
+end
+
 local function IsGroundTargeting()
   return SpellIsTargeting() or IsPetGroundTargeting()
 end
@@ -221,7 +258,7 @@ local function ShouldKeepWeaponsDrawnOnTempUnlock()
   if FreeLookOverride then
     return true
   end
-  if IsGroundTargeting() then
+  if IsGroundTargeting() or IsNativePingHeld() then
     return true
   end
   if CM.IsRadialMenuOpen and CM.IsRadialMenuOpen() then
@@ -522,8 +559,10 @@ function CM.ShouldFreeLookBeOff()
     end
     if
       IsGroundTargeting()
+      or IsNativePingHeld()
       or InCinematic()
       or IsInCinematicScene()
+      or CM.IsChatInputActive()
       or CM.IsUnlockFrameVisible()
       or CM.IsVendorMountOut()
     then

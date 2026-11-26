@@ -101,6 +101,8 @@ CANCEL
 CanLootUnit
 CastPetAction
 ChangeActionBarPage
+ChatEdit_GetActiveWindow
+ChatFrameUtil
 CLASS_ICON_TCOORDS
 ClearCursor
 ClearOverrideBindings
@@ -121,6 +123,7 @@ DynamicResizeButton_Resize
 EditMacro
 Enum
 EnumerateFrames
+EventRegistry
 FlipCameraYaw
 GameEvent
 GameFontHighlight

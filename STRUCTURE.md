@@ -9,7 +9,7 @@ When you move or rename modules, update this file, `Embeds.xml`, the matching `.
 
 ## Load order (scripts)
 
-1. **CombatMode/Core/Runtime/Runtime.lua** — receives the AddOn namespace (`local addonName, CM = ...`), optional `_G.CM` alias, registers `ADDON_LOADED` / `PLAYER_LOGIN` lifecycle, native `CombatModeDB` merge, and slash commands (`/acm`, `/actioncombatmode`). **Safe.lua** follows at once (`CM.Safe`, the secret-value readers every module aliases).
+1. **CombatMode/Core/Runtime/Runtime.lua** — receives the AddOn namespace (`local addonName, CM = ...`), optional `_G.CM` alias, registers `ADDON_LOADED` / `PLAYER_LOGIN` lifecycle, native `CombatModeDB` merge, and slash commands (`/acm`, `/actioncombatmode`). **Safe.lua** follows at once (`CM.Safe`, the secret-value readers every module aliases), then **SpellRanks.lua** (`CM.SpellRanks`: rank text, ranked cast names and the spell list CSV reader).
 2. **CombatMode/Constants/** — constants/data modules initialize `CM.Constants` and must load before feature consumers (`Namespace.lua` first).
    - **CombatMode/Locales/** loads right after `Constants/Namespace.lua`: **Locale.lua** (`CM.L`, English text is the key, missing entries fall back to it), **enUS.lua** (canonical key list), then one file per other client locale (deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW; each returns early unless `GetLocale()` matches). See `.claude/rules/localization.md`.
 3. **CombatMode/Core/Dev/** — developer tools with no production impact when idle:
@@ -31,3 +31,4 @@ When you move or rename modules, update this file, `Embeds.xml`, the matching `.
 - **Slash:** `/acm`, `/actioncombatmode` (Core/Runtime). Uninstall is the options sidebar button (`CM.UninstallCombatMode`), not a slash command.
 - **Options:** standalone movable window `CombatModeOptionsFrame` opened by `CM.OpenOptions()` (bound to `/acm`, the first-login popup, and Escape → Options → AddOns → Action Combat Mode via `UI/Options/BlizzardSettingsBridge.lua`); tabs registered via `CM.UI.Options.AddTab` in `UI/Options/Tabs/`.
 - **Changelog (in-game):** `CM.Config.ShowChangelog()` (sidebar footer → Changelog, or auto after version bump via `Core/Runtime/Runtime.lua` + `CM.Config.MaybeShowChangelogOnNewVersion`); body string `CM.Config.ChangelogText` in `UI/Changelog/ChangelogData.lua`, maintained from `CombatMode/CHANGELOG.md` with `scripts/sync-changelog-to-lua.ps1`.
+- **Core/Crosshair/FocusFrameVisibility.lua** loads after FocusNameplateMarker and before bootstrap/options callers. Owns the account-wide Hide Focus Frame preference; bootstrap applies it and EventRouter retries on combat end.

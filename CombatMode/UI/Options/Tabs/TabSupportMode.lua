@@ -1,9 +1,9 @@
 ---------------------------------------------------------------------------------------
 --  UI/Options/Tabs/TabSupportMode.lua — OPTIONS TAB — Support Mode
 ---------------------------------------------------------------------------------------
---  What it does: Support Mode keybind (a toggle), Self-Cast keybind (a hold), Prioritize
---  Crosshair Target, support bar page,
---  Cycle NPCs and Pets, Cycle in Group Order, Vignette tint toggle and the nameplates dropdown. An unbound Support Mode key disables it.
+--  What it does: Support Mode keybind (a toggle), Self-Cast keybind (a hold), the support bar
+--  page and nameplates dropdowns, then Prioritize Crosshair Target, Auto Lock Allies,
+--  Cycle NPCs and Pets, Cycle in Group Order and Vignette tint. An unbound Support Mode key disables it.
 --  (The Support crosshair color and texture are on the Crosshair tab: Reaction Colors and
 --  Appearance.)
 --  Architecture / how it works:
@@ -12,6 +12,7 @@
 --      (CM.RefreshClickCastMacros); both queue themselves in combat.
 --    • Rows are disabled with a notice while Reticle Targeting is off (the mode needs its
 --      click-cast proxies).
+--    • Auto Lock Allies is also disabled while Auto Target Lock (Reticle Targeting) is off.
 --  Does not: Own the secure state, build macro text or write CVars.
 --  Related: Core/ClickCasting/{SupportMode,BindingOverrides,TargetingMacroBuilder}.lua,
 --  Core/Runtime/CVarManager.lua, Constants/DatabaseDefaults.lua, UI/Options/OptionsPanel.lua
@@ -76,9 +77,9 @@ UI.Options.AddTab({
   label = L["Support Mode"],
   newFeatureFlag = true,
   build = function(ctx)
-    ctx:Header({ text = L["SUPPORT MODE"], newFeatureFlag = true })
+    ctx:Header(L["SUPPORT MODE"])
     ctx:Description({
-      text = L["A support-focused mode that, when active, switches your main action bar to a dedicated support page and allows helpful spells to target the friendly unit under your crosshair."],
+      text = L["A support-focused mode that, when active, switches your main action bar to the selected Support Bar Page. With Click Casting, the helpful spells on that page can target the friendly unit under your crosshair."],
     })
 
     ctx:Keybind({
@@ -111,6 +112,46 @@ UI.Options.AddTab({
       disabled = ReticleTargetingOff,
       watermarkWhenDisabled = ReticleTargetingNotice,
     })
+    ctx:Dropdown({
+      label = L["Support Bar Page"],
+      desc = L["The main action bar page shown while Support Mode is on. Place support abilities here. Exiting Support Mode returns to Page 1."],
+      charSpecific = true,
+      values = PAGE_VALUES,
+      order = PAGE_ORDER,
+      get = function()
+        local id = "p" .. (tonumber(CM.DB.char.supportModePage) or 0)
+        return PAGE_VALUES[id] and id or "p0"
+      end,
+      set = function(value)
+        CM.DB.char.supportModePage = tonumber(string.sub(value, 2)) or 0
+        Apply()
+      end,
+      disabled = ReticleTargetingOff,
+      watermarkWhenDisabled = ReticleTargetingNotice,
+    })
+    ctx:Dropdown({
+      label = L["Nameplate Behavior"],
+      desc = L["Choose which nameplates appear while in Support Mode. Normal settings are restored when exiting Support Mode."],
+      charSpecific = true,
+      values = NAMEPLATE_VALUES,
+      order = NAMEPLATE_ORDER,
+      get = function()
+        local mode = CM.DB.char.supportModeNameplateMode
+        return NAMEPLATE_VALUES[mode] and mode or "friendly"
+      end,
+      set = function(value)
+        CM.DB.char.supportModeNameplateMode = value
+        if CM.SyncSupportModeNameplates then
+          CM.SyncSupportModeNameplates()
+        end
+        -- "Don't Change" also leaves the pet and minion nameplates alone.
+        if CM.RefreshSupportModePetNameplates then
+          CM.RefreshSupportModePetNameplates()
+        end
+      end,
+      disabled = ReticleTargetingOff,
+      watermarkWhenDisabled = ReticleTargetingNotice,
+    })
     ctx:Toggle({
       label = L["Prioritize Crosshair Target"],
       desc = L["Prioritizes the ally under your crosshair over other friendly targets (e.g. Ally Cycle). Disable to prioritize your selected target instead."],
@@ -123,6 +164,23 @@ UI.Options.AddTab({
         Apply()
       end,
       disabled = ReticleTargetingOff,
+      watermarkWhenDisabled = ReticleTargetingNotice,
+    })
+    ctx:Toggle({
+      label = L["Auto Lock Allies"],
+      desc = L["Let Auto Target Lock lock the allies you heal. Manual Target Lock works either way."],
+      newFeatureFlag = true,
+      charSpecific = true,
+      get = function()
+        return CM.DbBool(CM.DB.char.supportModeAutoTargetLock, true)
+      end,
+      set = function(value)
+        CM.DB.char.supportModeAutoTargetLock = value and true or false
+        Apply()
+      end,
+      disabled = function()
+        return ReticleTargetingOff() or not CM.DbBool(CM.DB.char.autoTargetLockOnAttack, false)
+      end,
       watermarkWhenDisabled = ReticleTargetingNotice,
     })
     ctx:Toggle({
@@ -165,23 +223,6 @@ UI.Options.AddTab({
       disabled = ReticleTargetingOff,
       watermarkWhenDisabled = ReticleTargetingNotice,
     })
-    ctx:Dropdown({
-      label = L["Support Bar Page"],
-      desc = L["The main action bar page shown while Support Mode is on. Place support abilities here. Exiting Support Mode returns to Page 1."],
-      charSpecific = true,
-      values = PAGE_VALUES,
-      order = PAGE_ORDER,
-      get = function()
-        local id = "p" .. (tonumber(CM.DB.char.supportModePage) or 0)
-        return PAGE_VALUES[id] and id or "p0"
-      end,
-      set = function(value)
-        CM.DB.char.supportModePage = tonumber(string.sub(value, 2)) or 0
-        Apply()
-      end,
-      disabled = ReticleTargetingOff,
-      watermarkWhenDisabled = ReticleTargetingNotice,
-    })
     ctx:Toggle({
       label = L["Tint Vignette"],
       desc = L["While Support Mode is active, the Vignette adopts the Support crosshair color. It only appears when the Vignette is enabled."],
@@ -193,29 +234,6 @@ UI.Options.AddTab({
         CM.DB.char.supportModeTintVignette = value and true or false
         if CM.RefreshVignetteTint then
           CM.RefreshVignetteTint()
-        end
-      end,
-      disabled = ReticleTargetingOff,
-      watermarkWhenDisabled = ReticleTargetingNotice,
-    })
-    ctx:Dropdown({
-      label = L["Nameplate Behavior"],
-      desc = L["Choose which nameplates appear while in Support Mode. Normal settings are restored when exiting Support Mode."],
-      charSpecific = true,
-      values = NAMEPLATE_VALUES,
-      order = NAMEPLATE_ORDER,
-      get = function()
-        local mode = CM.DB.char.supportModeNameplateMode
-        return NAMEPLATE_VALUES[mode] and mode or "friendly"
-      end,
-      set = function(value)
-        CM.DB.char.supportModeNameplateMode = value
-        if CM.SyncSupportModeNameplates then
-          CM.SyncSupportModeNameplates()
-        end
-        -- "Don't Change" also leaves the pet and minion nameplates alone.
-        if CM.RefreshSupportModePetNameplates then
-          CM.RefreshSupportModePetNameplates()
         end
       end,
       disabled = ReticleTargetingOff,
