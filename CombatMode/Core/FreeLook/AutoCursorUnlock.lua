@@ -13,7 +13,8 @@
 --      Menu.GetManager():IsAnyMenuOpen() (same frameWatching gate).
 --    • InitializeWildcardFrameTracking — hooks/create listeners for dynamic names.
 --    • IsVendorMountOut / IsInPetBattle / IsFeignDeathActive / IsCustomConditionTrue
---      / IsCustomLockConditionTrue (DB.global.customLockCondition).
+--      / IsCustomLockConditionTrue (DB.global.customLockCondition). Feign Death reads
+--      UnitIsFeignDeath, a short latch armed by the player's own cast event, then the aura.
 --    • OPie path may free centering + hide crosshair via FreeLook helpers.
 --    • CloseUnlockWindows — closes those same windows, in combat only the unprotected ones (Close Windows
 --      option, called by the Mouse Look key).
@@ -28,6 +29,7 @@ local _G = _G
 
 -- WoW API
 local GetPlayerAuraBySpellID = _G.C_UnitAuras.GetPlayerAuraBySpellID
+local GetTime = _G.GetTime
 local GetUIPanel = _G.GetUIPanel
 -- Retail, Forever and Mists Classic have pet battles: check the API, not the client.
 local IsInBattle = _G.C_PetBattles and _G.C_PetBattles.IsInBattle
@@ -240,8 +242,40 @@ function CM.IsVendorMountOut()
   return false
 end
 
+-- Feign Death: the aura lookup alone is unreliable in combat (aura data can be restricted, and
+-- it lands a moment after the cast), so the unit state is checked first, plus a short latch
+-- armed by the player's own Feign Death cast (CM.OnPlayerSpellSucceeded) to bridge that lag.
+local FEIGN_DEATH_SPELL_ID = 5384
+local FEIGN_LATCH_SECONDS = 1.5
+local feignLatchUntil = 0
+
+function CM.NoteFeignDeathCast()
+  feignLatchUntil = GetTime() + FEIGN_LATCH_SECONDS
+end
+
 function CM.IsFeignDeathActive()
-  return GetPlayerAuraBySpellID(5384) ~= nil
+  if _G.UnitIsFeignDeath and CM.Safe.PublicBool(_G.UnitIsFeignDeath("player")) == true then
+    return true
+  end
+  if GetTime() < feignLatchUntil then
+    return true
+  end
+  local aura = GetPlayerAuraBySpellID(FEIGN_DEATH_SPELL_ID)
+  return aura ~= nil
+end
+
+--- UNIT_SPELLCAST_SUCCEEDED for the player: free the cursor at once on Feign Death.
+--- spellID can be secret in combat: then it is ignored (the unit state / aura take over).
+function CM.OnPlayerSpellSucceeded(unit, _, spellID)
+  if unit ~= "player" or CM.Safe.IsSecret(spellID) then
+    return
+  end
+  if spellID == FEIGN_DEATH_SPELL_ID then
+    CM.NoteFeignDeathCast()
+    if CM.ReconcileFreeLook then
+      CM.ReconcileFreeLook()
+    end
+  end
 end
 
 function CM.IsInPetBattle()

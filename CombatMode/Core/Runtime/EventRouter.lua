@@ -187,6 +187,11 @@ local function HandleEventByCategory(category, event, ...)
         CM.ReconcileFreeLook()
       end
     end,
+    FEIGN_DEATH_EVENTS = function(...)
+      if CM.OnPlayerSpellSucceeded then
+        CM.OnPlayerSpellSucceeded(...)
+      end
+    end,
     REMATCH_EVENTS = function()
       if CM.RuntimeRematch then
         CM.RuntimeRematch()

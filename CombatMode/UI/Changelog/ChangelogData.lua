@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The **Party Wheel** health rings have a new status bar look and now fill and drain smoothly as health changes. The swipe animation on the centre spell is a little larger too.
 
+### Fixed
+
+- **Feign Death** now frees your cursor right away in combat, so moving your mouse no longer makes you stand back up.
+
 ## [5.5.3] - 2026-11-26
 
 ### Added
