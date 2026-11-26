@@ -20,14 +20,13 @@
 --      (PartyWheel.lua). CM.RadialViewShown(kind) re-parents it to that wheel.
 --    • Party entries ({ kind = "unit" }) draw the member's portrait (class circle icon in a raid,
 --      IsRaidGroup; no cooldown, the centre shows it; inner black shadow, SetInnerShadow) and a
---      unit plate: a health ring (radial_health_{ring,fill,half,spark}.tga) as the portrait's
---      border (SetSlotRing), the role icon on its bottom notch, the raid marker on its top and the
+--      unit plate: a health ring (radial_health_{bg,fill,ring,half,spark}.tga) as the portrait's
+--      border (SetSlotRing), the role icon on its bottom, the raid marker on its top and the
 --      class-coloured first name under it (AllyCycleTarget.GetDisplayName; "Dead" / "Offline").
---    • The ring's fill is two halves behind rotating half-plane masks. Secret health (instances)
---      turns them through UnitHealthPercent curves (SetRotation takes secrets, SetCooldown does
---      not) and steps; public health is plain math and eases toward each reading. Repainted on
---      that unit's UNIT_HEALTH / UNIT_MAXHEALTH (view-local events while the wheel is open) and
---      every HEALTH_INTERVAL (range, dead, offline).
+--    • The ring's fill is two halves behind rotating half-plane masks. Health is secret: angles
+--      come from UnitHealthPercent curves and ease through hidden status bars (SetRotation takes
+--      secrets); public health (older clients) eases in Lua. Repainted on that unit's UNIT_HEALTH /
+--      UNIT_MAXHEALTH (view-local, while open) and every HEALTH_INTERVAL (range, dead, offline).
 --    • Ally HUD parity and the Party Wheel centre: see .claude/rules/domain-radial-menu.md (View.lua notes).
 --  Does not: Decide what a slice does, store wheels, or bind keys (Secure.lua / Data.lua).
 --  Related: Core/RadialMenu/{Data,Secure,PartyWheel,RadialMenu}.lua,
@@ -131,7 +130,7 @@ local CENTRE_ICON_VISIBLE = 58 / 64
 local INNER_SHADOW_RIM = 160 / 256
 local INNER_SHADOW_SCALE = 1.15
 local INNER_SHADOW_ALPHA = 0.85
-local CENTRE_FX_PROC_FILL = 60 / 86 -- PROC_ATLAS frames: the slash spans ~60 of 86 px
+local CENTRE_FX_PROC_FILL = 55 / 86 -- PROC_ATLAS: the frame px (of 86) sized to the slot's width
 local CLOSE_SIZE = 36
 -- Soft dark blob behind the centre texts / pips / close marker so they read over any scene.
 local BACKDROP_SIZE = 240
@@ -217,18 +216,16 @@ local source = SOURCES.radial
 local RING_SIZE = 66
 local RING_ICON = math.floor(RING_SIZE * 70 / 96) -- portrait fills the ring's opening, edge under the frame
 -- 12 o'clock: a mask edge lying on a half's own edge (the canvas centre line) fades that column,
--- a faint line where the halves meet. Past 50% the left mask turns RING_TOP_OVERSHOOT radians
--- further (over RING_TOP_RAMP of health) and the right one stops that short of 0, so at the top
--- only the halves' crisp texture edges meet; the sliver this costs is at 6 o'clock, under the role
--- icon. (No patch over the line: the plate's range alpha applies per texture, so any overlap shows
--- brighter.)
+-- a faint line where the halves meet. So the left mask turns RING_TOP_OVERSHOOT radians past
+-- 12 o'clock and the right one stops that short of 0: at the top only the halves' crisp texture
+-- edges meet; the sliver this costs is at 6 o'clock, under the role icon. (No patch over the
+-- line: the plate's range alpha applies per texture, so any overlap shows brighter.)
 local RING_TOP_OVERSHOOT = 0.04
-local RING_TOP_RAMP = 0.02
 local RING_SPARK_EDGE = 0.01 -- spark fades out this close to empty / full
 -- Health changes ease in (exponential approach, about the Ally HUD bar's ExponentialEaseOut).
 local RING_EASE_SPEED = 8
 local RING_EASE_SETTLE = 0.0005
-local RING_CANVAS_SCALE = 128 / 96 -- ring TGAs are the 96 px art centred on a 128 canvas
+local RING_CANVAS_SCALE = 128 / 96 -- the ring TGAs' canvas per RING_SIZE (make-party-ring.py)
 local RING_ROLE_INSET = 5 -- role icon centre, up from the ring's bottom edge
 local PLATE_Y = -1 -- gap between the role icon and the name
 local PLATE_WIDTH = 96 -- name width (adjacent slices of 8 are ~113 px apart)
@@ -582,23 +579,33 @@ end
 -- Health ring fill: radial_health_fill.tga in two halves (left = first half of health, clockwise
 -- from the bottom; right = second half). Each half is masked by radial_health_half.tga (a half-plane:
 -- right half opaque, CLAMP so any rotation still covers the canvas) rotated about the ring's centre.
--- Health can be secret and Cooldown:SetCooldown rejects secrets from addon code, but
--- Texture:SetRotation takes them: numeric curves map health % straight to each mask's angle, so
--- health never meets Lua math. Negative radians turn clockwise.
+-- Health is secret and Cooldown:SetCooldown rejects secrets from addon code, but
+-- Texture:SetRotation takes them: numeric curves map health % straight to angles, so health never
+-- meets Lua math. Negative radians turn clockwise.
+-- Each mask's angle is a straight line over all of health, held to the mask's own range
+-- (RING_RANGES.clamp). Straight lines so a change can ease: each line runs through a hidden status
+-- bar that the game interpolates, then through a second one whose min / max do the holding (the
+-- two halves then move one after the other, never both at once).
+local RING_LEFT_END = -math.pi - RING_TOP_OVERSHOOT
+local RING_RIGHT_FULL = RING_TOP_OVERSHOOT -- the right mask's angle at full health
+local RING_RIGHT_EMPTY = 2 * math.pi - RING_TOP_OVERSHOOT
 local RING_CURVE_POINTS = {
-  -- left half: the mask turns 0 -> -pi over the first half of health, then RING_TOP_OVERSHOOT on.
-  left = {
-    { 0, 0 },
-    { 0.5, -math.pi },
-    { 0.5 + RING_TOP_RAMP, -math.pi - RING_TOP_OVERSHOOT },
-    { 1, -math.pi - RING_TOP_OVERSHOOT },
-  },
-  -- right half: the mask starts flipped (pi) and turns pi -> RING_TOP_OVERSHOOT over the second half.
-  right = { { 0, math.pi }, { 0.5, math.pi }, { 1, RING_TOP_OVERSHOOT } },
+  -- left half: reaches RING_LEFT_END (a little past 12 o'clock) at half health.
+  left = { { 0, 0 }, { 1, 2 * RING_LEFT_END } },
+  -- right half: held at pi up to half health, then turns to RING_RIGHT_FULL.
+  right = { { 0, RING_RIGHT_EMPTY }, { 1, RING_RIGHT_FULL } },
   -- spark at the fill's edge: drawn at the bottom, turned the whole sweep (0 -> -2pi); its alpha
   -- fades out within RING_SPARK_EDGE of empty or full.
   spark = { { 0, 0 }, { 1, -2 * math.pi } },
   sparkAlpha = { { 0, 0 }, { RING_SPARK_EDGE, 1 }, { 1 - RING_SPARK_EDGE, 1 }, { 1, 0 } },
+}
+local RING_RANGES = {
+  line = {
+    left = { 2 * RING_LEFT_END, 0 },
+    right = { RING_RIGHT_FULL, RING_RIGHT_EMPTY },
+    spark = { -2 * math.pi, 0 },
+  },
+  clamp = { left = { RING_LEFT_END, 0 }, right = { RING_RIGHT_FULL, math.pi } },
 }
 local ringCurves
 
@@ -633,9 +640,8 @@ end
 
 -- Mask angles, spark angle and alpha for a public health fraction (same shapes as the curves).
 local function RingAnglesFromPct(pct)
-  local topTurn = math.max(0, math.min(1, (pct - 0.5) / RING_TOP_RAMP))
-  return -math.min(pct, 0.5) * 2 * math.pi - RING_TOP_OVERSHOOT * topTurn,
-    math.pi - math.max(pct - 0.5, 0) * 2 * (math.pi - RING_TOP_OVERSHOOT),
+  return math.max(RING_LEFT_END, 2 * RING_LEFT_END * pct),
+    math.min(math.pi, RING_RIGHT_EMPTY + (RING_RIGHT_FULL - RING_RIGHT_EMPTY) * pct),
     -pct * 2 * math.pi,
     math.max(0, math.min(1, pct / RING_SPARK_EDGE, (1 - pct) / RING_SPARK_EDGE))
 end
@@ -646,7 +652,7 @@ local function ApplyRing(plate, left, right, spark, sparkAlpha, r, g, b, a)
   plate.maskR:SetRotation(right)
   plate.spark:SetRotation(spark)
   plate.spark:SetAlpha(sparkAlpha)
-  -- The fill TGA is grey (shaded darker on the left, lighter on the right), tinted with the health colour.
+  -- The fill TGA is the status bar's shaded white fill, tinted with the health colour.
   -- Offline: the Ally HUD bar's offline look, the dead colour desaturated (its edge spark is
   -- hidden by PaintHealthRing).
   local offline = plate.offline or false
@@ -668,10 +674,57 @@ local function ApplyRingPct(plate, pct)
   ApplyRing(plate, left, right, spark, sparkAlpha, r, g, b, a)
 end
 
---- Reads the unit's health (every HEALTH_INTERVAL) and draws its ring. Public health becomes the
---- goal the ring eases to (StepHealthRing, like the Ally HUD bar's interpolation); a new unit or
---- a fresh open (shownPct nil) starts on it. Secret health (instances) can't be eased from addon
---- code (curves only evaluate secrets when untainted), so the ring is drawn by curves and steps.
+-- A hidden bar that only holds a number (maybe secret) for the engine to ease or clamp.
+local function NewRingBar(plate, range)
+  local bar = CreateFrame("StatusBar", nil, plate)
+  bar:SetSize(1, 1)
+  bar:SetPoint("CENTER")
+  bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8X8")
+  bar:SetAlpha(0)
+  bar:SetMinMaxValues(range[1], range[2])
+  return bar
+end
+
+-- Secret health: sends each curve's angle to its easing bar. `snap` (new unit, fresh open) skips
+-- the easing, as do clients without StatusBar interpolation.
+local function SetRingTargets(plate, unit, curves, snap)
+  local interp = _G.Enum and _G.Enum.StatusBarInterpolation
+  local ease = not snap and interp and interp.ExponentialEaseOut
+  for side, bar in pairs(plate.easeBars) do
+    local angle = UnitHealthPercent(unit, true, curves[side])
+    if ease then
+      bar:SetValue(angle, ease)
+    else
+      bar:SetValue(angle)
+    end
+  end
+end
+
+-- The bars' angles right now: left and right held to their masks' ranges, and the spark. All may
+-- be secret: only hand them to SetRotation.
+local function EasedRingAngles(plate)
+  local angles = {}
+  for side, bar in pairs(plate.easeBars) do
+    local value
+    if bar.GetInterpolatedValue then
+      value = bar:GetInterpolatedValue()
+    else
+      value = bar:GetValue()
+    end
+    local clamp = plate.clampBars[side]
+    if clamp then
+      clamp:SetValue(value)
+      value = clamp:GetValue()
+    end
+    angles[side] = value
+  end
+  return angles.left, angles.right, angles.spark
+end
+
+--- Reads the unit's health (every HEALTH_INTERVAL) and draws its ring. Health is secret on
+--- Mainline and Forever: the engine eases its angles through the plate's hidden bars. Public health
+--- (older clients) becomes a goal eased in Lua. Either way StepHealthRing moves the ring every
+--- frame, and a new unit or a fresh open (shownPct / easedUnit nil) starts on the health.
 function PaintHealthRing(slot, unit)
   local plate = slot.plate
   local dead = CM.AllyCycleTarget.IsDead(unit)
@@ -685,6 +738,8 @@ function PaintHealthRing(slot, unit)
   local shown = false
   local pct = not dead and PublicHealthPct(unit) or nil
   plate.goalPct = pct
+  local easedUnit = plate.easedUnit
+  plate.easedUnit = nil
   if pct then
     shown = true
     if plate.shownPct == nil then
@@ -697,17 +752,12 @@ function PaintHealthRing(slot, unit)
     if curves then
       shown = true
       local r, g, b, a = CM.AllyCycleHealthBar.GetFillColor(unit)
-      ApplyRing(
-        plate,
-        UnitHealthPercent(unit, true, curves.left),
-        UnitHealthPercent(unit, true, curves.right),
-        UnitHealthPercent(unit, true, curves.spark),
-        UnitHealthPercent(unit, true, curves.sparkAlpha),
-        r,
-        g,
-        b,
-        a
-      )
+      SetRingTargets(plate, unit, curves, easedUnit ~= unit)
+      plate.easedUnit = unit
+      local left, right, spark = EasedRingAngles(plate)
+      -- The spark's fade at empty / full follows the health itself, not the eased angle.
+      local sparkAlpha = UnitHealthPercent(unit, true, curves.sparkAlpha)
+      ApplyRing(plate, left, right, spark, sparkAlpha, r, g, b, a)
     end
   end
   plate.fillL:SetShown(shown)
@@ -750,6 +800,13 @@ end
 --- Eases each shown ring toward its goal health (every frame while the Party Wheel is open).
 local function StepHealthRing(slot, elapsed)
   local plate = slot.plate
+  if plate and plate.easedUnit and plate:IsShown() then
+    local left, right, spark = EasedRingAngles(plate)
+    plate.maskL:SetRotation(left)
+    plate.maskR:SetRotation(right)
+    plate.spark:SetRotation(spark)
+    return
+  end
   local goal, shownPct = plate and plate.goalPct, plate and plate.shownPct
   if not goal or not shownPct or shownPct == goal or not plate:IsShown() then
     return
@@ -763,8 +820,8 @@ local function StepHealthRing(slot, elapsed)
 end
 
 --- UNIT_HEALTH / UNIT_MAXHEALTH while the Party Wheel is open: repaints that member's ring at
---- once (the HEALTH_INTERVAL loop alone would leave it up to 0.2 s behind, which shows as steps
---- where health is secret and can't be eased). The loop still refreshes range / dead state.
+--- once (the HEALTH_INTERVAL loop alone would leave it up to 0.2 s behind). The loop still
+--- refreshes range / dead state.
 local function OnHealthEvent(_, _, unit)
   if type(unit) ~= "string" or (issecretvalue and issecretvalue(unit)) then
     return
@@ -795,10 +852,29 @@ local function SetHealthEvents(on)
   view:SetScript("OnEvent", on and OnHealthEvent or nil)
 end
 
+-- Ring art is drawn a bit under its own size at rest (a hovered slot grows), where thin curves
+-- step: filter it trilinearly.
+local function SetRingArt(texture, file)
+  texture:SetTexture(ART_PATH .. file, "CLAMP", "CLAMP", "TRILINEAR")
+end
+
+-- The dark body and the thin gold border also stay off the pixel grid (snapping roughens them).
+-- Not the fill halves: their meeting edges at 12 o'clock keep the default.
+local function BuildRingFrame(plate, sublevel, file)
+  local texture = plate:CreateTexture(nil, "ARTWORK", nil, sublevel)
+  SetRingArt(texture, file)
+  texture:SetAllPoints()
+  if texture.SetSnapToPixelGrid then
+    texture:SetSnapToPixelGrid(false)
+    texture:SetTexelSnappingBias(0)
+  end
+  return texture
+end
+
 -- One half of the fill art (u0..u1 of the canvas) with its own rotating half-plane mask.
 local function BuildRingHalf(plate, u0, u1, point)
   local fill = plate:CreateTexture(nil, "ARTWORK", nil, 1)
-  fill:SetTexture(ART_PATH .. "health_fill.tga")
+  SetRingArt(fill, "health_fill.tga")
   fill:SetTexCoord(u0, u1, 0, 1)
   fill:SetPoint("TOP" .. point, plate, "TOP" .. point)
   fill:SetPoint("BOTTOM" .. point, plate, "BOTTOM" .. point)
@@ -811,9 +887,9 @@ local function BuildRingHalf(plate, u0, u1, point)
   return fill, mask
 end
 
--- Party Wheel: the unit plate around the portrait: the health ring (radial_health_ring.tga frame,
--- masked fill halves on top, inside its channel, in the art's own colours), the role icon on the
--- ring's bottom notch and the class-coloured name under it
+-- Party Wheel: the unit plate around the portrait: the health ring (the status bar's layers swept
+-- round: dark body, masked fill halves, gold border over them, spark), the role icon on the ring's
+-- bottom and the class-coloured name under it
 -- (names come from AllyCycleTarget.GetDisplayName). Dead / offline members grey out through applyDead,
 -- their name replaced with "Dead" / "Offline".
 local function BuildPlate(slot)
@@ -836,14 +912,19 @@ local function BuildPlate(slot)
   plate.lowGlow:SetSize(LOW_GLOW_SIZE, LOW_GLOW_SIZE)
   plate.lowGlow:SetPoint("CENTER")
   plate.lowGlow:Hide()
-  plate.ring = plate:CreateTexture(nil, "ARTWORK")
-  plate.ring:SetTexture(ART_PATH .. "health_ring.tga")
-  plate.ring:SetAllPoints()
+  plate.body = BuildRingFrame(plate, 0, "health_bg.tga")
   plate.fillL, plate.maskL = BuildRingHalf(plate, 0, 0.5, "LEFT")
   plate.fillR, plate.maskR = BuildRingHalf(plate, 0.5, 1, "RIGHT")
-  -- The spark TGA is the Ally HUD bar's widgetstatusbar-spark standing across the band's bottom
-  -- (where the fill starts), 1.5x the bar's proportions (6 px wide, band + 4 px tall on screen)
-  -- on the band's middle, turned with the sweep.
+  plate.ring = BuildRingFrame(plate, 2, "health_ring.tga")
+  plate.easeBars, plate.clampBars = {}, {}
+  for side, range in pairs(RING_RANGES.line) do
+    plate.easeBars[side] = NewRingBar(plate, range)
+  end
+  for side, range in pairs(RING_RANGES.clamp) do
+    plate.clampBars[side] = NewRingBar(plate, range)
+  end
+  -- The spark TGA is the status bar's widgetstatusbar-spark standing across the band's bottom
+  -- (where the fill starts), turned with the sweep.
   plate.spark = plate:CreateTexture(nil, "ARTWORK", nil, 3)
   plate.spark:SetTexture(ART_PATH .. "health_spark.tga", "CLAMP", "CLAMP")
   plate.spark:SetBlendMode("ADD")
@@ -879,6 +960,7 @@ local function BuildPlate(slot)
     slot.icon:SetDesaturated(grey or slot.unusable or false)
     plate.role:SetDesaturated(grey)
     plate.ring:SetDesaturated(grey)
+    plate.body:SetDesaturated(grey)
     if grey then
       plate.name:SetTextColor(0.55, 0.55, 0.55, 1)
     else
@@ -919,6 +1001,7 @@ local function PaintUnitPlate(slot, unit)
   -- A new unit, or a plate shown again (the centre's), starts on the health instead of easing.
   if plate.unit ~= unit or not plate:IsShown() then
     plate.shownPct = nil
+    plate.easedUnit = nil
   end
   plate.unit = unit
   plate:Show()
@@ -1429,6 +1512,7 @@ function CM.RadialViewShown(kind)
     local slot = i == 0 and centerSlot or slots[i]
     if slot and slot.plate then
       slot.plate.shownPct = nil
+      slot.plate.easedUnit = nil
     end
   end
   centerFxSpell = nil -- replay the centre FlipBook on every open
