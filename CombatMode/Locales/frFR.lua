@@ -155,6 +155,11 @@ L["Auto Sheath"] = "Rengainer automatiquement"
 L["Close Windows With Mouse Look"] = "Fermer les fenêtres avec Mouse Look"
 L["Automatically close all open windows when toggling Mouse Look on."] =
   "Ferme automatiquement toutes les fenêtres ouvertes à l'activation de Mouse Look"
+L["Remember Last State"] = "Mémoriser le dernier état"
+L["On"] = "Activé"
+L["Initial Mouse Look State"] = "État initial de Mouse Look"
+L["The initial state Mouse Look starts in after a loading screen."] =
+  "L'état initial de Mouse Look après un écran de chargement."
 L["Sheath weapons automatically with Mouse Look."] =
   "Rengaine automatiquement les armes avec la vue à la souris."
 L["Vignette Shows When"] = "La vignette s'affiche quand"

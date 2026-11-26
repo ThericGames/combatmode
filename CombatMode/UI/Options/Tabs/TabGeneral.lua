@@ -2,7 +2,7 @@
 --  UI/Options/Tabs/TabGeneral.lua — OPTIONS TAB — Mouse Look / Camera / Interact
 ---------------------------------------------------------------------------------------
 --  What it does: Wires Mouse Look tab controls (tab id "general") to freelook and interact binds:
---  Mouse Look keybind, Interact keybind + interactUnit, Flip Camera keybind,
+--  Mouse Look keybind (+ macOS reset), Initial Mouse Look State, close windows, Interact keybind + unit, Flip Camera keybind,
 --  Camera Features (respectMotionSickness, turn speed, minimum zoom, dynamic pitch,
 --  shoulder offset, disable offset with mouselook); Additional Features (pulseCursor,
 --  hideTooltip + tooltipModifier, sheath weapons, vignette conditions + match).
@@ -10,7 +10,7 @@
 --    • DB: global.pulseCursor, hideTooltip, tooltipModifier, mouseLookSpeed, dynamicPitch,
 --      dynamicPitchStrength, vignetteConditions (CSV), vignetteMatch,
 --      respectMotionSickness, shoulderFollowsMouseLook, sheathWeaponsWithMouselook, closeWindowsOnMouseLook,
---      interactUnit; char.shoulderOffset.
+--      mouseLookStartState, interactUnit; char.shoulderOffset.
 --    • Motion Sickness Protection disables ActionCam-owned Camera Features (pitch /
 --      shoulder / focus). Disable Offset With Mouselook stays editable under DynamicCam.
 --    • Keybind sets go through TryApplyBindingChange + AssignNamedKeybind (clears Interact
@@ -51,6 +51,13 @@ local INTERACT_UNIT_VALUES = {
   target = L["Soft Target - More forgiving"],
 }
 local INTERACT_UNIT_ORDER = { "mouseover", "target" }
+
+local START_STATE_VALUES = {
+  keep = L["Remember Last State"],
+  on = L["On"],
+  off = L["Off"],
+}
+local START_STATE_ORDER = { "keep", "on", "off" }
 
 local TOOLTIP_MODIFIER_VALUES = {
   ALT = _G.ALT_KEY or "Alt",
@@ -180,6 +187,7 @@ end
 UI.Options.AddTab({
   id = "general",
   label = L["Mouse Look"],
+  newFeatureFlag = true,
   build = function(ctx)
     ctx:Header(L["MOUSE LOOK"])
     ctx:Description(
@@ -196,6 +204,45 @@ UI.Options.AddTab({
         CM.TryApplyBindingChange(L["mouse look keybinding"], function()
           CM.AssignNamedKeybind("Combat Mode - Mouse Look", key)
         end)
+      end,
+    })
+    -- macOS only: on other clients the stuck-cursor freeze does not occur, so this
+    -- recovery keybind is hidden to avoid clutter.
+    if IsMacClient() then
+      ctx:Keybind({
+        label = L["Reset Mouse Look"],
+        desc = L["Recover a stuck cursor after switching windows on macOS. Re-grabs and releases Mouse Look to clear a capture the game left stuck while running in the background."],
+        get = function()
+          return (GetBindingKey("Combat Mode - Reset Mouse Look"))
+        end,
+        set = function(key)
+          CM.TryApplyBindingChange(L["reset mouse look keybinding"], function()
+            CM.AssignNamedKeybind("Combat Mode - Reset Mouse Look", key)
+          end)
+        end,
+      })
+    end
+    ctx:Dropdown({
+      label = L["Initial Mouse Look State"],
+      desc = L["The initial state Mouse Look starts in after a loading screen."],
+      newFeatureFlag = true,
+      values = START_STATE_VALUES,
+      order = START_STATE_ORDER,
+      get = function()
+        return CM.DB.global.mouseLookStartState or "keep"
+      end,
+      set = function(value)
+        CM.DB.global.mouseLookStartState = value
+      end,
+    })
+    ctx:Toggle({
+      label = L["Close Windows With Mouse Look"],
+      desc = L["Automatically close all open windows when toggling Mouse Look on."],
+      get = function()
+        return CM.DB.global.closeWindowsOnMouseLook
+      end,
+      set = function(value)
+        CM.DB.global.closeWindowsOnMouseLook = value
       end,
     })
     ctx:Keybind({
@@ -266,32 +313,6 @@ UI.Options.AddTab({
         end)
       end,
     })
-    ctx:Toggle({
-      label = L["Close Windows With Mouse Look"],
-      desc = L["Automatically close all open windows when toggling Mouse Look on."],
-      get = function()
-        return CM.DB.global.closeWindowsOnMouseLook
-      end,
-      set = function(value)
-        CM.DB.global.closeWindowsOnMouseLook = value
-      end,
-    })
-    -- macOS only: on other clients the stuck-cursor freeze does not occur, so this
-    -- recovery keybind is hidden to avoid clutter.
-    if IsMacClient() then
-      ctx:Keybind({
-        label = L["Reset Mouse Look"],
-        desc = L["Recover a stuck cursor after switching windows on macOS. Re-grabs and releases Mouse Look to clear a capture the game left stuck while running in the background."],
-        get = function()
-          return (GetBindingKey("Combat Mode - Reset Mouse Look"))
-        end,
-        set = function(key)
-          CM.TryApplyBindingChange(L["reset mouse look keybinding"], function()
-            CM.AssignNamedKeybind("Combat Mode - Reset Mouse Look", key)
-          end)
-        end,
-      })
-    end
 
     ctx:Gap()
     ctx:Header(L["CAMERA FEATURES"])

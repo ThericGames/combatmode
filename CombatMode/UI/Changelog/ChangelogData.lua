@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [5.5.4] - 2026-11-26
 
+### Added
+
+- **Initial Mouse Look State** in the **Mouse Look** tab sets whether **Mouse Look** is on or off after a loading screen. The default, **Remember Last State**, keeps it as you left it through loading screens and reloads, so a cursor you freed now stays free after a reload. Logging in still starts with it on.
+
 ### Changed
 
 - The **Party Wheel** health rings have a new status bar look and now fill and drain smoothly as health changes. The swipe animation on the centre spell is a little larger too.

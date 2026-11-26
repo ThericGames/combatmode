@@ -88,6 +88,8 @@ CM.Constants.DatabaseDefaults = {
     tooltipModifier = "ALT", -- key that shows tooltips while Hide Tooltips is on: ALT | CTRL | SHIFT
     sheathWeaponsWithMouselook = false,
     closeWindowsOnMouseLook = false, -- Mouse Look key closes open windows instead of waiting for you to
+    -- Mouse Look after login / reload / loading screen: "keep" (as you left it) | "on" | "off"
+    mouseLookStartState = "keep",
     interactUnit = "target",
     showTargetLockMarker = true,
     -- Sounds (Advanced tab): one switch per feature that plays cues.
@@ -202,6 +204,8 @@ return false
     },
     -- Party Wheel: helpful spells (spell-ID CSV) that open the group wheel while held
     partyWheelSpells = "",
+    -- Cursor freed with the Mouse Look key; saved so Remember Last State survives a reload.
+    mouseLookFreed = false,
     -- mouse look camera
     shoulderOffset = 1.2,
     -- Closest the camera may zoom in (yards); 0 = off.

@@ -156,6 +156,11 @@ L["Auto Sheath"] = "Automatisch wegstecken"
 L["Close Windows With Mouse Look"] = "Fenster mit Mausblick schließen"
 L["Automatically close all open windows when toggling Mouse Look on."] =
   "Alle offenen Fenster automatisch schließen, wenn der Mausblick eingeschaltet wird"
+L["Remember Last State"] = "Letzten Zustand merken"
+L["On"] = "An"
+L["Initial Mouse Look State"] = "Anfangszustand des Mausblicks"
+L["The initial state Mouse Look starts in after a loading screen."] =
+  "Der Anfangszustand des Mausblicks nach einem Ladebildschirm."
 L["Sheath weapons automatically with Mouse Look."] =
   "Steckt Waffen automatisch mit dem Mausblick weg."
 L["Vignette Shows When"] = "Vignette erscheint bei"

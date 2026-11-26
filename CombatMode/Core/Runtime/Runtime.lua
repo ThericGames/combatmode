@@ -626,6 +626,11 @@ local function Rematch()
 
   CM.OnRematchCrosshair()
 
+  -- Freed by the player (or Initial Mouse Look State): don't lock.
+  if CM.IsMouseLookFreedByUser() then
+    CM.SettleFreedMouseLook()
+    return
+  end
   -- Early OnUpdate can start mouselook before Rematch; CursorFreelookCentering only
   -- hides the cursor across a fresh start (force 0 → Start → deferred 1). Bounce so
   -- LockFreeLook is not a no-op when already looking.
