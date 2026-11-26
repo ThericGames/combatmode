@@ -390,6 +390,9 @@ L["Hold to open the radial menu, aim at a slice, then release to activate it. Sc
 L["Radial Menu Style"] = "방사형 메뉴 스타일"
 L["Choose the appearance of the Radial Menu wheels."] =
   "방사형 메뉴 휠의 모양을 선택합니다."
+L["Radial Menu Scale"] = "방사형 메뉴 크기"
+L["Scales the size of the Radial Menu and Party Wheel."] =
+  "방사형 메뉴와 파티 휠의 크기를 조절합니다."
 L["Party Wheel Spells"] = "파티 휠 주문"
 L["Helpful spells that open a party targeting wheel while their key is held. Flick toward a party member and release to cast on them, or return to the center to cast on yourself. Tap to cast on your friendly target, or yourself if none is selected."] =
   "키를 누르고 있는 동안 파티 대상 지정 휠을 여는 이로운 주문입니다. 파티원 쪽으로 밀고 떼면 그에게 시전하고, 중앙으로 돌아오면 자신에게 시전합니다. 짧게 누르면 우호적 대상에게, 선택된 대상이 없으면 자신에게 시전합니다."

@@ -189,6 +189,8 @@ return false
     seenWizard = false,
     -- Radial Menu look: "forever" (original art) | "minimal" (Blizzard radial vignette)
     radialStyle = "minimal",
+    -- size of the Radial Menu and Party Wheel (0.5-1.5)
+    radialScale = 1,
     -- dev
     silenceAlerts = true,
     debugMode = false,

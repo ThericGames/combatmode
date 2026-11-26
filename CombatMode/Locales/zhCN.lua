@@ -376,6 +376,9 @@ L["Hold to open the radial menu, aim at a slice, then release to activate it. Sc
   "按住以打开轮盘菜单，瞄准一个扇区后松开即可触发。滚动鼠标滚轮可切换轮盘。"
 L["Radial Menu Style"] = "轮盘菜单样式"
 L["Choose the appearance of the Radial Menu wheels."] = "选择轮盘菜单的外观。"
+L["Radial Menu Scale"] = "轮盘菜单缩放"
+L["Scales the size of the Radial Menu and Party Wheel."] =
+  "缩放轮盘菜单和队伍轮盘的大小。"
 L["Party Wheel Spells"] = "队伍轮盘法术"
 L["Helpful spells that open a party targeting wheel while their key is held. Flick toward a party member and release to cast on them, or return to the center to cast on yourself. Tap to cast on your friendly target, or yourself if none is selected."] =
   "按住按键时会打开队伍选取轮盘的增益法术。向队友方向滑动并松开即可对其施法，回到中心则对自己施法。轻按则对友方目标施法，未选择目标时对自己施法。"

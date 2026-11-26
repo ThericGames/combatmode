@@ -388,6 +388,9 @@ L["Hold to open the radial menu, aim at a slice, then release to activate it. Sc
 L["Radial Menu Style"] = "Style du menu radial"
 L["Choose the appearance of the Radial Menu wheels."] =
   "Choisissez l'apparence des roues du menu radial."
+L["Radial Menu Scale"] = "Échelle du menu radial"
+L["Scales the size of the Radial Menu and Party Wheel."] =
+  "Redimensionne le menu radial et la roue de groupe."
 L["Party Wheel Spells"] = "Sorts de la roue de groupe"
 L["Helpful spells that open a party targeting wheel while their key is held. Flick toward a party member and release to cast on them, or return to the center to cast on yourself. Tap to cast on your friendly target, or yourself if none is selected."] =
   "Sorts bénéfiques qui ouvrent une roue de ciblage de groupe tant que leur touche est maintenue. Dirigez-vous vers un membre du groupe et relâchez pour le lancer sur lui, ou revenez au centre pour le lancer sur vous. Une simple pression le lance sur votre cible amie, ou sur vous si aucune n'est sélectionnée."

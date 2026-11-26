@@ -684,7 +684,10 @@ local function StoreImpl()
     centreZone:SetSize(2 * dead, 2 * dead)
   end
   local c = CM.DB and CM.DB.char
-  Wheel:SetAttribute("ryoff", (c and c.crosshairY) or 0)
+  -- SetPoint offsets are in the wheel's own scale: divide so it stays on the crosshair.
+  local scale = CM.RadialScale()
+  Wheel:SetScale(scale)
+  Wheel:SetAttribute("ryoff", ((c and c.crosshairY) or 0) / scale)
 end
 
 local pendingStore, pendingRebind = false, false

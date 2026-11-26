@@ -324,6 +324,8 @@ L["Hold to open the radial menu, aim at a slice, then release to activate it. Sc
   true
 L["Radial Menu Style"] = true
 L["Choose the appearance of the Radial Menu wheels."] = true
+L["Radial Menu Scale"] = true
+L["Scales the size of the Radial Menu and Party Wheel."] = true
 L["Party Wheel Spells"] = true
 L["Helpful spells that open a party targeting wheel while their key is held. Flick toward a party member and release to cast on them, or return to the center to cast on yourself. Tap to cast on your friendly target, or yourself if none is selected."] =
   true

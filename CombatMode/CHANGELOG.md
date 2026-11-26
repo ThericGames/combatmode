@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Hide Focus Frame** in the **Target Lock** section, off by default and shared by all your characters. Hides Blizzard's focus frame while keeping your focus and **Target Lock**.
 - **Support Mode** has a new **Auto Lock Allies** option, on by default. Turn it off to keep **Auto Target Lock** for enemies without it locking the allies you heal. Manual **Target Lock** works either way.
 - On Forever and Classic, **Party Wheel Spells**, **Excluded Spells** and **Cast at Crosshair** have a new **All Ranks** pick. One entry covers every rank of a spell, including ones you train later.
+- **Radial Menu Scale** in the **Radial Menu** tab resizes the **Radial Menu** and **Party Wheel**.
 
 ### Fixed
 

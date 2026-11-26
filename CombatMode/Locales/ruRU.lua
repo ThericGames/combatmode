@@ -409,6 +409,9 @@ L["Hold to open the radial menu, aim at a slice, then release to activate it. Sc
 L["Radial Menu Style"] = "Стиль радиального меню"
 L["Choose the appearance of the Radial Menu wheels."] =
   "Выберите внешний вид колес радиального меню."
+L["Radial Menu Scale"] = "Масштаб радиального меню"
+L["Scales the size of the Radial Menu and Party Wheel."] =
+  "Изменяет размер радиального меню и колеса группы."
 L["Party Wheel Spells"] = "Заклинания колеса группы"
 L["Helpful spells that open a party targeting wheel while their key is held. Flick toward a party member and release to cast on them, or return to the center to cast on yourself. Tap to cast on your friendly target, or yourself if none is selected."] =
   "Полезные заклинания, открывающие колесо выбора цели из группы, пока удерживается их клавиша. Сдвиньте курсор к участнику группы и отпустите, чтобы применить на него, или вернитесь в центр, чтобы применить на себя. Короткое нажатие применяет на дружественную цель, а если ее нет, то на вас."
