@@ -5,15 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/2.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [5.5.2] - 2026-11-19
+## [5.5.3] - 2026-11-26
 
 ### Added
 
 - **Auto Unlock** now releases the cursor while you type in chat by default. Turn off **Unlock While Chatting** to keep Mouse Look while typing.
-- **Support Mode** has a new **Self-Cast Keybind**. Hold it and the helpful spells on your click-cast buttons land on you, without changing your target or **Target Lock**.
-- **Support Mode** has a new **Cycle in Group Order** option. Turn it on and the **Cycle Lock** keys move through your party or raid in group order, instead of jumping to the nearest player. With nobody locked, **Next** locks the first member of your group and **Previous** the last.
 - **Unlock Cursor for Ping** in **Auto Unlock**, off by default. Hold a Blizzard **Ping** binding to aim with a free cursor and release to resume Mouse Look and its usual cursor centering. Existing reticle ping behavior is unchanged when the option is off.
 - **Hide Focus Frame** in the **Target Lock** section, off by default and saved per character. Hides Blizzard's focus frame while keeping your focus and Target Lock intact. Turning it off restores the frame; changes during combat apply after combat ends.
+
+## [5.5.2] - 2026-11-19
+
+### Added
+
+- **Support Mode** has a new **Self-Cast Keybind**. Hold it and the helpful spells on your click-cast buttons land on you, without changing your target or **Target Lock**.
+- **Support Mode** has a new **Cycle in Group Order** option. Turn it on and the **Cycle Lock** keys move through your party or raid in group order, instead of jumping to the nearest player. With nobody locked, **Next** locks the first member of your group and **Previous** the last.
 
 ### Changed
 
@@ -971,7 +976,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rapidly toggling OPie rings could leave the cursor stuck and visible while Mouse Look was active.
 - Reloading could leave the cursor visible while still in the Mouse Look state after the loading screen.
 
-[Unreleased]: https://github.com/ThericGames/combatmode/compare/5.5.2...HEAD
+[Unreleased]: https://github.com/ThericGames/combatmode/compare/5.5.3...HEAD
+[5.5.3]: https://github.com/ThericGames/combatmode/compare/5.5.2...5.5.3
 [5.5.2]: https://github.com/ThericGames/combatmode/compare/5.5.1...5.5.2
 [5.5.1]: https://github.com/ThericGames/combatmode/compare/5.5.0...5.5.1
 [5.5.0]: https://github.com/ThericGames/combatmode/compare/5.4.7...5.5.0
