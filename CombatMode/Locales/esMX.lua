@@ -351,6 +351,14 @@ L["Radial Menu Wheels"] = "Ruedas del menú radial"
 L["Forever"] = "Forever"
 L["Minimal"] = "Minimalista"
 L["Clear Slice"] = "Vaciar sector"
+L["Add Action"] = "Agregar acción"
+L["Make First"] = "Poner primero"
+L["Remove Action"] = "Quitar acción"
+L["A slice holds up to %d actions."] = "Un sector admite hasta %d acciones."
+L["Right-click to remove this slice."] = "Clic derecho para quitar este sector."
+L["Right-click to remove this action."] = "Clic derecho para quitar esta acción."
+L["Action %d of %d. Scroll to see the others."] =
+  "Acción %d de %d. Usa la rueda del mouse para ver las demás."
 L["UI Actions"] = "Acciones de interfaz"
 L["Emotes"] = "Emociones"
 L["Commands"] = "Comandos"
@@ -363,8 +371,13 @@ L["Wheel"] = "Rueda"
 L["You can have up to %d wheels."] = "Puedes tener hasta %d ruedas."
 L["That can't go on a wheel. Use a spell, item, toy, mount or macro."] =
   "Eso no puede ir en una rueda. Usa un hechizo, objeto, juguete, montura o macro."
-L["Drag a spell, item, toy, mount or macro here, or click to change the action."] =
-  "Arrastra aquí un hechizo, objeto, juguete, montura o macro, o haz clic para cambiar la acción."
+L["Replace %s"] = "Reemplazar %s"
+L["Click to replace the shown action or manage the slice."] =
+  "Haz clic para reemplazar la acción mostrada o administrar la sección."
+L["Click the + to add another action, or drag a spell, item, toy, mount or macro here."] =
+  "Haz clic en + para agregar otra acción, o arrastra aquí un hechizo, objeto, juguete, montura o macro."
+L["Adds another action to this slice (%d of %d used). With the wheel open, aim at the slice and scroll to switch between them."] =
+  "Agrega otra acción a esta sección (%d de %d ocupadas). Con la rueda abierta, apunta a la sección y usa la rueda del mouse para cambiar entre ellas."
 L["Empty Slice"] = "Sector vacío"
 L["Drag a spell, item, toy, mount or macro here, or click to set an action. Empty slices are left out of the wheel."] =
   "Arrastra aquí un hechizo, objeto, juguete, montura o macro, o haz clic para establecer una acción. Los sectores vacíos no aparecen en la rueda."
@@ -382,14 +395,14 @@ L["You need at least one wheel."] = "Necesitas al menos una rueda."
 L["Remove this wheel and all of its slices?"] = "¿Quitar esta rueda y todos sus sectores?"
 L["Add Wheel"] = "Añadir rueda"
 L["Pick a preset wheel or a blank one."] = "Elige una rueda predefinida o una en blanco."
-L["Click a slice to choose its action, or drop a spell, item, toy, mount or macro on it.\nDrag a slice to reorder it. Right-click a slice to remove it."] =
-  "Haz clic en un sector para elegir su acción, o suelta sobre él un hechizo, objeto, juguete, montura o macro.\nArrastra un sector para reordenarlo. Clic derecho para quitarlo."
+L["Each slice holds up to %d actions: click its + to add one, then scroll over the slice to see them.\nClick a slice to replace an action, or drop a spell, item, toy, mount or macro on it.\nDrag a slice to reorder it. Right-click to remove."] =
+  "Cada sección admite hasta %d acciones: haz clic en su + para agregar una y usa la rueda del mouse sobre la sección para verlas.\nHaz clic en una sección para reemplazar una acción, o suelta sobre ella un hechizo, objeto, juguete, montura o macro.\nArrastra una sección para reordenarla. Clic derecho para quitar."
 L["RADIAL MENU"] = "MENÚ RADIAL"
 L["Create quick access wheels for spells, items, macros, emotes, and interface shortcuts."] =
   "Crea ruedas de acceso rápido para hechizos, objetos, macros, emociones y atajos de la interfaz."
 L["Radial Menu Keybind"] = "Atajo del menú radial"
-L["Hold to open the radial menu, aim at a slice, then release to activate it. Scroll to switch between wheels."] =
-  "Mantén presionado para abrir el menú radial, apunta a un sector y suelta para activarlo. Usa la rueda del mouse para cambiar de rueda."
+L["Hold to open the radial menu, aim at a slice, then release to activate it. Scroll to cycle the actions of an aimed slice, or to switch between wheels."] =
+  "Mantén presionado para abrir el menú radial, apunta a un sector y suelta para activarlo. Usa la rueda del mouse para recorrer las acciones del sector apuntado o para cambiar de rueda."
 L["Radial Menu Style"] = "Estilo del menú radial"
 L["Choose the appearance of the Radial Menu wheels."] =
   "Elige el aspecto de las ruedas del menú radial."
@@ -591,8 +604,8 @@ L["Normally a ground-targeted spell cast through Reticle Targeting will temporar
   "Normalmente, un hechizo de suelo lanzado con la selección por retícula desactiva temporalmente la vista con mouse para que lo coloques manualmente. Los hechizos de esta lista se lanzan automáticamente en el suelo, en la posición de tu mira.\n\nEjemplos típicos son {Ventisca}, {Salto heroico} o {Muerte y descomposición}. Si un hechizo de suelo sigue pausando Mouse Look para que lo coloques, añádelo aquí."
 L["Binds only work while Mouse Look is on. With Reticle Targeting on, a bound spell targets the enemy under your crosshair first, and helpful spells keep your friendly target.\n\n{Account-Wide Binds} shares one set of binds between all your characters."] =
   "Las asignaciones solo funcionan con la vista con mouse activa. Con la selección por retícula activa, un hechizo asignado apunta primero al enemigo bajo tu mira, y los de ayuda conservan tu objetivo amistoso.\n\n{Asignaciones de toda la cuenta} comparte un único conjunto de asignaciones entre todos tus personajes."
-L["Each wheel holds up to {8 slices}, and you can keep up to {5 wheels}. In the editor below:\n• {Click} a slice to pick a shortcut or emote\n• {Drop} a spell, item, mount or macro onto it\n• {Right-click} it to remove it\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."] =
-  "Cada rueda admite hasta {8 secciones} y puedes tener hasta {5 ruedas}. En el editor de abajo:\n• {Haz clic} en una sección para elegir un atajo o emoción\n• {Suelta} un hechizo, objeto, montura o macro sobre ella\n• {Clic derecho} para quitarla\n• Arrástrala para moverla\n\n{Esc} o {clic derecho} con la rueda abierta cancela sin usar nada."
+L["Each wheel holds up to {8 slices} with up to {5 actions} each, and you can keep up to {5 wheels}. In the editor below:\n• Click its {+} to add another action\n• {Click} the slice to pick a shortcut or emote, replacing the shown action\n• {Drop} a spell, item, mount or macro onto it to add it\n• {Scroll} over it to see its other actions\n• {Right-click} it to remove the shown action, or the slice\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."] =
+  "Cada rueda admite hasta {8 secciones} con hasta {5 acciones} cada una, y puedes tener hasta {5 ruedas}. En el editor de abajo:\n• Haz clic en su {+} para agregar otra acción\n• {Haz clic} en la sección para elegir un atajo o emote que reemplace la acción mostrada\n• {Suelta} un hechizo, objeto, montura o macro sobre ella para agregarlo\n• {Usa la rueda del mouse} sobre ella para ver sus otras acciones\n• {Clic derecho} para quitar la acción mostrada o la sección\n• Arrástrala para moverla\n\n{Esc} o {clic derecho} con la rueda abierta cancela sin usar nada."
 L["Lock your cursor to the center of the screen and steer by moving the mouse, no more holding right-click.\n\nSet a {key to toggle it}, and {one to interact with} whatever you're aiming at."] =
   "Fija el cursor en el centro de la pantalla y apunta moviendo el mouse, sin mantener pulsado el clic derecho.\n\nAsigna una {tecla para activarla} y {otra para interactuar} con lo que estés apuntando."
 L["A reactive, fully customizable crosshair that adapts to your target and combat state."] =
@@ -609,8 +622,8 @@ L["Lock onto a target with one tap so the reticle stops swapping. While locked, 
   "Fija un objetivo con una pulsación para que la mira deje de cambiar. Mientras está fijado, las teclas de ciclo saltan a enemigos cercanos, o a aliados cercanos en el modo de apoyo.\n\n{Comportamiento de fijar objetivo} decide si pulsar de nuevo lo suelta ({Alternar}) o mueve el fijado a lo que haya bajo la mira ({Cambiar objetivo}).\n\nAsigna tus teclas."
 L["Turn your mouse clicks into actions while in Mouse Look, such as casting your action bar spells with {Left and Right Click}.\n\nPick what each click does, with or without a {modifier key}."] =
   "Convierte tus clics del mouse en acciones durante la vista con mouse, como lanzar los hechizos de tu barra de acción con {clic izquierdo y derecho}.\n\nElige qué hace cada clic, con o sin {tecla modificadora}."
-L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to switch between wheels."] =
-  "Una rueda con tus {hechizos, objetos, macros y atajos} que funciona en combate.\n\nMantén pulsada su tecla, mueve el mouse hacia una porción y suelta para usarla.\n\n{Desplázate} para cambiar entre ruedas."
+L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to cycle the actions of the slice you aim at, or to switch between wheels."] =
+  "Una rueda con tus {hechizos, objetos, macros y atajos} que funciona en combate.\n\nMantén pulsada su tecla, mueve el mouse hacia una porción y suelta para usarla.\n\n{Desplázate} para recorrer las acciones de la porción apuntada o para cambiar entre ruedas."
 L["Hold the key of a {helpful spell} listed here to open a wheel of your group members. Move toward one and release to cast on them, or come back to the {center} to cast on yourself.\n\n{Tap} the key to cast on your friendly target, or yourself if you have none.\n\nType a {spell name or ID} to add it."] =
   "Mantén pulsada la tecla de un {hechizo beneficioso} de esta lista para abrir una rueda con los miembros de tu grupo. Muévete hacia uno y suelta para lanzarle el hechizo, o vuelve al {centro} para lanzártelo a ti.\n\n{Pulsa brevemente} la tecla para lanzarlo a tu objetivo amistoso, o a ti si no tienes ninguno.\n\nEscribe un {nombre o ID de hechizo} para añadirlo."
 L["Cycle through group members in Mouse Look so {helpful spells} go to the ally while {harmful ones} keep hitting your enemy.\n\nThe {Ally HUD} shows who is selected.\n\nSet your cycle keys."] =

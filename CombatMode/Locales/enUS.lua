@@ -291,6 +291,13 @@ L["Radial Menu Wheels"] = true
 L["Forever"] = true
 L["Minimal"] = true
 L["Clear Slice"] = true
+L["Add Action"] = true
+L["Make First"] = true
+L["Remove Action"] = true
+L["A slice holds up to %d actions."] = true
+L["Right-click to remove this slice."] = true
+L["Right-click to remove this action."] = true
+L["Action %d of %d. Scroll to see the others."] = true
 L["UI Actions"] = true
 L["Emotes"] = true
 L["Commands"] = true
@@ -302,7 +309,11 @@ L["New Wheel"] = true
 L["Wheel"] = true
 L["You can have up to %d wheels."] = true
 L["That can't go on a wheel. Use a spell, item, toy, mount or macro."] = true
-L["Drag a spell, item, toy, mount or macro here, or click to change the action."] = true
+L["Replace %s"] = true
+L["Click to replace the shown action or manage the slice."] = true
+L["Click the + to add another action, or drag a spell, item, toy, mount or macro here."] = true
+L["Adds another action to this slice (%d of %d used). With the wheel open, aim at the slice and scroll to switch between them."] =
+  true
 L["Empty Slice"] = true
 L["Drag a spell, item, toy, mount or macro here, or click to set an action. Empty slices are left out of the wheel."] =
   true
@@ -319,12 +330,12 @@ L["You need at least one wheel."] = true
 L["Remove this wheel and all of its slices?"] = true
 L["Add Wheel"] = true
 L["Pick a preset wheel or a blank one."] = true
-L["Click a slice to choose its action, or drop a spell, item, toy, mount or macro on it.\nDrag a slice to reorder it. Right-click a slice to remove it."] =
+L["Each slice holds up to %d actions: click its + to add one, then scroll over the slice to see them.\nClick a slice to replace an action, or drop a spell, item, toy, mount or macro on it.\nDrag a slice to reorder it. Right-click to remove."] =
   true
 L["RADIAL MENU"] = true
 L["Create quick access wheels for spells, items, macros, emotes, and interface shortcuts."] = true
 L["Radial Menu Keybind"] = true
-L["Hold to open the radial menu, aim at a slice, then release to activate it. Scroll to switch between wheels."] =
+L["Hold to open the radial menu, aim at a slice, then release to activate it. Scroll to cycle the actions of an aimed slice, or to switch between wheels."] =
   true
 L["Radial Menu Style"] = true
 L["Choose the appearance of the Radial Menu wheels."] = true
@@ -503,7 +514,7 @@ L["Normally a ground-targeted spell cast through Reticle Targeting will temporar
   true
 L["Binds only work while Mouse Look is on. With Reticle Targeting on, a bound spell targets the enemy under your crosshair first, and helpful spells keep your friendly target.\n\n{Account-Wide Binds} shares one set of binds between all your characters."] =
   true
-L["Each wheel holds up to {8 slices}, and you can keep up to {5 wheels}. In the editor below:\n• {Click} a slice to pick a shortcut or emote\n• {Drop} a spell, item, mount or macro onto it\n• {Right-click} it to remove it\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."] =
+L["Each wheel holds up to {8 slices} with up to {5 actions} each, and you can keep up to {5 wheels}. In the editor below:\n• Click its {+} to add another action\n• {Click} the slice to pick a shortcut or emote, replacing the shown action\n• {Drop} a spell, item, mount or macro onto it to add it\n• {Scroll} over it to see its other actions\n• {Right-click} it to remove the shown action, or the slice\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."] =
   true
 L["Lock your cursor to the center of the screen and steer by moving the mouse, no more holding right-click.\n\nSet a {key to toggle it}, and {one to interact with} whatever you're aiming at."] =
   true
@@ -520,7 +531,7 @@ L["Lock onto a target with one tap so the reticle stops swapping. While locked, 
   true
 L["Turn your mouse clicks into actions while in Mouse Look, such as casting your action bar spells with {Left and Right Click}.\n\nPick what each click does, with or without a {modifier key}."] =
   true
-L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to switch between wheels."] =
+L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to cycle the actions of the slice you aim at, or to switch between wheels."] =
   true
 L["Hold the key of a {helpful spell} listed here to open a wheel of your group members. Move toward one and release to cast on them, or come back to the {center} to cast on yourself.\n\n{Tap} the key to cast on your friendly target, or yourself if you have none.\n\nType a {spell name or ID} to add it."] =
   true

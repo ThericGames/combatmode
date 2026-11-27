@@ -353,6 +353,15 @@ L["Radial Menu Wheels"] = "방사형 메뉴 휠"
 L["Forever"] = "Forever"
 L["Minimal"] = "미니멀"
 L["Clear Slice"] = "칸 비우기"
+L["Add Action"] = "동작 추가"
+L["Make First"] = "첫 번째로 지정"
+L["Remove Action"] = "동작 제거"
+L["A slice holds up to %d actions."] =
+  "한 칸에는 동작을 최대 %d개까지 둘 수 있습니다."
+L["Right-click to remove this slice."] = "오른쪽 클릭하면 이 칸이 제거됩니다."
+L["Right-click to remove this action."] = "오른쪽 클릭하면 이 동작이 제거됩니다."
+L["Action %d of %d. Scroll to see the others."] =
+  "동작 %d/%d. 마우스 휠로 다른 동작을 볼 수 있습니다."
 L["UI Actions"] = "UI 동작"
 L["Emotes"] = "감정 표현"
 L["Commands"] = "명령어"
@@ -365,8 +374,13 @@ L["Wheel"] = "휠"
 L["You can have up to %d wheels."] = "휠은 최대 %d개까지 만들 수 있습니다."
 L["That can't go on a wheel. Use a spell, item, toy, mount or macro."] =
   "휠에 넣을 수 없습니다. 주문, 아이템, 장난감, 탈것 또는 매크로를 사용하세요."
-L["Drag a spell, item, toy, mount or macro here, or click to change the action."] =
-  "주문, 아이템, 장난감, 탈것 또는 매크로를 여기로 끌어다 놓거나, 클릭하여 동작을 변경하세요."
+L["Replace %s"] = "%s 교체"
+L["Click to replace the shown action or manage the slice."] =
+  "클릭하면 표시된 동작을 교체하거나 칸을 관리합니다."
+L["Click the + to add another action, or drag a spell, item, toy, mount or macro here."] =
+  "+를 클릭해 동작을 더 추가하거나, 주문, 아이템, 장난감, 탈것, 매크로를 여기에 끌어다 놓으세요."
+L["Adds another action to this slice (%d of %d used). With the wheel open, aim at the slice and scroll to switch between them."] =
+  "이 칸에 동작을 추가합니다(%d / %d 사용 중). 휠이 열려 있을 때 이 칸을 겨냥하고 마우스 휠을 돌리면 동작이 바뀝니다."
 L["Empty Slice"] = "빈 칸"
 L["Drag a spell, item, toy, mount or macro here, or click to set an action. Empty slices are left out of the wheel."] =
   "주문, 아이템, 장난감, 탈것 또는 매크로를 여기로 끌어다 놓거나, 클릭하여 동작을 지정하세요. 빈 칸은 휠에서 제외됩니다."
@@ -384,14 +398,14 @@ L["You need at least one wheel."] = "휠이 최소 한 개 필요합니다."
 L["Remove this wheel and all of its slices?"] = "이 휠과 모든 칸을 제거하시겠습니까?"
 L["Add Wheel"] = "휠 추가"
 L["Pick a preset wheel or a blank one."] = "프리셋 휠 또는 빈 휠을 선택하세요."
-L["Click a slice to choose its action, or drop a spell, item, toy, mount or macro on it.\nDrag a slice to reorder it. Right-click a slice to remove it."] =
-  "칸을 클릭해 동작을 고르거나, 주문, 아이템, 장난감, 탈것 또는 매크로를 그 위에 놓으세요.\n칸을 끌어서 순서를 바꿀 수 있습니다. 오른쪽 클릭하면 제거됩니다."
+L["Each slice holds up to %d actions: click its + to add one, then scroll over the slice to see them.\nClick a slice to replace an action, or drop a spell, item, toy, mount or macro on it.\nDrag a slice to reorder it. Right-click to remove."] =
+  "각 칸에는 동작을 최대 %d개 담을 수 있습니다. 칸의 +를 클릭해 추가한 뒤, 칸 위에서 마우스 휠로 확인하세요.\n칸을 클릭하면 동작을 교체합니다. 주문, 아이템, 장난감, 탈것, 매크로를 끌어다 놓을 수도 있습니다.\n칸을 끌어 순서를 바꾸고, 우클릭으로 제거합니다."
 L["RADIAL MENU"] = "방사형 메뉴"
 L["Create quick access wheels for spells, items, macros, emotes, and interface shortcuts."] =
   "주문, 아이템, 매크로, 감정 표현, 인터페이스 단축 기능을 위한 빠른 실행 휠을 만듭니다."
 L["Radial Menu Keybind"] = "방사형 메뉴 단축키"
-L["Hold to open the radial menu, aim at a slice, then release to activate it. Scroll to switch between wheels."] =
-  "누르고 있으면 방사형 메뉴가 열립니다. 칸을 조준한 뒤 떼면 실행됩니다. 마우스 휠로 휠을 전환합니다."
+L["Hold to open the radial menu, aim at a slice, then release to activate it. Scroll to cycle the actions of an aimed slice, or to switch between wheels."] =
+  "누르고 있으면 방사형 메뉴가 열립니다. 칸을 조준한 뒤 떼면 실행됩니다. 마우스 휠로 조준한 칸의 동작을 넘기거나 휠을 전환합니다."
 L["Radial Menu Style"] = "방사형 메뉴 스타일"
 L["Choose the appearance of the Radial Menu wheels."] =
   "방사형 메뉴 휠의 모양을 선택합니다."
@@ -592,8 +606,8 @@ L["Normally a ground-targeted spell cast through Reticle Targeting will temporar
   "보통 조준선 대상 지정으로 시전하는 지면 지정 주문은 직접 위치를 정할 수 있도록 마우스 시점을 일시적으로 끕니다. 이 목록의 주문은 대신 조준점 위치의 지면에 자동으로 시전됩니다.\n\n{눈보라}, {영웅의 도약}, {죽음과 부패} 같은 주문이 대표적입니다. 지면 지정 주문이 여전히 마우스 시점을 멈추고 직접 위치를 정하게 한다면 여기에 추가하세요."
 L["Binds only work while Mouse Look is on. With Reticle Targeting on, a bound spell targets the enemy under your crosshair first, and helpful spells keep your friendly target.\n\n{Account-Wide Binds} shares one set of binds between all your characters."] =
   "단축키는 마우스 시점이 켜져 있을 때만 작동합니다. 조준선 대상 지정이 켜져 있으면 지정한 주문은 먼저 조준점 아래의 적을 대상으로 하고, 우호 주문은 우호 대상을 유지합니다.\n\n{계정 공통 단축키}는 모든 캐릭터가 하나의 단축키 세트를 공유하게 합니다."
-L["Each wheel holds up to {8 slices}, and you can keep up to {5 wheels}. In the editor below:\n• {Click} a slice to pick a shortcut or emote\n• {Drop} a spell, item, mount or macro onto it\n• {Right-click} it to remove it\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."] =
-  "휠마다 최대 {8개 칸}이 있고 휠은 최대 {5개}까지 둘 수 있습니다. 아래 편집기에서:\n• 칸을 {클릭}해 바로가기나 감정 표현을 고릅니다\n• 주문, 아이템, 탈것, 매크로를 칸에 {끌어다 놓습니다}\n• {우클릭}으로 제거합니다\n• 끌어서 옮깁니다\n\n휠이 열려 있을 때 {Esc} 또는 {우클릭}하면 아무것도 사용하지 않고 취소됩니다."
+L["Each wheel holds up to {8 slices} with up to {5 actions} each, and you can keep up to {5 wheels}. In the editor below:\n• Click its {+} to add another action\n• {Click} the slice to pick a shortcut or emote, replacing the shown action\n• {Drop} a spell, item, mount or macro onto it to add it\n• {Scroll} over it to see its other actions\n• {Right-click} it to remove the shown action, or the slice\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."] =
+  "휠마다 최대 {8개 칸}, 칸마다 최대 {5개 동작}을 둘 수 있고 휠은 최대 {5개}까지 둘 수 있습니다. 아래 편집기에서:\n• 칸의 {+}를 클릭해 동작을 더 추가합니다\n• 칸을 {클릭}해 단축 기능이나 감정 표현을 고르면 표시된 동작이 교체됩니다\n• 주문, 아이템, 탈것, 매크로를 칸에 {끌어다 놓아} 추가합니다\n• 칸 위에서 {스크롤}해 다른 동작을 봅니다\n• {우클릭}으로 표시된 동작이나 칸을 제거합니다\n• 끌어서 옮깁니다\n\n휠이 열려 있을 때 {Esc} 또는 {우클릭}하면 아무것도 사용하지 않고 취소됩니다."
 L["Lock your cursor to the center of the screen and steer by moving the mouse, no more holding right-click.\n\nSet a {key to toggle it}, and {one to interact with} whatever you're aiming at."] =
   "커서를 화면 중앙에 고정하고 마우스를 움직여 방향을 조절합니다. 더 이상 오른쪽 클릭을 누르고 있을 필요가 없습니다.\n\n{전환 단축키}와 조준 중인 대상과 {상호작용하는 단축키}를 지정하세요."
 L["A reactive, fully customizable crosshair that adapts to your target and combat state."] =
@@ -610,8 +624,8 @@ L["Lock onto a target with one tap so the reticle stops swapping. While locked, 
   "한 번 눌러 대상을 고정하면 조준점이 더 이상 대상을 바꾸지 않습니다. 고정 중에는 순환 단축키가 근처 적으로, 지원 모드에서는 근처 아군으로 넘어갑니다.\n\n{대상 고정 동작}은 다시 눌렀을 때 해제할지({전환}) 조준점 아래의 대상으로 고정을 옮길지({대상 교체}) 정합니다.\n\n단축키를 지정하세요."
 L["Turn your mouse clicks into actions while in Mouse Look, such as casting your action bar spells with {Left and Right Click}.\n\nPick what each click does, with or without a {modifier key}."] =
   "마우스 룩 중에 마우스 클릭을 동작으로 바꿉니다. 예를 들어 {왼쪽·오른쪽 클릭}으로 행동 단축바의 주문을 시전할 수 있습니다.\n\n{보조 키}를 함께 쓰거나 쓰지 않고 각 클릭이 하는 일을 정하세요."
-L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to switch between wheels."] =
-  "전투 중에도 사용할 수 있는 {주문, 아이템, 매크로, 바로가기} 휠입니다.\n\n단축키를 누른 채 마우스를 조각 쪽으로 움직이고 놓으면 사용됩니다.\n\n{스크롤}하여 휠을 전환하세요."
+L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to cycle the actions of the slice you aim at, or to switch between wheels."] =
+  "전투 중에도 사용할 수 있는 {주문, 아이템, 매크로, 바로가기} 휠입니다.\n\n단축키를 누른 채 마우스를 조각 쪽으로 움직이고 놓으면 사용됩니다.\n\n{스크롤}하여 조준한 조각의 동작을 넘기거나 휠을 전환하세요."
 L["Hold the key of a {helpful spell} listed here to open a wheel of your group members. Move toward one and release to cast on them, or come back to the {center} to cast on yourself.\n\n{Tap} the key to cast on your friendly target, or yourself if you have none.\n\nType a {spell name or ID} to add it."] =
   "여기에 등록된 {이로운 주문}의 단축키를 누르고 있으면 파티원 휠이 열립니다. 한 명 쪽으로 움직이고 놓으면 그에게 시전하고, {중앙}으로 돌아오면 자신에게 시전합니다.\n\n단축키를 {짧게 누르면} 우호적 대상에게, 없으면 자신에게 시전합니다.\n\n{주문 이름 또는 ID}를 입력해 추가하세요."
 L["Cycle through group members in Mouse Look so {helpful spells} go to the ally while {harmful ones} keep hitting your enemy.\n\nThe {Ally HUD} shows who is selected.\n\nSet your cycle keys."] =

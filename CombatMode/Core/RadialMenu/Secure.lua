@@ -4,12 +4,14 @@
 --  What it does: Holds every protected piece of the Radial Menu: the wheel frame (a
 --  SecureHandlerBaseTemplate), 8 slice buttons (SecureActionButtonTemplate, one per slice),
 --  the key button the Radial Menu keybind clicks, and the mouse-wheel page button. Holding
---  the key shows the wheel; releasing it uses the slice the cursor points at; the mouse wheel
---  turns to the next/previous wheel while it is open.
+--  the key shows the wheel; releasing it uses the slice the cursor points at. While it is open
+--  the mouse wheel cycles the actions of the aimed slice (2+ actions), otherwise it turns to the
+--  next/previous wheel.
 --  Architecture / how it works:
 --    • The player's wheels are written to attributes OUT OF COMBAT (CM.RadialStore): per wheel k
---      rn<k> (slice count), rt<k>_<i> / rv<k>_<i> (type / value), plus rx<n>_<i> / ry<n>_<i>
---      (direction of slice i of n). Combat only reads them; edits made in combat are queued
+--      rn<k> (slice count), rm<k>_<i> (action count), rt<k>_<i>_<j> / rv<k>_<i>_<j> (type /
+--      value of action j), rx<n>_<i> / ry<n>_<i> (direction of slice i of n). rsel<i> = the action
+--      slice i shows (opening / turning resets it to the 1st). Edits made in combat are queued
 --      (CM.TryApplyBindingChange) and stored on PLAYER_REGEN_ENABLED.
 --    • Restricted snippets (wrapped OnClick on the key button): press = position the wheel at the
 --      crosshair, point the 8 slice buttons at the current wheel, show it and take MOUSEWHEEL +
@@ -17,8 +19,9 @@
 --      release then finds the wheel closed and does nothing); release = AIM
 --      (owner:GetMousePosition(), exact angle by dot product, dead zone → none) then return "s<slot>" so the key button clicks that slice button.
 --      The slice button's post body closes the wheel. Pre-bodies return (newbutton, message).
---    • The insecure side only reads: CM.IsRadialMenuOpen, CM.RadialCurrent, CM.RadialAimSlot;
---      the wheel calls Wheel:RadialChanged() when the page turns (View repaints).
+--    • The insecure side only reads: CM.IsRadialMenuOpen, CM.RadialCurrent, CM.RadialAimSlot,
+--      CM.RadialSliceOption; the wheel calls Wheel:RadialChanged() on a page turn and
+--      Wheel:RadialCycled(i) when slice i changes action (View repaints).
 --    • The key press does nothing while the Party Wheel is open (frame ref "party", set by
 --      PartyWheel.lua); CM.IsRadialMenuOpen is also true for that wheel.
 --  Does not: Draw anything (View.lua), edit wheels (Data.lua), or define UI actions (Actions.lua).
@@ -55,29 +58,39 @@ local PageButton
 local Slices = {}
 local OverrideOwner = CreateFrame("Frame", "CombatModeRadialOverrideOwner", UIParent)
 
--- Insecure mirror of what was stored: lists[k] = { dbIndex = n, entries = { filtered entries } }.
+-- Insecure mirror of what was stored: lists[k] = { dbIndex = n, slices = { { actions }, ... }
+-- (filtered), entries = the shown action per slice (refilled by CM.RadialCurrent) }.
 local lists = {}
 
 ---------------------------------------------------------------------------------------
 -- Snippets (restricted environment: no GetCursorPosition, math is limited, no string.format)
 ---------------------------------------------------------------------------------------
+-- Points slice button i at the action it shows (rsel<i>) on wheel cur of n slices. Needs the
+-- locals i, cur and n (restricted snippets can't define functions, so it is pasted in).
+local APPLY_SLICE = [[
+  local b = owner:GetFrameRef("slice" .. i)
+  local t = nil
+  local v = nil
+  if i <= n then
+    local j = owner:GetAttribute("rsel" .. i) or 1
+    t = owner:GetAttribute("rt" .. cur .. "_" .. i .. "_" .. j)
+    v = owner:GetAttribute("rv" .. cur .. "_" .. i .. "_" .. j)
+  end
+  b:SetAttribute("spell", t == "spell" and v or nil)
+  b:SetAttribute("item", t == "item" and v or nil)
+  b:SetAttribute("macro", t == "macro" and v or nil)
+  b:SetAttribute("macrotext", t == "macrotext" and v or nil)
+  b:SetAttribute("type", (t == "macrotext") and "macro" or t)
+]]
+
+-- The whole wheel, every slice back on its 1st action.
 local APPLY = [[
   local cur = owner:GetAttribute("rcur") or 1
   local n = owner:GetAttribute("rn" .. cur) or 0
   owner:SetAttribute("rcurn", n)
   for i = 1, 8 do
-    local b = owner:GetFrameRef("slice" .. i)
-    local t = nil
-    local v = nil
-    if i <= n then
-      t = owner:GetAttribute("rt" .. cur .. "_" .. i)
-      v = owner:GetAttribute("rv" .. cur .. "_" .. i)
-    end
-    b:SetAttribute("spell", t == "spell" and v or nil)
-    b:SetAttribute("item", t == "item" and v or nil)
-    b:SetAttribute("macro", t == "macro" and v or nil)
-    b:SetAttribute("macrotext", t == "macrotext" and v or nil)
-    b:SetAttribute("type", (t == "macrotext") and "macro" or t)
+    owner:SetAttribute("rsel" .. i, nil)
+    ]] .. APPLY_SLICE .. [[
   end
 ]]
 
@@ -150,8 +163,9 @@ local KEY_PRE = [[
   return "s" .. slot, true
 ]]
 
--- Mouse wheel while open: previous / next wheel. Wheel binds may send a down AND an up; act on
--- whichever arrives first and swallow its pair.
+-- Mouse wheel while open: on a slice with 2+ actions, previous / next action; anywhere else,
+-- previous / next wheel. Wheel binds may send a down AND an up; act on whichever arrives first
+-- and swallow its pair.
 local PAGE_PRE = [[
   local owner = owner or self
   if not owner:IsShown() then
@@ -163,16 +177,34 @@ local PAGE_PRE = [[
     self:SetAttribute("rseen", nil)
     return false
   end
+  ]] .. AIM .. [[
+  local cur = owner:GetAttribute("rcur") or 1
+  local step = 1
+  if button == "UP" then
+    step = -1
+  end
+  local count = 0
+  if slot > 0 then
+    count = owner:GetAttribute("rm" .. cur .. "_" .. slot) or 0
+  end
+  if count > 1 then
+    local j = (owner:GetAttribute("rsel" .. slot) or 1) + step
+    if j < 1 then
+      j = count
+    elseif j > count then
+      j = 1
+    end
+    owner:SetAttribute("rsel" .. slot, j)
+    local i = slot
+    ]] .. APPLY_SLICE .. [[
+    owner:CallMethod("RadialCycled", slot)
+    return false
+  end
   local total = owner:GetAttribute("rtotal") or 0
   if total < 2 then
     return false
   end
-  local cur = owner:GetAttribute("rcur") or 1
-  if button == "UP" then
-    cur = cur - 1
-  else
-    cur = cur + 1
-  end
+  cur = cur + step
   if cur < 1 then
     cur = total
   elseif cur > total then
@@ -199,6 +231,11 @@ if SecureHandlerWrapScript then
   Wheel.RadialChanged = function()
     if CM.RadialViewRefresh then
       CM.RadialViewRefresh()
+    end
+  end
+  Wheel.RadialCycled = function(_, slot)
+    if CM.RadialViewCycled then
+      CM.RadialViewCycled(slot)
     end
   end
 
@@ -264,7 +301,21 @@ function CM.RadialCurrent()
   if not list then
     return 0, 0, {}, nil
   end
+  -- Runs every frame while open (aim): the table is refilled, never rebuilt.
+  for i, actions in ipairs(list.slices) do
+    list.entries[i] = actions[Wheel:GetAttribute("rsel" .. i) or 1] or actions[1]
+  end
   return k, total, list.entries, CM.RadialGetWheels()[list.dbIndex]
+end
+
+--- selected, count: which of its actions slice `i` of the page showing now is on.
+function CM.RadialSliceOption(i)
+  local k = CM.RadialCurrent()
+  local actions = lists[k] and lists[k].slices[i]
+  if not actions then
+    return 1, 0
+  end
+  return Wheel:GetAttribute("rsel" .. i) or 1, #actions
 end
 
 --- Slice (1..n) the cursor points at; 0 = none. Same maths as the AIM snippet.
@@ -328,27 +379,39 @@ local function StoreImpl()
   StoreDirections()
   wipe(lists)
   for dbIndex, wheel in ipairs(CM.RadialGetWheels()) do
-    local entries = {}
-    for _, entry in ipairs(CM.RadialCompact(wheel)) do
-      if CM.RadialEntrySecure(entry) then
-        entries[#entries + 1] = entry
+    local slices = {}
+    for _, actions in ipairs(CM.RadialCompact(wheel)) do
+      local usable = {}
+      for _, entry in ipairs(actions) do
+        if CM.RadialEntrySecure(entry) then
+          usable[#usable + 1] = entry
+        end
+      end
+      if #usable > 0 then
+        slices[#slices + 1] = usable
       end
     end
-    if #entries > 0 then
-      lists[#lists + 1] = { dbIndex = dbIndex, entries = entries }
+    if #slices > 0 then
+      lists[#lists + 1] = { dbIndex = dbIndex, slices = slices, entries = {} }
     end
   end
   for k = 1, LAYOUT.MAX_WHEELS do
     local list = lists[k]
-    local n = list and #list.entries or 0
+    local n = list and #list.slices or 0
     Wheel:SetAttribute("rn" .. k, n)
     for i = 1, LAYOUT.MAX_SLICES do
-      local kind, value, isText
-      if i <= n then
-        kind, value, isText = CM.RadialEntrySecure(list.entries[i])
+      local actions = i <= n and list.slices[i] or nil
+      Wheel:SetAttribute("rm" .. k .. "_" .. i, actions and #actions or nil)
+      for j = 1, LAYOUT.MAX_ACTIONS do
+        local entry = actions and actions[j]
+        local kind, value, isText
+        if entry then
+          kind, value, isText = CM.RadialEntrySecure(entry)
+        end
+        local key = k .. "_" .. i .. "_" .. j
+        Wheel:SetAttribute("rt" .. key, kind and (isText and "macrotext" or kind) or nil)
+        Wheel:SetAttribute("rv" .. key, kind and value or nil)
       end
-      Wheel:SetAttribute("rt" .. k .. "_" .. i, kind and (isText and "macrotext" or kind) or nil)
-      Wheel:SetAttribute("rv" .. k .. "_" .. i, kind and value or nil)
     end
   end
   Wheel:SetAttribute("rtotal", #lists)

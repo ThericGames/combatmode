@@ -19,6 +19,7 @@ local SPECS = {
   "spec_support_lock",
   "spec_spell_ranks",
   "spec_start_state",
+  "spec_radial_slices",
 }
 local CLIENTS = {
   { name = "retail", pattern = "## Interface:%s*(%d+)" },

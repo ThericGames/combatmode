@@ -175,8 +175,8 @@ local STEPS = {
     section = L["RADIAL MENU"],
     title = L["Radial Menu"],
     slides = { "radial", 4 },
-    body = L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to switch between wheels."],
-    details = L["Each wheel holds up to {8 slices}, and you can keep up to {5 wheels}. In the editor below:\n• {Click} a slice to pick a shortcut or emote\n• {Drop} a spell, item, mount or macro onto it\n• {Right-click} it to remove it\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."],
+    body = L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to cycle the actions of the slice you aim at, or to switch between wheels."],
+    details = L["Each wheel holds up to {8 slices} with up to {5 actions} each, and you can keep up to {5 wheels}. In the editor below:\n• Click its {+} to add another action\n• {Click} the slice to pick a shortcut or emote, replacing the shown action\n• {Drop} a spell, item, mount or macro onto it to add it\n• {Scroll} over it to see its other actions\n• {Right-click} it to remove the shown action, or the slice\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."],
     tasks = {
       {
         label = L["Set a Radial Menu key"],

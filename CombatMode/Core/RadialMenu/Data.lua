@@ -9,9 +9,11 @@
 --      shows its filled slots only, compacted in order (like a wheel of 3 = three thirds).
 --    • Entry = { kind = "spell" | "item" | "macro" | "action", id = number | string }.
 --      "action" ids are keys of CM.RadialActions (Actions.lua).
+--    • A slot is its 1st entry plus more = { entry, ... } (up to MAX_ACTIONS in all), scrolled
+--      through on the open wheel. Read it with CM.RadialSlotActions.
 --    • CM.RadialEntrySecure(entry) → type, value, isMacroText: what the slice's
 --      SecureActionButton needs (spell name, "item:ID", macro name, or "/click" text).
---    • CM.RadialCompact(wheel) → the filled entries in order (what the secure side stores).
+--    • CM.RadialCompact(wheel) → each filled slot's action list, in order (what the secure side stores).
 --  Does not: Draw anything, own secure frames or bindings, or build the editor window.
 --  Related: Core/RadialMenu/{Actions,Secure,View,RadialMenu}.lua, UI/Options/Tabs/TabRadialMenu.lua, Constants/DatabaseDefaults.lua
 ---------------------------------------------------------------------------------------
@@ -29,6 +31,7 @@ local GetMacroInfo = _G.GetMacroInfo
 local format = _G.string.format
 local ipairs = _G.ipairs
 local math = _G.math
+local unpack = _G.unpack
 local select = _G.select
 local type = _G.type
 
@@ -43,6 +46,7 @@ local type = _G.type
 CM.RadialLayout = {
   MAX_WHEELS = 5,
   MAX_SLICES = 8,
+  MAX_ACTIONS = 5, -- actions one slice can hold
   ART = 512,
   FRAME = 2048, -- secure frame: big enough that the cursor is always over it (aim math)
   ICON_RADIUS = 148,
@@ -143,24 +147,26 @@ function CM.RadialPlaceDividers(tex, anchor, n, scale)
 end
 
 -- Preset wheels: first-run content, and what the editor's "+" menu can add back later.
--- Entries are action ids (strings) or ready-made { kind, id } slots.
+-- Each entry is one slice: an action id, or a list of ids for a slice with several. Actions this
+-- client lacks are left out, and so is a slice that is left with none.
 local function PresetWheel(name, entries)
   local slots = {}
-  for i, entry in ipairs(entries) do
-    slots[i] = type(entry) == "table" and entry or { kind = "action", id = entry }
-  end
-  return { name = name, count = #entries, slots = slots }
-end
-
--- Keeps the ids this client has, in order, up to `limit`.
-local function AvailableIds(ids, limit)
-  local out = {}
-  for _, id in ipairs(ids) do
-    if #out < limit and CM.RadialActions.IsAvailable(id) then
-      out[#out + 1] = id
+  for _, entry in ipairs(entries) do
+    local slot
+    for _, id in ipairs(type(entry) == "table" and entry or { entry }) do
+      if CM.RadialActions.IsAvailable(id) then
+        local action = { kind = "action", id = id }
+        if not slot then
+          slot = action
+        else
+          slot.more = slot.more or {}
+          slot.more[#slot.more + 1] = action
+        end
+      end
     end
+    slots[#slots + 1] = slot -- nil adds nothing
   end
-  return out
+  return { name = name, count = #slots, slots = slots }
 end
 
 local PRESETS = {
@@ -168,42 +174,23 @@ local PRESETS = {
     key = "interface",
     label = L["Interface"],
     build = function()
-      -- Group Finder on Retail / Forever, Friends & Social on the other clients; the tail only fills in
-      -- when this client is missing some of the panels.
       local build = _G.GetBuildInfo and select(4, _G.GetBuildInfo()) or 0
       local isForever = type(build) == "number" and build >= 16000 and build < 20000
       local modern = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE or isForever
-      if isForever then
-        return PresetWheel(
-          L["Interface"],
-          AvailableIds({
-            "character",
-            "professions",
-            "bags",
-            "talents",
-            "legacy",
-            "questlog",
-            "groupfinder",
-            "collections",
-          }, 8)
-        )
-      end
-      return PresetWheel(
-        L["Interface"],
-        AvailableIds({
-          "character",
-          "bags",
-          "professions",
-          "questlog",
-          "gamemenu",
-          modern and "groupfinder" or "social",
-          -- The other clients have no calendar: the World Map takes its place.
-          modern and "calendar" or "map",
-          "talents",
-          "map",
-          "spellbook",
-        }, 8)
-      )
+      -- The spellbook alone beside Talents; clients without it get "Spellbook & Talents".
+      local spellbook = CM.RadialActions.IsAvailable("spellbookonly") and "spellbookonly"
+        or "spellbook"
+      return PresetWheel(L["Interface"], {
+        { "character", "reputation", "currency" },
+        { "talents", spellbook },
+        { "bags", "professions" },
+        "legacy",
+        { "gamemenu", "macros", "acmoptions" },
+        -- The other clients have no calendar: the World Map takes its place.
+        { "questlog", modern and "calendar" or "map" },
+        { "groupfinder", "social", "guild" },
+        { "collections", "toybox" },
+      })
     end,
   },
   {
@@ -226,17 +213,13 @@ local PRESETS = {
     key = "misc",
     label = L["Misc"],
     build = function()
-      return PresetWheel(
-        L["Misc"],
-        AvailableIds({
-          "readycheck",
-          "countdown",
-          "duel",
-          "invitetarget",
-          "inspect",
-          "reloadui",
-        }, 8)
-      )
+      return PresetWheel(L["Misc"], {
+        { "readycheck", "rolepoll", "countdown" },
+        "duel",
+        "invitetarget",
+        "inspect",
+        "reloadui",
+      })
     end,
   },
 }
@@ -469,7 +452,91 @@ local function ValidEntry(entry)
   return false
 end
 
---- entry = nil empties the slot.
+--- Only the saved fields: a slot's own table also carries `more`.
+local function CopyEntry(entry)
+  return { kind = entry.kind, id = entry.id }
+end
+
+--- A slot's valid actions in order (copies); empty for a nil slot.
+function CM.RadialSlotActions(slot)
+  local actions = {}
+  local function add(entry)
+    if #actions < LAYOUT.MAX_ACTIONS and ValidEntry(entry) then
+      actions[#actions + 1] = CopyEntry(entry)
+    end
+  end
+  if type(slot) == "table" then
+    add(slot)
+    if type(slot.more) == "table" then
+      for _, entry in ipairs(slot.more) do
+        add(entry)
+      end
+    end
+  end
+  return actions
+end
+
+--- The wheel and slot's actions, or nil for a bad index.
+local function SlotForEdit(index, slot)
+  local wheel = CM.RadialGetWheels()[index]
+  if not wheel or type(slot) ~= "number" or slot < 1 or slot > LAYOUT.MAX_SLICES then
+    return nil
+  end
+  wheel.slots = wheel.slots or {}
+  return wheel, CM.RadialSlotActions(wheel.slots[slot])
+end
+
+--- Saves an action list: the 1st in the slot itself (the old one-action shape), the rest in `more`.
+local function StoreActions(wheel, slot, actions)
+  local first = actions[1]
+  if first and #actions > 1 then
+    first.more = {}
+    for i = 2, #actions do
+      first.more[i - 1] = actions[i]
+    end
+  end
+  wheel.slots[slot] = first
+  Changed()
+end
+
+--- Appends an action to a slot; returns its position, or nil when full / invalid.
+function CM.RadialAddAction(index, slot, entry)
+  local wheel, actions = SlotForEdit(index, slot)
+  if not wheel or #actions >= LAYOUT.MAX_ACTIONS or not ValidEntry(entry) then
+    return nil
+  end
+  actions[#actions + 1] = CopyEntry(entry)
+  StoreActions(wheel, slot, actions)
+  return #actions
+end
+
+--- Replaces action `pos`; entry = nil removes it (the later ones move up).
+function CM.RadialSetAction(index, slot, pos, entry)
+  local wheel, actions = SlotForEdit(index, slot)
+  if not wheel or not actions[pos] or (entry ~= nil and not ValidEntry(entry)) then
+    return false
+  end
+  if entry then
+    actions[pos] = CopyEntry(entry)
+  else
+    table.remove(actions, pos)
+  end
+  StoreActions(wheel, slot, actions)
+  return true
+end
+
+--- Moves action `pos` to the front: the one every open of the wheel starts on.
+function CM.RadialMakeFirstAction(index, slot, pos)
+  local wheel, actions = SlotForEdit(index, slot)
+  if not wheel or pos == 1 or not actions[pos] then
+    return false
+  end
+  table.insert(actions, 1, table.remove(actions, pos))
+  StoreActions(wheel, slot, actions)
+  return true
+end
+
+--- entry = nil empties the slot (all its actions).
 function CM.RadialSetSlot(index, slot, entry)
   local wheel = CM.RadialGetWheels()[index]
   if not wheel or type(slot) ~= "number" or slot < 1 or slot > LAYOUT.MAX_SLICES then
@@ -506,14 +573,14 @@ function CM.RadialReorderSlots(index, order)
   Changed()
 end
 
---- The wheel's filled slots, in order, no holes.
+--- The action lists of the wheel's filled slots, in order, no holes.
 function CM.RadialCompact(wheel)
   local list = {}
   if wheel and wheel.slots then
     for slot = 1, LAYOUT.MAX_SLICES do
-      local entry = wheel.slots[slot]
-      if ValidEntry(entry) then
-        list[#list + 1] = entry
+      local actions = CM.RadialSlotActions(wheel.slots[slot])
+      if #actions > 0 then
+        list[#list + 1] = actions
       end
     end
   end
@@ -582,12 +649,120 @@ local SLOT_ICON_SCALE = 0.9
 local ART_ICON_PATH = "Interface\\AddOns\\CombatMode\\Assets\\radial\\radial_art_"
 local ART_ICON_SCALE = 1.35
 local PLAIN_ICON_SCALE = 1.1 -- icon files without padding (the logo, game menu art), still drawn without a slot
+-- Action dots: small round dots on an arc around the slot's outward side (away from the wheel's
+-- centre), gold and glowing for the current one. Sizes and radii are fractions of the slot size.
+-- Art: scripts/art/make-radial-dots.py.
+local ACTION_PIP = {
+  dotArt = "Interface\\AddOns\\CombatMode\\Assets\\radial\\radial_dot.tga",
+  glowArt = "Interface\\AddOns\\CombatMode\\Assets\\radial\\radial_dot_glow.tga",
+  size = 0.12, -- dot diameter
+  canvas = 16 / 12, -- radial_dot.tga: canvas size over the dot's diameter
+  glow = 2.4, -- glow (and shadow) canvas, in dot diameters
+  radius = 0.648, -- from the slot's centre to the dot centres
+  artRadius = 0.778, -- ...further out around the larger icon art
+  step = math.rad(13.6), -- angle between neighbouring dots
+  off = { 0.34, 0.33, 0.39 },
+  on = { 1, 0.82, 0.16 },
+  onGlow = { 1, 0.72, 0.1, 0.45 }, -- additive; the alpha sets its strength
+  offShadow = { 0, 0, 0, 0.3 }, -- the glow art in black behind the other dots
+}
+
+--- The action dots of one slot: textures on `over`, around `host`'s centre; `size` = the slot's.
+local function BuildActionPips(host, over, size)
+  local pips = {}
+  local dots = {} -- each with its drop shadow as dot.shadow
+  local glow -- behind the lit dot, made when first needed
+  local count = 0
+  local dirX, dirY = 0, -1 -- the middle of the arc, from the slot's centre (y up)
+  local radius = size * ACTION_PIP.radius
+  local diameter = size * ACTION_PIP.size
+
+  -- Off the pixel grid: snapping a texture this small makes its round edge step.
+  local function NewTexture(sublevel, file, width)
+    local tex = over:CreateTexture(nil, "OVERLAY", nil, sublevel)
+    tex:SetTexture(file, "CLAMP", "CLAMP", "TRILINEAR")
+    tex:SetSize(width, width)
+    if tex.SetSnapToPixelGrid then
+      tex:SetSnapToPixelGrid(false)
+      tex:SetTexelSnappingBias(0)
+    end
+    return tex
+  end
+
+  local function Place()
+    local middle = math.atan2(dirY, dirX)
+    -- Run the dots whichever way reads left to right, or top to bottom on the sides; on the two
+    -- diagonals where those disagree, top to bottom wins.
+    local rightward, upward = -math.sin(middle), math.cos(middle) -- counter-clockwise from the middle
+    local reading = rightward - upward
+    if math.abs(reading) < 0.001 then
+      reading = -upward
+    end
+    local turn = reading > 0 and 1 or -1
+    for i = 1, count do
+      local angle = middle + turn * (i - (count + 1) / 2) * ACTION_PIP.step
+      dots[i]:ClearAllPoints()
+      dots[i]:SetPoint("CENTER", host, "CENTER", radius * math.cos(angle), radius * math.sin(angle))
+    end
+  end
+
+  --- Centres the arc on the direction `x`, `y` (y up): the slice's outward side on a wheel.
+  function pips.SetDirection(x, y)
+    if x ~= dirX or y ~= dirY then
+      dirX, dirY = x, y
+      Place()
+    end
+  end
+
+  --- `fraction` of the slot size from its centre to the dots.
+  function pips.SetRadius(fraction)
+    if size * fraction ~= radius then
+      radius = size * fraction
+      Place()
+    end
+  end
+
+  --- One dot per action, `current` lit; hidden below 2.
+  function pips.Set(total, current)
+    count = (total and total > 1) and math.min(total, LAYOUT.MAX_ACTIONS) or 0
+    for i = #dots + 1, count do
+      local dot = NewTexture(2, ACTION_PIP.dotArt, diameter * ACTION_PIP.canvas)
+      -- Below the glow's layer, so a neighbour's shadow never dims the lit dot's glow.
+      dot.shadow = NewTexture(0, ACTION_PIP.glowArt, diameter * ACTION_PIP.glow)
+      dot.shadow:SetVertexColor(unpack(ACTION_PIP.offShadow))
+      dot.shadow:SetPoint("CENTER", dot, "CENTER")
+      dots[i] = dot
+    end
+    for i, dot in ipairs(dots) do
+      dot:SetVertexColor(unpack(i == current and ACTION_PIP.on or ACTION_PIP.off))
+      dot:SetShown(i <= count)
+      dot.shadow:SetShown(i <= count and i ~= current)
+    end
+    Place()
+    local lit = current and current <= count and dots[current]
+    if lit then
+      if not glow then
+        glow = NewTexture(1, ACTION_PIP.glowArt, diameter * ACTION_PIP.glow)
+        glow:SetBlendMode("ADD")
+        glow:SetVertexColor(unpack(ACTION_PIP.onGlow))
+      end
+      glow:ClearAllPoints()
+      glow:SetPoint("CENTER", lit, "CENTER")
+    end
+    if glow then
+      glow:SetShown(lit and true or false)
+    end
+  end
+
+  return pips
+end
 
 --- Round slot chrome shared by the wheel and the editor: shadow and disc behind, border over
 --- everything. Sets host.icon (circle-masked), host.border, host.SetSlotState("normal" |
---- "selected" | "disabled") which swaps the disc / border art, host.SetSlotArt and host.SetSlotRing
---- (own frame: glow only); returns a frame above the icon /
---- cooldown for the border, labels and counts. `host` must already have its size.
+--- "selected" | "disabled") which swaps the disc / border art, host.SetSlotArt, host.SetSlotRing
+--- (own frame: glow only), host.SetActionPips(count, current) and host.SetPipDirection(x, y);
+--- returns a frame above the icon / cooldown for the border, labels and counts. `host` must
+--- already have its size.
 function CM.RadialBuildSlotChrome(host)
   local size = host:GetWidth()
   local base = size
@@ -630,7 +805,9 @@ function CM.RadialBuildSlotChrome(host)
   local state = "normal"
   local artName
   local ringIcon, ringGlow
+  local pips = BuildActionPips(host, over, base)
   local function Apply()
+    pips.SetRadius(artName and ACTION_PIP.artRadius or ACTION_PIP.radius)
     local plain = artName == nil
     shadow:SetShown(plain and not ringIcon)
     disc:SetShown(plain)
@@ -691,6 +868,7 @@ function CM.RadialBuildSlotChrome(host)
     ringGlow = frameSize and frameSize * SLOT_ART_WIDE / SLOT_ART_BASE
     Apply()
   end
+  host.SetActionPips, host.SetPipDirection = pips.Set, pips.SetDirection
   return over
 end
 

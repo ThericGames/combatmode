@@ -352,6 +352,14 @@ L["Radial Menu Wheels"] = "Radialmenü-Räder"
 L["Forever"] = "Forever"
 L["Minimal"] = "Minimal"
 L["Clear Slice"] = "Segment leeren"
+L["Add Action"] = "Aktion hinzufügen"
+L["Make First"] = "An den Anfang setzen"
+L["Remove Action"] = "Aktion entfernen"
+L["A slice holds up to %d actions."] = "Ein Segment fasst bis zu %d Aktionen."
+L["Right-click to remove this slice."] = "Rechtsklick entfernt dieses Segment."
+L["Right-click to remove this action."] = "Rechtsklick entfernt diese Aktion."
+L["Action %d of %d. Scroll to see the others."] =
+  "Aktion %d von %d. Mit dem Mausrad siehst du die anderen."
 L["UI Actions"] = "UI-Aktionen"
 L["Emotes"] = "Emotes"
 L["Commands"] = "Befehle"
@@ -364,8 +372,13 @@ L["Wheel"] = "Rad"
 L["You can have up to %d wheels."] = "Du kannst bis zu %d Räder haben."
 L["That can't go on a wheel. Use a spell, item, toy, mount or macro."] =
   "Das kann nicht auf ein Rad. Verwende einen Zauber, Gegenstand, ein Spielzeug, Reittier oder Makro."
-L["Drag a spell, item, toy, mount or macro here, or click to change the action."] =
-  "Ziehe einen Zauber, Gegenstand, ein Spielzeug, Reittier oder Makro hierher oder klicke, um die Aktion zu ändern."
+L["Replace %s"] = "%s ersetzen"
+L["Click to replace the shown action or manage the slice."] =
+  "Klicke, um die angezeigte Aktion zu ersetzen oder das Segment zu verwalten."
+L["Click the + to add another action, or drag a spell, item, toy, mount or macro here."] =
+  "Klicke auf das +, um eine weitere Aktion hinzuzufügen, oder ziehe einen Zauber, Gegenstand, ein Spielzeug, Reittier oder Makro hierher."
+L["Adds another action to this slice (%d of %d used). With the wheel open, aim at the slice and scroll to switch between them."] =
+  "Fügt diesem Segment eine weitere Aktion hinzu (%d von %d belegt). Ziele bei geöffnetem Rad auf das Segment und wechsle mit dem Mausrad zwischen ihnen."
 L["Empty Slice"] = "Leeres Segment"
 L["Drag a spell, item, toy, mount or macro here, or click to set an action. Empty slices are left out of the wheel."] =
   "Ziehe einen Zauber, Gegenstand, ein Spielzeug, Reittier oder Makro hierher oder klicke, um eine Aktion festzulegen. Leere Segmente werden im Rad weggelassen."
@@ -383,14 +396,14 @@ L["You need at least one wheel."] = "Du brauchst mindestens ein Rad."
 L["Remove this wheel and all of its slices?"] = "Dieses Rad und alle seine Segmente entfernen?"
 L["Add Wheel"] = "Rad hinzufügen"
 L["Pick a preset wheel or a blank one."] = "Wähle ein vorgefertigtes oder ein leeres Rad."
-L["Click a slice to choose its action, or drop a spell, item, toy, mount or macro on it.\nDrag a slice to reorder it. Right-click a slice to remove it."] =
-  "Klicke auf ein Segment, um seine Aktion zu wählen, oder lege einen Zauber, Gegenstand, ein Spielzeug, Reittier oder Makro darauf ab.\nZiehe ein Segment, um es umzusortieren. Rechtsklick entfernt es."
+L["Each slice holds up to %d actions: click its + to add one, then scroll over the slice to see them.\nClick a slice to replace an action, or drop a spell, item, toy, mount or macro on it.\nDrag a slice to reorder it. Right-click to remove."] =
+  "Jedes Segment fasst bis zu %d Aktionen: Füge mit seinem + eine hinzu und sieh sie dir mit dem Mausrad über dem Segment an.\nKlicke auf ein Segment, um eine Aktion zu ersetzen, oder lege einen Zauber, Gegenstand, ein Spielzeug, Reittier oder Makro darauf ab.\nZiehe ein Segment, um es umzusortieren. Rechtsklick entfernt."
 L["RADIAL MENU"] = "RADIALMENÜ"
 L["Create quick access wheels for spells, items, macros, emotes, and interface shortcuts."] =
   "Erstelle Schnellzugriffsräder für Zauber, Gegenstände, Makros, Emotes und Oberflächenkürzel."
 L["Radial Menu Keybind"] = "Radialmenü-Tastenbelegung"
-L["Hold to open the radial menu, aim at a slice, then release to activate it. Scroll to switch between wheels."] =
-  "Halten, um das Radialmenü zu öffnen, ein Segment anvisieren und zum Aktivieren loslassen. Mit dem Mausrad zwischen den Rädern wechseln."
+L["Hold to open the radial menu, aim at a slice, then release to activate it. Scroll to cycle the actions of an aimed slice, or to switch between wheels."] =
+  "Halten, um das Radialmenü zu öffnen, ein Segment anvisieren und zum Aktivieren loslassen. Das Mausrad wechselt die Aktionen des anvisierten Segments, sonst die Räder."
 L["Radial Menu Style"] = "Radialmenü-Stil"
 L["Choose the appearance of the Radial Menu wheels."] =
   "Wähle das Aussehen der Radialmenü-Räder."
@@ -593,8 +606,8 @@ L["Normally a ground-targeted spell cast through Reticle Targeting will temporar
   "Normalerweise deaktiviert ein bodenzielender Zauber, der über die Fadenkreuz-Zielerfassung gewirkt wird, vorübergehend den Mausblick, damit du ihn manuell platzieren kannst. Zauber in dieser Liste werden stattdessen automatisch auf den Boden an der Position deines Fadenkreuzes gewirkt.\n\nTypische Beispiele sind {Schneesturm}, {Heldenhafter Sprung} oder {Tod und Verfall}. Wenn ein Bodenzauber den Mausblick weiterhin stoppt, damit du ihn platzieren kannst, füge ihn hier hinzu."
 L["Binds only work while Mouse Look is on. With Reticle Targeting on, a bound spell targets the enemy under your crosshair first, and helpful spells keep your friendly target.\n\n{Account-Wide Binds} shares one set of binds between all your characters."] =
   "Belegungen funktionieren nur bei aktivem Mausblick. Bei aktiver Fadenkreuz-Zielerfassung zielt ein belegter Zauber zuerst auf den Feind unter dem Fadenkreuz, und hilfreiche Zauber behalten dein freundliches Ziel.\n\n{Accountweite Belegungen} teilt eine Belegung zwischen all deinen Charakteren."
-L["Each wheel holds up to {8 slices}, and you can keep up to {5 wheels}. In the editor below:\n• {Click} a slice to pick a shortcut or emote\n• {Drop} a spell, item, mount or macro onto it\n• {Right-click} it to remove it\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."] =
-  "Jedes Rad fasst bis zu {8 Segmente}, und du kannst bis zu {5 Räder} behalten. Im Editor unten:\n• {Klicke} ein Segment, um eine Verknüpfung oder ein Emote zu wählen\n• {Ziehe} einen Zauber, Gegenstand, ein Reittier oder Makro darauf\n• {Rechtsklick} entfernt es\n• Per Ziehen verschiebst du es\n\n{Esc} oder {Rechtsklick} bei geöffnetem Rad bricht ab, ohne etwas zu benutzen."
+L["Each wheel holds up to {8 slices} with up to {5 actions} each, and you can keep up to {5 wheels}. In the editor below:\n• Click its {+} to add another action\n• {Click} the slice to pick a shortcut or emote, replacing the shown action\n• {Drop} a spell, item, mount or macro onto it to add it\n• {Scroll} over it to see its other actions\n• {Right-click} it to remove the shown action, or the slice\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."] =
+  "Jedes Rad fasst bis zu {8 Segmente} mit je bis zu {5 Aktionen}, und du kannst bis zu {5 Räder} behalten. Im Editor unten:\n• Klicke auf sein {+}, um eine weitere Aktion hinzuzufügen\n• {Klicke} auf das Segment, um ein Kürzel oder Emote zu wählen, das die angezeigte Aktion ersetzt\n• {Ziehe} einen Zauber, Gegenstand, ein Reittier oder Makro darauf, um es hinzuzufügen\n• {Scrolle} darüber, um seine anderen Aktionen zu sehen\n• {Rechtsklick} entfernt die angezeigte Aktion oder das Segment\n• Per Ziehen verschiebst du es\n\n{Esc} oder {Rechtsklick} bei geöffnetem Rad bricht ab, ohne etwas zu benutzen."
 L["Lock your cursor to the center of the screen and steer by moving the mouse, no more holding right-click.\n\nSet a {key to toggle it}, and {one to interact with} whatever you're aiming at."] =
   "Fixiere deinen Cursor in der Bildschirmmitte und steuere durch Mausbewegung, ohne die rechte Maustaste zu halten.\n\nLege eine {Taste zum Umschalten} fest und eine {zum Interagieren} mit dem, worauf du zielst."
 L["A reactive, fully customizable crosshair that adapts to your target and combat state."] =
@@ -611,8 +624,8 @@ L["Lock onto a target with one tap so the reticle stops swapping. While locked, 
   "Fixiere mit einem Tastendruck ein Ziel, damit das Fadenkreuz nicht mehr wechselt. Solange gesperrt, springen die Wechseltasten zu Feinden in der Nähe, im Unterstützungsmodus zu Verbündeten in der Nähe.\n\n{Verhalten der Zielsperre} legt fest, ob erneutes Drücken entsperrt ({Umschalten}) oder die Sperre auf das verschiebt, was unter dem Fadenkreuz liegt ({Ziel wechseln}).\n\nLege deine Tasten fest."
 L["Turn your mouse clicks into actions while in Mouse Look, such as casting your action bar spells with {Left and Right Click}.\n\nPick what each click does, with or without a {modifier key}."] =
   "Verwandle deine Mausklicks im Mausblick in Aktionen, etwa um Zauber deiner Aktionsleiste per {Links- und Rechtsklick} zu wirken.\n\nWähle, was jeder Klick bewirkt, mit oder ohne {Zusatztaste}."
-L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to switch between wheels."] =
-  "Ein Rad mit deinen {Zaubern, Gegenständen, Makros und Kürzeln}, das auch im Kampf funktioniert.\n\nHalte die Taste, bewege die Maus zu einem Segment und lasse los, um es zu nutzen.\n\n{Scrolle}, um zwischen Rädern zu wechseln."
+L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to cycle the actions of the slice you aim at, or to switch between wheels."] =
+  "Ein Rad mit deinen {Zaubern, Gegenständen, Makros und Kürzeln}, das auch im Kampf funktioniert.\n\nHalte die Taste, bewege die Maus zu einem Segment und lasse los, um es zu nutzen.\n\n{Scrolle}, um die Aktionen des anvisierten Segments durchzugehen oder zwischen Rädern zu wechseln."
 L["Hold the key of a {helpful spell} listed here to open a wheel of your group members. Move toward one and release to cast on them, or come back to the {center} to cast on yourself.\n\n{Tap} the key to cast on your friendly target, or yourself if you have none.\n\nType a {spell name or ID} to add it."] =
   "Halte die Taste eines hier aufgelisteten {hilfreichen Zaubers}, um ein Rad deiner Gruppenmitglieder zu öffnen. Bewege dich zu einem und lasse los, um ihn zu wirken, oder kehre in die {Mitte} zurück, um auf dich selbst zu wirken.\n\n{Tippe} die Taste kurz an, um auf dein freundliches Ziel zu wirken, oder auf dich selbst, wenn du keines hast.\n\nGib einen {Zaubernamen oder eine ID} ein, um ihn hinzuzufügen."
 L["Cycle through group members in Mouse Look so {helpful spells} go to the ally while {harmful ones} keep hitting your enemy.\n\nThe {Ally HUD} shows who is selected.\n\nSet your cycle keys."] =

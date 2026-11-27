@@ -341,6 +341,14 @@ L["Radial Menu Wheels"] = "轮盘菜单的轮盘"
 L["Forever"] = "Forever"
 L["Minimal"] = "极简"
 L["Clear Slice"] = "清空扇区"
+L["Add Action"] = "添加动作"
+L["Make First"] = "设为第一个"
+L["Remove Action"] = "移除动作"
+L["A slice holds up to %d actions."] = "一个扇区最多有 %d 个动作。"
+L["Right-click to remove this slice."] = "右键点击移除此扇区。"
+L["Right-click to remove this action."] = "右键点击移除此动作。"
+L["Action %d of %d. Scroll to see the others."] =
+  "第 %d 个动作，共 %d 个。滚动鼠标滚轮查看其他动作。"
 L["UI Actions"] = "界面动作"
 L["Emotes"] = "表情"
 L["Commands"] = "命令"
@@ -353,8 +361,13 @@ L["Wheel"] = "轮盘"
 L["You can have up to %d wheels."] = "最多可以有 %d 个轮盘。"
 L["That can't go on a wheel. Use a spell, item, toy, mount or macro."] =
   "无法放入轮盘。请使用法术、物品、玩具、坐骑或宏。"
-L["Drag a spell, item, toy, mount or macro here, or click to change the action."] =
-  "将法术、物品、玩具、坐骑或宏拖到此处，或点击以更改动作。"
+L["Replace %s"] = "替换%s"
+L["Click to replace the shown action or manage the slice."] =
+  "点击可替换当前显示的动作或管理该扇区。"
+L["Click the + to add another action, or drag a spell, item, toy, mount or macro here."] =
+  "点击 + 添加另一个动作，或将法术、物品、玩具、坐骑或宏拖到这里。"
+L["Adds another action to this slice (%d of %d used). With the wheel open, aim at the slice and scroll to switch between them."] =
+  "向该扇区添加另一个动作（已用 %d / %d）。轮盘打开时，指向该扇区并滚动鼠标滚轮即可切换动作。"
 L["Empty Slice"] = "空扇区"
 L["Drag a spell, item, toy, mount or macro here, or click to set an action. Empty slices are left out of the wheel."] =
   "将法术、物品、玩具、坐骑或宏拖到此处，或点击以设置动作。空扇区不会出现在轮盘中。"
@@ -371,14 +384,14 @@ L["You need at least one wheel."] = "至少需要一个轮盘。"
 L["Remove this wheel and all of its slices?"] = "要移除此轮盘及其所有扇区吗？"
 L["Add Wheel"] = "添加轮盘"
 L["Pick a preset wheel or a blank one."] = "选择预设轮盘或空白轮盘。"
-L["Click a slice to choose its action, or drop a spell, item, toy, mount or macro on it.\nDrag a slice to reorder it. Right-click a slice to remove it."] =
-  "点击扇区选择其动作，或将法术、物品、玩具、坐骑或宏拖放到其上。\n拖动扇区可重新排序，右键点击可移除。"
+L["Each slice holds up to %d actions: click its + to add one, then scroll over the slice to see them.\nClick a slice to replace an action, or drop a spell, item, toy, mount or macro on it.\nDrag a slice to reorder it. Right-click to remove."] =
+  "每个扇区最多可放 %d 个动作：点击扇区上的 + 添加，然后在扇区上滚动鼠标滚轮查看。\n点击扇区可替换动作，也可以将法术、物品、玩具、坐骑或宏拖到扇区上。\n拖动扇区可调整顺序。右键点击移除。"
 L["RADIAL MENU"] = "轮盘菜单"
 L["Create quick access wheels for spells, items, macros, emotes, and interface shortcuts."] =
   "为法术、物品、宏、表情和界面快捷方式创建快速访问轮盘。"
 L["Radial Menu Keybind"] = "轮盘菜单按键"
-L["Hold to open the radial menu, aim at a slice, then release to activate it. Scroll to switch between wheels."] =
-  "按住以打开轮盘菜单，瞄准一个扇区后松开即可触发。滚动鼠标滚轮可切换轮盘。"
+L["Hold to open the radial menu, aim at a slice, then release to activate it. Scroll to cycle the actions of an aimed slice, or to switch between wheels."] =
+  "按住以打开轮盘菜单，瞄准一个扇区后松开即可触发。滚动鼠标滚轮可切换所瞄准扇区的动作，或切换轮盘。"
 L["Radial Menu Style"] = "轮盘菜单样式"
 L["Choose the appearance of the Radial Menu wheels."] = "选择轮盘菜单的外观。"
 L["Radial Menu Scale"] = "轮盘菜单缩放"
@@ -574,8 +587,8 @@ L["Normally a ground-targeted spell cast through Reticle Targeting will temporar
   "通常，通过准星瞄准施放的地面指向法术会暂时关闭鼠标视角，让你手动选择位置。此列表中的法术则会自动施放在准星所指的地面位置。\n\n典型的例子有{暴风雪}、{英勇飞跃}或{枯萎凋零}。如果某个地面法术仍会暂停鼠标视角让你手动放置，就把它加到这里。"
 L["Binds only work while Mouse Look is on. With Reticle Targeting on, a bound spell targets the enemy under your crosshair first, and helpful spells keep your friendly target.\n\n{Account-Wide Binds} shares one set of binds between all your characters."] =
   "绑定仅在鼠标视角开启时生效。开启准星瞄准后，绑定的法术会先以准星下的敌人为目标，增益法术则保留你的友方目标。\n\n{账号通用绑定}让你所有角色共用同一套绑定。"
-L["Each wheel holds up to {8 slices}, and you can keep up to {5 wheels}. In the editor below:\n• {Click} a slice to pick a shortcut or emote\n• {Drop} a spell, item, mount or macro onto it\n• {Right-click} it to remove it\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."] =
-  "每个轮盘最多有{8个扇区}，最多可保留{5个轮盘}。在下方编辑器中：\n• {点击}扇区选择快捷方式或表情\n• 把法术、物品、坐骑或宏{拖到}扇区上\n• {右键}移除\n• 拖动可移动位置\n\n轮盘打开时按{Esc}或{右键}会取消，不使用任何内容。"
+L["Each wheel holds up to {8 slices} with up to {5 actions} each, and you can keep up to {5 wheels}. In the editor below:\n• Click its {+} to add another action\n• {Click} the slice to pick a shortcut or emote, replacing the shown action\n• {Drop} a spell, item, mount or macro onto it to add it\n• {Scroll} over it to see its other actions\n• {Right-click} it to remove the shown action, or the slice\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."] =
+  "每个轮盘最多有{8个扇区}，每个扇区最多有{5个动作}，最多可保留{5个轮盘}。在下方编辑器中：\n• 点击扇区上的 {+} 添加更多动作\n• {点击}扇区可选择快捷方式或表情，替换当前显示的动作\n• 把法术、物品、坐骑或宏{拖到}扇区上即可添加\n• 在扇区上{滚动滚轮}查看其他动作\n• {右键}移除显示的动作或扇区\n• 拖动可移动位置\n\n轮盘打开时按{Esc}或{右键}会取消，不使用任何内容。"
 L["Lock your cursor to the center of the screen and steer by moving the mouse, no more holding right-click.\n\nSet a {key to toggle it}, and {one to interact with} whatever you're aiming at."] =
   "将光标锁定在屏幕中央，通过移动鼠标来转向，无需再按住右键。\n\n设置一个{切换按键}，以及一个与瞄准目标{交互的按键}。"
 L["A reactive, fully customizable crosshair that adapts to your target and combat state."] =
@@ -592,8 +605,8 @@ L["Lock onto a target with one tap so the reticle stops swapping. While locked, 
   "一键锁定目标，让准星不再切换。锁定期间，循环按键会跳到附近的敌人，在辅助模式下则跳到附近的盟友。\n\n{目标锁定行为}决定再次按键是解除锁定（{切换}），还是将锁定转移到准星下的目标（{切换目标}）。\n\n设置你的按键。"
 L["Turn your mouse clicks into actions while in Mouse Look, such as casting your action bar spells with {Left and Right Click}.\n\nPick what each click does, with or without a {modifier key}."] =
   "在鼠标视角下将鼠标点击变为动作，例如用{左键和右键}施放动作条上的法术。\n\n选择每次点击的功能，可搭配或不搭配{修饰键}。"
-L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to switch between wheels."] =
-  "在战斗中也可使用的{法术、物品、宏和快捷方式}轮盘。\n\n按住按键，将鼠标移向某个扇区，松开即可使用。\n\n{滚动滚轮}可切换轮盘。"
+L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to cycle the actions of the slice you aim at, or to switch between wheels."] =
+  "在战斗中也可使用的{法术、物品、宏和快捷方式}轮盘。\n\n按住按键，将鼠标移向某个扇区，松开即可使用。\n\n{滚动滚轮}可切换所瞄准扇区的动作，或切换轮盘。"
 L["Hold the key of a {helpful spell} listed here to open a wheel of your group members. Move toward one and release to cast on them, or come back to the {center} to cast on yourself.\n\n{Tap} the key to cast on your friendly target, or yourself if you have none.\n\nType a {spell name or ID} to add it."] =
   "按住此处列出的{增益法术}的按键，打开队伍成员轮盘。移向某位成员并松开即可对其施放，回到{中心}则对自己施放。\n\n{轻按}按键则对你的友方目标施放，没有目标时对自己施放。\n\n输入{法术名称或 ID}即可添加。"
 L["Cycle through group members in Mouse Look so {helpful spells} go to the ally while {harmful ones} keep hitting your enemy.\n\nThe {Ally HUD} shows who is selected.\n\nSet your cycle keys."] =

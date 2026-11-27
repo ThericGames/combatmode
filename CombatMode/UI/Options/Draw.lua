@@ -107,6 +107,9 @@ UI.Colors = {
   controlFillTop = { 0.170, 0.148, 0.126, 1.0 }, -- #2B2520 gradient top
   buttonHover = { 0.150, 0.130, 0.110, 1.0 },
   buttonHoverTop = { 0.225, 0.196, 0.165, 1.0 },
+  -- Hover fill of tiny buttons (the wheel editor's "+" badge), where buttonHover barely shows.
+  badgeHover = { 0.345, 0.275, 0.200, 1.0 },
+  badgeHoverTop = { 0.490, 0.400, 0.300, 1.0 },
   -- Warm-brown border for cards, chips, toggles (off) and neutral buttons.
   cardBorder = { 0.290, 0.230, 0.170, 1.0 }, -- #4A3B2B
   -- Hairlines (header rule, sidebar divider, footer separator).

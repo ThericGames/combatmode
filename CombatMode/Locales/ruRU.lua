@@ -366,6 +366,16 @@ L["Radial Menu Wheels"] = "Колеса радиального меню"
 L["Forever"] = "Forever"
 L["Minimal"] = "Минимализм"
 L["Clear Slice"] = "Очистить сектор"
+L["Add Action"] = "Добавить действие"
+L["Make First"] = "Сделать первым"
+L["Remove Action"] = "Удалить действие"
+L["A slice holds up to %d actions."] = "Максимум действий в секторе: %d."
+L["Right-click to remove this slice."] =
+  "Правый щелчок удаляет этот сектор."
+L["Right-click to remove this action."] =
+  "Правый щелчок удаляет это действие."
+L["Action %d of %d. Scroll to see the others."] =
+  "Действие %d из %d. Прокрутите колесико, чтобы увидеть остальные."
 L["UI Actions"] = "Действия интерфейса"
 L["Emotes"] = "Эмоции"
 L["Commands"] = "Команды"
@@ -378,8 +388,13 @@ L["Wheel"] = "Колесо"
 L["You can have up to %d wheels."] = "Можно создать не более %d колес."
 L["That can't go on a wheel. Use a spell, item, toy, mount or macro."] =
   "Это нельзя поместить на колесо. Используйте заклинание, предмет, игрушку, средство передвижения или макрос."
-L["Drag a spell, item, toy, mount or macro here, or click to change the action."] =
-  "Перетащите сюда заклинание, предмет, игрушку, средство передвижения или макрос либо щелкните, чтобы сменить действие."
+L["Replace %s"] = "Заменить: %s"
+L["Click to replace the shown action or manage the slice."] =
+  "Щелкните, чтобы заменить показанное действие или настроить сектор."
+L["Click the + to add another action, or drag a spell, item, toy, mount or macro here."] =
+  "Щелкните «+», чтобы добавить еще одно действие, или перетащите сюда заклинание, предмет, игрушку, средство передвижения или макрос."
+L["Adds another action to this slice (%d of %d used). With the wheel open, aim at the slice and scroll to switch between them."] =
+  "Добавляет в сектор еще одно действие (занято %d из %d). При открытом колесе наведитесь на сектор и крутите колесо мыши, чтобы переключаться между действиями."
 L["Empty Slice"] = "Пустой сектор"
 L["Drag a spell, item, toy, mount or macro here, or click to set an action. Empty slices are left out of the wheel."] =
   "Перетащите сюда заклинание, предмет, игрушку, средство передвижения или макрос либо щелкните, чтобы задать действие. Пустые секторы в колесо не попадают."
@@ -403,14 +418,14 @@ L["Remove this wheel and all of its slices?"] =
 L["Add Wheel"] = "Добавить колесо"
 L["Pick a preset wheel or a blank one."] =
   "Выберите готовое колесо или пустое."
-L["Click a slice to choose its action, or drop a spell, item, toy, mount or macro on it.\nDrag a slice to reorder it. Right-click a slice to remove it."] =
-  "Щелкните сектор, чтобы выбрать действие, или перетащите на него заклинание, предмет, игрушку, средство передвижения или макрос.\nПеретащите сектор, чтобы изменить порядок. Правый щелчок удаляет его."
+L["Each slice holds up to %d actions: click its + to add one, then scroll over the slice to see them.\nClick a slice to replace an action, or drop a spell, item, toy, mount or macro on it.\nDrag a slice to reorder it. Right-click to remove."] =
+  "В каждом секторе помещается до %d действий: щелкните «+», чтобы добавить действие, и крутите колесо мыши над сектором, чтобы увидеть их.\nЩелкните сектор, чтобы заменить действие, или перетащите на него заклинание, предмет, игрушку, средство передвижения или макрос.\nПеретащите сектор, чтобы изменить порядок. Правый щелчок — удалить."
 L["RADIAL MENU"] = "РАДИАЛЬНОЕ МЕНЮ"
 L["Create quick access wheels for spells, items, macros, emotes, and interface shortcuts."] =
   "Создавайте колеса быстрого доступа для заклинаний, предметов, макросов, эмоций и ярлыков интерфейса."
 L["Radial Menu Keybind"] = "Клавиша радиального меню"
-L["Hold to open the radial menu, aim at a slice, then release to activate it. Scroll to switch between wheels."] =
-  "Удерживайте, чтобы открыть радиальное меню, наведитесь на сектор и отпустите для активации. Колесо мыши переключает колеса."
+L["Hold to open the radial menu, aim at a slice, then release to activate it. Scroll to cycle the actions of an aimed slice, or to switch between wheels."] =
+  "Удерживайте, чтобы открыть радиальное меню, наведитесь на сектор и отпустите для активации. Колесо мыши листает действия выбранного сектора или переключает колеса."
 L["Radial Menu Style"] = "Стиль радиального меню"
 L["Choose the appearance of the Radial Menu wheels."] =
   "Выберите внешний вид колес радиального меню."
@@ -622,8 +637,8 @@ L["Normally a ground-targeted spell cast through Reticle Targeting will temporar
   "Обычно заклинание, применяемое на землю через наведение по прицелу, временно отключает обзор мышью, чтобы вы могли указать место вручную. Заклинания из этого списка вместо этого автоматически применяются на землю в точке прицела.\n\nТипичные примеры — {Снежная буря}, {Героический прыжок} или {Смерть и разложение}. Если заклинание на землю по-прежнему отключает Mouse Look, чтобы вы указали место, добавьте его сюда."
 L["Binds only work while Mouse Look is on. With Reticle Targeting on, a bound spell targets the enemy under your crosshair first, and helpful spells keep your friendly target.\n\n{Account-Wide Binds} shares one set of binds between all your characters."] =
   "Привязки работают только при включённом обзоре мышью. При включённом наведении по прицелу назначенное заклинание сначала целится во врага под прицелом, а полезные сохраняют вашу дружественную цель.\n\n{Привязки для всей учетной записи} дают один набор привязок всем вашим персонажам."
-L["Each wheel holds up to {8 slices}, and you can keep up to {5 wheels}. In the editor below:\n• {Click} a slice to pick a shortcut or emote\n• {Drop} a spell, item, mount or macro onto it\n• {Right-click} it to remove it\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."] =
-  "В каждом колесе до {8 секторов}, всего можно держать до {5 колёс}. В редакторе ниже:\n• {Нажмите} на сектор, чтобы выбрать быструю команду или эмоцию\n• {Перетащите} на него заклинание, предмет, средство передвижения или макрос\n• {Правой кнопкой} уберите его\n• Перетащите, чтобы переместить\n\n{Esc} или {правая кнопка} при открытом колесе отменяет, ничего не используя."
+L["Each wheel holds up to {8 slices} with up to {5 actions} each, and you can keep up to {5 wheels}. In the editor below:\n• Click its {+} to add another action\n• {Click} the slice to pick a shortcut or emote, replacing the shown action\n• {Drop} a spell, item, mount or macro onto it to add it\n• {Scroll} over it to see its other actions\n• {Right-click} it to remove the shown action, or the slice\n• Drag it to move it\n\n{Esc} or {right-click} while the wheel is open cancels without using anything."] =
+  "В каждом колесе до {8 секторов}, в каждом секторе до {5 действий}, всего можно держать до {5 колёс}. В редакторе ниже:\n• Щелкните «{+}» на секторе, чтобы добавить еще одно действие\n• {Щелкните} сектор, чтобы выбрать ярлык или эмоцию вместо показанного действия\n• {Перетащите} на него заклинание, предмет, средство передвижения или макрос, чтобы добавить его\n• {Прокрутите колесико} над ним, чтобы увидеть другие действия\n• {Правой кнопкой} уберите показанное действие или сектор\n• Перетащите, чтобы переместить\n\n{Esc} или {правая кнопка} при открытом колесе отменяет, ничего не используя."
 L["Lock your cursor to the center of the screen and steer by moving the mouse, no more holding right-click.\n\nSet a {key to toggle it}, and {one to interact with} whatever you're aiming at."] =
   "Курсор фиксируется в центре экрана, а направление задается движением мыши, без удержания правой кнопки.\n\nНазначьте {клавишу переключения} и {клавишу взаимодействия} с тем, на что вы целитесь."
 L["A reactive, fully customizable crosshair that adapts to your target and combat state."] =
@@ -640,8 +655,8 @@ L["Lock onto a target with one tap so the reticle stops swapping. While locked, 
   "Захватите цель одним нажатием, чтобы прицел перестал переключаться. Пока цель захвачена, клавиши смены переходят к ближайшим врагам, а в режиме поддержки — к ближайшим союзникам.\n\n{Поведение захвата цели} определяет, снимает ли повторное нажатие захват ({Переключить}) или переносит его на то, что под прицелом ({Сменить цель}).\n\nНазначьте клавиши."
 L["Turn your mouse clicks into actions while in Mouse Look, such as casting your action bar spells with {Left and Right Click}.\n\nPick what each click does, with or without a {modifier key}."] =
   "Превращайте щелчки мыши в действия в режиме обзора мышью, например применяйте заклинания с панели команд {левым и правым щелчком}.\n\nВыберите, что делает каждый щелчок, с {клавишей-модификатором} или без нее."
-L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to switch between wheels."] =
-  "Колесо из ваших {заклинаний, предметов, макросов и ярлыков}, работающее в бою.\n\nУдерживайте клавишу, переместите мышь к сектору и отпустите, чтобы использовать его.\n\n{Прокрутите колесико}, чтобы переключать колеса."
+L["A wheel of your {spells, items, macros and shortcuts} that works in combat.\n\nHold its key, move the mouse toward a slice and release to use it.\n\n{Scroll} to cycle the actions of the slice you aim at, or to switch between wheels."] =
+  "Колесо из ваших {заклинаний, предметов, макросов и ярлыков}, работающее в бою.\n\nУдерживайте клавишу, переместите мышь к сектору и отпустите, чтобы использовать его.\n\n{Прокрутите колесико}, чтобы листать действия выбранного сектора или переключать колеса."
 L["Hold the key of a {helpful spell} listed here to open a wheel of your group members. Move toward one and release to cast on them, or come back to the {center} to cast on yourself.\n\n{Tap} the key to cast on your friendly target, or yourself if you have none.\n\nType a {spell name or ID} to add it."] =
   "Удерживайте клавишу {полезного заклинания} из этого списка, чтобы открыть колесо участников группы. Переместитесь к одному из них и отпустите, чтобы применить на него, или вернитесь в {центр}, чтобы применить на себя.\n\n{Коротко нажмите} клавишу, чтобы применить на дружественную цель, а если ее нет, то на себя.\n\nВведите {название или ID заклинания}, чтобы добавить его."
 L["Cycle through group members in Mouse Look so {helpful spells} go to the ally while {harmful ones} keep hitting your enemy.\n\nThe {Ally HUD} shows who is selected.\n\nSet your cycle keys."] =

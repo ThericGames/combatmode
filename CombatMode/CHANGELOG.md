@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/2.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.5.5] - 2026-11-27
+
+### Added
+
+- **Radial Menu** slices can hold up to 5 actions each. Aim at a slice and scroll to pick one, then release to use it; dots on the slice's outer edge show which you're on. Away from those slices, scrolling still switches wheels. In the editor, click a slice's **+** to add any action from the list, or drop something on the slice.
+
+### Changed
+
+- The **Interface** and **Misc** wheel presets now put related actions together on a slice; the first **Misc** slice holds **Ready Check**, **Role Check** and **Pull Countdown**. Wheels you already have stay as they are: add a preset from the editor's **+** to get the new one.
+
+### Fixed
+
+- A **Radial Menu** wheel with a single slice no longer shows a seam below its centre in the **Minimal** style.
+
 ## [5.5.4] - 2026-11-26
 
 ### Added
@@ -997,7 +1011,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rapidly toggling OPie rings could leave the cursor stuck and visible while Mouse Look was active.
 - Reloading could leave the cursor visible while still in the Mouse Look state after the loading screen.
 
-[Unreleased]: https://github.com/ThericGames/combatmode/compare/5.5.4...HEAD
+[Unreleased]: https://github.com/ThericGames/combatmode/compare/5.5.5...HEAD
+[5.5.5]: https://github.com/ThericGames/combatmode/compare/5.5.4...5.5.5
 [5.5.4]: https://github.com/ThericGames/combatmode/compare/5.5.3...5.5.4
 [5.5.3]: https://github.com/ThericGames/combatmode/compare/5.5.2...5.5.3
 [5.5.2]: https://github.com/ThericGames/combatmode/compare/5.5.1...5.5.2

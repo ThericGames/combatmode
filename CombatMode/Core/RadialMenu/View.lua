@@ -2,8 +2,9 @@
 --  Core/RadialMenu/View.lua — RADIALMENU — wheel drawing: art, icons, aim highlight
 ---------------------------------------------------------------------------------------
 --  What it does: Draws the open Radial Menu / Party Wheel on a plain child frame of the secure
---  wheel: the background art for the slice count, round icon slots with cooldown / count, the
---  highlight on the slice the cursor points at, the wheel name and the wheel page dots.
+--  wheel: the background art for the slice count, round icon slots with cooldown / count and
+--  action dots (CM.RadialViewCycled when a slice changes action), the highlight on the slice the
+--  cursor points at, the wheel name and the wheel page dots.
 --  Architecture / how it works:
 --    • Art is Assets/radial/radial_[minimal_]{bg,sel,off}_N.tga (N = slice count 1..8); which set,
 --      its size and overlay placement come from CM.RadialStyle() (global.radialStyle: Forever /
@@ -1396,6 +1397,14 @@ local function PlaceOverlay(tex, kind, n, i)
   PlaceOverlayAt(tex, kind, n, CM.RadialSlotAngle(i, n))
 end
 
+--- The item count sits bottom right, or bottom left where the action dots face that corner (a
+--- lower-right slice with several actions).
+local function PlaceStackCount(slot, left)
+  local corner = left and "BOTTOMLEFT" or "BOTTOMRIGHT"
+  slot.count:ClearAllPoints()
+  slot.count:SetPoint(corner, slot, corner, left and -2 or 2, -2)
+end
+
 local function Paint()
   Build()
   if not view then
@@ -1437,6 +1446,13 @@ local function Paint()
       local dx, dy = CM.RadialSlotDir(i, n)
       slot.px, slot.py = LAYOUT.ICON_RADIUS * dx, LAYOUT.ICON_RADIUS * dy
       PlaceSlot(slot)
+      -- Radial Menu only: one dot per action of the slice (the Party Wheel has no such slices).
+      local shownAction, actionCount = 1, 0
+      if source == SOURCES.radial then
+        shownAction, actionCount = CM.RadialSliceOption(i)
+      end
+      slot.SetPipDirection(dx, dy)
+      slot.SetActionPips(actionCount, shownAction)
       if entry.kind == "unit" then
         SetMemberPortrait(slot.icon, entry.unit)
         slot.iconLabel:SetText("")
@@ -1461,6 +1477,7 @@ local function Paint()
       end
       local unusable = SliceUnusable(entry)
       slot.unusable = unusable
+      PlaceStackCount(slot, actionCount > 1 and dx > 0.3 and dy < -0.3)
       if entry.kind == "item" then
         local count = ItemCount(entry.id)
         slot.count:SetText(count > 1 and count or "")
@@ -1491,6 +1508,18 @@ function CM.RadialViewRefresh()
   if CM.IsRadialMenuOpen and CM.IsRadialMenuOpen() then
     Paint()
   end
+end
+
+--- Slice `i` of the open Radial Menu changed action (mouse wheel): tick, pop its icon, repaint.
+function CM.RadialViewCycled(i)
+  if source ~= SOURCES.radial or not (view and slots[i] and CM.IsRadialMenuOpen()) then
+    return
+  end
+  lastAimSound = GetTime()
+  PlayRadialSound("aim")
+  -- Back to rest size: the hover easing grows the aimed slice again.
+  slots[i].scale = 1
+  Paint()
 end
 
 --- Called by the façade when a wheel is shown / hidden. `kind` = "radial" (default) | "party".
